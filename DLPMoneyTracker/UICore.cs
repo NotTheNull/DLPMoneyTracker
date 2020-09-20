@@ -25,8 +25,8 @@ namespace DLPMoneyTracker
         {
             services.AddSingleton<ITrackerConfig, TrackerConfig>();
             services.AddSingleton<MainWindow>();
-            services.AddScoped<AddEditMoneyAccount>();
-            services.AddScoped<AddEditMoneyAccountVM>();
+            services.AddTransient<AddEditMoneyAccount>();
+            services.AddTransient<AddEditMoneyAccountVM>();
         }
     }
 }

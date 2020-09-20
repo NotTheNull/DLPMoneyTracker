@@ -29,7 +29,8 @@ namespace DLPMoneyTracker.Data.ConfigModels
 
         public MoneyAccount()
         {
-            
+            this.ID = this.Description = this.WebAddress = string.Empty;
+            this.AccountType = MoneyAccountType.NotSet;
         }
     }
 }

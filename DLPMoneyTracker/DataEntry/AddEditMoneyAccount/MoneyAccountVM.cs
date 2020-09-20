@@ -78,7 +78,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
 		public void Load(MoneyAccount src)
 		{
 			if (src is null) throw new ArgumentNullException("Source");
-			if (string.IsNullOrWhiteSpace(this.ID)) throw new InvalidOperationException("ID cannot be blank");
+			if (string.IsNullOrWhiteSpace(src.ID)) throw new InvalidOperationException("ID cannot be blank");
 
 			this.ID = src.ID.Trim();
 			this.AccountType = src.AccountType;
