@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30002.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DLPMoneyTracker", "DLPMoneyTracker\DLPMoneyTracker.csproj", "{45EB64CB-C9FD-4BD8-A830-FDA537ECF968}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DLPMoneyTracker.Data", "DLPMoneyTracker.Data\DLPMoneyTracker.Data.csproj", "{F4D979FF-60D1-4A6E-A696-32158DCF66F4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{45EB64CB-C9FD-4BD8-A830-FDA537ECF968}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45EB64CB-C9FD-4BD8-A830-FDA537ECF968}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45EB64CB-C9FD-4BD8-A830-FDA537ECF968}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45EB64CB-C9FD-4BD8-A830-FDA537ECF968}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4D979FF-60D1-4A6E-A696-32158DCF66F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4D979FF-60D1-4A6E-A696-32158DCF66F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4D979FF-60D1-4A6E-A696-32158DCF66F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4D979FF-60D1-4A6E-A696-32158DCF66F4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0BB000F4-6ACC-4DEC-B794-813172F23862}
+	EndGlobalSection
+EndGlobal

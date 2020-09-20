@@ -1,0 +1,213 @@
+﻿<Window x:Class="DLPMoneyTracker.DataEntry.AddEditMoneyAccount.AddEditMoneyAccount"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:local="clr-namespace:DLPMoneyTracker.DataEntry.AddEditMoneyAccount"
+        xmlns:core="clr-namespace:DLPMoneyTracker.Core"
+        mc:Ignorable="d" 
+        WindowStartupLocation="CenterScreen"
+        Title="Add/Edit Money Account"
+        Height="460" 
+        Width="550">
+
+    
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="10,5,5,5" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+
+        <Style x:Key="HeaderLabel" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontFamily" Value="Arial" />
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid x:Name="layoutMain" Background="{StaticResource DefaultUIBackgroundColor}">
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="250" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="0"
+                    >
+            <Button x:Name="btnCloseWindow"
+                    ToolTip="Discard Unsaved Changes and Close Window"
+                    Click="btnCloseWindow_Click"
+                    Style="{StaticResource MenuButton}"
+                    >
+                <Image Source="/Icons/Leave-256.png" />
+            </Button>
+
+
+            <Button x:Name="btnAddNew"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding Path=CommandAddNew}"
+                    ToolTip="Add New Account"
+                    >
+                <Image Source="/Icons/Add-New-256.png" />
+            </Button>
+
+            <Button x:Name="btnCommitChanges"
+                    ToolTip="Commit Changes to File"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding Path=CommandSaveChanges}"
+                    >
+                <Image Source="/Icons/Save-256.png" />
+            </Button>
+
+            <Button x:Name="btnDiscardChanges"
+                    ToolTip="Discard Changes and Reload"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding Path=CommandDiscardChanges}">
+                <Image Source="/Icons/Cancel-256.png" />
+            </Button>
+
+        </StackPanel>
+
+        <DataGrid x:Name="gridAccounts" 
+                  Grid.Row="1"
+                  Style="{StaticResource StandardDataGrid}"
+                  ItemsSource="{Binding Path=MoneyAccountList, UpdateSourceTrigger=PropertyChanged}"
+                  >
+            <DataGrid.Resources>
+                <core:BindingProxy x:Key="proxy" Data="{Binding}" />
+            </DataGrid.Resources>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding ID, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Description" Binding="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn Header="Account Type" Binding="{Binding MoneyAccountType, Converter={StaticResource converterMoneyAccountToString}, UpdateSourceTrigger=PropertyChanged}" />
+
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button x:Name="btnEdit" 
+                                        ToolTip="Edit Account"
+                                        Style="{StaticResource MenuButton}"
+                                        Command="{Binding Path=Data.CommandEditMoneyAccount, Source={StaticResource proxy}}"
+                                        CommandParameter="{Binding}">
+                                    <Image Source="/Icons/Edit-Pencil-256.png" />
+                                </Button>
+                                <Button x:Name="btnDelete"
+                                        ToolTip="Delete Account"
+                                        Style="{StaticResource MenuButton}"
+                                        Command="{Binding Path=Data.CommandDeleteMoneyAccount, Source={StaticResource proxy}}"
+                                        CommandParameter="{Binding}">
+                                    <Image Source="/Icons/Garbage-Closed-256.png" />
+                                </Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Grid x:Name="layoutEdit" 
+              Grid.Row="2">
+
+
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="15" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="15" />
+            </Grid.RowDefinitions>
+
+
+
+            <TextBlock Text="ID" 
+                   Grid.Column="1"
+                   Grid.Row="1"
+                       Style="{StaticResource HeaderLabel}"
+                   />
+
+            <TextBox x:Name="txtAccountId"
+                 MaxLength="10"
+                 Grid.Column="2"
+                 Grid.Row="1"
+                     Background="{Binding Path=IsEnabled, Converter={StaticResource convertEnabledToBgColor}, UpdateSourceTrigger=PropertyChanged}"
+                     Width="100"
+                     IsEnabled="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}"
+                     Text="{Binding Path=ID, Mode=TwoWay}"
+                 />
+
+            <TextBlock Text="Description"
+                       Grid.Column="1"
+                       Grid.Row="2"
+                       IsEnabled="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}"
+                       Style="{StaticResource HeaderLabel}"
+                       />
+
+            <TextBox x:Name="txtDesc"
+                     MaxLength="50"
+                     Grid.Column="2"
+                     Grid.Row="2"
+                     Width="260"
+                     Background="{Binding Path=IsEnabled, Converter={StaticResource convertEnabledToBgColor}, UpdateSourceTrigger=PropertyChanged}"
+                     IsEnabled="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}"
+                     Text="{Binding Path=Description, Mode=TwoWay}"
+                     />
+
+            <TextBlock Text="Account Type"
+                       Grid.Column="1"
+                       Grid.Row="3"
+                       Style="{StaticResource HeaderLabel}"
+                       />
+
+            <ComboBox x:Name="cboAccountType"
+                      Grid.Column="2"
+                      Grid.Row="3"
+                      Margin="10, 5, 5, 5"
+                      MinWidth="180"
+                      Width="Auto"
+                      HorizontalAlignment="Left"
+                      IsEnabled="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}"
+                      ItemsSource="{Binding Path=AccountTypeList}"
+                      DisplayMemberPath="Display"
+                      SelectedValuePath="Value"
+                      SelectedItem="{Binding Path=SelectedAccountType, Mode=TwoWay}"
+                      />
+
+            <TextBlock Text="Website URL"
+                       Grid.Column="1"
+                       Grid.Row="4"
+                       IsEnabled="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}"
+                       Style="{StaticResource HeaderLabel}"
+                       />
+
+            <TextBox x:Name="txtWebAddress"
+                     Grid.Column="2"
+                     Grid.Row="4"
+                     Width="400"
+                     Background="{Binding Path=IsEnabled, Converter={StaticResource convertEnabledToBgColor}, UpdateSourceTrigger=PropertyChanged}"
+                     IsEnabled="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}"
+                     Text="{Binding Path=WebAddress, Mode=TwoWay}"
+                     />
+
+
+
+
+        </Grid>
+
+
+
+    </Grid>
+</Window>
