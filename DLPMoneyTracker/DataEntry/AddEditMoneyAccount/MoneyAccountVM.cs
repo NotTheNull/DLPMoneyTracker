@@ -8,8 +8,10 @@ using System.Text;
 
 namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
 {
-    public class MoneyAccountVM : BaseViewModel, IDisposable
+    public class MoneyAccountVM : BaseViewModel, IDisposable, ILinkDataModelToViewModel<MoneyAccount>
     {
+		public Guid UID { get; set; }
+
 		private string _id;
 
 		[StringLength(10)]
@@ -71,11 +73,11 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
 		}
 		public MoneyAccountVM(MoneyAccount src) : base()
 		{
-			this.Load(src);
+			this.LoadSource(src);
 		}
 		~MoneyAccountVM() { this.Dispose(); }
 
-		public void Load(MoneyAccount src)
+		public void LoadSource(MoneyAccount src)
 		{
 			if (src is null) throw new ArgumentNullException("Source");
 			if (string.IsNullOrWhiteSpace(src.ID)) throw new InvalidOperationException("ID cannot be blank");
@@ -86,7 +88,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
 			this.WebAddress = src.WebAddress?.Trim() ?? string.Empty;
 		}
 
-		public MoneyAccount GetMoneyAccount()
+		public MoneyAccount GetSource()
 		{
 			if (string.IsNullOrWhiteSpace(this.ID)) throw new InvalidOperationException("ID cannot be blank");
 

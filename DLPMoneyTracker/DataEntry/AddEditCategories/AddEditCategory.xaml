@@ -1,0 +1,126 @@
+﻿<Window x:Class="DLPMoneyTracker.DataEntry.AddEditCategories.AddEditCategory"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:local="clr-namespace:DLPMoneyTracker.DataEntry.AddEditCategories"
+        xmlns:behave="clr-namespace:DLPMoneyTracker.Core.Behaviors"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:core="clr-namespace:DLPMoneyTracker.Core"
+        mc:Ignorable="d" 
+        Title="Add/Edit Categories"
+        Height="450" 
+        Width="500">
+    
+    <Grid Style="{StaticResource MainGridStyle}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="0"
+                    >
+            <Button x:Name="btnCloseWindow"
+                    ToolTip="Discard Unsaved Changes and Close Window"
+                    Click="btnCloseWindow_Click"
+                    Style="{StaticResource MenuButton}"
+                    >
+                <Image Source="/Icons/Leave-256.png" />
+            </Button>
+
+
+            <Button x:Name="btnAddNew"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding Path=CommandAddNew}"
+                    ToolTip="Add New Account"
+                    >
+                <Image Source="/Icons/Add-New-256.png" />
+            </Button>
+
+            <Button x:Name="btnCommitChanges"
+                    ToolTip="Commit Changes to File"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding Path=CommandSaveChanges}"
+                    >
+                <Image Source="/Icons/Save-256.png" />
+            </Button>
+
+            <Button x:Name="btnDiscardChanges"
+                    ToolTip="Discard Changes and Reload"
+                    Style="{StaticResource MenuButton}"
+                    Command="{Binding Path=CommandDiscardChanges}">
+                <Image Source="/Icons/Cancel-256.png" />
+            </Button>
+
+        </StackPanel>
+
+
+        <DataGrid Grid.Row="1"
+                  Style="{StaticResource StandardDataGrid}"
+                  >
+            <DataGrid.Resources>
+                <core:BindingProxy x:Key="proxy" Data="{Binding}" />
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Category Name" 
+                                    Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"
+                                    />
+
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button x:Name="btnEdit" 
+                                        ToolTip="Edit Account"
+                                        Style="{StaticResource MenuButton}"
+                                        Command="{Binding Path=Data.CommandEditMoneyAccount, Source={StaticResource proxy}}"
+                                        CommandParameter="{Binding}">
+                                    <Image Source="/Icons/Edit-Pencil-256.png" />
+                                </Button>
+                                <Button x:Name="btnDelete"
+                                        ToolTip="Delete Account"
+                                        Style="{StaticResource MenuButton}"
+                                        Command="{Binding Path=Data.CommandDeleteMoneyAccount, Source={StaticResource proxy}}"
+                                        CommandParameter="{Binding}">
+                                    <Image Source="/Icons/Garbage-Closed-256.png" />
+                                </Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        
+
+        <Grid Grid.Row="2" Margin="0,15,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Category Name"
+                       Grid.Column="1"
+                       />
+
+            <TextBox x:Name="txtCategoryName"
+                     Grid.Column="2"
+                     Width="200"
+                     MaxLength="50"
+                     Margin="10,0,0,0"
+                     HorizontalAlignment="Left"
+                     IsEnabled="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}"
+                     Background="{Binding Path=IsEnabled, Converter={StaticResource convertEnabledToBgColor}, UpdateSourceTrigger=PropertyChanged}"
+                     Text="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <i:Interaction.Behaviors>
+                    <behave:TextBoxFocusBehavior />
+                </i:Interaction.Behaviors>
+                
+            </TextBox>
+        </Grid>
+
+    </Grid>
+</Window>

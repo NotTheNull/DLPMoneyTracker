@@ -28,13 +28,14 @@
         </Style>
     </Window.Resources>
 
-    <Grid x:Name="layoutMain" Background="{StaticResource DefaultUIBackgroundColor}">
+    <Grid x:Name="layoutMain" Style="{StaticResource MainGridStyle}">
 
         <Grid.RowDefinitions>
 
             <RowDefinition Height="Auto" />
             <RowDefinition Height="250" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal"

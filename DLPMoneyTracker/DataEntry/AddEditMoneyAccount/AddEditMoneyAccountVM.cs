@@ -218,7 +218,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
             _config.AccountsList.Clear();
             foreach (var acct in this.MoneyAccountList)
             {
-                _config.AccountsList.Add(acct.GetMoneyAccount());
+                _config.AccountsList.Add(acct.GetSource());
             }
 
             _config.SaveMoneyAccounts();

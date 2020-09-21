@@ -24,6 +24,11 @@
                         <Image Source="/Icons/Dollar-256.png" />
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="_Edit Categories" Click="MenuItemEditCategories_Click">
+                    <MenuItem.Icon>
+                        <Image Source="/Icons/Library-Books-256.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
         </Menu>
 

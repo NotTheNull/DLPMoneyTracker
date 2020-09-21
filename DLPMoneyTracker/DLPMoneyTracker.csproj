@@ -13,6 +13,8 @@
     <None Remove="Icons\Edit-Pencil-256.png" />
     <None Remove="Icons\Garbage-Closed-256.png" />
     <None Remove="Icons\Leave-256.png" />
+    <None Remove="Icons\Library-Books-256.png" />
+    <None Remove="Icons\Light-Bulb-256.png" />
     <None Remove="Icons\Refresh-256.png" />
     <None Remove="Icons\Save-256.png" />
   </ItemGroup>
@@ -33,6 +35,8 @@
     <Resource Include="Icons\Edit-Pencil-256.png" />
     <Resource Include="Icons\Garbage-Closed-256.png" />
     <Resource Include="Icons\Leave-256.png" />
+    <Resource Include="Icons\Library-Books-256.png" />
+    <Resource Include="Icons\Light-Bulb-256.png" />
     <Resource Include="Icons\Refresh-256.png" />
     <Resource Include="Icons\Save-256.png" />
   </ItemGroup>

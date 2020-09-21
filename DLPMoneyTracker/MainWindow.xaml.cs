@@ -1,4 +1,5 @@
 ﻿using DLPMoneyTracker.Data;
+using DLPMoneyTracker.DataEntry.AddEditCategories;
 using DLPMoneyTracker.DataEntry.AddEditMoneyAccount;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -40,6 +41,12 @@ namespace DLPMoneyTracker
         {
             AddEditMoneyAccount uiAddEditMoneyAccount = UICore.DependencyHost.GetService<AddEditMoneyAccount>();
             uiAddEditMoneyAccount.Show();
+        }
+
+        private void MenuItemEditCategories_Click(object sender, RoutedEventArgs e)
+        {
+            AddEditCategory uiAddEditCategory = UICore.DependencyHost.GetService<AddEditCategory>();
+            uiAddEditCategory.Show();
         }
     }
 }
