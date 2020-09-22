@@ -9,6 +9,7 @@
         xmlns:core="clr-namespace:DLPMoneyTracker.Core"
         mc:Ignorable="d" 
         Title="Add/Edit Categories"
+        WindowStartupLocation="CenterScreen"
         Height="450" 
         Width="500">
     
@@ -60,6 +61,7 @@
 
         <DataGrid Grid.Row="1"
                   Style="{StaticResource StandardDataGrid}"
+                  ItemsSource="{Binding Path=CategoryList, UpdateSourceTrigger=PropertyChanged}"
                   >
             <DataGrid.Resources>
                 <core:BindingProxy x:Key="proxy" Data="{Binding}" />

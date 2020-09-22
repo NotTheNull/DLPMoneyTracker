@@ -201,6 +201,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
             NotifyPropertyChanged(nameof(this.UID));
             NotifyPropertyChanged(nameof(this.Name));
             NotifyPropertyChanged(nameof(this.CategoryList));
+            NotifyPropertyChanged(nameof(this.IsEnabled));
         }
     }
 }

@@ -33,7 +33,7 @@ namespace DLPMoneyTracker.Data
 
         private string CategoryListConfig { get { return string.Concat(CONFIG_PATH, "Categories.json"); } }
 
-        private List<TransactionCategory> _listCategories;
+        private List<TransactionCategory> _listCategories = new List<TransactionCategory>();
         public List<TransactionCategory> CategoryList { get { return _listCategories; } }
 
 
