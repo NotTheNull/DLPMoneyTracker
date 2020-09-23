@@ -1,6 +1,7 @@
 ﻿using DLPMoneyTracker.Data;
 using DLPMoneyTracker.DataEntry.AddEditCategories;
 using DLPMoneyTracker.DataEntry.AddEditMoneyAccount;
+using DLPMoneyTracker.ReportViews;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -19,17 +20,26 @@ using System.Windows.Shapes;
 
 namespace DLPMoneyTracker
 {
+    // TODO: Add UI to display summary of Money Accounts
+    // TODO: Add ability to create transactions
+    // TODO: Add Window to display Money Account detail
+    // TODO: Create VM and UI to display summary of Categories that include current totals and budget expectations
+    // TODO: Modify Main Window to show tabbed interface.  Main tab is summary of Money Accounts.  Second tab would be summary of Categories. Third tab could be Full Ledger.
+
+
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        ITrackerConfig _config;
+        private MoneyAccountsOverview _uiAccountSummary;
 
-        public MainWindow(ITrackerConfig config)
+        public MainWindow(MoneyAccountsOverview uiAccountSummary)
         {
             InitializeComponent();
-            _config = config;
+            panelAccountSummary.Children.Add(uiAccountSummary);
+            _uiAccountSummary = uiAccountSummary;
         }
 
         private void MenuItemExit_Click(object sender, RoutedEventArgs e)

@@ -46,6 +46,7 @@ namespace DLPMoneyTracker.Data
             }
 
             this.LoadMoneyAccounts();
+            this.LoadCategories();
         }
         ~TrackerConfig() { this.Dispose(); }
 
@@ -85,11 +86,17 @@ namespace DLPMoneyTracker.Data
             {
                 _listCategories = new List<TransactionCategory>();
             }
+
+            _listCategories.Add(new TransactionCategory()
+            {
+                ID = Guid.Empty,
+                Name = "*STARTING BALANCE*"
+            });
         }
 
         public void SaveCategories()
         {
-            string json = JsonSerializer.Serialize(this.CategoryList, typeof(List<TransactionCategory>));
+            string json = JsonSerializer.Serialize(this.CategoryList.Where(x => x.ID != Guid.Empty), typeof(List<TransactionCategory>));
             File.WriteAllText(CategoryListConfig, json);
         }
 

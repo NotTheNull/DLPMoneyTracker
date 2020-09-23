@@ -1,6 +1,8 @@
 ﻿using DLPMoneyTracker.Data;
+using DLPMoneyTracker.Data.ConfigModels;
 using DLPMoneyTracker.DataEntry.AddEditCategories;
 using DLPMoneyTracker.DataEntry.AddEditMoneyAccount;
+using DLPMoneyTracker.ReportViews;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -25,12 +27,37 @@ namespace DLPMoneyTracker
         private static void ConfigureServices(ServiceCollection services)
         {
             services.AddSingleton<ITrackerConfig, TrackerConfig>();
+            services.AddSingleton<ILedger, Ledger>();
             services.AddSingleton<MainWindow>();
-                        
+            services.AddSingleton<MoneyAccountsOverview>();
+            services.AddSingleton<MoneyAccountOverviewVM>();
+
             services.AddTransient<AddEditMoneyAccount>();
             services.AddTransient<AddEditMoneyAccountVM>();
             services.AddTransient<AddEditCategory>();
             services.AddTransient<AddEditCategoryVM>();
         }
     }
+
+    public static class StringExtensions
+    {
+        public static string ToDisplayText(this MoneyAccountType actType)
+        {
+            switch(actType)
+            {
+                case MoneyAccountType.Checking:
+                    return "Checking";
+                case MoneyAccountType.CreditCard:
+                    return "Credit Card";
+                case MoneyAccountType.Loan:
+                    return "Loan";
+                case MoneyAccountType.Savings:
+                    return "Savings";
+                default:
+                    return "*N/A*";
+            }
+        }
+    }
+
+
 }

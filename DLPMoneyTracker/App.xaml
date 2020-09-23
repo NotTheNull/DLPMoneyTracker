@@ -8,6 +8,8 @@
     <Application.Resources>
         <convert:MoneyAccountTypeToString x:Key="converterMoneyAccountToString" />
         <convert:EnabledBooleanToBackgroundColor x:Key="convertEnabledToBgColor" />
+        <convert:AccountTypeToBackgroundColor x:Key="convertMoneyAccountToBgColor" />
+        <convert:DecimalToDisplayTextConverter x:Key="convertDecimalToDisplay" />
 
 
         <SolidColorBrush x:Key="DefaultUIBackgroundColor" Color="#AACCFF" />

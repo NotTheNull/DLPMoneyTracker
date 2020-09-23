@@ -1,5 +1,4 @@
-﻿using DLPMoneyTracker.Data.ConfigModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -7,14 +6,21 @@ using System.Windows.Data;
 
 namespace DLPMoneyTracker.Core.Converters
 {
-    public class MoneyAccountTypeToString : IValueConverter
+    public class DecimalToDisplayTextConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is null) return string.Empty;
-            if(value is MoneyAccountType acctType)
+            if(value is decimal number)
             {
-                return acctType.ToDisplayText();
+                if(!(parameter is null))
+                {
+                    return number.ToString(parameter.ToString());
+                }
+                else
+                {
+                    return string.Format("{0:#,###.00###}", number);
+                }
             }
 
             return string.Empty;
