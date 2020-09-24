@@ -33,11 +33,26 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
 			}
 		}
 
+		private CategoryType _type;
+
+		public CategoryType CategoryType
+		{
+			get { return _type; }
+			set 
+			{
+				_type = value;
+				NotifyPropertyChanged(nameof(this.CategoryType));
+			}
+		}
+
+
+
 
 		public TransactionCategoryVM() : base()
 		{
 			this.UID = Guid.NewGuid();
 			this.Name = "*NEW*";
+			this.CategoryType = CategoryType.NotSet;
 		}
 		public TransactionCategoryVM(TransactionCategory src) : base()
 		{
@@ -49,6 +64,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
 		{
 			this.UID = src.ID;
 			this.Name = src.Name.Trim();
+			this.CategoryType = src.CategoryType;
 		}
 
 		public TransactionCategory GetSource()
@@ -56,13 +72,15 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
 			return new TransactionCategory()
 			{
 				ID = this.UID,
-				Name = this.Name.Trim()
+				Name = this.Name.Trim(),
+				CategoryType = this.CategoryType
 			};
 		}
 
 		public void NotifyAll()
 		{
 			NotifyPropertyChanged(nameof(this.Name));
+			NotifyPropertyChanged(nameof(this.CategoryType));
 		}
 	}
 }

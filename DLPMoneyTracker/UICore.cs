@@ -57,6 +57,22 @@ namespace DLPMoneyTracker
                     return "*N/A*";
             }
         }
+
+
+        public static string ToDisplayText(this CategoryType catType)
+        {
+            switch(catType)
+            {
+                case CategoryType.Expense:
+                    return "Expense";
+                case CategoryType.Income:
+                    return "Income";
+                case CategoryType.UntrackedAdjustment:
+                    return "Adjustment";
+                default:
+                    return "*N/A*";
+            }
+        }
     }
 
 

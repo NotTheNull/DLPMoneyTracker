@@ -96,7 +96,7 @@ namespace DLPMoneyTracker.Data
 
         public void SaveCategories()
         {
-            string json = JsonSerializer.Serialize(this.CategoryList.Where(x => x.ID != Guid.Empty), typeof(List<TransactionCategory>));
+            string json = JsonSerializer.Serialize(this.CategoryList.Where(x => x.ID != Guid.Empty).ToList(), typeof(List<TransactionCategory>));
             File.WriteAllText(CategoryListConfig, json);
         }
 

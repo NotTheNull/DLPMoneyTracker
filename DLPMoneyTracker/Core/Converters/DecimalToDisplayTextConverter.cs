@@ -28,7 +28,14 @@ namespace DLPMoneyTracker.Core.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            if (value is null) return decimal.Zero;
+            
+            if(decimal.TryParse(value.ToString(), out decimal number))
+            {
+                return number;
+            }            
+
+            return decimal.Zero;
         }
     }
 }

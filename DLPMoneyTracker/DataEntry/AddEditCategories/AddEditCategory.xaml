@@ -71,6 +71,10 @@
                                     Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"
                                     />
 
+                <DataGridTextColumn Header="Category Type"
+                                    Binding="{Binding Path=CategoryType, Converter={StaticResource convertCategoryTypeToDisplay}, UpdateSourceTrigger=PropertyChanged}"
+                                    />
+
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -101,14 +105,22 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            
             <TextBlock Text="Category Name"
+                       Grid.Row="0"
                        Grid.Column="1"
+                       Style="{StaticResource StandardHeaderLabel}"
                        />
 
             <TextBox x:Name="txtCategoryName"
+                     Grid.Row="0"
                      Grid.Column="2"
                      Width="200"
                      MaxLength="50"
@@ -122,6 +134,25 @@
                 </i:Interaction.Behaviors>
                 
             </TextBox>
+
+            <TextBlock Text="Category Type"
+                       Grid.Row="1"
+                       Grid.Column="1"
+                       Style="{StaticResource StandardHeaderLabel}"
+                       />
+
+            <ComboBox x:Name="cboCategoryType"
+                      Grid.Row="1"
+                      Grid.Column="2"
+                      Width="180"
+                      Margin="10, 5, 0, 5"
+                      HorizontalAlignment="Left"
+                      ItemsSource="{Binding Path=CategoryTypeList, UpdateSourceTrigger=PropertyChanged}"
+                      DisplayMemberPath="Display"
+                      SelectedValuePath="Value"
+                      SelectedValue="{Binding Path=SelectedCategoryType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      />
+
         </Grid>
 
     </Grid>

@@ -41,4 +41,8 @@
     <Resource Include="Icons\Save-256.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ReportViews\CategoryOverview\" />
+  </ItemGroup>
+
 </Project>

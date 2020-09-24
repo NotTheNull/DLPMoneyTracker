@@ -1,5 +1,6 @@
 ﻿using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Data;
+using DLPMoneyTracker.Data.ConfigModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,7 +14,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
         private ITrackerConfig _config;
         private TransactionCategoryVM _data;
 
-        
+
 
         public Guid UID
         {
@@ -39,14 +40,28 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
         }
 
 
+        public CategoryType SelectedCategoryType
+        {
+            get { return _data?.CategoryType ?? CategoryType.NotSet; }
+            set
+            {
+                if (_data is null) return;
+                _data.CategoryType = value;
+                NotifyPropertyChanged(nameof(this.SelectedCategoryType));
+            }
+        }
+
+
+
         public bool IsEnabled { get { return !(_data is null); } }
 
 
         private ObservableCollection<TransactionCategoryVM> _listCategory = new ObservableCollection<TransactionCategoryVM>();
-        public ObservableCollection<TransactionCategoryVM> CategoryList
-        {
-            get { return _listCategory; }
-        }
+        public ObservableCollection<TransactionCategoryVM> CategoryList { get { return _listCategory; } }
+
+
+        private List<SpecialDropListItem<CategoryType>> _listCategoryType;
+        public List<SpecialDropListItem<CategoryType>> CategoryTypeList { get { return _listCategoryType; } }
 
 
         #region Commands
@@ -145,6 +160,13 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
         public AddEditCategoryVM(ITrackerConfig config)
         {
             _config = config;
+
+            _listCategoryType = new List<SpecialDropListItem<CategoryType>>()
+            {
+                new SpecialDropListItem<CategoryType>("Expense", CategoryType.Expense),
+                new SpecialDropListItem<CategoryType>("Income", CategoryType.Income),
+                new SpecialDropListItem<CategoryType>("Adjustment", CategoryType.UntrackedAdjustment)
+            };
         }
 
         public void Clear()
@@ -156,9 +178,9 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
         public void CommitChanges()
         {
             _config.CategoryList.Clear();
-            if(this.CategoryList.Any())
+            if (this.CategoryList.Any())
             {
-                foreach(var c in this.CategoryList)
+                foreach (var c in this.CategoryList)
                 {
                     _config.CategoryList.Add(c.GetSource());
                 }
@@ -175,20 +197,20 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
         public void LoadCategories()
         {
             this.CategoryList.Clear();
-            if(_config.CategoryList.Any())
+            if (_config.CategoryList.Any())
             {
-                foreach(var c in _config.CategoryList)
+                foreach (var c in _config.CategoryList)
                 {
                     this.CategoryList.Add(new TransactionCategoryVM(c));
                 }
             }
-            
+
         }
 
         private void RemoveCategory(TransactionCategoryVM cat)
         {
             if (cat is null) throw new ArgumentNullException("Category");
-            if(this.CategoryList.Contains(cat))
+            if (this.CategoryList.Contains(cat))
             {
                 this.CategoryList.Remove(cat);
             }
@@ -200,6 +222,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
         {
             NotifyPropertyChanged(nameof(this.UID));
             NotifyPropertyChanged(nameof(this.Name));
+            NotifyPropertyChanged(nameof(this.SelectedCategoryType));
             NotifyPropertyChanged(nameof(this.CategoryList));
             NotifyPropertyChanged(nameof(this.IsEnabled));
         }
