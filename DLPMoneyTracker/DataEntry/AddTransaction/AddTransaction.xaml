@@ -113,7 +113,7 @@
                  Width="150"
                  HorizontalAlignment="Left"
                  Margin="0, 5, 0, 5"
-                 Text="{Binding Path=Amount, Converter={StaticResource convertDecimalToDisplay}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                 Text="{Binding Path=Amount, Converter={StaticResource convertDecimalToDisplay}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
             <i:Interaction.Behaviors>
                 <behave:TextBoxFocusBehavior />
             </i:Interaction.Behaviors>

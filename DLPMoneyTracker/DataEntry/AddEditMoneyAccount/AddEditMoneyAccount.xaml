@@ -229,7 +229,7 @@
                      Width="120"
                      Background="{Binding Path=IsEnabled, Converter={StaticResource convertEnabledToBgColor}, UpdateSourceTrigger=PropertyChanged}"
                      IsEnabled="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}"
-                     Text="{Binding Path=InitialAmount, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=0.00,  Mode=TwoWay}"
+                     Text="{Binding Path=InitialAmount, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=0.00,  Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                      />
 
         </Grid>
