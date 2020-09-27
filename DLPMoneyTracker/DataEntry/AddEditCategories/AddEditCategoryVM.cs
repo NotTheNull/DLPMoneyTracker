@@ -177,12 +177,12 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
 
         public void CommitChanges()
         {
-            _config.CategoryList.Clear();
+            _config.ClearCategoryList();
             if (this.CategoryList.Any())
             {
                 foreach (var c in this.CategoryList)
                 {
-                    _config.CategoryList.Add(c.GetSource());
+                    _config.AddCategory(c.GetSource());
                 }
                 _config.SaveCategories();
             }

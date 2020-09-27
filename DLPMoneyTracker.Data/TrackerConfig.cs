@@ -5,13 +5,14 @@ using System.Text.Json;
 using System.IO;
 using System.Linq;
 using DLPMoneyTracker;
+using System.Collections.ObjectModel;
 
 namespace DLPMoneyTracker.Data
 {
     public interface ITrackerConfig : IDisposable
     {
-        List<MoneyAccount> AccountsList { get; }
-        List<TransactionCategory> CategoryList { get; }
+        ReadOnlyCollection<MoneyAccount> AccountsList { get; }
+        ReadOnlyCollection<TransactionCategory> CategoryList { get; }
 
         void LoadMoneyAccounts();
         void SaveMoneyAccounts();
@@ -21,6 +22,15 @@ namespace DLPMoneyTracker.Data
 
         TransactionCategory GetCategory(Guid uid);
         MoneyAccount GetAccount(string id);
+
+        void AddCategory(TransactionCategory cat);
+        void AddMoneyAccount(MoneyAccount act);
+
+        void RemoveCategory(TransactionCategory cat);
+        void RemoveMoneyAccount(MoneyAccount act);
+
+        void ClearCategoryList();
+        void ClearMoneyAccountList();
     }
 
     public class TrackerConfig : ITrackerConfig
@@ -31,13 +41,13 @@ namespace DLPMoneyTracker.Data
         private string AccountListConfig { get { return string.Concat(CONFIG_PATH, "MoneyAccounts.json"); } }
 
         private List<MoneyAccount> _listAccts = new List<MoneyAccount>();
-        public List<MoneyAccount> AccountsList { get { return _listAccts; } }
+        public ReadOnlyCollection<MoneyAccount> AccountsList { get { return _listAccts.OrderBy(o => o.ID).ToList().AsReadOnly(); } }
 
 
         private string CategoryListConfig { get { return string.Concat(CONFIG_PATH, "Categories.json"); } }
 
         private List<TransactionCategory> _listCategories = new List<TransactionCategory>();
-        public List<TransactionCategory> CategoryList { get { return _listCategories; } }
+        public ReadOnlyCollection<TransactionCategory> CategoryList { get { return _listCategories.OrderBy(o => o.Name).ToList().AsReadOnly(); } }
 
 
         
@@ -111,6 +121,48 @@ namespace DLPMoneyTracker.Data
         public MoneyAccount GetAccount(string id)
         {
             return _listAccts.FirstOrDefault(x => x.ID == id);
+        }
+
+        public void AddCategory(TransactionCategory cat)
+        {
+            if (cat is null) return;
+            if (cat.ID == Guid.Empty) return;
+            if (_listCategories.Any(x => x.ID == cat.ID)) return;
+            _listCategories.Add(cat);
+        }
+
+        public void AddMoneyAccount(MoneyAccount act)
+        {
+            if (act is null) return;
+            if (string.IsNullOrWhiteSpace(act.ID)) return;
+            if (_listAccts.Any(x => x.ID == act.ID)) return;
+            _listAccts.Add(act);
+        }
+
+        public void RemoveCategory(TransactionCategory cat)
+        {
+            if (cat is null) return;
+            if (cat.ID == Guid.Empty) return;
+            if (!_listCategories.Any(x => x.ID == cat.ID)) return;
+            _listCategories.Remove(cat);
+        }
+
+        public void RemoveMoneyAccount(MoneyAccount act)
+        {
+            if (act is null) return;
+            if (string.IsNullOrWhiteSpace(act.ID)) return;
+            if (!_listAccts.Any(x => x.ID == act.ID)) return;
+            _listAccts.Remove(act);
+        }
+
+        public void ClearCategoryList()
+        {
+            _listCategories.Clear();
+        }
+
+        public void ClearMoneyAccountList()
+        {
+            _listAccts.Clear();
         }
 
 

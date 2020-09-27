@@ -236,11 +236,11 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
 
         public void CommitChanges()
         {
-            _config.AccountsList.Clear();
+            _config.ClearMoneyAccountList();
             foreach (var acct in this.MoneyAccountList)
             {
                 MoneyAccount src = acct.GetSource();
-                _config.AccountsList.Add(src);
+                _config.AddMoneyAccount(src);
                 _ledger.AddTransaction(new MoneyRecord()
                 {
                     Account = src,
