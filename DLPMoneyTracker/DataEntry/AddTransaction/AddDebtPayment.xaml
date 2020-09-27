@@ -1,0 +1,139 @@
+﻿<Window x:Class="DLPMoneyTracker.DataEntry.AddTransaction.AddDebtPayment"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DLPMoneyTracker.DataEntry.AddTransaction"
+        xmlns:behave="clr-namespace:DLPMoneyTracker.Core.Behaviors"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        mc:Ignorable="d"
+        Title="Add Debt Payment" 
+        Height="240" 
+        Width="500">
+    <Grid Style="{StaticResource MainGridStyle}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="15"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Trans Date"
+                   Grid.Row="1"
+                   Grid.Column="1"
+                   Style="{StaticResource StandardHeaderLabel}"
+                   />
+
+        <DatePicker x:Name="datTransaction"
+                    Width="120"
+                    HorizontalAlignment="Left"
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Margin="0, 5, 0, 5"
+                    SelectedDate="{Binding Path=TransactionDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    />
+
+
+        <TextBlock Text="Bank Account"
+                   Grid.Row="2"
+                   Grid.Column="1"
+                   Style="{StaticResource StandardHeaderLabel}"
+                   />
+        <ComboBox x:Name="cboBankAccount"
+                  Grid.Row="2"
+                  Grid.Column="2"
+                  Width="120"
+                  HorizontalAlignment="Left"
+                  Margin="0, 5, 0, 5"
+                  ItemsSource="{Binding Path=BankAccountList}"
+                  SelectedValue="{Binding Path=BankAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  DisplayMemberPath="Display"
+                  SelectedValuePath="Value"
+                  />
+
+
+        <TextBlock Text="Debt Account"
+                   Grid.Row="2"
+                   Grid.Column="3"
+                   Style="{StaticResource StandardHeaderLabel}"
+                   />
+        <ComboBox x:Name="cboDebtAccount"
+                  Grid.Row="2"
+                  Grid.Column="4"
+                  Width="120"
+                  HorizontalAlignment="Left"
+                  Margin="0, 5, 0, 5"
+                  ItemsSource="{Binding Path=DebtAccountList}"
+                  SelectedValue="{Binding Path=DebtAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  DisplayMemberPath="Display"
+                  SelectedValuePath="Value"
+                  />
+
+        <TextBlock Text="Payment"
+                   Grid.Row="3"
+                   Grid.Column="1"
+                   Style="{StaticResource StandardHeaderLabel}"
+                   />
+        <TextBox x:Name="txtPayment"
+                 Grid.Row="3"
+                 Grid.Column="2"
+                 Margin="0, 5, 0, 5"
+                 Text="{Binding Path=Payment, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=0.00, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                 >
+            <i:Interaction.Behaviors>
+                <behave:TextBoxFocusBehavior />
+            </i:Interaction.Behaviors>
+        </TextBox>
+
+
+        <StackPanel Grid.Row="4"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="2"
+                    Margin="0, 10, 0, 0"
+                    Orientation="Vertical">
+
+            <Button x:Name="btnSave"
+                    Click="btnSave_Click"
+                    Height="20"
+                    Width="130"
+                    >
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Icons/Add-New-256.png" />
+                        <TextBlock Text="Save   " 
+                                   Margin="10, 0, 0, 0"
+                                   />
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+
+            <Button x:Name="btnCancel"
+                    Margin="0, 5, 0, 0"
+                    Click="btnCancel_Click"
+                    Height="20"
+                    Width="130">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Icons/Cancel-256.png" />
+                        <TextBlock Text="Cancel" 
+                                   Margin="10, 0, 0, 0"
+                                   />
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+
+        </StackPanel>
+
+
+    </Grid>
+</Window>
