@@ -43,9 +43,16 @@ namespace DLPMoneyTracker
             _uiAccountSummary = uiAccountSummary;
         }
 
+        private void Exit()
+        {
+            // Possible that I'll need to ask before exit at some point
+            // Also making this a separate method in case I have multiple events to trigger it
+            System.Windows.Application.Current.Shutdown();
+        }
+
         private void MenuItemExit_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Application.Current.Shutdown();
+            this.Exit();
         }
 
         private void MenuItemEditMoneyAccount_Click(object sender, RoutedEventArgs e)
@@ -64,6 +71,12 @@ namespace DLPMoneyTracker
         {
             AddTransaction uiAddTransaction = UICore.DependencyHost.GetService<AddTransaction>();
             uiAddTransaction.Show();
+        }
+
+        private void MenuItemAddDebtPayment_Click(object sender, RoutedEventArgs e)
+        {
+            AddDebtPayment uiAddDeptPayment = UICore.DependencyHost.GetService<AddDebtPayment>();
+            uiAddDeptPayment.Show();
         }
     }
 }

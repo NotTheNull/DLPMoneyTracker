@@ -35,10 +35,15 @@ namespace DLPMoneyTracker
 
             services.AddTransient<AddEditMoneyAccount>();
             services.AddTransient<AddEditMoneyAccountVM>();
+
             services.AddTransient<AddEditCategory>();
             services.AddTransient<AddEditCategoryVM>();
+
             services.AddTransient<AddTransaction>();
             services.AddTransient<AddTransactionVM>();
+
+            services.AddTransient<AddDebtPayment>();
+            services.AddTransient<AddDebtPaymentVM>();
             
         }
     }

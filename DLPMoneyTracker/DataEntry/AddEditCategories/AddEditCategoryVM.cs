@@ -167,6 +167,8 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
                 new SpecialDropListItem<CategoryType>("Income", CategoryType.Income),
                 new SpecialDropListItem<CategoryType>("Adjustment", CategoryType.UntrackedAdjustment)
             };
+
+            this.LoadCategories();
         }
 
         public void Clear()

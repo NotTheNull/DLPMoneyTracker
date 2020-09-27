@@ -149,10 +149,8 @@ namespace DLPMoneyTracker.Data
                                     // No other account types can have income reported
                                     break;
                                 case CategoryType.Payment:
-                                    if (act.AccountType == MoneyAccountType.CreditCard || act.AccountType == MoneyAccountType.Loan)
-                                    {
-                                        balance -= record.TransAmount;
-                                    }
+                                    // No matter the account type, it's a reduction
+                                    balance -= record.TransAmount;
                                     break;
                             }
                         }
