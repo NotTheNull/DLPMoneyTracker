@@ -18,6 +18,9 @@ namespace DLPMoneyTracker.Data
 
         void LoadCategories();
         void SaveCategories();
+
+        TransactionCategory GetCategory(Guid uid);
+        MoneyAccount GetAccount(string id);
     }
 
     public class TrackerConfig : ITrackerConfig
@@ -87,11 +90,7 @@ namespace DLPMoneyTracker.Data
                 _listCategories = new List<TransactionCategory>();
             }
 
-            _listCategories.Add(new TransactionCategory()
-            {
-                ID = Guid.Empty,
-                Name = "*STARTING BALANCE*"
-            });
+            
         }
 
         public void SaveCategories()
@@ -101,6 +100,18 @@ namespace DLPMoneyTracker.Data
         }
 
 
+
+        public TransactionCategory GetCategory(Guid uid)
+        {
+            if (uid == Guid.Empty) return TransactionCategory.InitialBalance;
+
+            return _listCategories.FirstOrDefault(x => x.ID == uid);
+        }
+
+        public MoneyAccount GetAccount(string id)
+        {
+            return _listAccts.FirstOrDefault(x => x.ID == id);
+        }
 
 
 

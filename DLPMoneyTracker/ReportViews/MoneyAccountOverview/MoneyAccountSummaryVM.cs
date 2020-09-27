@@ -55,6 +55,7 @@ namespace DLPMoneyTracker.ReportViews
         public MoneyAccountSummaryVM(MoneyAccount act, ILedger ledger)
         {
             _ledger = ledger;
+            _ledger.LedgerModified += () => Refresh();
             _act = act;
 
             this.Refresh();

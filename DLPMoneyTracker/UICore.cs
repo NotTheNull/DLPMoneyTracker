@@ -2,6 +2,7 @@
 using DLPMoneyTracker.Data.ConfigModels;
 using DLPMoneyTracker.DataEntry.AddEditCategories;
 using DLPMoneyTracker.DataEntry.AddEditMoneyAccount;
+using DLPMoneyTracker.DataEntry.AddTransaction;
 using DLPMoneyTracker.ReportViews;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -36,6 +37,9 @@ namespace DLPMoneyTracker
             services.AddTransient<AddEditMoneyAccountVM>();
             services.AddTransient<AddEditCategory>();
             services.AddTransient<AddEditCategoryVM>();
+            services.AddTransient<AddTransaction>();
+            services.AddTransient<AddTransactionVM>();
+            
         }
     }
 

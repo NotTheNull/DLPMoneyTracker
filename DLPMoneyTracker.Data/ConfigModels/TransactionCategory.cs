@@ -9,11 +9,15 @@ namespace DLPMoneyTracker.Data.ConfigModels
         Income,
         Expense,
         UntrackedAdjustment,
-        NotSet
+        NotSet,
+        Payment, // For Credit Card and Loans
+        InitialBalance
     }
 
     public class TransactionCategory
     {
+        public static TransactionCategory InitialBalance { get { return new TransactionCategory() { ID = Guid.Empty, Name = "*STARTING BALANCE*", CategoryType = CategoryType.InitialBalance }; } }
+
         public Guid ID { get; set; }
         public string Name { get; set; }
         public CategoryType CategoryType { get; set; }

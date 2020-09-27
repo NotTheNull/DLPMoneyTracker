@@ -6,6 +6,7 @@ using System.Text;
 using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.ConfigModels;
+using DLPMoneyTracker.Data.TransactionModels;
 
 namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
 {
@@ -13,6 +14,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
     {
         #region Objects and Properties
         private ITrackerConfig _config;
+        private ILedger _ledger;
         private MoneyAccountVM _data;
 
         public MoneyAccountVM SelectedAccount
@@ -69,6 +71,19 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
             }
         }
 
+        
+
+        public decimal InitialAmount
+        {
+            get { return this.SelectedAccount?.InitialAmount ?? decimal.Zero; }
+            set 
+            {
+                if (this.SelectedAccount is null) return;
+                this.SelectedAccount.InitialAmount = value;
+                NotifyPropertyChanged(nameof(this.InitialAmount));
+            }
+        }
+
 
         public bool IsEnabled { get { return !(this.SelectedAccount is null); } }
 
@@ -94,6 +109,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
                       if (o is MoneyAccountVM act)
                       {
                           _data = act;
+                          this.InitialAmount = act.InitialAmount;
                           this.NotifyAll();
                       }
                   }));
@@ -139,7 +155,8 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
                     _data = new MoneyAccountVM()
                     {
                         ID = "*NEW*",
-                        Description = "New"
+                        Description = "New",
+                        InitialAmount = 0.00m
                     };
                     this.MoneyAccountList.Add(_data);
                     this.NotifyAll();
@@ -178,9 +195,10 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
         #endregion
 
 
-        public AddEditMoneyAccountVM(ITrackerConfig config) : base()
+        public AddEditMoneyAccountVM(ITrackerConfig config, ILedger ledger) : base()
         {
             _config = config;
+            _ledger = ledger;
             this.MoneyAccountList = new ObservableCollection<MoneyAccountVM>();
             this.LoadAccounts();
 
@@ -208,20 +226,33 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
             {
                 foreach (var act in _config.AccountsList.Where(x => !string.IsNullOrWhiteSpace(x.ID)))
                 {
-                    this.MoneyAccountList.Add(new MoneyAccountVM(act));
+                    MoneyAccountVM vm = new MoneyAccountVM(act);
+                    vm.InitialAmount = _ledger.GetAccountBalance(act);
+                    this.MoneyAccountList.Add(vm);
                 }
             }
         }
+
 
         public void CommitChanges()
         {
             _config.AccountsList.Clear();
             foreach (var acct in this.MoneyAccountList)
             {
-                _config.AccountsList.Add(acct.GetSource());
+                MoneyAccount src = acct.GetSource();
+                _config.AccountsList.Add(src);
+                _ledger.AddTransaction(new MoneyRecord()
+                {
+                    Account = src,
+                    Category = TransactionCategory.InitialBalance,
+                    Description = "Initial Balance",
+                    TransDate = DateTime.Now,
+                    TransAmount = acct.InitialAmount
+                });
             }
 
             _config.SaveMoneyAccounts();
+            _ledger.SaveToFile();
         }
 
         public void RemoveAccount(MoneyAccountVM act)
@@ -247,6 +278,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
             NotifyPropertyChanged(nameof(this.WebAddress));
             NotifyPropertyChanged(nameof(this.IsEnabled));
             NotifyPropertyChanged(nameof(this.MoneyAccountList));
+            NotifyPropertyChanged(nameof(this.InitialAmount));
         }
 
         public void Dispose()

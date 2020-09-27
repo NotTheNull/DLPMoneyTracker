@@ -10,7 +10,7 @@
         mc:Ignorable="d" 
         WindowStartupLocation="CenterScreen"
         Title="Add/Edit Money Account"
-        Height="460" 
+        Height="500" 
         Width="550">
 
     
@@ -88,6 +88,7 @@
                 <DataGridTextColumn Header="ID" Binding="{Binding ID, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Description" Binding="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
                 <DataGridTextColumn Header="Account Type" Binding="{Binding AccountType, Converter={StaticResource converterMoneyAccountToString}, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Initial Bal" Binding="{Binding Path=InitialAmount, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, UpdateSourceTrigger=PropertyChanged}" />
 
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
@@ -127,6 +128,7 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="15" />
+                <RowDefinition Height="30" />
                 <RowDefinition Height="30" />
                 <RowDefinition Height="30" />
                 <RowDefinition Height="30" />
@@ -199,7 +201,6 @@
             <TextBlock Text="Website URL"
                        Grid.Column="1"
                        Grid.Row="4"
-                       IsEnabled="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}"
                        Style="{StaticResource HeaderLabel}"
                        />
 
@@ -216,7 +217,20 @@
             </TextBox>
 
 
+            <TextBlock Text="Initial Balance"
+                       Grid.Column="1"
+                       Grid.Row="5"
+                       Style="{StaticResource HeaderLabel}"
+                       />
 
+            <TextBox x:Name="txtInitialBalance"
+                     Grid.Column="2"
+                     Grid.Row="5"
+                     Width="120"
+                     Background="{Binding Path=IsEnabled, Converter={StaticResource convertEnabledToBgColor}, UpdateSourceTrigger=PropertyChanged}"
+                     IsEnabled="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}"
+                     Text="{Binding Path=InitialAmount, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=0.00,  Mode=TwoWay}"
+                     />
 
         </Grid>
 

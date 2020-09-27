@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Text;
 
 namespace DLPMoneyTracker.Data.ConfigModels
@@ -14,7 +15,7 @@ namespace DLPMoneyTracker.Data.ConfigModels
         NotSet
     }
 
-
+    [DebuggerDisplay("{ID} {Description}")]
     public class MoneyAccount
     {
         public string ID { get; set; } 

@@ -12,6 +12,9 @@ namespace DLPMoneyTracker.Data
 {
     public interface ILedger
     {
+        delegate void LedgerModifiedHandler();
+        event LedgerModifiedHandler LedgerModified;
+
         ReadOnlyCollection<IMoneyRecord> TransactionList { get; }
 
 
@@ -19,6 +22,7 @@ namespace DLPMoneyTracker.Data
         void AddTransaction(IMoneyRecord trans);
         void RemoveTransaction(IMoneyRecord trans);
 
+        decimal GetInitialBalance(MoneyAccount act);
         decimal GetAccountBalance(MoneyAccount act);
         decimal GetCategoryTotal(TransactionCategory cat);
 
@@ -29,6 +33,8 @@ namespace DLPMoneyTracker.Data
 
     public class Ledger : ILedger
     {
+        public event ILedger.LedgerModifiedHandler LedgerModified;
+
         private const string LEDGER_FOLDER_PATH = @"D:\Program Files\DLP Money Tracker\Data\";
         private string LedgerFilePath { get { return string.Concat(LEDGER_FOLDER_PATH, "Ledger.json"); } }
 
@@ -36,6 +42,8 @@ namespace DLPMoneyTracker.Data
 
 
         private List<IMoneyRecord> _listTransactions = new List<IMoneyRecord>();
+
+
         public ReadOnlyCollection<IMoneyRecord> TransactionList { get { return _listTransactions.AsReadOnly(); } }
 
 
@@ -59,7 +67,23 @@ namespace DLPMoneyTracker.Data
 
         public void AddTransaction(IMoneyRecord trans)
         {
-            _listTransactions.Add(trans);
+            if (trans.CategoryUID == Guid.Empty)
+            {
+                // This is the UID of the Initial Account Balance category.  There should only be ONE per Money Account
+                var initialRecord = _listTransactions.FirstOrDefault(x => x.CategoryUID == Guid.Empty && x.AccountID == trans.AccountID);
+                if (initialRecord is null)
+                {
+                    _listTransactions.Add(trans);
+                }
+                else if (initialRecord is MoneyRecord record)
+                {
+                    record.TransAmount = trans.TransAmount;
+                }
+            }
+            else
+            {
+                _listTransactions.Add(trans);
+            }
             this.SaveToFile();
         }
         public void RemoveTransaction(IMoneyRecord trans)
@@ -72,14 +96,77 @@ namespace DLPMoneyTracker.Data
         }
 
 
-        public decimal GetAccountBalance(MoneyAccount act)
+        public decimal GetInitialBalance(MoneyAccount act)
         {
-            if (_listTransactions.Any(x => x.AccountID == act.ID))
+            decimal initialBalance = decimal.Zero;
+            if (_listTransactions.Any(x => x.AccountID == act.ID && x.CategoryUID == TransactionCategory.InitialBalance.ID))
             {
-                return _listTransactions.Where(x => x.AccountID == act.ID).Sum(s => s.TransAmount);
+                var record = _listTransactions.FirstOrDefault(x => x.AccountID == act.ID && x.CategoryUID == TransactionCategory.InitialBalance.ID);
+                initialBalance = record.TransAmount;
             }
 
-            return decimal.Zero;
+            return initialBalance;
+        }
+
+
+        public decimal GetAccountBalance(MoneyAccount act)
+        {
+            decimal balance = decimal.Zero;
+            if (_listTransactions.Any(x => x.AccountID == act.ID))
+            {
+                foreach (var trans in _listTransactions.Where(x => x.AccountID == act.ID))
+                {
+                    if (trans is MoneyRecord record)
+                    {
+                        if (trans.CategoryUID == TransactionCategory.InitialBalance.ID)
+                        {
+                            balance += record.TransAmount;
+                        }
+                        else
+                        {
+
+                            switch (record.Category.CategoryType)
+                            {
+                                case CategoryType.UntrackedAdjustment:
+                                    balance += record.TransAmount;
+                                    break;
+                                case CategoryType.Expense:
+                                    if (act.AccountType == MoneyAccountType.Checking || act.AccountType == MoneyAccountType.Savings)
+                                    {
+                                        balance -= record.TransAmount;
+                                    }
+                                    else if (act.AccountType == MoneyAccountType.CreditCard)
+                                    {
+                                        balance += record.TransAmount;
+                                    }
+                                    // Loans cannot have expenses added to them
+                                    break;
+                                case CategoryType.Income:
+                                    if (act.AccountType == MoneyAccountType.Checking || act.AccountType == MoneyAccountType.Savings)
+                                    {
+                                        balance += record.TransAmount;
+                                    }
+                                    // No other account types can have income reported
+                                    break;
+                                case CategoryType.Payment:
+                                    if (act.AccountType == MoneyAccountType.CreditCard || act.AccountType == MoneyAccountType.Loan)
+                                    {
+                                        balance -= record.TransAmount;
+                                    }
+                                    break;
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException(string.Format("Type {0} is not supported in Account Balance Calc", trans.GetType()));
+                    }
+                }
+
+            }
+
+            return balance;
         }
 
         public decimal GetCategoryTotal(TransactionCategory cat)
@@ -105,18 +192,21 @@ namespace DLPMoneyTracker.Data
             if (File.Exists(LedgerFilePath))
             {
                 string json = File.ReadAllText(LedgerFilePath);
-                var dataList = (List<IMoneyRecord>)JsonSerializer.Deserialize(json, typeof(List<IMoneyRecord>));
+                if (string.IsNullOrWhiteSpace(json)) return;
 
+                var dataList = (List<MoneyRecordJSON>)JsonSerializer.Deserialize(json, typeof(List<MoneyRecordJSON>));
                 foreach (var trans in dataList)
                 {
-                    _listTransactions.Add(new MoneyRecord()
+                    MoneyRecord record = new MoneyRecord()
                     {
-                        Description = trans.Description,
                         TransDate = trans.TransDate,
-                        TransAmount = trans.TransAmount,
-                        Account = _config.AccountsList.FirstOrDefault(x => x.ID == trans.AccountID),
-                        Category = _config.CategoryList.FirstOrDefault(x => x.ID == trans.CategoryUID)
-                    });
+                        Account = _config.GetAccount(trans.AccountID),
+                        Category = _config.GetCategory(trans.CategoryUID),
+                        Description = trans.Description,
+                        TransAmount = trans.TransAmount
+                    };
+
+                    _listTransactions.Add(record);
                 }
             }
         }

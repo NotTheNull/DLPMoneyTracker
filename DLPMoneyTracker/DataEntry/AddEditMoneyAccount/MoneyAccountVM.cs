@@ -65,6 +65,19 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
 		}
 
 
+		private decimal _amt;
+
+		public decimal InitialAmount
+		{
+			get { return _amt; }
+			set 
+			{
+				_amt = value;
+				NotifyPropertyChanged(nameof(this.InitialAmount));
+			}
+		}
+
+
 
 		public MoneyAccountVM() : base() 
 		{
@@ -107,6 +120,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
 			NotifyPropertyChanged(nameof(this.AccountType));
 			NotifyPropertyChanged(nameof(this.Description));
 			NotifyPropertyChanged(nameof(this.WebAddress));
+			NotifyPropertyChanged(nameof(this.InitialAmount));
 		}
 
 		public void Dispose()

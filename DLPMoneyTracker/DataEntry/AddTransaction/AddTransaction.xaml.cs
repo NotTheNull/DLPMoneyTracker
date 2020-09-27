@@ -17,9 +17,25 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
     /// </summary>
     public partial class AddTransaction : Window
     {
-        public AddTransaction()
+        private AddTransactionVM _viewModel;
+
+        public AddTransaction(AddTransactionVM viewModel)
         {
             InitializeComponent();
+            this.DataContext = viewModel;
+            _viewModel = viewModel;
+        }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            _viewModel.Clear();
+            this.Close();
+        }
+
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+            _viewModel.SaveTransaction();
+            this.Close();
         }
     }
 }
