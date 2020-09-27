@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using DLPMoneyTracker;
 using System.Collections.ObjectModel;
+using System.Transactions;
 
 namespace DLPMoneyTracker.Data
 {
@@ -113,9 +114,11 @@ namespace DLPMoneyTracker.Data
 
         public TransactionCategory GetCategory(Guid uid)
         {
-            if (uid == Guid.Empty) return TransactionCategory.InitialBalance;
-
-            return _listCategories.FirstOrDefault(x => x.ID == uid);
+            if (uid == TransactionCategory.InitialBalance.ID) return TransactionCategory.InitialBalance;
+            else if (uid == TransactionCategory.DebtPayment.ID) return TransactionCategory.DebtPayment;
+            else if (uid == TransactionCategory.TransferFrom.ID) return TransactionCategory.TransferFrom;
+            else if (uid == TransactionCategory.TransferTo.ID) return TransactionCategory.TransferTo;
+            else return _listCategories.FirstOrDefault(x => x.ID == uid);
         }
 
         public MoneyAccount GetAccount(string id)

@@ -44,6 +44,9 @@ namespace DLPMoneyTracker
 
             services.AddTransient<AddDebtPayment>();
             services.AddTransient<AddDebtPaymentVM>();
+
+            services.AddTransient<TransferMoney>();
+            services.AddTransient<TransferMoneyVM>();
             
         }
     }

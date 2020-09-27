@@ -22,6 +22,7 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
         public AddDebtPayment(AddDebtPaymentVM viewModel)
         {
             InitializeComponent();
+            this.DataContext = viewModel;
             _viewModel = viewModel;
         }
 
