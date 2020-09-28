@@ -31,9 +31,9 @@
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Header="_Ledger">
-                    <MenuItem Header="Add _Transaction" Click="MenuItemAddTransaction_Click">
+                    <MenuItem Header="Add _Expense" Click="MenuItemAddTransaction_Click">
                         <MenuItem.Icon>
-                            <Image Source="/Icons/Dollar-256.png" />
+                            <Image Source="/Icons/Credit-Card-256.png" />
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="Add _Debt Payment" Click="MenuItemAddDebtPayment_Click">
@@ -80,13 +80,13 @@
                            Fill="Silver"
                            />
 
-                <Button x:Name="btnAddTransaction"
+                <Button x:Name="btnAddExpense"
                         Style="{StaticResource MenuButton}"
-                        ToolTip="Add Transaction"
+                        ToolTip="Add Expense"
                         Click="MenuItemAddTransaction_Click"
                         >
                     <Button.Content>
-                        <Image Source="/Icons/Dollar-256.png" />
+                        <Image Source="/Icons/Credit-Card-256.png" />
                     </Button.Content>
                 </Button>
 

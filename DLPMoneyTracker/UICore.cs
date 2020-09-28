@@ -39,8 +39,8 @@ namespace DLPMoneyTracker
             services.AddTransient<AddEditCategory>();
             services.AddTransient<AddEditCategoryVM>();
 
-            services.AddTransient<AddTransaction>();
-            services.AddTransient<AddTransactionVM>();
+            services.AddTransient<AddExpenseView>();
+            services.AddTransient<AddExpenseVM>();
 
             services.AddTransient<AddDebtPayment>();
             services.AddTransient<AddDebtPaymentVM>();

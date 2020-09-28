@@ -54,7 +54,7 @@ namespace DLPMoneyTracker
 
         private void MenuItemAddTransaction_Click(object sender, RoutedEventArgs e)
         {
-            AddTransaction uiAddTransaction = UICore.DependencyHost.GetService<AddTransaction>();
+            AddExpenseView uiAddTransaction = UICore.DependencyHost.GetService<AddExpenseView>();
             uiAddTransaction.Show();
         }
 
