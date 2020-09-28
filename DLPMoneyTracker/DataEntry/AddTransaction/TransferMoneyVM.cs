@@ -78,7 +78,7 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
         public List<SpecialDropListItem<MoneyAccount>>  BankAccountList { get { return _listBanks; } }
 
 
-        public TransferMoneyVM(ITrackerConfig config, ILedger ledger)
+        public TransferMoneyVM(ITrackerConfig config, ILedger ledger) : base()
         {
             _ledger = ledger;
             _config = config;

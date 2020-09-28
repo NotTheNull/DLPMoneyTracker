@@ -7,11 +7,11 @@
         xmlns:behave="clr-namespace:DLPMoneyTracker.Core.Behaviors"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="Enter Transaction" 
+        Title="Enter Expense" 
         WindowStartupLocation="CenterScreen"
         Height="240" 
         Width="500">
-    
+
     <Grid Style="{StaticResource MainGridStyle}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5"/>

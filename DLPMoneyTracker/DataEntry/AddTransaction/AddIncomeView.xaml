@@ -4,9 +4,157 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DLPMoneyTracker.DataEntry.AddTransaction"
+        xmlns:behave="clr-namespace:DLPMoneyTracker.Core.Behaviors"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="AddIncomeView" Height="450" Width="800">
-    <Grid>
-        
+        Title="Enter Income" 
+        Height="240" 
+        Width="500">
+    <Grid Style="{StaticResource MainGridStyle}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="15"/>
+        </Grid.RowDefinitions>
+
+
+        <TextBlock Text="Trans Date"
+                   Grid.Row="1"
+                   Grid.Column="1"
+                   Style="{StaticResource StandardHeaderLabel}"
+                   />
+
+        <DatePicker x:Name="datTransaction"
+                    Width="120"
+                    HorizontalAlignment="Left"
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Margin="0, 5, 0, 5"
+                    SelectedDate="{Binding Path=TransactionDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    />
+
+        <TextBlock Text="Account"
+                   Grid.Row="2"
+                   Grid.Column="1"
+                   Style="{StaticResource StandardHeaderLabel}"
+                   />
+        <ComboBox x:Name="cboMoneyAccount"
+                  Grid.Row="2"
+                  Grid.Column="2"
+                  Width="120"
+                  HorizontalAlignment="Left"
+                  Margin="0, 5, 0, 5"
+                  ItemsSource="{Binding Path=BankAccountList}"
+                  SelectedValue="{Binding Path=BankAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  DisplayMemberPath="Display"
+                  SelectedValuePath="Value"
+                  />
+
+        <TextBlock Text="Category"
+                   Grid.Row="2"
+                   Grid.Column="3"
+                   Style="{StaticResource StandardHeaderLabel}"
+                   />
+
+        <ComboBox x:Name="cboCategory"
+                  Grid.Row="2"
+                  Grid.Column="4"
+                  Width="120"
+                  HorizontalAlignment="Left"
+                  Margin="0, 5, 0, 5"
+                  ItemsSource="{Binding Path=CategoryList}"
+                  DisplayMemberPath="Display"
+                  SelectedValuePath="Value"
+                  SelectedValue="{Binding Path=Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  />
+
+        <TextBlock Text="Description"
+                   Grid.Row="4"
+                   Grid.Column="1"
+                   Style="{StaticResource StandardHeaderLabel}"
+                   />
+        <TextBox x:Name="txtDescription"
+                 Grid.Row="4"
+                 Grid.Column="2"
+                 Grid.ColumnSpan="3"
+                 Margin="0, 5, 0, 5"
+                 HorizontalAlignment="Stretch"
+                 Text="{Binding Path=Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <i:Interaction.Behaviors>
+                <behave:TextBoxFocusBehavior />
+            </i:Interaction.Behaviors>
+        </TextBox>
+
+
+        <TextBlock Text="Amount"
+                   Grid.Row="5"
+                   Grid.Column="1"
+                   Style="{StaticResource StandardHeaderLabel}"
+                   />
+
+        <TextBox x:Name="txtTransAmount"
+                 Grid.Row="5"
+                 Grid.Column="2"
+                 Width="150"
+                 HorizontalAlignment="Left"
+                 Margin="0, 5, 0, 5"
+                 Text="{Binding Path=Amount, Converter={StaticResource convertDecimalToDisplay}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
+            <i:Interaction.Behaviors>
+                <behave:TextBoxFocusBehavior />
+            </i:Interaction.Behaviors>
+        </TextBox>
+
+
+        <StackPanel Grid.Row="6"
+                    Grid.Column="3"
+                    Grid.ColumnSpan="2"
+                    Margin="0, 10, 0, 0"
+                    Orientation="Vertical">
+
+            <Button x:Name="btnSave"
+                    Click="btnSave_Click"
+                    Height="20"
+                    Width="130"
+                    >
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Icons/Add-New-256.png" />
+                        <TextBlock Text="Save   " 
+                                   Margin="10, 0, 0, 0"
+                                   />
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+
+            <Button x:Name="btnCancel"
+                    Margin="0, 5, 0, 0"
+                    Click="btnCancel_Click"
+                    Height="20"
+                    Width="130">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Icons/Cancel-256.png" />
+                        <TextBlock Text="Cancel" 
+                                   Margin="10, 0, 0, 0"
+                                   />
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+
+        </StackPanel>
+
     </Grid>
 </Window>

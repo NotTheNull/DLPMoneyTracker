@@ -82,7 +82,7 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
 
 
 
-        public AddDebtPaymentVM(ILedger ledger, ITrackerConfig config)
+        public AddDebtPaymentVM(ILedger ledger, ITrackerConfig config) : base()
         {
             _ledger = ledger;
             _config = config;

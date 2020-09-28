@@ -97,7 +97,7 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
 
 
 
-        public AddExpenseVM(ILedger ledger, ITrackerConfig config)
+        public AddExpenseVM(ILedger ledger, ITrackerConfig config) : base()
         {
             _ledger = ledger;
             _config = config;

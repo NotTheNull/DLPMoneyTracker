@@ -8,6 +8,7 @@
         xmlns:behave="clr-namespace:DLPMoneyTracker.Core.Behaviors"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         Title="Transfer Money"
+        WindowStartupLocation="CenterScreen"
         Height="240" 
         Width="500">
     <Grid Style="{StaticResource MainGridStyle}">

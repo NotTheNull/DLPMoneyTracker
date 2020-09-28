@@ -69,5 +69,11 @@ namespace DLPMoneyTracker
             TransferMoney uiTransferMoney = UICore.DependencyHost.GetService<TransferMoney>();
             uiTransferMoney.Show();
         }
+
+        private void MenuItemAddIncome_Click(object sender, RoutedEventArgs e)
+        {
+            AddIncomeView uiAddIncome = UICore.DependencyHost.GetService<AddIncomeView>();
+            uiAddIncome.Show();
+        }
     }
 }

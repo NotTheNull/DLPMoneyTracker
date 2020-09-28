@@ -157,7 +157,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
         #endregion
 
 
-        public AddEditCategoryVM(ITrackerConfig config)
+        public AddEditCategoryVM(ITrackerConfig config) : base()
         {
             _config = config;
 

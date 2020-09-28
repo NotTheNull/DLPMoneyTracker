@@ -31,6 +31,12 @@
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Header="_Ledger">
+                    <MenuItem Header="Add _Income" Click="MenuItemAddIncome_Click">
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/Dollar-256.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    
                     <MenuItem Header="Add _Expense" Click="MenuItemAddTransaction_Click">
                         <MenuItem.Icon>
                             <Image Source="/Icons/Credit-Card-256.png" />
@@ -87,15 +93,6 @@
                         >
                     <Button.Content>
                         <Image Source="/Icons/Credit-Card-256.png" />
-                    </Button.Content>
-                </Button>
-
-                <Button x:Name="btnTransferMoney"
-                        Style="{StaticResource MenuButton}"
-                        ToolTip="Transfer Money"
-                        Click="MenuItemTransferMoney_Click">
-                    <Button.Content>
-                        <Image Source="/Icons/Money-Transfer-256.png" />
                     </Button.Content>
                 </Button>
 

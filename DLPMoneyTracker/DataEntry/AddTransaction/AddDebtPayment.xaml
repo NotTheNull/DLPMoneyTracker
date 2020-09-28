@@ -8,6 +8,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="Add Debt Payment" 
+        WindowStartupLocation="CenterScreen"
         Height="240" 
         Width="500">
     <Grid Style="{StaticResource MainGridStyle}">
