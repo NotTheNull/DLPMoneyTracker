@@ -9,8 +9,8 @@ using System.Windows.Controls;
 
 namespace DLPMoneyTracker
 {
-    // TODO: Add UI to display summary of Money Accounts
-    // TODO: Add Window to display Money Account detail
+    // TODO: Add UI to maintain a Budget with each Transaction Category
+    // TODO: Add UI to plan for upcoming Bills
     // TODO: Create VM and UI to display summary of Categories that include current totals and budget expectations
     // TODO: Modify Main Window to show tabbed interface.  Main tab is summary of Money Accounts.  Second tab would be summary of Categories. Third tab could be Full Ledger.
 
