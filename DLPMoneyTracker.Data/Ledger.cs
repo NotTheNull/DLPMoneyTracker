@@ -10,9 +10,9 @@ using System.Text.Json;
 
 namespace DLPMoneyTracker.Data
 {
+    public delegate void LedgerModifiedHandler();
     public interface ILedger
     {
-        delegate void LedgerModifiedHandler();
         event LedgerModifiedHandler LedgerModified;
 
         ReadOnlyCollection<IMoneyRecord> TransactionList { get; }
@@ -33,7 +33,7 @@ namespace DLPMoneyTracker.Data
 
     public class Ledger : ILedger
     {
-        public event ILedger.LedgerModifiedHandler LedgerModified;
+        public event LedgerModifiedHandler LedgerModified;
 
         private const string LEDGER_FOLDER_PATH = @"D:\Program Files\DLP Money Tracker\Data\";
         private string LedgerFilePath { get { return string.Concat(LEDGER_FOLDER_PATH, "Ledger.json"); } }
@@ -181,6 +181,7 @@ namespace DLPMoneyTracker.Data
         {
             string json = JsonSerializer.Serialize(_listTransactions);
             File.WriteAllText(LedgerFilePath, json);
+            LedgerModified?.Invoke();
         }
 
         public void LoadFromFile()
