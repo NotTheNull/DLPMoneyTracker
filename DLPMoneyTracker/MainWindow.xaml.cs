@@ -2,8 +2,10 @@
 using DLPMoneyTracker.DataEntry.AddEditMoneyAccount;
 using DLPMoneyTracker.DataEntry.AddTransaction;
 using DLPMoneyTracker.ReportViews;
+using DLPMoneyTracker.ReportViews.LedgerViews;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DLPMoneyTracker
 {
@@ -20,13 +22,20 @@ namespace DLPMoneyTracker
     public partial class MainWindow : Window
     {
         private MoneyAccountsOverview _uiAccountSummary;
+        private LedgerDetailView _uiFullLedger;
 
-        public MainWindow(MoneyAccountsOverview uiAccountSummary)
+        public MainWindow(MoneyAccountsOverview uiAccountSummary, LedgerDetailView uiFullLedger)
         {
             InitializeComponent();
             panelAccountSummary.Children.Add(uiAccountSummary);
             _uiAccountSummary = uiAccountSummary;
+
+            uiFullLedger.ShowFullLedgerDetail();
+            
+            panelTransactions.Children.Add(uiFullLedger);
+            _uiFullLedger = uiFullLedger;
         }
+                
 
         private void Exit()
         {

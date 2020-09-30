@@ -4,6 +4,7 @@ using DLPMoneyTracker.DataEntry.AddEditCategories;
 using DLPMoneyTracker.DataEntry.AddEditMoneyAccount;
 using DLPMoneyTracker.DataEntry.AddTransaction;
 using DLPMoneyTracker.ReportViews;
+using DLPMoneyTracker.ReportViews.LedgerViews;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -50,6 +51,9 @@ namespace DLPMoneyTracker
 
             services.AddTransient<TransferMoney>();
             services.AddTransient<TransferMoneyVM>();
+
+            services.AddTransient<LedgerDetailView>();
+            services.AddTransient<LedgerDetailVM>();
             
         }
     }

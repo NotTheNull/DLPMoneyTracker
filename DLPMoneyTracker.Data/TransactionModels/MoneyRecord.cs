@@ -18,10 +18,16 @@ namespace DLPMoneyTracker.Data.TransactionModels
 
         public string AccountID { get { return this.Account?.ID ?? string.Empty; } }
 
+        public string AccountName { get { return this.Account?.Description ?? string.Empty; } }
+
         [JsonIgnore]
         public TransactionCategory Category { get; set; }
 
         public Guid CategoryUID { get { return this.Category?.ID ?? Guid.Empty; } }
+
+        public string CategoryName { get { return this.Category?.Name ?? string.Empty; } }
+
+        public CategoryType CategoryType { get { return this.Category?.CategoryType ?? CategoryType.NotSet; } }
 
         public string Description { get; set; }
         public decimal TransAmount { get; set; }

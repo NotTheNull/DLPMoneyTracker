@@ -7,7 +7,9 @@
         xmlns:moneyAcct="clr-namespace:DLPMoneyTracker.DataEntry.AddEditMoneyAccount"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="DLP Money Tracker" Height="600" Width="800">
+        Title="DLP Money Tracker" 
+        Height="600" 
+        Width="800">
 
     <Window.Resources>
         <Style x:Key="TabHeaderLabel" TargetType="TextBlock">
@@ -142,6 +144,8 @@
                         </StackPanel>
                     </TabItem.Header>
                     <StackPanel Orientation="Vertical"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
                                 x:Name="panelTransactions"/>
                 </TabItem>
             </TabControl>

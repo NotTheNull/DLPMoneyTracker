@@ -11,6 +11,7 @@
         <convert:AccountTypeToBackgroundColor x:Key="convertMoneyAccountToBgColor" />
         <convert:DecimalToDisplayTextConverter x:Key="convertDecimalToDisplay" />
         <convert:CategoryTypeToDisplayText x:Key="convertCategoryTypeToDisplay"/>
+        <convert:CategoryTypeToBackgroundColor x:Key="convertCategoryTypeToBgColor"/>
 
 
         <SolidColorBrush x:Key="DefaultUIBackgroundColor" Color="#AACCFF" />

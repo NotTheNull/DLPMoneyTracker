@@ -82,7 +82,7 @@ namespace DLPMoneyTracker.Data
 
         public void SaveMoneyAccounts()
         {
-            string json = JsonSerializer.Serialize(this.AccountsList, typeof(List<MoneyAccount>));
+            string json = JsonSerializer.Serialize(_listAccts, typeof(List<MoneyAccount>));
             File.WriteAllText(AccountListConfig, json);
         }
 
@@ -106,7 +106,7 @@ namespace DLPMoneyTracker.Data
 
         public void SaveCategories()
         {
-            string json = JsonSerializer.Serialize(this.CategoryList.Where(x => x.ID != Guid.Empty).ToList(), typeof(List<TransactionCategory>));
+            string json = JsonSerializer.Serialize(_listCategories.Where(x => x.ID != Guid.Empty).ToList(), typeof(List<TransactionCategory>));
             File.WriteAllText(CategoryListConfig, json);
         }
 
