@@ -56,7 +56,20 @@
                 
                 <!--<DataGridTextColumn Header="Category" Binding="{Binding CategoryName}" />-->
                 <DataGridTextColumn Header="Description" Binding="{Binding Description}" />
-                <DataGridTextColumn Header="Amount" Binding="{Binding TransAmount, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"/>
+                <DataGridTemplateColumn Header="Amount">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding TransAmount, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                                           HorizontalAlignment="Right"
+                                           />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                <!--<DataGridTextColumn Header="Amount" 
+                                    Binding="{Binding TransAmount, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"/>-->
             </DataGrid.Columns>
         </DataGrid>
 
