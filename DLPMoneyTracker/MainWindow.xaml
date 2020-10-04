@@ -54,6 +54,11 @@
                             <Image Source="/Icons/Money-Transfer-256.png" />
                         </MenuItem.Icon>
                     </MenuItem>
+                    <MenuItem Header="Modify _Budget" Click="MenuItemModifyBudget_Click" >
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/Stock-Exchange-256.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="_Config">
                     <MenuItem Header="_Edit Money Accounts" Click="MenuItemEditMoneyAccount_Click">
@@ -123,18 +128,7 @@
                     <StackPanel Orientation="Vertical"
                                 x:Name="panelAccountSummary"/>
                 </TabItem>
-                <TabItem>
-                    <TabItem.Header>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="~ Budget Tracker ~"
-                                       Foreground="Blue"
-                                       Style="{StaticResource TabHeaderLabel}"
-                                       />
-                        </StackPanel>
-                    </TabItem.Header>
-                    <StackPanel Orientation="Vertical"
-                                x:Name="panelBudgetTracker"/>
-                </TabItem>
+                
                 <TabItem>
                     <TabItem.Header>
                         <StackPanel Orientation="Horizontal">

@@ -7,8 +7,8 @@
         xmlns:core="clr-namespace:DLPMoneyTracker.Core"
         mc:Ignorable="d" 
         Title="Budget Planner"
-        d:DesignHeight="450" 
-        d:DesignWidth="800">
+        Height="450" 
+        Width="800">
     
         
     <Grid Style="{StaticResource MainGridStyle}">
