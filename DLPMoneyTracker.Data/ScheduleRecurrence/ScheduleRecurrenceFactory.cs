@@ -27,5 +27,25 @@ namespace DLPMoneyTracker.Data.ScheduleRecurrence
 
             return null;
         }
+
+        public static IScheduleRecurrence Build(RecurrenceFrequency type, int monthDay)
+        {
+            if (type != RecurrenceFrequency.Monthly) throw new InvalidOperationException("Arguments provided do not match Recurrence Type");
+
+            return new MonthlyRecurrence() { DayOfMonth = monthDay };
+        }
+
+        public static IScheduleRecurrence Build(RecurrenceFrequency type, DateTime dateStart)
+        {
+            switch(type)
+            {
+                case RecurrenceFrequency.Annual:
+                    return new AnnualRecurrence() { StartDate = dateStart };
+                case RecurrenceFrequency.SemiAnnual:
+                    return new SemiAnnualRecurrence() { StartDate = dateStart };
+                default:
+                    throw new InvalidOperationException("Arguments provided do not match Recurrence Type");
+            }
+        }
     }
 }

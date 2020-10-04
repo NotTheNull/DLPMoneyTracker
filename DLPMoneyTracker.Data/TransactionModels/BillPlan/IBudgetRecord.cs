@@ -1,4 +1,5 @@
-﻿using DLPMoneyTracker.Data.ScheduleRecurrence;
+﻿using DLPMoneyTracker.Data.ConfigModels;
+using DLPMoneyTracker.Data.ScheduleRecurrence;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,14 +7,13 @@ using System.Text.Json.Serialization;
 
 namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
 {
-    public interface IBillPlan
+    public interface IBudgetRecord
     {
         Guid UID { get; }
 
         string BillDescription { get; }
 
-        [JsonIgnore]
-        IScheduleRecurrence Recurrence { get; }
+        Guid CategoryID { get; }
 
         string RecurrenceJSON { get; }
 

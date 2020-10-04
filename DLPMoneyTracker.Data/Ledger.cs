@@ -188,12 +188,14 @@ namespace DLPMoneyTracker.Data
         {
             if (_listTransactions is null) _listTransactions = new List<IMoneyRecord>();
             _listTransactions.Clear();
-            if (File.Exists(LedgerFilePath))
-            {
-                string json = File.ReadAllText(LedgerFilePath);
-                if (string.IsNullOrWhiteSpace(json)) return;
+            if (!File.Exists(LedgerFilePath)) return;
 
-                var dataList = (List<MoneyRecordJSON>)JsonSerializer.Deserialize(json, typeof(List<MoneyRecordJSON>));
+            string json = File.ReadAllText(LedgerFilePath);
+            if (string.IsNullOrWhiteSpace(json)) return;
+
+            var dataList = (List<MoneyRecordJSON>)JsonSerializer.Deserialize(json, typeof(List<MoneyRecordJSON>));
+            if (dataList.Any())
+            {
                 foreach (var trans in dataList)
                 {
                     MoneyRecord record = new MoneyRecord()

@@ -1,4 +1,5 @@
-﻿using DLPMoneyTracker.Data.ScheduleRecurrence;
+﻿using DLPMoneyTracker.Data.ConfigModels;
+using DLPMoneyTracker.Data.ScheduleRecurrence;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
 {
-    public class BillPlan : IBillPlan
+    public class BudgetRecord : IBudgetRecord
     {
         public Guid UID { get; set; }
 
@@ -26,7 +27,12 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
 
         public decimal ExpectedAmount { get; set; }
 
-        public BillPlan()
+        [JsonIgnore]
+        public TransactionCategory Category { get; set; }
+
+        public Guid CategoryID { get { return this.Category?.ID ?? Guid.Empty; } }
+
+        public BudgetRecord()
         {
             this.UID = Guid.NewGuid();
         }

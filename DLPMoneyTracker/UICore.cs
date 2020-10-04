@@ -1,8 +1,11 @@
 ﻿using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.ConfigModels;
+using DLPMoneyTracker.Data.ScheduleRecurrence;
 using DLPMoneyTracker.DataEntry.AddEditCategories;
 using DLPMoneyTracker.DataEntry.AddEditMoneyAccount;
 using DLPMoneyTracker.DataEntry.AddTransaction;
+using DLPMoneyTracker.DataEntry.BudgetPlanner;
+using DLPMoneyTracker.DataEntry.ScheduleRecurrence;
 using DLPMoneyTracker.ReportViews;
 using DLPMoneyTracker.ReportViews.LedgerViews;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +33,7 @@ namespace DLPMoneyTracker
         {
             services.AddSingleton<ITrackerConfig, TrackerConfig>();
             services.AddSingleton<ILedger, Ledger>();
+            services.AddSingleton<IBudgetPlanner, BudgetPlanner>();
             services.AddSingleton<MainWindow>();
             services.AddSingleton<MoneyAccountsOverview>();
             services.AddSingleton<MoneyAccountOverviewVM>();
@@ -54,6 +58,12 @@ namespace DLPMoneyTracker
 
             services.AddTransient<LedgerDetailView>();
             services.AddTransient<LedgerDetailVM>();
+
+            services.AddTransient<RecurrenceEditorView>();
+            services.AddTransient<RecurrenceEditorVM>();
+
+            services.AddTransient<BudgetPlannerView>();
+            services.AddTransient<BudgetPlannerVM>();
             
         }
     }
@@ -88,6 +98,21 @@ namespace DLPMoneyTracker
                     return "Income";
                 case CategoryType.UntrackedAdjustment:
                     return "Adjustment";
+                default:
+                    return "*N/A*";
+            }
+        }
+
+        public static string ToDisplayText(this RecurrenceFrequency recurType)
+        {
+            switch(recurType)
+            {
+                case RecurrenceFrequency.Annual:
+                    return "Annual";
+                case RecurrenceFrequency.SemiAnnual:
+                    return "Semi-Annual";
+                case RecurrenceFrequency.Monthly:
+                    return "Monthly";
                 default:
                     return "*N/A*";
             }

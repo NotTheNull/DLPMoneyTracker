@@ -22,6 +22,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal"
+                    Background="LightGray"
                     Grid.Row="0"
                     >
             <Button x:Name="btnCloseWindow"
@@ -60,6 +61,7 @@
 
 
         <DataGrid Grid.Row="1"
+                  Margin="0, 10, 0, 0"
                   Style="{StaticResource StandardDataGrid}"
                   ItemsSource="{Binding Path=CategoryList, UpdateSourceTrigger=PropertyChanged}"
                   >

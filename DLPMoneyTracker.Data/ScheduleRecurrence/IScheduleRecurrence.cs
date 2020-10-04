@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DLPMoneyTracker.Data.ScheduleRecurrence
 {
-    
+    // NOTE: Your paychecks are technically two days in a month but not necessary Bi-Weekly
     public enum RecurrenceFrequency
     {
         Monthly,

@@ -5,6 +5,7 @@ using System.Text;
 
 namespace DLPMoneyTracker.Core
 {
+    public delegate void SimpleNotification();
     public abstract class BaseViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
