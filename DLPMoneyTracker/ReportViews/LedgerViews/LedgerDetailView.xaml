@@ -32,7 +32,6 @@
         </Button>
 
         <DataGrid Grid.Row="1"
-                  Style="{StaticResource StandardDataGrid}"
                   ItemsSource="{Binding Path=DisplayRecordsList}"
                   >
             <DataGrid.Columns>

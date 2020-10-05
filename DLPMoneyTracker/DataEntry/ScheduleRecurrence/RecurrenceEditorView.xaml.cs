@@ -16,7 +16,7 @@ namespace DLPMoneyTracker.DataEntry.ScheduleRecurrence
     /// <summary>
     /// Interaction logic for RecurrenceEditor.xaml
     /// </summary>
-    public partial class RecurrenceEditorView : UserControl
+    public partial class RecurrenceEditorView : Window
     {
         private RecurrenceEditorVM _viewModel;
         public RecurrenceEditorVM ViewModel { get { return _viewModel; } }
@@ -26,8 +26,17 @@ namespace DLPMoneyTracker.DataEntry.ScheduleRecurrence
             InitializeComponent();
             this.DataContext = viewModel;
             _viewModel = viewModel;
+            _viewModel.RecurrenceSelected += _viewModel_RecurrenceSelected;
         }
 
-        
+        private void _viewModel_RecurrenceSelected(Data.ScheduleRecurrence.IScheduleRecurrence selected)
+        {
+            this.Close();
+        }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

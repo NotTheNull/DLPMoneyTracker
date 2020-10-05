@@ -25,7 +25,15 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             set
             {
                 _record = value;
-                this.IsExpense = _record.Category.CategoryType == CategoryType.Expense;
+                if (_record?.Category?.CategoryType is null)
+                {
+                    this.IsExpense = true;
+                }
+                else
+                {
+                    this.IsExpense = _record.Category.CategoryType == CategoryType.Expense;
+                }
+
                 this.NotifyAll();
             }
         }
@@ -196,10 +204,22 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             {
                 return _cmdEditRecord ?? (_cmdEditRecord = new RelayCommand((record) =>
                 {
-                    if(record is BudgetRecordVM vm)
+                    if (record is BudgetRecordVM vm)
                     {
                         this.Source = vm;
                     }
+                }));
+            }
+        }
+
+        private RelayCommand _cmdAddRecord;
+        public RelayCommand CommandAddRecord
+        {
+            get
+            {
+                return _cmdAddRecord ?? (_cmdEditRecord = new RelayCommand((o) =>
+                {
+                    this.AddBudgetRecord();
                 }));
             }
         }
@@ -211,10 +231,22 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             {
                 return _cmdDeleteRecord ?? (_cmdDeleteRecord = new RelayCommand((record) =>
                 {
-                    if(record is BudgetRecordVM vm)
+                    if (record is BudgetRecordVM vm)
                     {
                         this.RemoveBudgetRecord(vm);
                     }
+                }));
+            }
+        }
+
+        private RelayCommand _cmdClear;
+        public RelayCommand CommandClear
+        {
+            get
+            {
+                return _cmdClear ?? (_cmdClear = new RelayCommand((o) =>
+                {
+                    this.Clear();
                 }));
             }
         }
@@ -271,9 +303,9 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         {
             List<MoneyAccountType> allowedAccounts = new List<MoneyAccountType>() { MoneyAccountType.Checking, MoneyAccountType.Savings, MoneyAccountType.CreditCard };
             this.AccountList.Clear();
-            if(_config.AccountsList.Any(x => allowedAccounts.Contains(x.AccountType)))
+            if (_config.AccountsList.Any(x => allowedAccounts.Contains(x.AccountType)))
             {
-                foreach(var act in _config.AccountsList.Where(x => allowedAccounts.Contains(x.AccountType)))
+                foreach (var act in _config.AccountsList.Where(x => allowedAccounts.Contains(x.AccountType)))
                 {
                     this.AccountList.Add(new SpecialDropListItem<MoneyAccount>(act.Description, act));
                 }
@@ -327,6 +359,26 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             this.LoadBudget();
         }
 
+
+        private void AddBudgetRecord()
+        {
+            if (this.IsExpense)
+            {
+                if (!this.ExpenseBudgetList.Contains(this.Source))
+                {
+                    this.ExpenseBudgetList.Add(this.Source);
+                }
+            }
+            else
+            {
+                if (!this.IncomeBudgetList.Contains(this.Source))
+                {
+                    this.IncomeBudgetList.Add(this.Source);
+                }
+            }
+        }
+
+
         private void RemoveBudgetRecord(BudgetRecordVM record)
         {
             if (record is null) throw new ArgumentNullException("Budget Record VM");
@@ -357,19 +409,19 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         public void Dispose()
         {
             GC.SuppressFinalize(this);
-            if(!(_listCategories is null))
+            if (!(_listCategories is null))
             {
                 _listCategories.Clear();
                 _listCategories = null;
             }
 
-            if(!(_listExpenses is null))
+            if (!(_listExpenses is null))
             {
                 _listExpenses.Clear();
                 _listExpenses = null;
             }
 
-            if(!(_listIncome is null))
+            if (!(_listIncome is null))
             {
                 _listIncome.Clear();
                 _listIncome = null;

@@ -5,8 +5,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:local="clr-namespace:DLPMoneyTracker.DataEntry.BudgetPlanner"
         xmlns:core="clr-namespace:DLPMoneyTracker.Core"
+        xmlns:behave="clr-namespace:DLPMoneyTracker.Core.Behaviors"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d" 
         Title="Budget Planner"
+        WindowStartupLocation="CenterScreen"
         Height="450" 
         Width="800">
     
@@ -62,9 +65,9 @@
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="240" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="240" />
             </Grid.ColumnDefinitions>
 
 
@@ -80,10 +83,13 @@
 
                 <DataGrid x:Name="dataExpenses"
                           VerticalAlignment="Center"
+                          ItemsSource="{Binding Path=ExpenseBudgetList}"
                           Height="350">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Description" Binding="{Binding Path=Description, UpdateSourceTrigger=PropertyChanged}" />
-                        <DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Description" 
+                                            Width="*"
+                                            Binding="{Binding Path=Description, UpdateSourceTrigger=PropertyChanged}" />
+                        <DataGridTemplateColumn Width="80">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
@@ -161,8 +167,12 @@
                      Text="{Binding Path=Description, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                      Grid.Row="2"
                      Grid.Column="1"
-                     Height="20"
-                     />
+                     Height="20">
+
+                    <i:Interaction.Behaviors>
+                        <behave:TextBoxFocusBehavior />
+                    </i:Interaction.Behaviors>
+                </TextBox>
 
 
                 <TextBlock Text="Category"
@@ -210,8 +220,12 @@
                      Grid.Column="1"
                      Height="20"
                      Width="120"
-                     HorizontalAlignment="Left"
-                     />
+                     HorizontalAlignment="Left">
+
+                    <i:Interaction.Behaviors>
+                        <behave:TextBoxFocusBehavior />
+                    </i:Interaction.Behaviors>
+                </TextBox>
 
                 <TextBlock Text="Recurrence"
                        Grid.Row="6"
@@ -227,6 +241,7 @@
                         Height="30"
                         HorizontalAlignment="Left"
                         Content="Modify"
+                            Click="btnEditRecurrence_Click"
                         />
 
                     <TextBlock x:Name="lblRecurrenceType"
@@ -238,6 +253,29 @@
                            />
                 </StackPanel>
 
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            Grid.Row="7"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2">
+
+                    <Button x:Name="btnApply"
+                            Content="Apply"
+                            Width="100"
+                            Height="30"
+                            Command="{Binding CommandAddRecord}"
+                            />
+
+                    <Button x:Name="btnClear"
+                            Content="Clear"
+                            Width="100"
+                            Height="30"
+                            Margin="15, 0, 0, 0"
+                            Command="{Binding CommandClear}"
+                            />
+
+                    
+                </StackPanel>
 
             </Grid>
 
@@ -257,10 +295,13 @@
 
                 <DataGrid x:Name="dataIncome"
                           VerticalAlignment="Center"
+                          ItemsSource="{Binding Path=IncomeBudgetList}"
                           Height="350">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Description" Binding="{Binding Path=Description, UpdateSourceTrigger=PropertyChanged}" />
-                        <DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Description" 
+                                            Width="*"
+                                            Binding="{Binding Path=Description, UpdateSourceTrigger=PropertyChanged}" />
+                        <DataGridTemplateColumn Width="80">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">

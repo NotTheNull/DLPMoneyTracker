@@ -79,7 +79,6 @@
         <DataGrid x:Name="gridAccounts" 
                   Margin="0, 10, 0, 0"
                   Grid.Row="1"
-                  Style="{StaticResource StandardDataGrid}"
                   ItemsSource="{Binding Path=MoneyAccountList, UpdateSourceTrigger=PropertyChanged}"
                   >
             <DataGrid.Resources>

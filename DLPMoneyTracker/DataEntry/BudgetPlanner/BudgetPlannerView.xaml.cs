@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using DLPMoneyTracker.DataEntry.ScheduleRecurrence;
+using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 {
@@ -30,6 +21,18 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         private void btnCloseWindow_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void btnEditRecurrence_Click(object sender, RoutedEventArgs e)
+        {
+            RecurrenceEditorView uiEditRecurrence = UICore.DependencyHost.GetService<RecurrenceEditorView>();
+            uiEditRecurrence.ViewModel.RecurrenceSelected += ViewModel_RecurrenceSelected;
+            uiEditRecurrence.Show();
+        }
+
+        private void ViewModel_RecurrenceSelected(Data.ScheduleRecurrence.IScheduleRecurrence selected)
+        {
+            _viewModel.Recurrence = selected;
         }
     }
 }

@@ -10,7 +10,6 @@ namespace DLPMoneyTracker.DataEntry.ScheduleRecurrence
     {
         public delegate void RecurrenceSelectedHandler(IScheduleRecurrence selected);
         public event RecurrenceSelectedHandler RecurrenceSelected;
-        public event SimpleNotification EditCanceled;
 
 
 
@@ -83,17 +82,6 @@ namespace DLPMoneyTracker.DataEntry.ScheduleRecurrence
             }
         }
 
-        private RelayCommand _cmdClose;
-        public RelayCommand CommandClose
-        {
-            get
-            {
-                return _cmdClose ?? (_cmdClose = new RelayCommand((o) =>
-                {
-                    EditCanceled?.Invoke();
-                }));
-            }
-        }
         #endregion
 
 

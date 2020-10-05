@@ -98,10 +98,12 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 
         public BudgetRecordVM(ITrackerConfig config)
         {
+            this.UID = Guid.NewGuid();
             _config = config;
         }
         public BudgetRecordVM(ITrackerConfig config, IBudgetRecord src)
         {
+            this.UID = Guid.NewGuid();
             _config = config;
             this.LoadSource(src);
         }

@@ -74,7 +74,7 @@ namespace DLPMoneyTracker.Data
             string json = File.ReadAllText(BudgetFilePath);
             if (string.IsNullOrWhiteSpace(json)) return;
 
-            var dataList = (List<BudgetRecordJSON>)JsonSerializer.Deserialize(json, typeof(List<MoneyRecordJSON>));
+            var dataList = (List<BudgetRecordJSON>)JsonSerializer.Deserialize(json, typeof(List<BudgetRecordJSON>));
             if(dataList.Any())
             {
                 foreach(var record in dataList)

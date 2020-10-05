@@ -39,7 +39,17 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
 
-        <Style x:Key="StandardDataGrid" TargetType="DataGrid">
+        
+        <Style x:Key="StandardHeaderLabel" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Arial" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="Maroon" />
+            <Setter Property="Margin" Value="10, 0, 15, 0" />
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="DataGrid">
             <Setter Property="AutoGenerateColumns" Value="False" />
             <Setter Property="CanUserAddRows" Value="False" />
             <Setter Property="CanUserDeleteRows" Value="False"/>
@@ -52,18 +62,8 @@
             <Setter Property="AlternatingRowBackground" Value="LightYellow"/>
         </Style>
 
-        <Style x:Key="StandardHeaderLabel" TargetType="TextBlock">
-            <Setter Property="FontFamily" Value="Arial" />
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Foreground" Value="Maroon" />
-            <Setter Property="Margin" Value="10, 0, 15, 0" />
-            <Setter Property="VerticalAlignment" Value="Center"/>
-        </Style>
 
 
-        
-        
         <Style TargetType="{x:Type DataGridColumnHeader}">
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Height" Value="30"/>
