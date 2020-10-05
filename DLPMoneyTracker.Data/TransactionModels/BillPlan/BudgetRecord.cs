@@ -11,6 +11,18 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
     {
         public Guid UID { get; set; }
 
+        [JsonIgnore]
+        public TransactionCategory Category { get; set; }
+
+        public Guid CategoryID { get { return this.Category?.ID ?? Guid.Empty; } }
+
+        [JsonIgnore]
+        public MoneyAccount Account { get; set; }
+
+        public string AccountID { get { return this.Account?.ID ?? string.Empty; } }
+
+
+
         public string BillDescription { get; set; }
 
         [JsonIgnore]
@@ -27,10 +39,6 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
 
         public decimal ExpectedAmount { get; set; }
 
-        [JsonIgnore]
-        public TransactionCategory Category { get; set; }
-
-        public Guid CategoryID { get { return this.Category?.ID ?? Guid.Empty; } }
 
         public BudgetRecord()
         {

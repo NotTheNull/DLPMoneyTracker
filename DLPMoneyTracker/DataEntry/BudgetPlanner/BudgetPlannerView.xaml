@@ -126,6 +126,7 @@
                     <RowDefinition Height="40"/>
                     <RowDefinition Height="40"/>
                     <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
@@ -149,13 +150,28 @@
                              />
                 </StackPanel>
 
-                <TextBlock Text="Category"
+
+                <TextBlock Text="Description"
                        Grid.Row="2"
                        Grid.Column="0"
                        Style="{StaticResource StandardHeaderLabel}"
                        />
+
+                <TextBox x:Name="txtDesc"
+                     Text="{Binding Path=Description, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                     Grid.Row="2"
+                     Grid.Column="1"
+                     Height="20"
+                     />
+
+
+                <TextBlock Text="Category"
+                       Grid.Row="3"
+                       Grid.Column="0"
+                       Style="{StaticResource StandardHeaderLabel}"
+                       />
                 <ComboBox x:Name="cboCategory"
-                      Grid.Row="2"
+                      Grid.Row="3"
                       Grid.Column="1"
                       Margin="0, 5, 0, 5"
                       DisplayMemberPath="Display"
@@ -164,28 +180,33 @@
                       SelectedValue="{Binding Path=SelectedCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       />
 
-                <TextBlock Text="Description"
-                       Grid.Row="3"
-                       Grid.Column="0"
-                       Style="{StaticResource StandardHeaderLabel}"
-                       />
 
-                <TextBox x:Name="txtDesc"
-                     Text="{Binding Path=Description, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                     Grid.Row="3"
-                     Grid.Column="1"
-                     Height="20"
-                     />
+                <TextBlock Text="Account"
+                           Grid.Row="4"
+                           Grid.Column="0"
+                           Style="{StaticResource StandardHeaderLabel}"/>
+
+                <ComboBox x:Name="cboAccounts"
+                          Grid.Row="4"
+                          Grid.Column="1"
+                          Margin="0, 5, 0, 5"
+                      DisplayMemberPath="Display"
+                      SelectedValuePath="Value"
+                      ItemsSource="{Binding Path=AccountList}"
+                      SelectedValue="{Binding Path=SelectedAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          />
+
+
 
                 <TextBlock Text="Amount"
-                       Grid.Row="4"
+                       Grid.Row="5"
                        Grid.Column="0"
                        Style="{StaticResource StandardHeaderLabel}"
                        />
 
                 <TextBox x:Name="txtAmount"
                      Text="{Binding Path=Amount, Mode=TwoWay, UpdateSourceTrigger=LostFocus, Converter={StaticResource convertDecimalToDisplay}}"
-                     Grid.Row="4"
+                     Grid.Row="5"
                      Grid.Column="1"
                      Height="20"
                      Width="120"
@@ -193,12 +214,12 @@
                      />
 
                 <TextBlock Text="Recurrence"
-                       Grid.Row="5"
+                       Grid.Row="6"
                        Grid.Column="0"
                        Style="{StaticResource StandardHeaderLabel}"
                        />
                 <StackPanel Orientation="Horizontal"
-                        Grid.Row="5"
+                        Grid.Row="6"
                         Grid.Column="1">
 
                     <Button x:Name="btnEditRecurrence"

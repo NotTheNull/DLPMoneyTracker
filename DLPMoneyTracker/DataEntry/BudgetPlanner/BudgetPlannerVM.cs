@@ -61,11 +61,23 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             get { return this.Source?.Category; }
             set
             {
+                if (this.Source is null) return;
                 this.Source.Category = value;
                 NotifyPropertyChanged(nameof(this.SelectedCategory));
             }
         }
 
+
+        public MoneyAccount SelectedAccount
+        {
+            get { return this.Source?.Account; }
+            set
+            {
+                if (this.Source is null) return;
+                this.Source.Account = value;
+                NotifyPropertyChanged(nameof(this.SelectedAccount));
+            }
+        }
 
 
         public string Description
@@ -133,6 +145,8 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         public ObservableCollection<SpecialDropListItem<TransactionCategory>> CategoryList { get { return _listCategories; } }
 
 
+        ObservableCollection<SpecialDropListItem<MoneyAccount>> _listAccounts = new ObservableCollection<SpecialDropListItem<MoneyAccount>>();
+        public ObservableCollection<SpecialDropListItem<MoneyAccount>> AccountList { get { return _listAccounts; } }
 
 
 
@@ -219,6 +233,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             _budget = budget;
             _config = config;
 
+            this.LoadAccounts();
             this.LoadBudget();
             this.Clear();
         }
@@ -248,6 +263,19 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
                     {
                         this.IncomeBudgetList.Add(new BudgetRecordVM(_config, data));
                     }
+                }
+            }
+        }
+
+        private void LoadAccounts()
+        {
+            List<MoneyAccountType> allowedAccounts = new List<MoneyAccountType>() { MoneyAccountType.Checking, MoneyAccountType.Savings, MoneyAccountType.CreditCard };
+            this.AccountList.Clear();
+            if(_config.AccountsList.Any(x => allowedAccounts.Contains(x.AccountType)))
+            {
+                foreach(var act in _config.AccountsList.Where(x => allowedAccounts.Contains(x.AccountType)))
+                {
+                    this.AccountList.Add(new SpecialDropListItem<MoneyAccount>(act.Description, act));
                 }
             }
         }
@@ -319,6 +347,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         {
             NotifyPropertyChanged(nameof(this.IsExpense));
             NotifyPropertyChanged(nameof(this.SelectedCategory));
+            NotifyPropertyChanged(nameof(this.SelectedAccount));
             NotifyPropertyChanged(nameof(this.Description));
             NotifyPropertyChanged(nameof(this.Amount));
             NotifyPropertyChanged(nameof(this.Recurrence));

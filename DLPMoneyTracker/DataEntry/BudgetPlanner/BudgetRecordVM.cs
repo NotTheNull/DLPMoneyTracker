@@ -53,6 +53,21 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         }
 
 
+        private MoneyAccount _act;
+
+        public MoneyAccount Account
+        {
+            get { return _act; }
+            set 
+            { 
+                _act = value;
+                NotifyPropertyChanged(nameof(this.Account));
+            }
+        }
+
+
+
+
         private IScheduleRecurrence _recurr;
 
         public IScheduleRecurrence Recurrence
@@ -102,6 +117,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
                 UID = this.UID,
                 BillDescription = this.Description,
                 Category = this.Category,
+                Account = this.Account,
                 Recurrence = this.Recurrence,
                 ExpectedAmount = this.Amount
             };
@@ -112,6 +128,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             this.UID = src.UID;
             this.Description = src.BillDescription;
             this.Category = _config.GetCategory(src.CategoryID);
+            this.Account = _config.GetAccount(src.AccountID);
             this.Recurrence = ScheduleRecurrenceFactory.Build(src.RecurrenceJSON);
             this.Amount = src.ExpectedAmount;
         }
@@ -121,6 +138,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             NotifyPropertyChanged(nameof(this.UID));
             NotifyPropertyChanged(nameof(this.Description));
             NotifyPropertyChanged(nameof(this.Category));
+            NotifyPropertyChanged(nameof(this.Account));
             NotifyPropertyChanged(nameof(this.Amount));
             NotifyPropertyChanged(nameof(this.Recurrence));
         }

@@ -14,6 +14,8 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
 
         public Guid CategoryID { get; set; }
 
+        public string AccountID { get; set; }
+
         public string RecurrenceJSON { get; set; }
 
         public decimal ExpectedAmount { get; set; }
