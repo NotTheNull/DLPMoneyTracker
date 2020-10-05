@@ -20,6 +20,7 @@ namespace DLPMoneyTracker.Data
         void ClearBudget();
         void LoadFromFile();
         void SaveToFile();
+        IEnumerable<IBudgetRecord> GetUpcomingBudgetListForAccount(string accountID);
     }
 
     public class BudgetPlanner : IBudgetPlanner
@@ -82,7 +83,7 @@ namespace DLPMoneyTracker.Data
                     _listBudgets.Add(new BudgetRecord()
                     {
                         UID = record.UID,
-                        BillDescription = record.BillDescription,
+                        Description = record.Description,
                         Category = _config.GetCategory(record.CategoryID),
                         ExpectedAmount = record.ExpectedAmount,
                         RecurrenceJSON = record.RecurrenceJSON
@@ -96,6 +97,25 @@ namespace DLPMoneyTracker.Data
         {
             string json = JsonSerializer.Serialize(_listBudgets);
             File.WriteAllText(BudgetFilePath, json);
+        }
+
+        public IEnumerable<IBudgetRecord> GetUpcomingBudgetListForAccount(string accountID)
+        {
+            if (!this.BudgetRecordList.Any(x => x.AccountID == accountID)) return null;
+
+            List<IBudgetRecord> dataList = new List<IBudgetRecord>();
+            foreach(var record in this.BudgetRecordList.Where(x => x.AccountID == accountID))
+            {
+                if(record is BudgetRecord budget)
+                {
+                    if(budget.Recurrence.NotificationDate <= DateTime.Today && budget.Recurrence.NextOccurence >= DateTime.Today)
+                    {
+                        dataList.Add(budget);
+                    }
+                }
+            }
+
+            return dataList;
         }
     }
 }

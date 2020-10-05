@@ -49,8 +49,12 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             { 
                 _cat = value;
                 NotifyPropertyChanged(nameof(this.Category));
+                NotifyPropertyChanged(nameof(this.CategoryName));
             }
         }
+
+        public string CategoryName { get { return this.Category?.Name ?? string.Empty; } }
+        public CategoryType CategoryType { get { return this.Category?.CategoryType ?? CategoryType.NotSet; } }
 
 
         private MoneyAccount _act;
@@ -77,8 +81,14 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             { 
                 _recurr = value;
                 NotifyPropertyChanged(nameof(this.Recurrence));
+                NotifyPropertyChanged(nameof(this.NextDueDate));
+                NotifyPropertyChanged(nameof(this.NotificationDate));
             }
         }
+
+        public DateTime NextDueDate { get { return this.Recurrence?.NextOccurence ?? DateTime.MinValue; } }
+        public DateTime NotificationDate { get { return this.Recurrence?.NotificationDate ?? DateTime.MinValue; } }
+
 
         private decimal _amt;
 
@@ -117,7 +127,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             return new BudgetRecord()
             {
                 UID = this.UID,
-                BillDescription = this.Description,
+                Description = this.Description,
                 Category = this.Category,
                 Account = this.Account,
                 Recurrence = this.Recurrence,
@@ -128,7 +138,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         public void LoadSource(IBudgetRecord src)
         {
             this.UID = src.UID;
-            this.Description = src.BillDescription;
+            this.Description = src.Description;
             this.Category = _config.GetCategory(src.CategoryID);
             this.Account = _config.GetAccount(src.AccountID);
             this.Recurrence = ScheduleRecurrenceFactory.Build(src.RecurrenceJSON);

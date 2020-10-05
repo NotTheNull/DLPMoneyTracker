@@ -11,7 +11,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
     {
         Guid UID { get; }
 
-        string BillDescription { get; }
+        string Description { get; }
 
         Guid CategoryID { get; }
 

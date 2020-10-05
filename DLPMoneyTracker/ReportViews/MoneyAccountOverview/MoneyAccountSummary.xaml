@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DLPMoneyTracker.ReportViews"
              mc:Ignorable="d" 
-             Height="70" 
+             MinHeight="70" 
              Width="680">
     <UserControl.Resources>
         <Style x:Key="MainLabel" TargetType="TextBlock">
@@ -15,11 +15,14 @@
             <Setter Property="FontWeight" Value="Bold"/>
         </Style>
     </UserControl.Resources>
-    
+
+
     <Grid Background="{Binding Path=AccountType, Converter={StaticResource convertMoneyAccountToBgColor}, UpdateSourceTrigger=PropertyChanged, FallbackValue=LightGray}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="25"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -28,7 +31,7 @@
             <ColumnDefinition Width="25" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="140" />
             <ColumnDefinition Width="25" />
         </Grid.ColumnDefinitions>
@@ -50,9 +53,10 @@
         <TextBlock Grid.Row="2"
                    Grid.Column="3"
                    Text="Balance:"
+                   HorizontalAlignment="Right"
                    Style="{StaticResource MainLabel}"
                    />
-        
+
         <TextBlock Grid.Row="2"
                    Grid.Column="4"
                    HorizontalAlignment="Right"
@@ -60,5 +64,51 @@
                    Style="{StaticResource MainLabel}"
                    />
 
+        <DataGrid Grid.Row="3" 
+                  Grid.Column="1"
+                  Grid.ColumnSpan="4"
+                  Visibility="{Binding Path=ShowBudgetData, Converter={StaticResource convertBoolToVisibility}}"
+                  ItemsSource="{Binding Path=BudgetList}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Budget Description" Binding="{Binding Path=Description}" />
+                
+                <DataGridTemplateColumn Header="Category">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="10" 
+                                           Height="10" 
+                                           Fill="{Binding Path=CategoryType, Converter={StaticResource convertCategoryTypeToBgColor}}" />
+                                <TextBlock Text="{Binding Path=CategoryName}" 
+                                           Margin="5, 0, 0, 0"
+                                           />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn Header="Next Date" Binding="{Binding Path=NextDueDate, Converter={StaticResource convertDateToDisplay}, ConverterParameter=yyyy/MM/dd}" />
+
+                <DataGridTextColumn Header="Amount" Binding="{Binding Path=Amount, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <TextBlock Text="New Balance:"
+                   Grid.Row="4"
+                   Grid.Column="3"
+                   HorizontalAlignment="Right"
+                   Visibility="{Binding Path=ShowBudgetData, Converter={StaticResource convertBoolToVisibility}}"
+                   Style="{StaticResource MainLabel}"/>
+
+        <TextBlock Grid.Row="4"
+                   Grid.Column="4"
+                   HorizontalAlignment="Right"
+                   Text="{Binding Path=BudgetBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, UpdateSourceTrigger=PropertyChanged, FallbackValue=0.00}"
+                   Style="{StaticResource MainLabel}"
+                   />
     </Grid>
+
+
+
+
 </UserControl>

@@ -23,7 +23,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
 
 
 
-        public string BillDescription { get; set; }
+        public string Description { get; set; }
 
         [JsonIgnore]
         public IScheduleRecurrence Recurrence { get; set; }

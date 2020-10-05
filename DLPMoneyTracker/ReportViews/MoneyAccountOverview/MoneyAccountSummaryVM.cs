@@ -1,14 +1,20 @@
 ﻿using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.ConfigModels;
+using DLPMoneyTracker.Data.TransactionModels.BillPlan;
+using DLPMoneyTracker.DataEntry.BudgetPlanner;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 
 namespace DLPMoneyTracker.ReportViews
 {
     public class MoneyAccountSummaryVM : BaseViewModel
     {
+        private ITrackerConfig _config;
+        private IBudgetPlanner _budget;
         private ILedger _ledger;
         private MoneyAccount _act;
 
@@ -32,6 +38,28 @@ namespace DLPMoneyTracker.ReportViews
 
 
 
+
+        ObservableCollection<BudgetRecordVM> _listBudgets = new ObservableCollection<BudgetRecordVM>();
+        public ObservableCollection<BudgetRecordVM> BudgetList { get { return _listBudgets; } }
+
+        public bool ShowBudgetData { get { return _listBudgets.Any(); } }
+
+        public decimal BudgetBalance 
+        { 
+            get
+            {
+                decimal bal = this.Balance;
+                if (!this.BudgetList.Any()) return bal;
+
+                foreach(var budget in this.BudgetList)
+                {
+                    bal = _ledger.ApplyTransactionToBalance(_act, bal, budget.Category, budget.Amount);
+                }
+
+                return bal;
+            } 
+        }
+
         #region Commands
         private RelayCommand _cmdDetails;
         public RelayCommand CommandDetails
@@ -52,8 +80,10 @@ namespace DLPMoneyTracker.ReportViews
 
 
 
-        public MoneyAccountSummaryVM(MoneyAccount act, ILedger ledger)
+        public MoneyAccountSummaryVM(MoneyAccount act, ILedger ledger, IBudgetPlanner budget, ITrackerConfig config)
         {
+            _config = config;
+            _budget = budget;
             _ledger = ledger;
             _ledger.LedgerModified += () => Refresh();
             _act = act;
@@ -61,10 +91,27 @@ namespace DLPMoneyTracker.ReportViews
             this.Refresh();
         }
 
+        private void LoadBudgets()
+        {
+            this.BudgetList.Clear();
+
+            var budgetList = _budget.GetUpcomingBudgetListForAccount(this.AccountID);
+            if (budgetList is null || !budgetList.Any()) return;
+
+            foreach(var budget in budgetList)
+            {
+                this.BudgetList.Add(new BudgetRecordVM(_config, budget));
+            }
+            NotifyPropertyChanged(nameof(this.BudgetBalance));
+            NotifyPropertyChanged(nameof(this.ShowBudgetData));
+        }
+
+
 
         public void Refresh()
         {
             this.Balance = _ledger.GetAccountBalance(_act);
+            this.LoadBudgets();
             this.NotifyAll();
         }
 

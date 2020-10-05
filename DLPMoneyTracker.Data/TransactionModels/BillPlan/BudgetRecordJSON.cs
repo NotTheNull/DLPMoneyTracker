@@ -10,7 +10,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
     {
         public Guid UID { get; set; }
 
-        public string BillDescription { get; set; }
+        public string Description { get; set; }
 
         public Guid CategoryID { get; set; }
 

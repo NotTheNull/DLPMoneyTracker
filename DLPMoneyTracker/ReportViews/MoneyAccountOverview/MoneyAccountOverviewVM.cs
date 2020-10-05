@@ -12,6 +12,7 @@ namespace DLPMoneyTracker.ReportViews
 {
     public class MoneyAccountOverviewVM : BaseViewModel
     {
+        private IBudgetPlanner _budget;
         private ITrackerConfig _config;
         private ILedger _ledger;
 
@@ -20,8 +21,9 @@ namespace DLPMoneyTracker.ReportViews
         public ObservableCollection<MoneyAccountSummaryVM> AccountSummaryList { get { return _listAcctSummary; } }
 
 
-        public MoneyAccountOverviewVM(ITrackerConfig config, ILedger ledger)
+        public MoneyAccountOverviewVM(ITrackerConfig config, IBudgetPlanner budget, ILedger ledger)
         {
+            _budget = budget;
             _config = config;
             _ledger = ledger;
             this.Load();
@@ -32,7 +34,7 @@ namespace DLPMoneyTracker.ReportViews
             _listAcctSummary.Clear();
             foreach(var act in _config.AccountsList)
             {
-                _listAcctSummary.Add(new MoneyAccountSummaryVM(act, _ledger));
+                _listAcctSummary.Add(new MoneyAccountSummaryVM(act, _ledger, _budget, _config));
             }
         }
 
@@ -55,7 +57,7 @@ namespace DLPMoneyTracker.ReportViews
             {
                 foreach(var act in _config.AccountsList.Where(hasNEWAccounts))
                 {
-                    _listAcctSummary.Add(new MoneyAccountSummaryVM(act, _ledger));
+                    _listAcctSummary.Add(new MoneyAccountSummaryVM(act, _ledger, _budget, _config));
                 }
             }
 

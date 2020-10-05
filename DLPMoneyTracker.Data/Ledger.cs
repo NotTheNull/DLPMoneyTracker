@@ -24,6 +24,7 @@ namespace DLPMoneyTracker.Data
 
         decimal GetInitialBalance(MoneyAccount act);
         decimal GetAccountBalance(MoneyAccount act);
+        decimal ApplyTransactionToBalance(MoneyAccount act, decimal startValue, TransactionCategory category, decimal transAmount);
         decimal GetCategoryTotal(TransactionCategory cat);
 
         void SaveToFile();
@@ -118,43 +119,7 @@ namespace DLPMoneyTracker.Data
                 {
                     if (trans is MoneyRecord record)
                     {
-                        if (trans.CategoryUID == TransactionCategory.InitialBalance.ID)
-                        {
-                            balance += record.TransAmount;
-                        }
-                        else
-                        {
-
-                            switch (record.Category.CategoryType)
-                            {
-                                case CategoryType.UntrackedAdjustment:
-                                    balance += record.TransAmount;
-                                    break;
-                                case CategoryType.Expense:
-                                    if (act.AccountType == MoneyAccountType.Checking || act.AccountType == MoneyAccountType.Savings)
-                                    {
-                                        balance -= record.TransAmount;
-                                    }
-                                    else if (act.AccountType == MoneyAccountType.CreditCard)
-                                    {
-                                        balance += record.TransAmount;
-                                    }
-                                    // Loans cannot have expenses added to them
-                                    break;
-                                case CategoryType.Income:
-                                    if (act.AccountType == MoneyAccountType.Checking || act.AccountType == MoneyAccountType.Savings)
-                                    {
-                                        balance += record.TransAmount;
-                                    }
-                                    // No other account types can have income reported
-                                    break;
-                                case CategoryType.Payment:
-                                    // No matter the account type, it's a reduction
-                                    balance -= record.TransAmount;
-                                    break;
-                            }
-                        }
-
+                        balance = this.ApplyTransactionToBalance(act, balance, record.Category, record.TransAmount);
                     }
                     else
                     {
@@ -162,6 +127,50 @@ namespace DLPMoneyTracker.Data
                     }
                 }
 
+            }
+
+            return balance;
+        }
+
+        public decimal ApplyTransactionToBalance(MoneyAccount act, decimal startValue, TransactionCategory category, decimal transAmount)
+        {
+            decimal balance = startValue;
+
+            if (category.ID == TransactionCategory.InitialBalance.ID)
+            {
+                balance += transAmount;
+            }
+            else
+            {
+
+                switch (category.CategoryType)
+                {
+                    case CategoryType.UntrackedAdjustment:
+                        balance += transAmount;
+                        break;
+                    case CategoryType.Expense:
+                        if (act.AccountType == MoneyAccountType.Checking || act.AccountType == MoneyAccountType.Savings)
+                        {
+                            balance -= transAmount;
+                        }
+                        else if (act.AccountType == MoneyAccountType.CreditCard)
+                        {
+                            balance += transAmount;
+                        }
+                        // Loans cannot have expenses added to them
+                        break;
+                    case CategoryType.Income:
+                        if (act.AccountType == MoneyAccountType.Checking || act.AccountType == MoneyAccountType.Savings)
+                        {
+                            balance += transAmount;
+                        }
+                        // No other account types can have income reported
+                        break;
+                    case CategoryType.Payment:
+                        // No matter the account type, it's a reduction
+                        balance -= transAmount;
+                        break;
+                }
             }
 
             return balance;
