@@ -9,6 +9,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         Title="Transfer Money"
         WindowStartupLocation="CenterScreen"
+        Icon="\Cash-64.ico"
         Height="240" 
         Width="500">
     <Grid Style="{StaticResource MainGridStyle}">

@@ -10,6 +10,7 @@
         mc:Ignorable="d" 
         Title="Budget Planner"
         WindowStartupLocation="CenterScreen"
+        Icon="\Cash-64.ico"
         Height="450" 
         Width="800">
     

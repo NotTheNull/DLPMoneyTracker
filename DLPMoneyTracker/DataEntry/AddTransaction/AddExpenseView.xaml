@@ -9,6 +9,7 @@
         mc:Ignorable="d"
         Title="Enter Expense" 
         WindowStartupLocation="CenterScreen"
+        Icon="\Cash-64.ico"
         Height="240" 
         Width="500">
 

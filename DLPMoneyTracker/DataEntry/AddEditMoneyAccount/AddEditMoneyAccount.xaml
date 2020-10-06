@@ -8,6 +8,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:core="clr-namespace:DLPMoneyTracker.Core"
         mc:Ignorable="d" 
+        Icon="\Cash-64.ico"
         WindowStartupLocation="CenterScreen"
         Title="Add/Edit Money Account"
         Height="500" 

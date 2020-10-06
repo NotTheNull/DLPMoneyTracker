@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:DLPMoneyTracker"
         xmlns:moneyAcct="clr-namespace:DLPMoneyTracker.DataEntry.AddEditMoneyAccount"
         mc:Ignorable="d"
+        Icon="Cash-64.ico"
         WindowStartupLocation="CenterScreen"
         Title="DLP Money Tracker" 
         Height="600" 

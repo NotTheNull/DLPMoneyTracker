@@ -9,6 +9,7 @@
         mc:Ignorable="d" 
         Title="Modify Recurrence"
         WindowStartupLocation="CenterScreen"
+        Icon="\Cash-64.ico"
         Height="180" 
         Width="420">
     <Window.Resources>
