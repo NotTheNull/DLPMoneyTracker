@@ -84,6 +84,7 @@ namespace DLPMoneyTracker.Data
                     {
                         UID = record.UID,
                         Description = record.Description,
+                        Account = _config.GetAccount(record.AccountID),
                         Category = _config.GetCategory(record.CategoryID),
                         ExpectedAmount = record.ExpectedAmount,
                         RecurrenceJSON = record.RecurrenceJSON
