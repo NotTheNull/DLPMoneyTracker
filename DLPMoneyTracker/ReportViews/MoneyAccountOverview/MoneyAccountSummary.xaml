@@ -103,6 +103,7 @@
         <TextBlock Grid.Row="4"
                    Grid.Column="4"
                    HorizontalAlignment="Right"
+                   Visibility="{Binding Path=ShowBudgetData, Converter={StaticResource convertBoolToVisibility}}"
                    Text="{Binding Path=BudgetBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, UpdateSourceTrigger=PropertyChanged, FallbackValue=0.00}"
                    Style="{StaticResource MainLabel}"
                    />
