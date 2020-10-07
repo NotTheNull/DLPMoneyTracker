@@ -35,6 +35,27 @@ namespace DLPMoneyTracker.ReportViews
             }
         }
 
+        public int OrderByAccountType
+        {
+            get
+            {
+                switch (AccountType)
+                {
+                    case MoneyAccountType.Checking: return 1;
+                    case MoneyAccountType.CreditCard: return 2;
+                    case MoneyAccountType.Savings: return 3;
+                    case MoneyAccountType.Loan: return 4;
+                    default: return 99;
+                }
+            }
+        }
+
+
+
+
+
+
+
 
 
 

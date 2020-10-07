@@ -32,7 +32,7 @@ namespace DLPMoneyTracker.ReportViews
         public void Load()
         {
             _listAcctSummary.Clear();
-            foreach(var act in _config.AccountsList)
+            foreach(var act in _config.AccountsList.OrderBy(o => o.OrderBy).ThenBy(o => o.Description))
             {
                 _listAcctSummary.Add(new MoneyAccountSummaryVM(act, _ledger, _budget, _config));
             }

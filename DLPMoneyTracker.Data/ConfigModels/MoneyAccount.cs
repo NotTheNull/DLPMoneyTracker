@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace DLPMoneyTracker.Data.ConfigModels
 {
@@ -26,7 +27,21 @@ namespace DLPMoneyTracker.Data.ConfigModels
 
         public string WebAddress { get; set; }
 
-
+        [JsonIgnore]
+        public int OrderBy
+        {
+            get
+            {
+                switch (AccountType)
+                {
+                    case MoneyAccountType.Checking: return 1;
+                    case MoneyAccountType.CreditCard: return 2;
+                    case MoneyAccountType.Savings: return 3;
+                    case MoneyAccountType.Loan: return 4;
+                    default: return 99;
+                }
+            }
+        }
 
         public MoneyAccount()
         {
