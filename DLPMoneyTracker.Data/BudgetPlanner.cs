@@ -25,6 +25,7 @@ namespace DLPMoneyTracker.Data
 
     public class BudgetPlanner : IBudgetPlanner
     {
+        // TODO: Modify program to store the Budget Folder Path in a config file
         private const string BUDGET_FOLDER_PATH = @"D:\Program Files\DLP Money Tracker\Data\";
 
         private string BudgetFilePath { get { return string.Concat(BUDGET_FOLDER_PATH, "Budget.json"); } }

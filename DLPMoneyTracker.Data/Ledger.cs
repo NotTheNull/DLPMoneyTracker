@@ -36,6 +36,7 @@ namespace DLPMoneyTracker.Data
     {
         public event LedgerModifiedHandler LedgerModified;
 
+        // TODO: Modify program to store the Ledger Folder Path in a config file
         private const string LEDGER_FOLDER_PATH = @"D:\Program Files\DLP Money Tracker\Data\";
         private string LedgerFilePath { get { return string.Concat(LEDGER_FOLDER_PATH, "Ledger.json"); } }
 

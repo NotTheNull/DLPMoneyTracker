@@ -36,6 +36,7 @@ namespace DLPMoneyTracker.Data
 
     public class TrackerConfig : ITrackerConfig
     {
+        // TODO: Modify program to store the Tracker Config Path in a config file
         public const string CONFIG_PATH = @"D:\Program Files\DLP Money Tracker\Config\";
         
         
