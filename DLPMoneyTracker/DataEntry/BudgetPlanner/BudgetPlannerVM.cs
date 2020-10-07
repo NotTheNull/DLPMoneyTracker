@@ -217,7 +217,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         {
             get
             {
-                return _cmdAddRecord ?? (_cmdEditRecord = new RelayCommand((o) =>
+                return _cmdAddRecord ?? (_cmdAddRecord = new RelayCommand((o) =>
                 {
                     this.AddBudgetRecord();
                 }));

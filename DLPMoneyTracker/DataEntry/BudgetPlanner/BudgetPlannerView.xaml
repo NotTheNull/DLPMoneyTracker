@@ -95,7 +95,7 @@
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
                                         <Button x:Name="btnEdit"
-                                                Command="{Binding Path=CommandEditRecord, Source={StaticResource proxy}}"
+                                                Command="{Binding Path=Data.CommandEditRecord, Source={StaticResource proxy}}"
                                                 CommandParameter="{Binding}"
                                                 Style="{StaticResource MenuButton}">
                                             <Button.Content>
@@ -104,7 +104,7 @@
                                         </Button>
 
                                         <Button x:Name="btnDelete"
-                                                Command="{Binding Path=CommandDeleteRecord, Source={StaticResource proxy}}"
+                                                Command="{Binding Path=Data.CommandDeleteRecord, Source={StaticResource proxy}}"
                                                 CommandParameter="{Binding}"
                                                 Style="{StaticResource MenuButton}">
                                             <Button.Content>
@@ -307,7 +307,7 @@
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
                                         <Button x:Name="btnEdit"
-                                                Command="{Binding Path=CommandEditRecord, Source={StaticResource proxy}}"
+                                                Command="{Binding Path=Data.CommandEditRecord, Source={StaticResource proxy}}"
                                                 CommandParameter="{Binding}"
                                                 Style="{StaticResource MenuButton}">
                                             <Button.Content>
@@ -316,7 +316,7 @@
                                         </Button>
 
                                         <Button x:Name="btnDelete"
-                                                Command="{Binding Path=CommandDeleteRecord, Source={StaticResource proxy}}"
+                                                Command="{Binding Path=Data.CommandDeleteRecord, Source={StaticResource proxy}}"
                                                 CommandParameter="{Binding}"
                                                 Style="{StaticResource MenuButton}">
                                             <Button.Content>
