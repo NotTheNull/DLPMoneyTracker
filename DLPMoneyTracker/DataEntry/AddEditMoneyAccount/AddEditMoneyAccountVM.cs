@@ -227,7 +227,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
                 foreach (var act in _config.AccountsList.Where(x => !string.IsNullOrWhiteSpace(x.ID)))
                 {
                     MoneyAccountVM vm = new MoneyAccountVM(act);
-                    vm.InitialAmount = _ledger.GetAccountBalance(act);
+                    vm.InitialAmount = _ledger.GetInitialBalance(act);
                     this.MoneyAccountList.Add(vm);
                 }
             }
