@@ -13,6 +13,7 @@
             <Setter Property="FontFamily" Value="MS Gothic" />
             <Setter Property="FontStyle" Value="Italic"/>
             <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
     </UserControl.Resources>
 
@@ -60,10 +61,23 @@
         <TextBlock Grid.Row="2"
                    Grid.Column="4"
                    HorizontalAlignment="Right"
+                   Margin="0, 0, 10, 0"
                    Text="{Binding Path=Balance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, UpdateSourceTrigger=PropertyChanged, FallbackValue=0.00}"
                    Style="{StaticResource MainLabel}"
                    />
 
+        <Button x:Name="btnDetail"
+                Grid.Row="2"
+                Grid.Column="5"
+                ToolTip="Ledger Detail"
+                Command="{Binding Path=CommandDetails}"
+                Style="{StaticResource MenuButton}">
+            <Button.Content>
+                <Image Source="/Icons/Stock-Exchange-256.png" />
+            </Button.Content>
+        </Button>
+        
+        
         <DataGrid Grid.Row="3" 
                   Grid.Column="1"
                   Grid.ColumnSpan="4"
@@ -103,6 +117,7 @@
         <TextBlock Grid.Row="4"
                    Grid.Column="4"
                    HorizontalAlignment="Right"
+                   Margin="0, 0, 10, 0"
                    Visibility="{Binding Path=ShowBudgetData, Converter={StaticResource convertBoolToVisibility}}"
                    Text="{Binding Path=BudgetBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, UpdateSourceTrigger=PropertyChanged, FallbackValue=0.00}"
                    Style="{StaticResource MainLabel}"

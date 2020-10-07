@@ -3,11 +3,14 @@ using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.ConfigModels;
 using DLPMoneyTracker.Data.TransactionModels.BillPlan;
 using DLPMoneyTracker.DataEntry.BudgetPlanner;
+using DLPMoneyTracker.ReportViews.LedgerViews;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Windows;
 
 namespace DLPMoneyTracker.ReportViews
 {
@@ -89,8 +92,17 @@ namespace DLPMoneyTracker.ReportViews
             {
                 return _cmdDetails ?? (_cmdDetails = new RelayCommand((o) =>
                 {
-                    // TODO: Command Details needs to display the ledger transactions associated with the given account
-
+                    LedgerDetailView uiAccountLedger = UICore.DependencyHost.GetService<LedgerDetailView>();
+                    uiAccountLedger.ShowAccountDetail(_act);
+                    Window windowLedger = new Window()
+                    {
+                        Content = uiAccountLedger,
+                        WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                        Title = "Ledger Detail",
+                        Width = 750,
+                        Height = 500
+                    };
+                    windowLedger.Show();
                 }));
             }
         }
