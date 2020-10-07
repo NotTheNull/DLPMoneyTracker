@@ -26,6 +26,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         private void btnEditRecurrence_Click(object sender, RoutedEventArgs e)
         {
             RecurrenceEditorView uiEditRecurrence = UICore.DependencyHost.GetService<RecurrenceEditorView>();
+            uiEditRecurrence.LoadRecurrence(_viewModel.Recurrence);
             uiEditRecurrence.ViewModel.RecurrenceSelected += ViewModel_RecurrenceSelected;
             uiEditRecurrence.Show();
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DLPMoneyTracker.Data.ScheduleRecurrence;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -27,6 +28,11 @@ namespace DLPMoneyTracker.DataEntry.ScheduleRecurrence
             this.DataContext = viewModel;
             _viewModel = viewModel;
             _viewModel.RecurrenceSelected += _viewModel_RecurrenceSelected;
+        }
+
+        public void LoadRecurrence(IScheduleRecurrence recurrence)
+        {
+            this.ViewModel.EditRecurrence(recurrence);
         }
 
         private void _viewModel_RecurrenceSelected(Data.ScheduleRecurrence.IScheduleRecurrence selected)
