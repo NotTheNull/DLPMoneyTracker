@@ -35,8 +35,12 @@
                   ItemsSource="{Binding Path=DisplayRecordsList}"
                   >
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Transaction Date" Binding="{Binding TransDate}" />
-                <DataGridTextColumn Header="Account" Binding="{Binding AccountName}" />
+                <DataGridTextColumn SortDirection="Ascending"
+                                    Header="Transaction Date" 
+                                    Binding="{Binding TransDate}" />
+                
+                <DataGridTextColumn Header="Account" 
+                                    Binding="{Binding AccountName}" />
 
                 <DataGridTemplateColumn Header="Category">
                     <DataGridTemplateColumn.CellTemplate>

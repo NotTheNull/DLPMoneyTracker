@@ -18,6 +18,8 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
     /// </summary>
     public partial class LedgerDetailView : UserControl
     {
+        // TODO: Consider adding filtering controls, at least for the Main Ledger
+
         private LedgerDetailVM _viewModel;
         private bool _canClose;
 

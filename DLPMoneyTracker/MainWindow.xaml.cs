@@ -12,7 +12,6 @@ namespace DLPMoneyTracker
 {
     // TODO: Create VM and UI to display summary of Categories that include current totals and budget expectations
     // TODO: Modify Main Window to show tabbed interface.  Main tab is summary of Money Accounts.  Second tab would be summary of Categories. Third tab could be Full Ledger.
-    
 
 
     /// <summary>
