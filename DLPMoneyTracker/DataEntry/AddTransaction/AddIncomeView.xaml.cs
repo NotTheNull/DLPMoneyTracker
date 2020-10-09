@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using DLPMoneyTracker.Data.TransactionModels.BillPlan;
+using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace DLPMoneyTracker.DataEntry.AddTransaction
 {
@@ -24,6 +16,18 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             InitializeComponent();
             this.DataContext = viewModel;
             _viewModel = viewModel;
+        }
+
+
+
+        public void CreateTransactionFromMoneyPlan(IMoneyPlan plan)
+        {
+            if (plan is null) throw new ArgumentNullException("Money Plan");
+
+            _viewModel.BankAccountId = plan.AccountID;
+            _viewModel.CategoryId = plan.CategoryID;
+            _viewModel.Description = plan.Description;
+            _viewModel.Amount = plan.ExpectedAmount;
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)

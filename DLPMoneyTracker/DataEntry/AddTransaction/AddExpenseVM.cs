@@ -15,6 +15,9 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
         private ITrackerConfig _config;
 
 
+        public Guid TransactionId { get; set; }
+
+
         private DateTime _transDate;
 
         public DateTime TransactionDate
@@ -36,6 +39,16 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             {
                 _act = value;
                 NotifyPropertyChanged(nameof(this.SelectedAccount));
+                NotifyPropertyChanged(nameof(this.SelectedAccountId));
+            }
+        }
+
+        public string SelectedAccountId
+        {
+            get { return this.SelectedAccount?.ID ?? string.Empty; }
+            set
+            {
+                this.SelectedAccount = _config.GetAccount(value);
             }
         }
 
@@ -49,6 +62,16 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             {
                 _cat = value;
                 NotifyPropertyChanged(nameof(this.SelectedCategory));
+                NotifyPropertyChanged(nameof(this.SelectedAccountId));
+            }
+        }
+
+        public Guid SelectedCategoryId
+        {
+            get { return this.SelectedCategory?.ID ?? Guid.Empty; }
+            set
+            {
+                this.SelectedCategory = _config.GetCategory(value);
             }
         }
 
@@ -101,6 +124,7 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
         {
             _ledger = ledger;
             _config = config;
+            this.TransactionId = Guid.Empty;
 
             this.FillLists();
             this.Clear();
@@ -138,18 +162,45 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             NotifyPropertyChanged(nameof(this.CategoryList));
         }
 
+
         public void SaveTransaction()
         {
-            MoneyRecord newRecord = new MoneyRecord()
-            {
-                TransDate = this.TransactionDate,
-                Account = this.SelectedAccount,
-                Category = this.SelectedCategory,
-                Description = this.Description.Trim(),
-                TransAmount = this.Amount
-            };
+            if (this.SelectedAccount is null) throw new InvalidOperationException("You MUST select an Account");
+            if (this.SelectedCategory is null) throw new InvalidOperationException("You MUST select a Category");
+            if (this.Amount <= decimal.Zero) throw new InvalidOperationException("Amount must be a positive value");
 
-            _ledger.AddTransaction(newRecord);
+            IMoneyRecord newRecord = null;
+            if (this.TransactionId != Guid.Empty)
+            {
+                newRecord = _ledger.TransactionList.FirstOrDefault(x => x.TransactionId == this.TransactionId);
+            }
+
+            if (newRecord is null)
+            {
+                newRecord = new MoneyRecord()
+                {
+                    TransDate = this.TransactionDate,
+                    Account = this.SelectedAccount,
+                    Category = this.SelectedCategory,
+                    Description = this.Description.Trim(),
+                    TransAmount = this.Amount
+                };
+
+                _ledger.AddTransaction(newRecord);
+                _ledger.SaveToFile();
+            }
+            else
+            {
+                if (newRecord is MoneyRecord transaction)
+                {
+                    transaction.TransDate = this.TransactionDate;
+                    transaction.TransAmount = this.Amount;
+                    transaction.Category = this.SelectedCategory;
+                    transaction.Account = this.SelectedAccount;
+                    transaction.Description = this.Description;
+                }
+            }
+            this.Clear();
         }
 
 

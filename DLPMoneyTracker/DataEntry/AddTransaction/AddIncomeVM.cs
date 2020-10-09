@@ -5,8 +5,6 @@ using DLPMoneyTracker.Data.TransactionModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Transactions;
 
 namespace DLPMoneyTracker.DataEntry.AddTransaction
 {
@@ -16,13 +14,8 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
         private ITrackerConfig _config;
 
 
-        private Guid _id;
 
-        public Guid TransactionId
-        {
-            get { return _id; }
-            set { _id = value; }
-        }
+        public Guid TransactionId { get; set; }
 
 
 
@@ -47,6 +40,16 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             { 
                 _act = value;
                 NotifyPropertyChanged(nameof(this.BankAccount));
+                NotifyPropertyChanged(nameof(this.BankAccountId));
+            }
+        }
+
+        public string BankAccountId
+        {
+            get { return this.BankAccount?.ID ?? string.Empty; }
+            set
+            {
+                this.BankAccount = _config.GetAccount(value);
             }
         }
 
@@ -60,8 +63,19 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             { 
                 _cat = value;
                 NotifyPropertyChanged(nameof(this.Category));
+                NotifyPropertyChanged(nameof(this.CategoryId));
             }
         }
+
+        public Guid CategoryId
+        {
+            get { return this.Category?.ID ?? Guid.Empty; }
+            set
+            {
+                this.Category = _config.GetCategory(value);
+            }
+        }
+
 
 
 
@@ -107,7 +121,7 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
         {
             _ledger = ledger;
             _config = config;
-            _id = Guid.Empty;
+            this.TransactionId = Guid.Empty;
 
 
             this.LoadAccounts();
@@ -156,27 +170,41 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             if (this.Category is null) throw new InvalidOperationException("Category cannot be NULL");
             if (this.Amount <= decimal.Zero) throw new InvalidOperationException("Amount must be provided");
 
-            MoneyRecord transaction = null;
-            if(this.TransactionId != Guid.Empty)
+
+            IMoneyRecord newRecord = null;
+            if (this.TransactionId != Guid.Empty)
             {
-                
+                newRecord = _ledger.TransactionList.FirstOrDefault(x => x.TransactionId == this.TransactionId);
+            }
+
+
+            if(newRecord is null)
+            {
+                _ledger.AddTransaction(new MoneyRecord()
+                {
+                    Account = this.BankAccount,
+                    Category = this.Category,
+                    TransDate = this.TransactionDate,
+                    Description = this.Description,
+                    TransAmount = this.Amount
+                });
+                _ledger.SaveToFile();
+            }
+            else
+            {
+                if(newRecord is MoneyRecord transaction)
+                {
+                    transaction.TransDate = this.TransactionDate;
+                    transaction.Account = this.BankAccount;
+                    transaction.Category = this.Category;
+                    transaction.Description = this.Description;
+                    transaction.TransAmount = this.Amount;
+                }
             }
 
 
 
 
-
-
-
-            _ledger.AddTransaction(new MoneyRecord()
-            {
-                Account = this.BankAccount,
-                Category = this.Category,
-                TransDate = this.TransactionDate,
-                Description = this.Description,
-                TransAmount = this.Amount
-            });
-            _ledger.SaveToFile();
             this.Clear();
         }
 

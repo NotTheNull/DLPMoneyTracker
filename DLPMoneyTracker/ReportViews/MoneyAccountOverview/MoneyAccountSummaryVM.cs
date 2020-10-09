@@ -140,6 +140,12 @@ namespace DLPMoneyTracker.ReportViews
         }
 
 
+        public void CreateTransaction(IMoneyPlan plan)
+        {
+            // TODO: Finish ability to create transaction from plan
+        }
+
+
 
         public void Refresh()
         {
