@@ -5,14 +5,28 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
 
+
 namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
 {
-    public class MoneyPlanRecord : IMoneyPlan
+    public class IncomePlan : IMoneyPlan
     {
         public Guid UID { get; set; }
 
+        public int PriorityOrder { get { return 1; } }
+
+        private TransactionCategory _cat;
+
         [JsonIgnore]
-        public TransactionCategory Category { get; set; }
+        public TransactionCategory Category
+        {
+            get { return _cat; }
+            set
+            {
+                if (value.CategoryType != CategoryType.Income) throw new InvalidOperationException("Only Income Categories are allowed");
+                _cat = value;
+            }
+        }
+
 
         public Guid CategoryID { get { return this.Category?.ID ?? Guid.Empty; } }
 
@@ -37,10 +51,17 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
             }
         }
 
+        [JsonIgnore]
+        public DateTime NotificationDate { get { return this.Recurrence?.NotificationDate ?? DateTime.MinValue; } }
+
+        [JsonIgnore]
+        public DateTime NextOccurrence { get { return this.Recurrence?.NextOccurence ?? DateTime.MaxValue; } }
+
         public decimal ExpectedAmount { get; set; }
 
 
-        public MoneyPlanRecord()
+
+        public IncomePlan()
         {
             this.UID = Guid.NewGuid();
         }

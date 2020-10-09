@@ -290,17 +290,15 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             if (!_moneyPlanner.MoneyPlanList.Any()) return;
             foreach (var record in _moneyPlanner.MoneyPlanList)
             {
-                if (record is MoneyPlanRecord data)
+                if(record is IncomePlan income)
                 {
-                    if (data.Category.CategoryType == CategoryType.Expense)
-                    {
-                        this.ExpenseList.Add(new MoneyPlanRecordVM(_config, data));
-                    }
-                    else
-                    {
-                        this.IncomeList.Add(new MoneyPlanRecordVM(_config, data));
-                    }
+                    this.IncomeList.Add(new MoneyPlanRecordVM(_config, income));
                 }
+                else if(record is ExpensePlan expense)
+                {
+                    this.ExpenseList.Add(new MoneyPlanRecordVM(_config, expense));
+                }
+
             }
         }
 

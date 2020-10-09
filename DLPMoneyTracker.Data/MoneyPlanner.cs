@@ -81,15 +81,7 @@ namespace DLPMoneyTracker.Data
             {
                 foreach(var record in dataList)
                 {
-                    _listMoneyPlans.Add(new MoneyPlanRecord()
-                    {
-                        UID = record.UID,
-                        Description = record.Description,
-                        Account = _config.GetAccount(record.AccountID),
-                        Category = _config.GetCategory(record.CategoryID),
-                        ExpectedAmount = record.ExpectedAmount,
-                        RecurrenceJSON = record.RecurrenceJSON
-                    });
+                    _listMoneyPlans.Add(MoneyPlanFactory.Build(_config, record));
                 }
             }
 
@@ -108,13 +100,11 @@ namespace DLPMoneyTracker.Data
             List<IMoneyPlan> dataList = new List<IMoneyPlan>();
             foreach(var record in this.MoneyPlanList.Where(x => x.AccountID == accountID))
             {
-                if(record is MoneyPlanRecord budget)
+                if(record.NotificationDate <= DateTime.Today && record.NextOccurrence >= DateTime.Today)
                 {
-                    if(budget.Recurrence.NotificationDate <= DateTime.Today && budget.Recurrence.NextOccurence >= DateTime.Today)
-                    {
-                        dataList.Add(budget);
-                    }
+                    dataList.Add(record);
                 }
+
             }
 
             return dataList;

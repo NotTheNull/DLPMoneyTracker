@@ -124,15 +124,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 
         public IMoneyPlan GetSource()
         {
-            return new MoneyPlanRecord()
-            {
-                UID = this.UID,
-                Description = this.Description,
-                Category = this.Category,
-                Account = this.Account,
-                Recurrence = this.Recurrence,
-                ExpectedAmount = this.Amount
-            };
+            return MoneyPlanFactory.Build(this.Category, this.Account, this.Description, this.Recurrence, this.Amount, this.UID);
         }
 
         public void LoadSource(IMoneyPlan src)
