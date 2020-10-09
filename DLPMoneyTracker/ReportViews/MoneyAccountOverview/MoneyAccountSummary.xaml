@@ -82,7 +82,7 @@
                   Grid.Column="1"
                   Grid.ColumnSpan="4"
                   Visibility="{Binding Path=ShowBudgetData, Converter={StaticResource convertBoolToVisibility}}"
-                  ItemsSource="{Binding Path=BudgetList}">
+                  ItemsSource="{Binding Path=MoneyPlanList}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Budget Description" Binding="{Binding Path=Description}" />
                 

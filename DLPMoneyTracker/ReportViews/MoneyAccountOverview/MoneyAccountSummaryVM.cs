@@ -64,7 +64,7 @@ namespace DLPMoneyTracker.ReportViews
 
 
         ObservableCollection<MoneyPlanRecordVM> _listBudgets = new ObservableCollection<MoneyPlanRecordVM>();
-        public ObservableCollection<MoneyPlanRecordVM> BudgetList { get { return _listBudgets; } }
+        public ObservableCollection<MoneyPlanRecordVM> MoneyPlanList { get { return _listBudgets; } }
 
         public bool ShowBudgetData { get { return _listBudgets.Any(); } }
 
@@ -73,9 +73,9 @@ namespace DLPMoneyTracker.ReportViews
             get
             {
                 decimal bal = this.Balance;
-                if (!this.BudgetList.Any()) return bal;
+                if (!this.MoneyPlanList.Any()) return bal;
 
-                foreach(var budget in this.BudgetList)
+                foreach(var budget in this.MoneyPlanList)
                 {
                     bal = _ledger.ApplyTransactionToBalance(_act, bal, budget.Category, budget.Amount);
                 }
@@ -124,16 +124,16 @@ namespace DLPMoneyTracker.ReportViews
             this.Refresh();
         }
 
-        private void LoadBudgets()
+        private void LoadMoneyPlan()
         {
-            this.BudgetList.Clear();
+            this.MoneyPlanList.Clear();
 
-            var budgetList = _budget.GetUpcomingMoneyPlansForAccount(this.AccountID);
-            if (budgetList is null || !budgetList.Any()) return;
+            var moneyList = _budget.GetUpcomingMoneyPlansForAccount(this.AccountID);
+            if (moneyList is null || !moneyList.Any()) return;
 
-            foreach(var budget in budgetList)
+            foreach(var budget in moneyList)
             {
-                this.BudgetList.Add(new MoneyPlanRecordVM(_config, budget));
+                this.MoneyPlanList.Add(new MoneyPlanRecordVM(_config, budget));
             }
             NotifyPropertyChanged(nameof(this.BudgetBalance));
             NotifyPropertyChanged(nameof(this.ShowBudgetData));
@@ -144,7 +144,7 @@ namespace DLPMoneyTracker.ReportViews
         public void Refresh()
         {
             this.Balance = _ledger.GetAccountBalance(_act);
-            this.LoadBudgets();
+            this.LoadMoneyPlan();
             this.NotifyAll();
         }
 
