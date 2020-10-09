@@ -246,7 +246,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
                     Account = src,
                     Category = TransactionCategory.InitialBalance,
                     Description = "Initial Balance",
-                    TransDate = DateTime.Now,
+                    TransDate = new DateTime(DateTime.Today.Year, 1, 1),
                     TransAmount = acct.InitialAmount
                 });
             }

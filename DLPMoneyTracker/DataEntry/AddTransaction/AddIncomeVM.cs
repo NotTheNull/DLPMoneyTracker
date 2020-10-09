@@ -16,6 +16,16 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
         private ITrackerConfig _config;
 
 
+        private Guid _id;
+
+        public Guid TransactionId
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+
+
+
         private DateTime _dateTrans;
 
         public DateTime TransactionDate
@@ -97,6 +107,8 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
         {
             _ledger = ledger;
             _config = config;
+            _id = Guid.Empty;
+
 
             this.LoadAccounts();
             this.LoadCategories();
@@ -143,6 +155,18 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             if (this.BankAccount is null) throw new InvalidOperationException("Bank Account cannot be NULL");
             if (this.Category is null) throw new InvalidOperationException("Category cannot be NULL");
             if (this.Amount <= decimal.Zero) throw new InvalidOperationException("Amount must be provided");
+
+            MoneyRecord transaction = null;
+            if(this.TransactionId != Guid.Empty)
+            {
+                
+            }
+
+
+
+
+
+
 
             _ledger.AddTransaction(new MoneyRecord()
             {

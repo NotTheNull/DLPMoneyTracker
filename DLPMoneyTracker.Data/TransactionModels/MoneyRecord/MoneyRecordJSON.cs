@@ -8,6 +8,7 @@ namespace DLPMoneyTracker.Data.TransactionModels
     [DebuggerDisplay("{AccountID} {Description} ${TransAmount}")]
     public class MoneyRecordJSON : IMoneyRecord
     {
+        public Guid TransactionId { get; set; }
         public DateTime TransDate { get; set; }
 
         public string AccountID { get; set; }

@@ -11,6 +11,8 @@ namespace DLPMoneyTracker.Data.TransactionModels
     [DebuggerDisplay("{AccountID} {Description} ${TransAmount}")]
     public class MoneyRecord : IMoneyRecord
     {
+        public Guid TransactionId { get; set; }
+
         public DateTime TransDate { get; set; }
 
         [JsonIgnore]
@@ -34,6 +36,7 @@ namespace DLPMoneyTracker.Data.TransactionModels
 
         public MoneyRecord()
         {
+            this.TransactionId = Guid.NewGuid();
             this.TransDate = DateTime.Now;
             this.Description = string.Empty;
             this.TransAmount = decimal.Zero;
