@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
 {
-    public class BudgetRecordJSON : IBudgetRecord
+    public class MoneyPlanRecordJSON : IMoneyPlan
     {
         public Guid UID { get; set; }
 

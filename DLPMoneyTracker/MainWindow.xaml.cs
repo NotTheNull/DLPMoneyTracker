@@ -86,7 +86,7 @@ namespace DLPMoneyTracker
 
         private void MenuItemModifyBudget_Click(object sender, RoutedEventArgs e)
         {
-            BudgetPlannerView uiModifyBudget = UICore.DependencyHost.GetService<BudgetPlannerView>();
+            MoneyPlannerView uiModifyBudget = UICore.DependencyHost.GetService<MoneyPlannerView>();
             uiModifyBudget.Show();
         }
     }

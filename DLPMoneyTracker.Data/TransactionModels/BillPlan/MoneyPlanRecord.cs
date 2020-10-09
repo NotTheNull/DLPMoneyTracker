@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
 {
-    public class BudgetRecord : IBudgetRecord
+    public class MoneyPlanRecord : IMoneyPlan
     {
         public Guid UID { get; set; }
 
@@ -40,7 +40,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
         public decimal ExpectedAmount { get; set; }
 
 
-        public BudgetRecord()
+        public MoneyPlanRecord()
         {
             this.UID = Guid.NewGuid();
         }

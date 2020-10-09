@@ -17,7 +17,7 @@ namespace DLPMoneyTracker.ReportViews
     public class MoneyAccountSummaryVM : BaseViewModel
     {
         private ITrackerConfig _config;
-        private IBudgetPlanner _budget;
+        private IMoneyPlanner _budget;
         private ILedger _ledger;
         private MoneyAccount _act;
 
@@ -63,8 +63,8 @@ namespace DLPMoneyTracker.ReportViews
 
 
 
-        ObservableCollection<BudgetRecordVM> _listBudgets = new ObservableCollection<BudgetRecordVM>();
-        public ObservableCollection<BudgetRecordVM> BudgetList { get { return _listBudgets; } }
+        ObservableCollection<MoneyPlanRecordVM> _listBudgets = new ObservableCollection<MoneyPlanRecordVM>();
+        public ObservableCollection<MoneyPlanRecordVM> BudgetList { get { return _listBudgets; } }
 
         public bool ShowBudgetData { get { return _listBudgets.Any(); } }
 
@@ -113,7 +113,7 @@ namespace DLPMoneyTracker.ReportViews
 
 
 
-        public MoneyAccountSummaryVM(MoneyAccount act, ILedger ledger, IBudgetPlanner budget, ITrackerConfig config)
+        public MoneyAccountSummaryVM(MoneyAccount act, ILedger ledger, IMoneyPlanner budget, ITrackerConfig config)
         {
             _config = config;
             _budget = budget;
@@ -128,12 +128,12 @@ namespace DLPMoneyTracker.ReportViews
         {
             this.BudgetList.Clear();
 
-            var budgetList = _budget.GetUpcomingBudgetListForAccount(this.AccountID);
+            var budgetList = _budget.GetUpcomingMoneyPlansForAccount(this.AccountID);
             if (budgetList is null || !budgetList.Any()) return;
 
             foreach(var budget in budgetList)
             {
-                this.BudgetList.Add(new BudgetRecordVM(_config, budget));
+                this.BudgetList.Add(new MoneyPlanRecordVM(_config, budget));
             }
             NotifyPropertyChanged(nameof(this.BudgetBalance));
             NotifyPropertyChanged(nameof(this.ShowBudgetData));

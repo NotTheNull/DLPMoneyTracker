@@ -12,7 +12,7 @@ namespace DLPMoneyTracker.ReportViews
 {
     public class MoneyAccountOverviewVM : BaseViewModel
     {
-        private IBudgetPlanner _budget;
+        private IMoneyPlanner _budget;
         private ITrackerConfig _config;
         private ILedger _ledger;
 
@@ -21,7 +21,7 @@ namespace DLPMoneyTracker.ReportViews
         public ObservableCollection<MoneyAccountSummaryVM> AccountSummaryList { get { return _listAcctSummary; } }
 
 
-        public MoneyAccountOverviewVM(ITrackerConfig config, IBudgetPlanner budget, ILedger ledger)
+        public MoneyAccountOverviewVM(ITrackerConfig config, IMoneyPlanner budget, ILedger ledger)
         {
             _budget = budget;
             _config = config;

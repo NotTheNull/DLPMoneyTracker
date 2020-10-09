@@ -7,11 +7,11 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
     /// <summary>
     /// Interaction logic for BudgetPlannerView.xaml
     /// </summary>
-    public partial class BudgetPlannerView : Window
+    public partial class MoneyPlannerView : Window
     {
-        private BudgetPlannerVM _viewModel;
+        private MoneyPlannerVM _viewModel;
 
-        public BudgetPlannerView(BudgetPlannerVM viewModel)
+        public MoneyPlannerView(MoneyPlannerVM viewModel)
         {
             InitializeComponent();
             this.DataContext = viewModel;

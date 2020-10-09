@@ -9,7 +9,7 @@ using System.Text;
 
 namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 {
-    public class BudgetRecordVM : BaseViewModel, ILinkDataModelToViewModel<IBudgetRecord>
+    public class MoneyPlanRecordVM : BaseViewModel, ILinkDataModelToViewModel<IMoneyPlan>
     {
         private ITrackerConfig _config;
 
@@ -106,12 +106,12 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 
 
 
-        public BudgetRecordVM(ITrackerConfig config)
+        public MoneyPlanRecordVM(ITrackerConfig config)
         {
             this.UID = Guid.NewGuid();
             _config = config;
         }
-        public BudgetRecordVM(ITrackerConfig config, IBudgetRecord src)
+        public MoneyPlanRecordVM(ITrackerConfig config, IMoneyPlan src)
         {
             this.UID = Guid.NewGuid();
             _config = config;
@@ -122,9 +122,9 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 
 
 
-        public IBudgetRecord GetSource()
+        public IMoneyPlan GetSource()
         {
-            return new BudgetRecord()
+            return new MoneyPlanRecord()
             {
                 UID = this.UID,
                 Description = this.Description,
@@ -135,7 +135,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             };
         }
 
-        public void LoadSource(IBudgetRecord src)
+        public void LoadSource(IMoneyPlan src)
         {
             this.UID = src.UID;
             this.Description = src.Description;

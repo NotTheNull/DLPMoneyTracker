@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
 {
-    public interface IBudgetRecord
+    public interface IMoneyPlan
     {
         Guid UID { get; }
 

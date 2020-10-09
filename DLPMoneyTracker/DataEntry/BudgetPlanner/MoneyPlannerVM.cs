@@ -11,15 +11,20 @@ using System.Text;
 
 namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 {
-    public class BudgetPlannerVM : BaseViewModel, IDisposable
+    /// <summary>
+    /// A Money Plan is a fixed recurring expense or income that has, hopefully, limited variability.  
+    /// Such items include Utility Bills, Subscriptions, Paychecks, etc
+    /// </summary>
+    
+    public class MoneyPlannerVM : BaseViewModel, IDisposable
     {
         private ITrackerConfig _config;
-        private IBudgetPlanner _budget;
+        private IMoneyPlanner _moneyPlanner;
 
         #region Editing Control Properties
 
-        private BudgetRecordVM _record;
-        private BudgetRecordVM Source
+        private MoneyPlanRecordVM _record;
+        private MoneyPlanRecordVM Source
         {
             get { return _record; }
             set
@@ -141,11 +146,11 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 
 
 
-        private ObservableCollection<BudgetRecordVM> _listExpenses = new ObservableCollection<BudgetRecordVM>();
-        public ObservableCollection<BudgetRecordVM> ExpenseBudgetList { get { return _listExpenses; } }
+        private ObservableCollection<MoneyPlanRecordVM> _listExpenses = new ObservableCollection<MoneyPlanRecordVM>();
+        public ObservableCollection<MoneyPlanRecordVM> ExpenseList { get { return _listExpenses; } }
 
-        private ObservableCollection<BudgetRecordVM> _listIncome = new ObservableCollection<BudgetRecordVM>();
-        public ObservableCollection<BudgetRecordVM> IncomeBudgetList { get { return _listIncome; } }
+        private ObservableCollection<MoneyPlanRecordVM> _listIncome = new ObservableCollection<MoneyPlanRecordVM>();
+        public ObservableCollection<MoneyPlanRecordVM> IncomeList { get { return _listIncome; } }
 
 
 
@@ -204,7 +209,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             {
                 return _cmdEditRecord ?? (_cmdEditRecord = new RelayCommand((record) =>
                 {
-                    if (record is BudgetRecordVM vm)
+                    if (record is MoneyPlanRecordVM vm)
                     {
                         this.Source = vm;
                     }
@@ -219,7 +224,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             {
                 return _cmdAddRecord ?? (_cmdAddRecord = new RelayCommand((o) =>
                 {
-                    this.AddBudgetRecord();
+                    this.AddMoneyPlanRecord();
                 }));
             }
         }
@@ -231,9 +236,9 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             {
                 return _cmdDeleteRecord ?? (_cmdDeleteRecord = new RelayCommand((record) =>
                 {
-                    if (record is BudgetRecordVM vm)
+                    if (record is MoneyPlanRecordVM vm)
                     {
-                        this.RemoveBudgetRecord(vm);
+                        this.RemoveMoneyPlanRecord(vm);
                     }
                 }));
             }
@@ -260,40 +265,40 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 
 
 
-        public BudgetPlannerVM(ITrackerConfig config, IBudgetPlanner budget) : base()
+        public MoneyPlannerVM(ITrackerConfig config, IMoneyPlanner planner) : base()
         {
-            _budget = budget;
+            _moneyPlanner = planner;
             _config = config;
 
             this.LoadAccounts();
-            this.LoadBudget();
+            this.LoadMoneyPlan();
             this.Clear();
         }
-        ~BudgetPlannerVM() { this.Dispose(); }
+        ~MoneyPlannerVM() { this.Dispose(); }
 
 
         private void Clear()
         {
-            this.Source = new BudgetRecordVM(_config);
+            this.Source = new MoneyPlanRecordVM(_config);
         }
 
-        private void LoadBudget()
+        private void LoadMoneyPlan()
         {
-            this.ExpenseBudgetList.Clear();
-            this.IncomeBudgetList.Clear();
+            this.ExpenseList.Clear();
+            this.IncomeList.Clear();
 
-            if (!_budget.BudgetRecordList.Any()) return;
-            foreach (var record in _budget.BudgetRecordList)
+            if (!_moneyPlanner.MoneyPlanList.Any()) return;
+            foreach (var record in _moneyPlanner.MoneyPlanList)
             {
-                if (record is BudgetRecord data)
+                if (record is MoneyPlanRecord data)
                 {
                     if (data.Category.CategoryType == CategoryType.Expense)
                     {
-                        this.ExpenseBudgetList.Add(new BudgetRecordVM(_config, data));
+                        this.ExpenseList.Add(new MoneyPlanRecordVM(_config, data));
                     }
                     else
                     {
-                        this.IncomeBudgetList.Add(new BudgetRecordVM(_config, data));
+                        this.IncomeList.Add(new MoneyPlanRecordVM(_config, data));
                     }
                 }
             }
@@ -334,61 +339,61 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 
         private void CommitChanges()
         {
-            _budget.ClearBudget();
-            if (this.ExpenseBudgetList.Any())
+            _moneyPlanner.ClearRecordList();
+            if (this.ExpenseList.Any())
             {
-                foreach (var exp in this.ExpenseBudgetList)
+                foreach (var exp in this.ExpenseList)
                 {
-                    _budget.AddBudget(exp.GetSource());
+                    _moneyPlanner.AddMoneyPlan(exp.GetSource());
                 }
             }
 
-            if (this.IncomeBudgetList.Any())
+            if (this.IncomeList.Any())
             {
-                foreach (var inc in this.IncomeBudgetList)
+                foreach (var inc in this.IncomeList)
                 {
-                    _budget.AddBudget(inc.GetSource());
+                    _moneyPlanner.AddMoneyPlan(inc.GetSource());
                 }
             }
 
-            _budget.SaveToFile();
+            _moneyPlanner.SaveToFile();
         }
 
         private void DiscardChanges()
         {
-            this.LoadBudget();
+            this.LoadMoneyPlan();
         }
 
 
-        private void AddBudgetRecord()
+        private void AddMoneyPlanRecord()
         {
             if (this.IsExpense)
             {
-                if (!this.ExpenseBudgetList.Contains(this.Source))
+                if (!this.ExpenseList.Contains(this.Source))
                 {
-                    this.ExpenseBudgetList.Add(this.Source);
+                    this.ExpenseList.Add(this.Source);
                 }
             }
             else
             {
-                if (!this.IncomeBudgetList.Contains(this.Source))
+                if (!this.IncomeList.Contains(this.Source))
                 {
-                    this.IncomeBudgetList.Add(this.Source);
+                    this.IncomeList.Add(this.Source);
                 }
             }
         }
 
 
-        private void RemoveBudgetRecord(BudgetRecordVM record)
+        private void RemoveMoneyPlanRecord(MoneyPlanRecordVM record)
         {
             if (record is null) throw new ArgumentNullException("Budget Record VM");
-            if (this.ExpenseBudgetList.Contains(record))
+            if (this.ExpenseList.Contains(record))
             {
-                this.ExpenseBudgetList.Remove(record);
+                this.ExpenseList.Remove(record);
             }
-            else if (this.IncomeBudgetList.Contains(record))
+            else if (this.IncomeList.Contains(record))
             {
-                this.IncomeBudgetList.Remove(record);
+                this.IncomeList.Remove(record);
             }
         }
 
@@ -429,7 +434,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 
             _record = null;
             _config = null;
-            _budget = null;
+            _moneyPlanner = null;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿<Window x:Class="DLPMoneyTracker.DataEntry.BudgetPlanner.BudgetPlannerView"
+﻿<Window x:Class="DLPMoneyTracker.DataEntry.BudgetPlanner.MoneyPlannerView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -84,7 +84,7 @@
 
                 <DataGrid x:Name="dataExpenses"
                           VerticalAlignment="Center"
-                          ItemsSource="{Binding Path=ExpenseBudgetList}"
+                          ItemsSource="{Binding Path=ExpenseList}"
                           Height="350">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Description" 
@@ -296,7 +296,7 @@
 
                 <DataGrid x:Name="dataIncome"
                           VerticalAlignment="Center"
-                          ItemsSource="{Binding Path=IncomeBudgetList}"
+                          ItemsSource="{Binding Path=IncomeList}"
                           Height="350">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Description" 
