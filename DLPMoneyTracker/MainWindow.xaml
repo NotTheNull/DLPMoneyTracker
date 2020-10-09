@@ -55,7 +55,7 @@
                             <Image Source="/Icons/Money-Transfer-256.png" />
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Modify _Budget" Click="MenuItemModifyBudget_Click" >
+                    <MenuItem Header="Modify Fixed Expense/Income Budget" Click="MenuItemModifyBudget_Click" >
                         <MenuItem.Icon>
                             <Image Source="/Icons/Stock-Exchange-256.png" />
                         </MenuItem.Icon>
