@@ -36,17 +36,16 @@ namespace DLPMoneyTracker.Data
 
     public class TrackerConfig : ITrackerConfig
     {
-        // TODO: Modify program to store the Tracker Config Path in a config file
-        public const string CONFIG_PATH = @"D:\Program Files\DLP Money Tracker\Config\";
         
         
-        private string AccountListConfig { get { return string.Concat(CONFIG_PATH, "MoneyAccounts.json"); } }
+        
+        private string AccountListConfig { get { return string.Concat(AppConfigSettings.CONFIG_FOLDER_PATH, "MoneyAccounts.json"); } }
 
         private List<MoneyAccount> _listAccts = new List<MoneyAccount>();
         public ReadOnlyCollection<MoneyAccount> AccountsList { get { return _listAccts.OrderBy(o => o.ID).ToList().AsReadOnly(); } }
 
 
-        private string CategoryListConfig { get { return string.Concat(CONFIG_PATH, "Categories.json"); } }
+        private string CategoryListConfig { get { return string.Concat(AppConfigSettings.CONFIG_FOLDER_PATH, "Categories.json"); } }
 
         private List<TransactionCategory> _listCategories = new List<TransactionCategory>();
         public ReadOnlyCollection<TransactionCategory> CategoryList { get { return _listCategories.OrderBy(o => o.Name).ToList().AsReadOnly(); } }
@@ -55,9 +54,9 @@ namespace DLPMoneyTracker.Data
         
         public TrackerConfig()
         {
-            if (!Directory.Exists(CONFIG_PATH))
+            if (!Directory.Exists(AppConfigSettings.CONFIG_FOLDER_PATH))
             {
-                Directory.CreateDirectory(CONFIG_PATH);
+                Directory.CreateDirectory(AppConfigSettings.CONFIG_FOLDER_PATH);
             }
 
             this.LoadMoneyAccounts();

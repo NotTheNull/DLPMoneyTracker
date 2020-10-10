@@ -11,24 +11,21 @@ using System.Text.Json;
 namespace DLPMoneyTracker.Data
 {
 
-    public interface IMoneyPlanner
+    public interface IMoneyPlanner : IJSONFileMaker
     {
         ReadOnlyCollection<IMoneyPlan> MoneyPlanList { get; }
 
         void AddMoneyPlan(IMoneyPlan record);
         void RemoveMoneyPlan(IMoneyPlan record);
         void ClearRecordList();
-        void LoadFromFile();
-        void SaveToFile();
+
         IEnumerable<IMoneyPlan> GetUpcomingMoneyPlansForAccount(string accountID);
     }
 
     public class MoneyPlanner : IMoneyPlanner
     {
-        // TODO: Modify program to store the Budget Folder Path in a config file
-        private const string MONEYPLAN_FOLDER_PATH = @"D:\Program Files\DLP Money Tracker\Data\";
 
-        private string MoneyPlanFilePath { get { return string.Concat(MONEYPLAN_FOLDER_PATH, "MoneyPlan.json"); } }
+        public string FilePath { get { return string.Concat(AppConfigSettings.DATA_FOLDER_PATH, "MoneyPlan.json"); } }
 
         private ITrackerConfig _config;
 
@@ -41,9 +38,9 @@ namespace DLPMoneyTracker.Data
         public MoneyPlanner(ITrackerConfig config)
         {
             _config = config;
-            if(!Directory.Exists(MONEYPLAN_FOLDER_PATH))
+            if (!Directory.Exists(AppConfigSettings.DATA_FOLDER_PATH))
             {
-                Directory.CreateDirectory(MONEYPLAN_FOLDER_PATH);
+                Directory.CreateDirectory(AppConfigSettings.DATA_FOLDER_PATH);
             }
             this.LoadFromFile();
         }
@@ -71,26 +68,24 @@ namespace DLPMoneyTracker.Data
         {
             if (_listMoneyPlans is null) _listMoneyPlans = new List<IMoneyPlan>();
             _listMoneyPlans.Clear();
-            if(!File.Exists(this.MoneyPlanFilePath)) return;
+            if (!File.Exists(this.FilePath)) return;
 
-            string json = File.ReadAllText(MoneyPlanFilePath);
+            string json = File.ReadAllText(FilePath);
             if (string.IsNullOrWhiteSpace(json)) return;
 
             var dataList = (List<MoneyPlanRecordJSON>)JsonSerializer.Deserialize(json, typeof(List<MoneyPlanRecordJSON>));
-            if(dataList.Any())
-            {
-                foreach(var record in dataList)
-                {
-                    _listMoneyPlans.Add(MoneyPlanFactory.Build(_config, record));
-                }
-            }
+            if (dataList is null || !dataList.Any()) return;
 
+            foreach (var record in dataList)
+            {
+                _listMoneyPlans.Add(MoneyPlanFactory.Build(_config, record));
+            }
         }
 
         public void SaveToFile()
         {
             string json = JsonSerializer.Serialize(_listMoneyPlans);
-            File.WriteAllText(MoneyPlanFilePath, json);
+            File.WriteAllText(FilePath, json);
         }
 
         public IEnumerable<IMoneyPlan> GetUpcomingMoneyPlansForAccount(string accountID)
@@ -98,9 +93,9 @@ namespace DLPMoneyTracker.Data
             if (!this.MoneyPlanList.Any(x => x.AccountID == accountID)) return null;
 
             List<IMoneyPlan> dataList = new List<IMoneyPlan>();
-            foreach(var record in this.MoneyPlanList.Where(x => x.AccountID == accountID))
+            foreach (var record in this.MoneyPlanList.Where(x => x.AccountID == accountID))
             {
-                if(record.NotificationDate <= DateTime.Today && record.NextOccurrence >= DateTime.Today)
+                if (record.NotificationDate <= DateTime.Today && record.NextOccurrence >= DateTime.Today)
                 {
                     dataList.Add(record);
                 }

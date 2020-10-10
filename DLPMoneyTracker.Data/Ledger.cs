@@ -11,7 +11,7 @@ using System.Text.Json;
 namespace DLPMoneyTracker.Data
 {
     public delegate void LedgerModifiedHandler();
-    public interface ILedger
+    public interface ILedger : IJSONFileMaker
     {
         event LedgerModifiedHandler LedgerModified;
 
@@ -27,8 +27,6 @@ namespace DLPMoneyTracker.Data
         decimal ApplyTransactionToBalance(MoneyAccount act, decimal startValue, TransactionCategory category, decimal transAmount);
         decimal GetCategoryTotal(TransactionCategory cat);
 
-        void SaveToFile();
-        void LoadFromFile();
     }
 
 
@@ -36,9 +34,8 @@ namespace DLPMoneyTracker.Data
     {
         public event LedgerModifiedHandler LedgerModified;
 
-        // TODO: Modify program to store the Ledger Folder Path in a config file
-        private const string LEDGER_FOLDER_PATH = @"D:\Program Files\DLP Money Tracker\Data\";
-        private string LedgerFilePath { get { return string.Concat(LEDGER_FOLDER_PATH, "Ledger.json"); } }
+
+        public string FilePath { get { return string.Concat(AppConfigSettings.DATA_FOLDER_PATH, "Ledger.json"); } }
 
         private ITrackerConfig _config;
 
@@ -58,9 +55,9 @@ namespace DLPMoneyTracker.Data
         public Ledger(ITrackerConfig config)
         {
             _config = config;
-            if (!Directory.Exists(LEDGER_FOLDER_PATH))
+            if (!Directory.Exists(AppConfigSettings.DATA_FOLDER_PATH))
             {
-                Directory.CreateDirectory(LEDGER_FOLDER_PATH);
+                Directory.CreateDirectory(AppConfigSettings.DATA_FOLDER_PATH);
             }
 
             this.LoadFromFile();
@@ -190,7 +187,7 @@ namespace DLPMoneyTracker.Data
         public void SaveToFile()
         {
             string json = JsonSerializer.Serialize(_listTransactions);
-            File.WriteAllText(LedgerFilePath, json);
+            File.WriteAllText(FilePath, json);
             LedgerModified?.Invoke();
         }
 
@@ -198,28 +195,28 @@ namespace DLPMoneyTracker.Data
         {
             if (_listTransactions is null) _listTransactions = new List<IMoneyRecord>();
             _listTransactions.Clear();
-            if (!File.Exists(LedgerFilePath)) return;
+            if (!File.Exists(FilePath)) return;
 
-            string json = File.ReadAllText(LedgerFilePath);
+            string json = File.ReadAllText(FilePath);
             if (string.IsNullOrWhiteSpace(json)) return;
 
             var dataList = (List<MoneyRecordJSON>)JsonSerializer.Deserialize(json, typeof(List<MoneyRecordJSON>));
-            if (dataList.Any())
-            {
-                foreach (var trans in dataList)
-                {
-                    MoneyRecord record = new MoneyRecord()
-                    {
-                        TransDate = trans.TransDate,
-                        Account = _config.GetAccount(trans.AccountID),
-                        Category = _config.GetCategory(trans.CategoryUID),
-                        Description = trans.Description,
-                        TransAmount = trans.TransAmount
-                    };
+            if (dataList is null || !dataList.Any()) return;
 
-                    _listTransactions.Add(record);
-                }
+            foreach (var trans in dataList)
+            {
+                MoneyRecord record = new MoneyRecord()
+                {
+                    TransDate = trans.TransDate,
+                    Account = _config.GetAccount(trans.AccountID),
+                    Category = _config.GetCategory(trans.CategoryUID),
+                    Description = trans.Description,
+                    TransAmount = trans.TransAmount
+                };
+
+                _listTransactions.Add(record);
             }
+
         }
     }
 }
