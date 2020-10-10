@@ -116,9 +116,9 @@ namespace DLPMoneyTracker.ReportViews
             {
                 return _cmdCreateTransaction ?? (_cmdCreateTransaction = new RelayCommand((o) =>
                 {
-                    if(o is IMoneyPlan plan)
+                    if(o is MoneyPlanRecordVM plan)
                     {
-                        this.CreateTransaction(plan);
+                        this.CreateTransaction(plan.GetSource());
                     }
                 }));
             }
