@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DLPMoneyTracker.ReportViews"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:core="clr-namespace:DLPMoneyTracker.Core"
              mc:Ignorable="d" 
              MinHeight="70" 
              Width="680">
@@ -83,7 +85,12 @@
                   Grid.ColumnSpan="4"
                   Visibility="{Binding Path=ShowBudgetData, Converter={StaticResource convertBoolToVisibility}}"
                   ItemsSource="{Binding Path=MoneyPlanList}">
+            <DataGrid.Resources>
+                <core:BindingProxy x:Key="proxy" Data="{Binding}" />
+            </DataGrid.Resources>
+            
             <DataGrid.Columns>
+                
                 <DataGridTextColumn Header="Budget Description" Binding="{Binding Path=Description}" />
                 
                 <DataGridTemplateColumn Header="Category">
@@ -104,6 +111,24 @@
                 <DataGridTextColumn Header="Next Date" Binding="{Binding Path=NextDueDate, Converter={StaticResource convertDateToDisplay}, ConverterParameter=yyyy/MM/dd}" />
 
                 <DataGridTextColumn Header="Amount" Binding="{Binding Path=Amount, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}" />
+
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Style="{StaticResource MenuButton}" 
+                                        Command="{Binding Path=Data.CommandCreateTransaction, Source={StaticResource proxy}}"
+                                        CommandParameter="{Binding}"
+                                        ToolTip="Create Transaction">
+                                    <Button.Content>
+                                        <Image Source="/Icons/Payment-256.png" />
+                                    </Button.Content>
+                                </Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
             </DataGrid.Columns>
         </DataGrid>
 

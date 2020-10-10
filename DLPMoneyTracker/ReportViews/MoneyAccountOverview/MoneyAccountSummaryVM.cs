@@ -2,6 +2,7 @@
 using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.ConfigModels;
 using DLPMoneyTracker.Data.TransactionModels.BillPlan;
+using DLPMoneyTracker.DataEntry.AddTransaction;
 using DLPMoneyTracker.DataEntry.BudgetPlanner;
 using DLPMoneyTracker.ReportViews.LedgerViews;
 using Microsoft.Extensions.DependencyInjection;
@@ -142,7 +143,18 @@ namespace DLPMoneyTracker.ReportViews
 
         public void CreateTransaction(IMoneyPlan plan)
         {
-            // TODO: Finish ability to create transaction from plan
+            if(plan is ExpensePlan expense)
+            {
+                AddExpenseView uiAddExpense = UICore.DependencyHost.GetService<AddExpenseView>();
+                uiAddExpense.CreateTransactionFromMoneyPlan(expense);
+                uiAddExpense.Show();
+            }
+            else if(plan is IncomePlan income)
+            {
+                AddIncomeView uiAddIncome = UICore.DependencyHost.GetService<AddIncomeView>();
+                uiAddIncome.CreateTransactionFromMoneyPlan(income);
+                uiAddIncome.Show();
+            }
         }
 
 
