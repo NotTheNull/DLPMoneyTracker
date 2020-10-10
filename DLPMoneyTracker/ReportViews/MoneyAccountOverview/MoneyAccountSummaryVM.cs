@@ -109,6 +109,21 @@ namespace DLPMoneyTracker.ReportViews
         }
 
 
+        private RelayCommand _cmdCreateTransaction;
+        public RelayCommand CommandCreateTransaction
+        {
+            get
+            {
+                return _cmdCreateTransaction ?? (_cmdCreateTransaction = new RelayCommand((o) =>
+                {
+                    if(o is IMoneyPlan plan)
+                    {
+                        this.CreateTransaction(plan);
+                    }
+                }));
+            }
+        }
+
         #endregion
 
 
@@ -132,7 +147,7 @@ namespace DLPMoneyTracker.ReportViews
             var moneyList = _budget.GetUpcomingMoneyPlansForAccount(this.AccountID);
             if (moneyList is null || !moneyList.Any()) return;
 
-            foreach(var budget in moneyList)
+            foreach(var budget in moneyList.OrderBy(o => o.NotificationDate).ThenBy(o => o.PriorityOrder))
             {
                 this.MoneyPlanList.Add(new MoneyPlanRecordVM(_config, budget));
             }
