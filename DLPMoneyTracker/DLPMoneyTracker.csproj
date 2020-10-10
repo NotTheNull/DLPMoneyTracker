@@ -22,6 +22,7 @@
     <None Remove="Icons\Payment-256.png" />
     <None Remove="Icons\Refresh-256.png" />
     <None Remove="Icons\Save-256.png" />
+    <None Remove="Icons\Settings-01-256.png" />
     <None Remove="Icons\Stock-Exchange-256.png" />
   </ItemGroup>
 
@@ -49,6 +50,7 @@
     <Resource Include="Icons\Payment-256.png" />
     <Resource Include="Icons\Refresh-256.png" />
     <Resource Include="Icons\Save-256.png" />
+    <Resource Include="Icons\Settings-01-256.png" />
     <Resource Include="Icons\Stock-Exchange-256.png" />
   </ItemGroup>
 
