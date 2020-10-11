@@ -12,6 +12,9 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
     {
         public Guid UID { get; set; }
 
+        [JsonIgnore]
+        public MoneyPlanType PlanType { get { return MoneyPlanType.Income; } }
+
         public int PriorityOrder { get { return 1; } }
 
         private TransactionCategory _cat;
@@ -50,6 +53,10 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
                 this.Recurrence = ScheduleRecurrenceFactory.Build(value);
             }
         }
+
+
+        [JsonIgnore]
+        public RecurrenceFrequency Frequency { get { return this.Recurrence.Frequency; } }
 
         [JsonIgnore]
         public DateTime NotificationDate { get { return this.Recurrence?.NotificationDate ?? DateTime.MinValue; } }

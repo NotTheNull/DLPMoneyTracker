@@ -7,9 +7,20 @@ using System.Text.Json.Serialization;
 
 namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
 {
+    public enum MoneyPlanType
+    {
+        Expense,
+        Income,
+        NotSet
+    }
+
+
     public interface IMoneyPlan
     {
         Guid UID { get; }
+
+        [JsonIgnore]
+        MoneyPlanType PlanType { get; }
 
         [JsonIgnore]
         int PriorityOrder { get; } // Mainly for sorting purposes 
@@ -21,6 +32,9 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
         string AccountID { get; }
 
         string RecurrenceJSON { get; }
+
+        [JsonIgnore]
+        RecurrenceFrequency Frequency { get; }
 
         decimal ExpectedAmount { get; }
 
@@ -36,8 +50,10 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
     {
         public Guid UID { get; set; }
 
+        public MoneyPlanType PlanType { get { return MoneyPlanType.NotSet; } }
+
         [JsonIgnore]
-        public int PriorityOrder { get { return 9999999; } } 
+        public int PriorityOrder { get { return 9999999; } }
 
         public string Description { get; set; }
 
@@ -46,6 +62,9 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
         public string AccountID { get; set; }
 
         public string RecurrenceJSON { get; set; }
+
+        [JsonIgnore]
+        public RecurrenceFrequency Frequency { get { return RecurrenceFrequency.Annual; } }
 
         public decimal ExpectedAmount { get; set; }
 

@@ -16,6 +16,8 @@ namespace DLPMoneyTracker.Data
 
         void AddBudget(IBudget record);
         void RemoveBudget(IBudget record);
+        void ClearBudget();
+        decimal GetBudgetAmount(Guid categoryId);
     }
 
 
@@ -65,7 +67,15 @@ namespace DLPMoneyTracker.Data
             _listBudgets.Remove(record);
         }
 
+        public void ClearBudget()
+        {
+            _listBudgets.Clear();
+        }
 
+        public decimal GetBudgetAmount(Guid categoryId)
+        {
+            return _listBudgets.FirstOrDefault(x => x.CategoryId == categoryId)?.BudgetAmount ?? decimal.Zero;
+        }
 
 
         public void LoadFromFile()

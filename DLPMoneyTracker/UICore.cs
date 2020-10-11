@@ -34,6 +34,7 @@ namespace DLPMoneyTracker
             services.AddSingleton<ITrackerConfig, TrackerConfig>();
             services.AddSingleton<ILedger, Ledger>();
             services.AddSingleton<IMoneyPlanner, MoneyPlanner>();
+            services.AddSingleton<IBudgetTracker, BudgetTracker>();
             services.AddSingleton<MainWindow>();
             services.AddSingleton<MoneyAccountsOverview>();
             services.AddSingleton<MoneyAccountOverviewVM>();
@@ -64,6 +65,9 @@ namespace DLPMoneyTracker
 
             services.AddTransient<MoneyPlannerView>();
             services.AddTransient<MoneyPlannerVM>();
+
+            services.AddTransient<MonthlyBudgetPlannerView>();
+            services.AddTransient<MonthlyBudgetPlannerVM>();
             
         }
     }
