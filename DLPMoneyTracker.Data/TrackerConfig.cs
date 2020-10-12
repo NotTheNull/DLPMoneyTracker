@@ -36,9 +36,9 @@ namespace DLPMoneyTracker.Data
 
     public class TrackerConfig : ITrackerConfig
     {
-        
-        
-        
+
+
+
         private string AccountListConfig { get { return string.Concat(AppConfigSettings.CONFIG_FOLDER_PATH, "MoneyAccounts.json"); } }
 
         private List<MoneyAccount> _listAccts = new List<MoneyAccount>();
@@ -51,7 +51,7 @@ namespace DLPMoneyTracker.Data
         public ReadOnlyCollection<TransactionCategory> CategoryList { get { return _listCategories.OrderBy(o => o.Name).ToList().AsReadOnly(); } }
 
 
-        
+
         public TrackerConfig()
         {
             if (!Directory.Exists(AppConfigSettings.CONFIG_FOLDER_PATH))
@@ -91,17 +91,32 @@ namespace DLPMoneyTracker.Data
         {
             if (!(_listCategories is null) && _listCategories.Any()) _listCategories.Clear();
 
-            if(File.Exists(CategoryListConfig))
-            {
-                string json = File.ReadAllText(CategoryListConfig);
-                _listCategories = (List<TransactionCategory>)JsonSerializer.Deserialize(json, typeof(List<TransactionCategory>));
-            }
-            else
+            if (!File.Exists(CategoryListConfig)) return;
+
+            string json = File.ReadAllText(CategoryListConfig);
+            _listCategories = (List<TransactionCategory>)JsonSerializer.Deserialize(json, typeof(List<TransactionCategory>));
+            if (_listCategories is null || !_listCategories.Any())
             {
                 _listCategories = new List<TransactionCategory>();
+                // Could be older version, try Transfer Version
+                var dataList = (List<TransactionCategoryJSONTransferVersion>)JsonSerializer.Deserialize(json, typeof(List<TransactionCategoryJSONTransferVersion>));
+                if (dataList is null || !dataList.Any()) return;
+
+                foreach(var cat in dataList)
+                {
+                    _listCategories.Add(new TransactionCategory()
+                    {
+                        ID = cat.ID,
+                        CategoryType = cat.CategoryType,
+                        Name = cat.Name,
+                        ExcludeFromBudget = false
+                    });
+                }
+
+                this.SaveCategories();
             }
 
-            
+
         }
 
         public void SaveCategories()
@@ -183,7 +198,7 @@ namespace DLPMoneyTracker.Data
                 _listAccts = null;
             }
 
-            if(!(_listCategories is null))
+            if (!(_listCategories is null))
             {
                 _listCategories.Clear();
                 _listCategories = null;

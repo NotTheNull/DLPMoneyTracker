@@ -52,6 +52,17 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
         }
 
 
+        public bool ExcludeFromBudget
+        {
+            get { return _data?.ExcludeFromBudget ?? false; }
+            set
+            {
+                if (_data is null) return;
+                _data.ExcludeFromBudget = value;
+                NotifyPropertyChanged(nameof(this.ExcludeFromBudget));
+            }
+        }
+
 
         public bool IsEnabled { get { return !(_data is null); } }
 
@@ -227,6 +238,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
             NotifyPropertyChanged(nameof(this.SelectedCategoryType));
             NotifyPropertyChanged(nameof(this.CategoryList));
             NotifyPropertyChanged(nameof(this.IsEnabled));
+            NotifyPropertyChanged(nameof(this.ExcludeFromBudget));
         }
     }
 }
