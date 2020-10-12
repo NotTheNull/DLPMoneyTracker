@@ -112,6 +112,7 @@ namespace DLPMoneyTracker.DataEntry.ScheduleRecurrence
 
         public void EditRecurrence(IScheduleRecurrence recurr)
         {
+            if (recurr is null) return;
             this.SelectedFrequency = recurr.Frequency;
 
             if (recurr is MonthlyRecurrence monthly)

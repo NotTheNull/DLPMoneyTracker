@@ -8,7 +8,7 @@
              xmlns:core="clr-namespace:DLPMoneyTracker.Core"
              mc:Ignorable="d" 
              MinHeight="70" 
-             Width="680">
+             Width="650">
     <UserControl.Resources>
         <Style x:Key="MainLabel" TargetType="TextBlock">
             <Setter Property="FontSize" Value="24" />
@@ -91,12 +91,14 @@
             
             <DataGrid.Columns>
                 
-                <DataGridTextColumn Header="Budget Description" Binding="{Binding Path=Description}" />
+                <DataGridTextColumn Header="Budget Description" 
+                                    Width="220"
+                                    Binding="{Binding Path=Description}" />
                 
-                <DataGridTemplateColumn Header="Category">
+                <DataGridTemplateColumn Header="Category" Width="120" >
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel Margin="5, 0, 0, 0" Orientation="Horizontal">
                                 <Rectangle Width="10" 
                                            Height="10" 
                                            Fill="{Binding Path=CategoryType, Converter={StaticResource convertCategoryTypeToBgColor}}" />
@@ -108,11 +110,25 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn Header="Next Date" Binding="{Binding Path=NextDueDate, Converter={StaticResource convertDateToDisplay}, ConverterParameter=yyyy/MM/dd}" />
+                <DataGridTextColumn Header="Next Date" 
+                                    Width="100"
+                                    Binding="{Binding Path=NextDueDate, Converter={StaticResource convertDateToDisplay}, ConverterParameter=yyyy/MM/dd}" />
 
-                <DataGridTextColumn Header="Amount" Binding="{Binding Path=Amount, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}" />
+                <DataGridTemplateColumn Header="Amount"
+                                        Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Path=Amount, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}" 
+                                           HorizontalAlignment="Right"
+                                           />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
 
-                <DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="60">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
