@@ -10,8 +10,6 @@ using System.Windows.Controls;
 
 namespace DLPMoneyTracker
 {
-    // TODO: Create VM and UI to display summary of Categories that include current totals and budget expectations
-    // TODO: Modify Main Window to show tabbed interface.  Main tab is summary of Money Accounts.  Second tab would be summary of Categories. Third tab could be Full Ledger.
     // TODO: Add ability to backup/close Ledger and transfer balances to NEW ledger
 
 
@@ -22,8 +20,9 @@ namespace DLPMoneyTracker
     {
         private MoneyAccountsOverview _uiAccountSummary;
         private LedgerDetailView _uiFullLedger;
+        private MonthlyBudgetPlannerView _uiBudgetPlanner;
 
-        public MainWindow(MoneyAccountsOverview uiAccountSummary, LedgerDetailView uiFullLedger)
+        public MainWindow(MoneyAccountsOverview uiAccountSummary, LedgerDetailView uiFullLedger, MonthlyBudgetPlannerView uiBudgetPlanner)
         {
             InitializeComponent();
             panelAccountSummary.Children.Add(uiAccountSummary);
@@ -33,6 +32,9 @@ namespace DLPMoneyTracker
             
             panelTransactions.Children.Add(uiFullLedger);
             _uiFullLedger = uiFullLedger;
+
+            panelBudget.Children.Add(uiBudgetPlanner);
+            _uiBudgetPlanner = uiBudgetPlanner;
         }
                 
 

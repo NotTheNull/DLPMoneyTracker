@@ -26,6 +26,7 @@ namespace DLPMoneyTracker.Data
         decimal GetAccountBalance(MoneyAccount act);
         decimal ApplyTransactionToBalance(MoneyAccount act, decimal startValue, TransactionCategory category, decimal transAmount);
         decimal GetCategoryTotal(TransactionCategory cat);
+        decimal GetCategoryMonthlyTotal(TransactionCategory cat);
 
     }
 
@@ -183,6 +184,24 @@ namespace DLPMoneyTracker.Data
 
             return decimal.Zero;
         }
+
+        public decimal GetCategoryMonthlyTotal(TransactionCategory cat)
+        {
+            bool isCurrentMonth(IMoneyRecord record)
+            {
+                return record.CategoryUID == cat.ID 
+                    && record.TransDate.Month == DateTime.Today.Month;
+            };
+
+            if(_listTransactions.Any(isCurrentMonth))
+            {
+                return _listTransactions.Where(isCurrentMonth).Sum(s => s.TransAmount);
+            }
+
+            return decimal.Zero;
+        }
+
+
 
         public void SaveToFile()
         {

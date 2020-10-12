@@ -10,6 +10,8 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 {
     public class MonthlyBudgetRecordVM : BaseViewModel, ILinkDataModelToViewModel<IBudget>
     {
+        public event SimpleNotification BudgetAmountModified;
+
         ITrackerConfig _config;
 
 
@@ -40,10 +42,26 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             get { return _amt; }
             set
             {
+                if (this.IsFixedExpense) return;
                 _amt = value;
                 NotifyPropertyChanged(nameof(this.BudgetAmount));
+                BudgetAmountModified?.Invoke();
             }
         }
+
+
+        private decimal _currVal;
+
+        public decimal CurrentValue
+        {
+            get { return _currVal; }
+            set 
+            {
+                _currVal = value;
+                NotifyPropertyChanged(nameof(this.CurrentValue));
+            }
+        }
+
 
 
 

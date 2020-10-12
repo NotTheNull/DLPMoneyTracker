@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace DLPMoneyTracker.DataEntry.BudgetPlanner
@@ -16,6 +17,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         ITrackerConfig _config;
         IBudgetTracker _budget;
         IMoneyPlanner _moneyPlanner;
+        ILedger _ledger;
 
 
         private decimal _incomeTotal;
@@ -31,26 +33,82 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         }
 
 
-
-        ObservableCollection<MonthlyBudgetRecordVM> _listBudgets = new ObservableCollection<MonthlyBudgetRecordVM>();
-        public ObservableCollection<MonthlyBudgetRecordVM> BudgetList { get { return _listBudgets; } }
+        
 
 
 
-        public MonthlyBudgetPlannerVM(ITrackerConfig config, IBudgetTracker budget, IMoneyPlanner planner)
+        List<MonthlyBudgetRecordVM> _listFixed = new List<MonthlyBudgetRecordVM>();
+        public ReadOnlyCollection<MonthlyBudgetRecordVM> FixedExpenseList { get { return _listFixed.AsReadOnly(); } }
+
+        List<MonthlyBudgetRecordVM> _listBudget = new List<MonthlyBudgetRecordVM>();
+        public ReadOnlyCollection<MonthlyBudgetRecordVM> VariableExpenseList { get { return _listBudget.AsReadOnly(); } }
+
+        
+
+
+        public decimal FixedExpenseTotal { get { return this.FixedExpenseList?.Sum(s => s.BudgetAmount) ?? decimal.Zero; } }
+
+        public decimal VariableExpenseTotal { get { return this.VariableExpenseList?.Sum(s => s.BudgetAmount) ?? decimal.Zero; } }
+
+        public decimal GrandExpenseTotal { get { return this.FixedExpenseTotal + this.VariableExpenseTotal; } }
+
+        public decimal MonthlyBalance { get { return this.MonthlyIncomeTotal - this.GrandExpenseTotal; } }
+
+
+        #region Commands
+        private RelayCommand _cmdSave;
+        public RelayCommand SaveChanges
+        {
+            get
+            {
+                return _cmdSave ?? (_cmdSave = new RelayCommand((o) =>
+                {
+                    this.CommitChanges();
+                }));
+            }
+        }
+        #endregion
+
+
+
+
+        public MonthlyBudgetPlannerVM(ITrackerConfig config, IBudgetTracker budget, IMoneyPlanner planner, ILedger ledger)
         {
             _config = config;
             _budget = budget;
             _moneyPlanner = planner;
+            _ledger = ledger;
+            _ledger.LedgerModified += _ledger_LedgerModified;
 
             this.LoadBudgetList();
             this.CalcIncome();
         }
 
+        private void _ledger_LedgerModified()
+        {
+            this.LoadCurrentValues();
+            this.NotifyAll();
+        }
+
+
+        private void LoadCurrentValues()
+        {
+            foreach(var budget in _listFixed)
+            {
+                budget.CurrentValue = _ledger.GetCategoryMonthlyTotal(budget.Category);
+            }
+
+            foreach(var budget in _listBudget)
+            {
+                budget.CurrentValue = _ledger.GetCategoryMonthlyTotal(budget.Category);
+            }
+        }
+
 
         private void LoadBudgetList()
         {
-            this.BudgetList.Clear();
+            _listBudget.Clear();
+            _listFixed.Clear();
             foreach(TransactionCategory cat in _config.CategoryList.Where(x => x.CategoryType == CategoryType.Expense))
             {
                 bool isMonthlyFixedExpense(IMoneyPlan plan)
@@ -71,16 +129,27 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 
                 if(_moneyPlanner.MoneyPlanList.Any(isMonthlyFixedExpense))
                 {
-                    record.IsFixedExpense = true;
+                    // Make certain to set the amount BEFORE updating the Fixed Expense flag since it prevents further modification
                     record.BudgetAmount = _moneyPlanner.MoneyPlanList.Where(isMonthlyFixedExpense).Sum(s => s.ExpectedAmount);
+                    record.IsFixedExpense = true;
+                    _listFixed.Add(record);
                 }
                 else 
                 {
                     record.BudgetAmount = _budget.GetBudgetAmount(cat.ID);
-                }
-
-                this.BudgetList.Add(record);
+                    record.BudgetAmountModified += Record_BudgetAmountModified;
+                    _listBudget.Add(record);
+                }                
             }
+
+            this.LoadCurrentValues();
+            this.NotifyAll();
+        }
+
+        private void Record_BudgetAmountModified()
+        {
+            this.CommitChanges();
+            this.NotifyAll();
         }
 
         private void CalcIncome()
@@ -92,9 +161,9 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         private void CommitChanges()
         {
             _budget.ClearBudget();
-            if (this.BudgetList.Any(x => !x.IsFixedExpense))
+            if (this.VariableExpenseList.Any())
             {
-                foreach(var budget in this.BudgetList.Where(x => !x.IsFixedExpense))
+                foreach(var budget in this.VariableExpenseList)
                 {
                     _budget.AddBudget(budget.GetSource());
                 }
@@ -102,6 +171,17 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             _budget.SaveToFile();
         }
 
+
+        public void NotifyAll()
+        {
+            NotifyPropertyChanged(nameof(this.MonthlyIncomeTotal));
+            NotifyPropertyChanged(nameof(this.FixedExpenseList));
+            NotifyPropertyChanged(nameof(this.FixedExpenseTotal));
+            NotifyPropertyChanged(nameof(this.VariableExpenseList));
+            NotifyPropertyChanged(nameof(this.VariableExpenseTotal));
+            NotifyPropertyChanged(nameof(this.GrandExpenseTotal));
+            NotifyPropertyChanged(nameof(this.MonthlyBalance));
+        }
 
 
     }

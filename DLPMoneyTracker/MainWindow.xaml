@@ -129,6 +129,19 @@
                     <StackPanel Orientation="Vertical"
                                 x:Name="panelAccountSummary"/>
                 </TabItem>
+
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="~ Budget Planner ~"
+                                       Foreground="OrangeRed"
+                                       Style="{StaticResource TabHeaderLabel}"
+                                       />
+                        </StackPanel>
+                    </TabItem.Header>
+                    <StackPanel Orientation="Vertical"
+                                x:Name="panelBudget" />
+                </TabItem>
                 
                 <TabItem>
                     <TabItem.Header>
