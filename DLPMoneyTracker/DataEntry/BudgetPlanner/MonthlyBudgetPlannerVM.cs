@@ -109,7 +109,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         {
             _listBudget.Clear();
             _listFixed.Clear();
-            foreach(TransactionCategory cat in _config.CategoryList.Where(x => x.CategoryType == CategoryType.Expense))
+            foreach(TransactionCategory cat in _config.CategoryList.Where(x => x.CategoryType == CategoryType.Expense && !x.ExcludeFromBudget))
             {
                 bool isMonthlyFixedExpense(IMoneyPlan plan)
                 {
@@ -154,7 +154,12 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 
         private void CalcIncome()
         {
-            this.MonthlyIncomeTotal = _moneyPlanner.MoneyPlanList.Where(x => x.PlanType == Data.TransactionModels.BillPlan.MoneyPlanType.Income && x.Frequency == Data.ScheduleRecurrence.RecurrenceFrequency.Monthly).Sum(s => s.ExpectedAmount);
+            this.MonthlyIncomeTotal = _moneyPlanner.MoneyPlanList
+                .Where(x => 
+                    x.PlanType == Data.TransactionModels.BillPlan.MoneyPlanType.Income 
+                    && x.Frequency == Data.ScheduleRecurrence.RecurrenceFrequency.Monthly
+                    && !x.ExcludeFromBudgetPlanner
+                ).Sum(s => s.ExpectedAmount);
         }
 
 

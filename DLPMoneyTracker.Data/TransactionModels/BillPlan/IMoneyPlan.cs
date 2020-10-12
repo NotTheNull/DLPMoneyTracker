@@ -28,6 +28,11 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
         string Description { get; }
 
         Guid CategoryID { get; }
+        [JsonIgnore]
+        string CategoryName { get; }
+
+        [JsonIgnore]
+        bool ExcludeFromBudgetPlanner { get; }
 
         string AccountID { get; }
 
@@ -73,5 +78,11 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
 
         [JsonIgnore]
         public DateTime NextOccurrence { get { return DateTime.MaxValue; } }
+
+        [JsonIgnore]
+        public string CategoryName { get; set; }
+
+        [JsonIgnore]
+        public bool ExcludeFromBudgetPlanner { get; set; }
     }
 }

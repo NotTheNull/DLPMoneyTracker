@@ -30,6 +30,11 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
             }
         }
 
+        [JsonIgnore]
+        public string CategoryName { get { return this.Category?.Name ?? string.Empty; } }
+
+        [JsonIgnore]
+        public bool ExcludeFromBudgetPlanner { get { return this.Category?.ExcludeFromBudget ?? false; } }
 
         public Guid CategoryID { get { return this.Category?.ID ?? Guid.Empty; } }
 

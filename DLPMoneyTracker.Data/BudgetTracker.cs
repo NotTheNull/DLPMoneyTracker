@@ -91,11 +91,14 @@ namespace DLPMoneyTracker.Data
 
             foreach(var record in dataList)
             {
-                _listBudgets.Add(new MonthlyBudget()
+                MonthlyBudget budget = new MonthlyBudget()
                 {
                     BudgetAmount = record.BudgetAmount,
                     Category = _config.GetCategory(record.CategoryId)
-                });
+                };
+                if (budget.Category.ExcludeFromBudget) continue;
+
+                _listBudgets.Add(budget);
             }
         }
 
