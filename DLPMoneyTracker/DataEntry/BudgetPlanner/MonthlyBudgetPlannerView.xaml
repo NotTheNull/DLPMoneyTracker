@@ -107,6 +107,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding Path=CurrentValue, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, UpdateSourceTrigger=PropertyChanged}" 
                                                HorizontalAlignment="Right"
+                                               Foreground="{Binding Path=CurrentValueFontColor, UpdateSourceTrigger=PropertyChanged}"
                                                />
                                 </StackPanel>
                             </DataTemplate>
@@ -162,6 +163,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding Path=CurrentValue, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, UpdateSourceTrigger=PropertyChanged}" 
                                                HorizontalAlignment="Right"
+                                               Foreground="{Binding Path=CurrentValueFontColor, UpdateSourceTrigger=PropertyChanged}"
                                                />
                                 </StackPanel>
                             </DataTemplate>

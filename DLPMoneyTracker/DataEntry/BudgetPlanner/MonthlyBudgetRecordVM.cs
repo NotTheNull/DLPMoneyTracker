@@ -5,6 +5,7 @@ using DLPMoneyTracker.Data.TransactionModels.Budget;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Media;
 
 namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 {
@@ -45,6 +46,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
                 if (this.IsFixedExpense) return;
                 _amt = value;
                 NotifyPropertyChanged(nameof(this.BudgetAmount));
+                NotifyPropertyChanged(nameof(this.CurrentValueFontColor));
                 BudgetAmountModified?.Invoke();
             }
         }
@@ -59,6 +61,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             {
                 _currVal = value;
                 NotifyPropertyChanged(nameof(this.CurrentValue));
+                NotifyPropertyChanged(nameof(this.CurrentValueFontColor));
             }
         }
 
@@ -77,6 +80,19 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             }
         }
 
+
+        public SolidColorBrush CurrentValueFontColor
+        {
+            get
+            {
+                if(this.CurrentValue > this.BudgetAmount)
+                {
+                    return new SolidColorBrush(Colors.Red);
+                }
+
+                return new SolidColorBrush(Colors.Black);
+            }
+        }
 
 
 
@@ -115,6 +131,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             NotifyPropertyChanged(nameof(this.CategoryName));
             NotifyPropertyChanged(nameof(this.IsFixedExpense));
             NotifyPropertyChanged(nameof(this.BudgetAmount));
+            NotifyPropertyChanged(nameof(this.CurrentValueFontColor));
         }
     }
 }
