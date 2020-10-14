@@ -47,6 +47,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
                 _amt = value;
                 NotifyPropertyChanged(nameof(this.BudgetAmount));
                 NotifyPropertyChanged(nameof(this.CurrentValueFontColor));
+                NotifyPropertyChanged(nameof(this.RemainingBudgetAmount));
                 BudgetAmountModified?.Invoke();
             }
         }
@@ -62,7 +63,15 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
                 _currVal = value;
                 NotifyPropertyChanged(nameof(this.CurrentValue));
                 NotifyPropertyChanged(nameof(this.CurrentValueFontColor));
+                NotifyPropertyChanged(nameof(this.RemainingBudgetAmount));
             }
+        }
+
+
+
+        public decimal RemainingBudgetAmount
+        {
+            get { return this.BudgetAmount - this.CurrentValue; }
         }
 
 

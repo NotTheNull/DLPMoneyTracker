@@ -52,7 +52,30 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 
         public decimal GrandExpenseTotal { get { return this.FixedExpenseTotal + this.VariableExpenseTotal; } }
 
-        public decimal MonthlyBalance { get { return this.MonthlyIncomeTotal - this.GrandExpenseTotal; } }
+        
+        public decimal OverBudgetAmount
+        {
+            get
+            {
+                decimal overBudget = decimal.Zero;
+                if(_listFixed.Any(x => x.RemainingBudgetAmount < decimal.Zero))
+                {
+                    overBudget += _listFixed.Where(x => x.RemainingBudgetAmount < decimal.Zero).Sum(s => s.RemainingBudgetAmount);
+                }
+
+                if(_listBudget.Any(x => x.RemainingBudgetAmount < decimal.Zero))
+                {
+                    overBudget += _listBudget.Where(x => x.RemainingBudgetAmount < decimal.Zero).Sum(s => s.RemainingBudgetAmount);
+                }
+
+                // Value will be negative; negate it so that the UI shows it as a positive value
+                return overBudget * -1;
+            }
+        }
+
+        public bool HasCategoriesOverBudget { get { return this.OverBudgetAmount > decimal.Zero; } }
+
+        public decimal MonthlyBalance { get { return this.MonthlyIncomeTotal - this.GrandExpenseTotal - this.OverBudgetAmount; } }
 
 
         #region Commands
@@ -184,6 +207,8 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             NotifyPropertyChanged(nameof(this.FixedExpenseTotal));
             NotifyPropertyChanged(nameof(this.VariableExpenseList));
             NotifyPropertyChanged(nameof(this.VariableExpenseTotal));
+            NotifyPropertyChanged(nameof(this.OverBudgetAmount));
+            NotifyPropertyChanged(nameof(this.HasCategoriesOverBudget));
             NotifyPropertyChanged(nameof(this.GrandExpenseTotal));
             NotifyPropertyChanged(nameof(this.MonthlyBalance));
         }
