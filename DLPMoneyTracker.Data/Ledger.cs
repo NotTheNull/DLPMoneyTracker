@@ -5,53 +5,44 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 
 namespace DLPMoneyTracker.Data
 {
     public delegate void LedgerModifiedHandler();
+
     public interface ILedger : IJSONFileMaker
     {
         event LedgerModifiedHandler LedgerModified;
 
         ReadOnlyCollection<IMoneyRecord> TransactionList { get; }
 
-
-
         void AddTransaction(IMoneyRecord trans);
+
         void RemoveTransaction(IMoneyRecord trans);
 
         decimal GetInitialBalance(MoneyAccount act);
+
         decimal GetAccountBalance(MoneyAccount act);
+
         decimal ApplyTransactionToBalance(MoneyAccount act, decimal startValue, TransactionCategory category, decimal transAmount);
+
         decimal GetCategoryTotal(TransactionCategory cat);
+
         decimal GetCategoryMonthlyTotal(TransactionCategory cat);
-
     }
-
 
     public class Ledger : ILedger
     {
         public event LedgerModifiedHandler LedgerModified;
 
-
         public string FilePath { get { return string.Concat(AppConfigSettings.DATA_FOLDER_PATH, "Ledger.json"); } }
 
         private ITrackerConfig _config;
 
-
         private List<IMoneyRecord> _listTransactions = new List<IMoneyRecord>();
 
-
         public ReadOnlyCollection<IMoneyRecord> TransactionList { get { return _listTransactions.AsReadOnly(); } }
-
-
-
-
-
-
-
 
         public Ledger(ITrackerConfig config)
         {
@@ -63,7 +54,6 @@ namespace DLPMoneyTracker.Data
 
             this.LoadFromFile();
         }
-
 
         public void AddTransaction(IMoneyRecord trans)
         {
@@ -86,6 +76,7 @@ namespace DLPMoneyTracker.Data
             }
             this.SaveToFile();
         }
+
         public void RemoveTransaction(IMoneyRecord trans)
         {
             if (_listTransactions.Contains(trans))
@@ -94,7 +85,6 @@ namespace DLPMoneyTracker.Data
                 this.SaveToFile();
             }
         }
-
 
         public decimal GetInitialBalance(MoneyAccount act)
         {
@@ -107,7 +97,6 @@ namespace DLPMoneyTracker.Data
 
             return initialBalance;
         }
-
 
         public decimal GetAccountBalance(MoneyAccount act)
         {
@@ -125,7 +114,6 @@ namespace DLPMoneyTracker.Data
                         throw new InvalidOperationException(string.Format("Type {0} is not supported in Account Balance Calc", trans.GetType()));
                     }
                 }
-
             }
 
             return balance;
@@ -141,12 +129,12 @@ namespace DLPMoneyTracker.Data
             }
             else
             {
-
                 switch (category.CategoryType)
                 {
                     case CategoryType.UntrackedAdjustment:
                         balance += transAmount;
                         break;
+
                     case CategoryType.Expense:
                         if (act.AccountType == MoneyAccountType.Checking || act.AccountType == MoneyAccountType.Savings)
                         {
@@ -158,6 +146,7 @@ namespace DLPMoneyTracker.Data
                         }
                         // Loans cannot have expenses added to them
                         break;
+
                     case CategoryType.Income:
                         if (act.AccountType == MoneyAccountType.Checking || act.AccountType == MoneyAccountType.Savings)
                         {
@@ -165,6 +154,7 @@ namespace DLPMoneyTracker.Data
                         }
                         // No other account types can have income reported
                         break;
+
                     case CategoryType.Payment:
                         // No matter the account type, it's a reduction
                         balance -= transAmount;
@@ -189,19 +179,17 @@ namespace DLPMoneyTracker.Data
         {
             bool isCurrentMonth(IMoneyRecord record)
             {
-                return record.CategoryUID == cat.ID 
+                return record.CategoryUID == cat.ID
                     && record.TransDate.Month == DateTime.Today.Month;
             };
 
-            if(_listTransactions.Any(isCurrentMonth))
+            if (_listTransactions.Any(isCurrentMonth))
             {
                 return _listTransactions.Where(isCurrentMonth).Sum(s => s.TransAmount);
             }
 
             return decimal.Zero;
         }
-
-
 
         public void SaveToFile()
         {
@@ -235,7 +223,6 @@ namespace DLPMoneyTracker.Data
 
                 _listTransactions.Add(record);
             }
-
         }
     }
 }

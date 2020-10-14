@@ -4,8 +4,6 @@ using DLPMoneyTracker.Data.ConfigModels;
 using DLPMoneyTracker.Data.ScheduleRecurrence;
 using DLPMoneyTracker.Data.TransactionModels.BillPlan;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 {
@@ -13,8 +11,8 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
     {
         private ITrackerConfig _config;
 
-
         private Guid _id;
+
         public Guid UID
         {
             get { return _id; }
@@ -25,28 +23,25 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             }
         }
 
-
-
         private string _desc;
 
         public string Description
         {
             get { return _desc; }
-            set 
-            { 
+            set
+            {
                 _desc = value;
                 NotifyPropertyChanged(nameof(this.Description));
             }
         }
-
 
         private TransactionCategory _cat;
 
         public TransactionCategory Category
         {
             get { return _cat; }
-            set 
-            { 
+            set
+            {
                 _cat = value;
                 NotifyPropertyChanged(nameof(this.Category));
                 NotifyPropertyChanged(nameof(this.CategoryName));
@@ -56,29 +51,25 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         public string CategoryName { get { return this.Category?.Name ?? string.Empty; } }
         public CategoryType CategoryType { get { return this.Category?.CategoryType ?? CategoryType.NotSet; } }
 
-
         private MoneyAccount _act;
 
         public MoneyAccount Account
         {
             get { return _act; }
-            set 
-            { 
+            set
+            {
                 _act = value;
                 NotifyPropertyChanged(nameof(this.Account));
             }
         }
-
-
-
 
         private IScheduleRecurrence _recurr;
 
         public IScheduleRecurrence Recurrence
         {
             get { return _recurr; }
-            set 
-            { 
+            set
+            {
                 _recurr = value;
                 NotifyPropertyChanged(nameof(this.Recurrence));
                 NotifyPropertyChanged(nameof(this.NextDueDate));
@@ -89,38 +80,30 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         public DateTime NextDueDate { get { return this.Recurrence?.NextOccurence ?? DateTime.MinValue; } }
         public DateTime NotificationDate { get { return this.Recurrence?.NotificationDate ?? DateTime.MinValue; } }
 
-
         private decimal _amt;
 
         public decimal Amount
         {
             get { return _amt; }
-            set 
-            { 
+            set
+            {
                 _amt = value;
                 NotifyPropertyChanged(nameof(this.Amount));
             }
         }
-
-
-
-
 
         public MoneyPlanRecordVM(ITrackerConfig config)
         {
             this.UID = Guid.NewGuid();
             _config = config;
         }
+
         public MoneyPlanRecordVM(ITrackerConfig config, IMoneyPlan src)
         {
             this.UID = Guid.NewGuid();
             _config = config;
             this.LoadSource(src);
         }
-
-
-
-
 
         public IMoneyPlan GetSource()
         {

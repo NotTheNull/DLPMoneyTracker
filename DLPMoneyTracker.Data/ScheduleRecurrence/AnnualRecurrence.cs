@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DLPMoneyTracker.Data.ScheduleRecurrence
 {
@@ -26,10 +24,9 @@ namespace DLPMoneyTracker.Data.ScheduleRecurrence
 
         public RecurrenceFrequency Frequency { get { return RecurrenceFrequency.Annual; } }
 
-
         public DateTime StartDate { get; set; }
 
-        public DateTime AnniversaryDate 
+        public DateTime AnniversaryDate
         {
             get
             {
@@ -37,20 +34,15 @@ namespace DLPMoneyTracker.Data.ScheduleRecurrence
             }
         }
 
-
-
-
-        public AnnualRecurrence() 
+        public AnnualRecurrence()
         {
             this.StartDate = DateTime.Now;
         }
+
         public AnnualRecurrence(string fileData)
         {
             this.LoadFileData(fileData);
         }
-
-
-
 
         public string GetFileData()
         {

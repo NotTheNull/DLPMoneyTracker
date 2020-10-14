@@ -3,8 +3,6 @@ using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.ConfigModels;
 using DLPMoneyTracker.Data.TransactionModels.Budget;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Media;
 
 namespace DLPMoneyTracker.DataEntry.BudgetPlanner
@@ -13,12 +11,9 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
     {
         public event SimpleNotification BudgetAmountModified;
 
-        ITrackerConfig _config;
-
+        private ITrackerConfig _config;
 
         public Guid UID { get { return this.Category?.ID ?? Guid.Empty; } }
-
-
 
         private TransactionCategory _cat;
 
@@ -34,7 +29,6 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         }
 
         public string CategoryName { get { return this.Category?.Name ?? string.Empty; } }
-
 
         private decimal _amt;
 
@@ -52,13 +46,12 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             }
         }
 
-
         private decimal _currVal;
 
         public decimal CurrentValue
         {
             get { return _currVal; }
-            set 
+            set
             {
                 _currVal = value;
                 NotifyPropertyChanged(nameof(this.CurrentValue));
@@ -67,15 +60,10 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             }
         }
 
-
-
         public decimal RemainingBudgetAmount
         {
             get { return this.BudgetAmount - this.CurrentValue; }
         }
-
-
-
 
         private bool _isFixed;
 
@@ -89,12 +77,11 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             }
         }
 
-
         public SolidColorBrush CurrentValueFontColor
         {
             get
             {
-                if(this.CurrentValue > this.BudgetAmount)
+                if (this.CurrentValue > this.BudgetAmount)
                 {
                     return new SolidColorBrush(Colors.Red);
                 }
@@ -103,18 +90,10 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             }
         }
 
-
-
-
         public MonthlyBudgetRecordVM(ITrackerConfig config)
         {
             _config = config;
         }
-
-
-
-
-
 
         public IBudget GetSource()
         {

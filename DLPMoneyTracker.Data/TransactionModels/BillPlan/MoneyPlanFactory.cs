@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DLPMoneyTracker.Data.ConfigModels;
+﻿using DLPMoneyTracker.Data.ConfigModels;
 using DLPMoneyTracker.Data.ScheduleRecurrence;
+using System;
 
 namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
 {
@@ -21,7 +19,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
         {
             if (!uid.HasValue) uid = Guid.NewGuid();
 
-            switch(category.CategoryType)
+            switch (category.CategoryType)
             {
                 case CategoryType.Expense:
                     return new ExpensePlan()
@@ -33,6 +31,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
                         Recurrence = recurr,
                         ExpectedAmount = amount
                     };
+
                 case CategoryType.Income:
                     return new IncomePlan()
                     {
@@ -43,6 +42,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
                         Recurrence = recurr,
                         ExpectedAmount = amount
                     };
+
                 default:
                     return null;
             }

@@ -5,7 +5,6 @@ using DLPMoneyTracker.Data.TransactionModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DLPMoneyTracker.DataEntry.AddTransaction
 {
@@ -14,9 +13,7 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
         private ILedger _ledger;
         private ITrackerConfig _config;
 
-
         public Guid TransactionId { get; set; }
-
 
         private DateTime _transDate;
 
@@ -52,7 +49,6 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             }
         }
 
-
         private TransactionCategory _cat;
 
         public TransactionCategory SelectedCategory
@@ -75,7 +71,6 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             }
         }
 
-
         private string _desc;
 
         public string Description
@@ -87,7 +82,6 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
                 NotifyPropertyChanged(nameof(this.Description));
             }
         }
-
 
         private decimal _amt;
 
@@ -101,24 +95,11 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             }
         }
 
-
-
-
-
-
-
-
-
         private List<SpecialDropListItem<MoneyAccount>> _listAccts = new List<SpecialDropListItem<MoneyAccount>>();
         public List<SpecialDropListItem<MoneyAccount>> MoneyAccountList { get { return _listAccts; } }
 
-
         private List<SpecialDropListItem<TransactionCategory>> _listCat = new List<SpecialDropListItem<TransactionCategory>>();
         public List<SpecialDropListItem<TransactionCategory>> CategoryList { get { return _listCat; } }
-
-
-
-
 
         public AddExpenseVM(ILedger ledger, ITrackerConfig config) : base()
         {
@@ -162,7 +143,6 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             NotifyPropertyChanged(nameof(this.CategoryList));
         }
 
-
         public void SaveTransaction()
         {
             if (this.SelectedAccount is null) throw new InvalidOperationException("You MUST select an Account");
@@ -202,8 +182,5 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             }
             this.Clear();
         }
-
-
-
     }
 }

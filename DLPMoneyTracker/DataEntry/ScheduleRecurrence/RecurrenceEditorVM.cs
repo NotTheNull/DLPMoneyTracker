@@ -2,17 +2,14 @@
 using DLPMoneyTracker.Data.ScheduleRecurrence;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DLPMoneyTracker.DataEntry.ScheduleRecurrence
 {
     public class RecurrenceEditorVM : BaseViewModel
     {
         public delegate void RecurrenceSelectedHandler(IScheduleRecurrence selected);
+
         public event RecurrenceSelectedHandler RecurrenceSelected;
-
-
-
 
         private RecurrenceFrequency _selFreq;
 
@@ -27,12 +24,10 @@ namespace DLPMoneyTracker.DataEntry.ScheduleRecurrence
             }
         }
 
-
         public bool IsMonthly
         {
             get { return this.SelectedFrequency == RecurrenceFrequency.Monthly; }
         }
-
 
         private int _monthDay;
 
@@ -48,7 +43,6 @@ namespace DLPMoneyTracker.DataEntry.ScheduleRecurrence
             }
         }
 
-
         private DateTime _dateStart;
 
         public DateTime StartDate
@@ -61,16 +55,13 @@ namespace DLPMoneyTracker.DataEntry.ScheduleRecurrence
             }
         }
 
-
-
-
-        List<SpecialDropListItem<RecurrenceFrequency>> _listFreq;
+        private List<SpecialDropListItem<RecurrenceFrequency>> _listFreq;
         public List<SpecialDropListItem<RecurrenceFrequency>> RecurrenceFrequencyList { get { return _listFreq; } }
 
-
-
         #region Commands
+
         private RelayCommand _cmdSave;
+
         public RelayCommand CommandSave
         {
             get
@@ -82,8 +73,7 @@ namespace DLPMoneyTracker.DataEntry.ScheduleRecurrence
             }
         }
 
-        #endregion
-
+        #endregion Commands
 
         public RecurrenceEditorVM() : base()
         {
@@ -91,7 +81,6 @@ namespace DLPMoneyTracker.DataEntry.ScheduleRecurrence
             _dateStart = DateTime.Today;
             this.LoadFrequenceList();
         }
-
 
         private void LoadFrequenceList()
         {
@@ -128,7 +117,5 @@ namespace DLPMoneyTracker.DataEntry.ScheduleRecurrence
                 this.StartDate = annual.StartDate;
             }
         }
-
-
     }
 }

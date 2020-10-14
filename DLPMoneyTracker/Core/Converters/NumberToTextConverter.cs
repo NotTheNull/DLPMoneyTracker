@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Windows.Data;
 
 namespace DLPMoneyTracker.Core.Converters
@@ -19,7 +17,7 @@ namespace DLPMoneyTracker.Core.Converters
         {
             if (value is null) return 0;
 
-            if(int.TryParse(value.ToString(), out int number))
+            if (int.TryParse(value.ToString(), out int number))
             {
                 return number;
             }

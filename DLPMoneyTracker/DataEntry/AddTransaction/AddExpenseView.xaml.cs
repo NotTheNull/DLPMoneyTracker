@@ -28,7 +28,6 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             _viewModel.Amount = plan.ExpectedAmount;
         }
 
-
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
             _viewModel.Clear();

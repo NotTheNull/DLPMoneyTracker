@@ -1,22 +1,21 @@
-﻿using DLPMoneyTracker.Data.TransactionModels;
-using DLPMoneyTracker.Data.TransactionModels.BillPlan;
+﻿using DLPMoneyTracker.Data.TransactionModels.BillPlan;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 
 namespace DLPMoneyTracker.Data
 {
-
     public interface IMoneyPlanner : IJSONFileMaker
     {
         ReadOnlyCollection<IMoneyPlan> MoneyPlanList { get; }
 
         void AddMoneyPlan(IMoneyPlan record);
+
         void RemoveMoneyPlan(IMoneyPlan record);
+
         void ClearRecordList();
 
         IEnumerable<IMoneyPlan> GetUpcomingMoneyPlansForAccount(string accountID);
@@ -24,16 +23,12 @@ namespace DLPMoneyTracker.Data
 
     public class MoneyPlanner : IMoneyPlanner
     {
-
         public string FilePath { get { return string.Concat(AppConfigSettings.DATA_FOLDER_PATH, "MoneyPlan.json"); } }
 
         private ITrackerConfig _config;
 
-
         private List<IMoneyPlan> _listMoneyPlans = new List<IMoneyPlan>();
         public ReadOnlyCollection<IMoneyPlan> MoneyPlanList { get { return _listMoneyPlans.AsReadOnly(); } }
-
-
 
         public MoneyPlanner(ITrackerConfig config)
         {
@@ -44,7 +39,6 @@ namespace DLPMoneyTracker.Data
             }
             this.LoadFromFile();
         }
-
 
         public void AddMoneyPlan(IMoneyPlan record)
         {
@@ -62,7 +56,6 @@ namespace DLPMoneyTracker.Data
         {
             _listMoneyPlans.Clear();
         }
-
 
         public void LoadFromFile()
         {
@@ -99,7 +92,6 @@ namespace DLPMoneyTracker.Data
                 {
                     dataList.Add(record);
                 }
-
             }
 
             return dataList;

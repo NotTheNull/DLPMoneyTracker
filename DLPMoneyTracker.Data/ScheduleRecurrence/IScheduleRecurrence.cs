@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DLPMoneyTracker.Data.ScheduleRecurrence
 {
@@ -11,7 +9,6 @@ namespace DLPMoneyTracker.Data.ScheduleRecurrence
         SemiAnnual,
         Annual
     }
-
 
     public interface IScheduleRecurrence
     {
@@ -24,10 +21,8 @@ namespace DLPMoneyTracker.Data.ScheduleRecurrence
         DateTime NotificationDate { get; }
         RecurrenceFrequency Frequency { get; }
 
-
         string GetFileData();
+
         void LoadFileData(string data);
-
     }
-
 }

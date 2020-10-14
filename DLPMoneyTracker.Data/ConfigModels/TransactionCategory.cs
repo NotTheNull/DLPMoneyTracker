@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using System.Text.Json.Serialization;
 
 namespace DLPMoneyTracker.Data.ConfigModels
 {
@@ -29,7 +25,6 @@ namespace DLPMoneyTracker.Data.ConfigModels
         public string Name { get; set; }
         public CategoryType CategoryType { get; set; }
         public bool ExcludeFromBudget { get; set; } // Determines whether it will be visible on the Budget Planner as well as whether it will affect the Budget totals
-
 
         public TransactionCategory()
         {

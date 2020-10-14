@@ -1,19 +1,19 @@
 ﻿<Window x:Class="DLPMoneyTracker.DataEntry.AddEditCategories.AddEditCategory"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:DLPMoneyTracker.DataEntry.AddEditCategories"
         xmlns:behave="clr-namespace:DLPMoneyTracker.Core.Behaviors"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:core="clr-namespace:DLPMoneyTracker.Core"
-        mc:Ignorable="d" 
+        mc:Ignorable="d"
         Title="Add/Edit Categories"
         WindowStartupLocation="CenterScreen"
         Icon="\Cash-64.ico"
-        Height="450" 
+        Height="450"
         Width="500">
-    
+
     <Grid Style="{StaticResource MainGridStyle}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -24,30 +24,25 @@
 
         <StackPanel Orientation="Horizontal"
                     Background="LightGray"
-                    Grid.Row="0"
-                    >
+                    Grid.Row="0">
             <Button x:Name="btnCloseWindow"
                     ToolTip="Discard Unsaved Changes and Close Window"
                     Click="btnCloseWindow_Click"
-                    Style="{StaticResource MenuButton}"
-                    >
+                    Style="{StaticResource MenuButton}">
                 <Image Source="/Icons/Leave-256.png" />
             </Button>
-
 
             <Button x:Name="btnAddNew"
                     Style="{StaticResource MenuButton}"
                     Command="{Binding Path=CommandAddNew}"
-                    ToolTip="Add New Account"
-                    >
+                    ToolTip="Add New Account">
                 <Image Source="/Icons/Add-New-256.png" />
             </Button>
 
             <Button x:Name="btnCommitChanges"
                     ToolTip="Commit Changes to File"
                     Style="{StaticResource MenuButton}"
-                    Command="{Binding Path=CommandSaveChanges}"
-                    >
+                    Command="{Binding Path=CommandSaveChanges}">
                 <Image Source="/Icons/Save-256.png" />
             </Button>
 
@@ -57,31 +52,26 @@
                     Command="{Binding Path=CommandDiscardChanges}">
                 <Image Source="/Icons/Cancel-256.png" />
             </Button>
-
         </StackPanel>
-
 
         <DataGrid Grid.Row="1"
                   Margin="0, 10, 0, 0"
-                  ItemsSource="{Binding Path=CategoryList, UpdateSourceTrigger=PropertyChanged}"
-                  >
+                  ItemsSource="{Binding Path=CategoryList, UpdateSourceTrigger=PropertyChanged}">
             <DataGrid.Resources>
                 <core:BindingProxy x:Key="proxy" Data="{Binding}" />
             </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Category Name" 
-                                    Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}"
-                                    />
+                <DataGridTextColumn Header="Category Name"
+                                    Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}" />
 
                 <DataGridTextColumn Header="Category Type"
-                                    Binding="{Binding Path=CategoryType, Converter={StaticResource convertCategoryTypeToDisplay}, UpdateSourceTrigger=PropertyChanged}"
-                                    />
+                                    Binding="{Binding Path=CategoryType, Converter={StaticResource convertCategoryTypeToDisplay}, UpdateSourceTrigger=PropertyChanged}" />
 
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <Button x:Name="btnEdit" 
+                                <Button x:Name="btnEdit"
                                         ToolTip="Edit Account"
                                         Style="{StaticResource MenuButton}"
                                         Command="{Binding Path=Data.CommandEditMoneyAccount, Source={StaticResource proxy}}"
@@ -101,7 +91,6 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        
 
         <Grid Grid.Row="2" Margin="0,15,0,0">
             <Grid.ColumnDefinitions>
@@ -111,16 +100,15 @@
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            
+
             <TextBlock Text="Category Name"
                        Grid.Row="0"
                        Grid.Column="1"
-                       Style="{StaticResource StandardHeaderLabel}"
-                       />
+                       Style="{StaticResource StandardHeaderLabel}" />
 
             <TextBox x:Name="txtCategoryName"
                      Grid.Row="0"
@@ -135,14 +123,12 @@
                 <i:Interaction.Behaviors>
                     <behave:TextBoxFocusBehavior />
                 </i:Interaction.Behaviors>
-                
             </TextBox>
 
             <TextBlock Text="Category Type"
                        Grid.Row="1"
                        Grid.Column="1"
-                       Style="{StaticResource StandardHeaderLabel}"
-                       />
+                       Style="{StaticResource StandardHeaderLabel}" />
 
             <ComboBox x:Name="cboCategoryType"
                       Grid.Row="1"
@@ -153,21 +139,17 @@
                       ItemsSource="{Binding Path=CategoryTypeList, UpdateSourceTrigger=PropertyChanged}"
                       DisplayMemberPath="Display"
                       SelectedValuePath="Value"
-                      SelectedValue="{Binding Path=SelectedCategoryType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                      />
+                      SelectedValue="{Binding Path=SelectedCategoryType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
             <TextBlock Text="Exclude From Budget"
                        Grid.Row="2"
                        Grid.Column="1"
-                       Style="{StaticResource StandardHeaderLabel}"
-                       />
+                       Style="{StaticResource StandardHeaderLabel}" />
 
             <CheckBox Margin="10, 5, 0, 5"
                       Grid.Row="2"
                       Grid.Column="2"
-                      IsChecked="{Binding Path=ExcludeFromBudget, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                      />
+                      IsChecked="{Binding Path=ExcludeFromBudget, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </Grid>
-
     </Grid>
 </Window>

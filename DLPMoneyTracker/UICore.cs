@@ -10,17 +10,12 @@ using DLPMoneyTracker.ReportViews;
 using DLPMoneyTracker.ReportViews.LedgerViews;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace DLPMoneyTracker
 {
     public static class UICore
     {
         public static IServiceProvider DependencyHost { get; set; }
-
 
         public static void Init()
         {
@@ -68,7 +63,6 @@ namespace DLPMoneyTracker
 
             services.AddTransient<MonthlyBudgetPlannerView>();
             services.AddTransient<MonthlyBudgetPlannerVM>();
-            
         }
     }
 
@@ -76,32 +70,38 @@ namespace DLPMoneyTracker
     {
         public static string ToDisplayText(this MoneyAccountType actType)
         {
-            switch(actType)
+            switch (actType)
             {
                 case MoneyAccountType.Checking:
                     return "Checking";
+
                 case MoneyAccountType.CreditCard:
                     return "Credit Card";
+
                 case MoneyAccountType.Loan:
                     return "Loan";
+
                 case MoneyAccountType.Savings:
                     return "Savings";
+
                 default:
                     return "*N/A*";
             }
         }
 
-
         public static string ToDisplayText(this CategoryType catType)
         {
-            switch(catType)
+            switch (catType)
             {
                 case CategoryType.Expense:
                     return "Expense";
+
                 case CategoryType.Income:
                     return "Income";
+
                 case CategoryType.UntrackedAdjustment:
                     return "Adjustment";
+
                 default:
                     return "*N/A*";
             }
@@ -109,19 +109,20 @@ namespace DLPMoneyTracker
 
         public static string ToDisplayText(this RecurrenceFrequency recurType)
         {
-            switch(recurType)
+            switch (recurType)
             {
                 case RecurrenceFrequency.Annual:
                     return "Annual";
+
                 case RecurrenceFrequency.SemiAnnual:
                     return "Semi-Annual";
+
                 case RecurrenceFrequency.Monthly:
                     return "Monthly";
+
                 default:
                     return "*N/A*";
             }
         }
     }
-
-
 }

@@ -1,7 +1,5 @@
 ﻿using DLPMoneyTracker.Data.ConfigModels;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.Json.Serialization;
 
 namespace DLPMoneyTracker.Data.TransactionModels.Budget
@@ -14,7 +12,5 @@ namespace DLPMoneyTracker.Data.TransactionModels.Budget
         public Guid CategoryId { get { return this.Category?.ID ?? Guid.Empty; } }
 
         public decimal BudgetAmount { get; set; }
-
-
     }
 }

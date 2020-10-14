@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Input;
 
 namespace DLPMoneyTracker.Core
@@ -16,13 +14,11 @@ namespace DLPMoneyTracker.Core
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-
         public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
         {
             _execute = execute;
             _canExecute = canExecute;
         }
-
 
         public bool CanExecute(object parameter)
         {

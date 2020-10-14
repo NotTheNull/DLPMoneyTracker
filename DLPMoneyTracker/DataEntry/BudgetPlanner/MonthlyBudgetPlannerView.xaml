@@ -8,17 +8,17 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:core="clr-namespace:DLPMoneyTracker.Core"
              mc:Ignorable="d"
-             Height="450" 
+             Height="450"
              Width="750">
 
     <UserControl.Resources>
         <Style x:Key="LocalHeaderLabels" TargetType="TextBlock" BasedOn="{StaticResource StandardHeaderLabel}">
             <Setter Property="HorizontalAlignment" Value="Right" />
-            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Foreground" Value="Black" />
             <Setter Property="FontSize" Value="18" />
         </Style>
     </UserControl.Resources>
-    
+
     <Grid Style="{StaticResource MainGridStyle}">
         <Grid.RowDefinitions>
             <RowDefinition Height="15" />
@@ -40,20 +40,15 @@
                 <ColumnDefinition Width="180" />
                 <ColumnDefinition Width="140" />
             </Grid.ColumnDefinitions>
-            
-            
-            <TextBlock Text="Monthly Income" 
+
+            <TextBlock Text="Monthly Income"
                        Grid.Column="0"
-                       Style="{StaticResource LocalHeaderLabels}"
-                       />
+                       Style="{StaticResource LocalHeaderLabels}" />
 
             <TextBlock Text="{Binding Path=MonthlyIncomeTotal, Converter={StaticResource convertDecimalToDisplay}, FallbackValue=0.00, UpdateSourceTrigger=PropertyChanged}"
-                       Grid.Column="1"                       
-                       Style="{StaticResource LocalHeaderLabels}"                       
-                       />
-
+                       Grid.Column="1"
+                       Style="{StaticResource LocalHeaderLabels}" />
         </Grid>
-
 
         <Grid x:Name="panelDataGrids"
               Grid.Row="2">
@@ -69,14 +64,12 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Fixed Expenses" 
+            <TextBlock Text="Fixed Expenses"
                        Style="{StaticResource StandardHeaderLabel}"
                        HorizontalAlignment="Center"
                        FontSize="16"
                        Grid.Column="0"
-                       Grid.Row="0"
-                       />
-
+                       Grid.Row="0" />
 
             <DataGrid Grid.Column="0"
                       Grid.Row="1"
@@ -93,9 +86,8 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Path=BudgetAmount, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, UpdateSourceTrigger=PropertyChanged}" 
-                                               HorizontalAlignment="Right"
-                                               />
+                                    <TextBlock Text="{Binding Path=BudgetAmount, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, UpdateSourceTrigger=PropertyChanged}"
+                                               HorizontalAlignment="Right" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -106,28 +98,22 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Path=CurrentValue, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, UpdateSourceTrigger=PropertyChanged}" 
+                                    <TextBlock Text="{Binding Path=CurrentValue, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, UpdateSourceTrigger=PropertyChanged}"
                                                HorizontalAlignment="Right"
-                                               Foreground="{Binding Path=CurrentValueFontColor, UpdateSourceTrigger=PropertyChanged}"
-                                               />
+                                               Foreground="{Binding Path=CurrentValueFontColor, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
-            
-            
-            
-            
-            
-            <TextBlock Text="Variable Expenses" 
+
+            <TextBlock Text="Variable Expenses"
                        Style="{StaticResource StandardHeaderLabel}"
                        HorizontalAlignment="Center"
                        FontSize="16"
                        Grid.Column="1"
-                       Grid.Row="0"
-                       />
+                       Grid.Row="0" />
 
             <DataGrid Grid.Column="1"
                       Grid.Row="1"
@@ -156,27 +142,21 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-
                     <DataGridTemplateColumn Header="Current"
                                             Width="100">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Path=CurrentValue, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, UpdateSourceTrigger=PropertyChanged}" 
+                                    <TextBlock Text="{Binding Path=CurrentValue, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, UpdateSourceTrigger=PropertyChanged}"
                                                HorizontalAlignment="Right"
-                                               Foreground="{Binding Path=CurrentValueFontColor, UpdateSourceTrigger=PropertyChanged}"
-                                               />
+                                               Foreground="{Binding Path=CurrentValueFontColor, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
-
         </Grid>
-    
-        
-
 
         <Grid x:Name="panelMonthlyExpense"
               HorizontalAlignment="Right"
@@ -190,16 +170,13 @@
                 <ColumnDefinition Width="140" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Expenses Total" 
+            <TextBlock Text="Expenses Total"
                        Grid.Column="0"
-                       Style="{StaticResource LocalHeaderLabels}"
-                       />
+                       Style="{StaticResource LocalHeaderLabels}" />
 
             <TextBlock Text="{Binding Path=GrandExpenseTotal, Converter={StaticResource convertDecimalToDisplay}, FallbackValue=0.00, UpdateSourceTrigger=PropertyChanged}"
                        Grid.Column="1"
-                       Style="{StaticResource LocalHeaderLabels}"
-                       />
-
+                       Style="{StaticResource LocalHeaderLabels}" />
         </Grid>
 
         <Grid x:Name="panelOverBudget"
@@ -216,14 +193,11 @@
 
             <TextBlock Text="Overbudget"
                        Grid.Column="0"
-                       Style="{StaticResource LocalHeaderLabels}"
-                       />
+                       Style="{StaticResource LocalHeaderLabels}" />
 
             <TextBlock Text="{Binding Path=OverBudgetAmount, Converter={StaticResource convertDecimalToDisplay}, FallbackValue=0.00, UpdateSourceTrigger=PropertyChanged}"
                        Grid.Column="1"
-                       Style="{StaticResource LocalHeaderLabels}"
-                       />
-
+                       Style="{StaticResource LocalHeaderLabels}" />
         </Grid>
 
         <Grid x:Name="panelBalance"
@@ -237,17 +211,13 @@
                 <ColumnDefinition Width="140" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Monthly Balance" 
+            <TextBlock Text="Monthly Balance"
                        Grid.Column="0"
-                       Style="{StaticResource LocalHeaderLabels}"
-                       />
+                       Style="{StaticResource LocalHeaderLabels}" />
 
             <TextBlock Text="{Binding Path=MonthlyBalance, Converter={StaticResource convertDecimalToDisplay}, FallbackValue=0.00, UpdateSourceTrigger=PropertyChanged}"
                        Grid.Column="1"
-                       Style="{StaticResource LocalHeaderLabels}"
-                       />
-
+                       Style="{StaticResource LocalHeaderLabels}" />
         </Grid>
-              
     </Grid>
 </UserControl>

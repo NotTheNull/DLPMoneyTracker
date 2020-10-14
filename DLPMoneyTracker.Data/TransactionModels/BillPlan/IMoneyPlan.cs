@@ -1,8 +1,5 @@
-﻿using DLPMoneyTracker.Data.ConfigModels;
-using DLPMoneyTracker.Data.ScheduleRecurrence;
+﻿using DLPMoneyTracker.Data.ScheduleRecurrence;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.Json.Serialization;
 
 namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
@@ -14,7 +11,6 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
         NotSet
     }
 
-
     public interface IMoneyPlan
     {
         Guid UID { get; }
@@ -23,11 +19,12 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
         MoneyPlanType PlanType { get; }
 
         [JsonIgnore]
-        int PriorityOrder { get; } // Mainly for sorting purposes 
+        int PriorityOrder { get; } // Mainly for sorting purposes
 
         string Description { get; }
 
         Guid CategoryID { get; }
+
         [JsonIgnore]
         string CategoryName { get; }
 
@@ -48,7 +45,6 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
 
         [JsonIgnore]
         DateTime NextOccurrence { get; }
-
     }
 
     public class MoneyPlanRecordJSON : IMoneyPlan

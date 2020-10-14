@@ -7,14 +7,14 @@
         xmlns:behave="clr-namespace:DLPMoneyTracker.Core.Behaviors"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="Add Debt Payment" 
+        Title="Add Debt Payment"
         WindowStartupLocation="CenterScreen"
         Icon="\Cash-64.ico"
-        Height="240" 
+        Height="240"
         Width="500">
     <Grid Style="{StaticResource MainGridStyle}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="5" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
@@ -27,14 +27,13 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="15"/>
+            <RowDefinition Height="15" />
         </Grid.RowDefinitions>
 
         <TextBlock Text="Trans Date"
                    Grid.Row="1"
                    Grid.Column="1"
-                   Style="{StaticResource StandardHeaderLabel}"
-                   />
+                   Style="{StaticResource StandardHeaderLabel}" />
 
         <DatePicker x:Name="datTransaction"
                     Width="120"
@@ -42,15 +41,12 @@
                     Grid.Row="1"
                     Grid.Column="2"
                     Margin="0, 5, 0, 5"
-                    SelectedDate="{Binding Path=TransactionDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    />
-
+                    SelectedDate="{Binding Path=TransactionDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <TextBlock Text="Bank Account"
                    Grid.Row="2"
                    Grid.Column="1"
-                   Style="{StaticResource StandardHeaderLabel}"
-                   />
+                   Style="{StaticResource StandardHeaderLabel}" />
         <ComboBox x:Name="cboBankAccount"
                   Grid.Row="2"
                   Grid.Column="2"
@@ -60,15 +56,12 @@
                   ItemsSource="{Binding Path=BankAccountList}"
                   SelectedValue="{Binding Path=BankAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   DisplayMemberPath="Display"
-                  SelectedValuePath="Value"
-                  />
-
+                  SelectedValuePath="Value" />
 
         <TextBlock Text="Debt Account"
                    Grid.Row="2"
                    Grid.Column="3"
-                   Style="{StaticResource StandardHeaderLabel}"
-                   />
+                   Style="{StaticResource StandardHeaderLabel}" />
         <ComboBox x:Name="cboDebtAccount"
                   Grid.Row="2"
                   Grid.Column="4"
@@ -78,25 +71,21 @@
                   ItemsSource="{Binding Path=DebtAccountList}"
                   SelectedValue="{Binding Path=DebtAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   DisplayMemberPath="Display"
-                  SelectedValuePath="Value"
-                  />
+                  SelectedValuePath="Value" />
 
         <TextBlock Text="Payment"
                    Grid.Row="3"
                    Grid.Column="1"
-                   Style="{StaticResource StandardHeaderLabel}"
-                   />
+                   Style="{StaticResource StandardHeaderLabel}" />
         <TextBox x:Name="txtPayment"
                  Grid.Row="3"
                  Grid.Column="2"
                  Margin="0, 5, 0, 5"
-                 Text="{Binding Path=Payment, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=0.00, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                 >
+                 Text="{Binding Path=Payment, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=0.00, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
             <i:Interaction.Behaviors>
                 <behave:TextBoxFocusBehavior />
             </i:Interaction.Behaviors>
         </TextBox>
-
 
         <StackPanel Grid.Row="4"
                     Grid.Column="3"
@@ -107,14 +96,12 @@
             <Button x:Name="btnSave"
                     Click="btnSave_Click"
                     Height="20"
-                    Width="130"
-                    >
+                    Width="130">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Icons/Add-New-256.png" />
-                        <TextBlock Text="Save   " 
-                                   Margin="10, 0, 0, 0"
-                                   />
+                        <TextBlock Text="Save   "
+                                   Margin="10, 0, 0, 0" />
                     </StackPanel>
                 </Button.Content>
             </Button>
@@ -127,15 +114,11 @@
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Icons/Cancel-256.png" />
-                        <TextBlock Text="Cancel" 
-                                   Margin="10, 0, 0, 0"
-                                   />
+                        <TextBlock Text="Cancel"
+                                   Margin="10, 0, 0, 0" />
                     </StackPanel>
                 </Button.Content>
             </Button>
-
         </StackPanel>
-
-
     </Grid>
 </Window>

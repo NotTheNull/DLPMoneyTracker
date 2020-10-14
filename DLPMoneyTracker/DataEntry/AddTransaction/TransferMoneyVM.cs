@@ -1,12 +1,10 @@
 ﻿using DLPMoneyTracker.Core;
-using DLPMoneyTracker.Core.Converters;
 using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.ConfigModels;
 using DLPMoneyTracker.Data.TransactionModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DLPMoneyTracker.DataEntry.AddTransaction
 {
@@ -20,63 +18,51 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
         public DateTime TransactionDate
         {
             get { return _dateTrans; }
-            set 
+            set
             {
                 _dateTrans = value;
                 NotifyPropertyChanged(nameof(this.TransactionDate));
             }
         }
 
-
         private MoneyAccount _act1;
 
         public MoneyAccount BankAccountFrom
         {
             get { return _act1; }
-            set 
-            { 
+            set
+            {
                 _act1 = value;
                 NotifyPropertyChanged(nameof(this.BankAccountFrom));
             }
         }
-
 
         private MoneyAccount _act2;
 
         public MoneyAccount BankAccountTo
         {
             get { return _act2; }
-            set 
-            { 
+            set
+            {
                 _act2 = value;
                 NotifyPropertyChanged(nameof(this.BankAccountTo));
             }
         }
-
 
         private decimal _amt;
 
         public decimal Amount
         {
             get { return _amt; }
-            set 
-            { 
+            set
+            {
                 _amt = value;
                 NotifyPropertyChanged(nameof(this.Amount));
             }
         }
 
-
-
-
-
-
-
-
-
         private List<SpecialDropListItem<MoneyAccount>> _listBanks = new List<SpecialDropListItem<MoneyAccount>>();
-        public List<SpecialDropListItem<MoneyAccount>>  BankAccountList { get { return _listBanks; } }
-
+        public List<SpecialDropListItem<MoneyAccount>> BankAccountList { get { return _listBanks; } }
 
         public TransferMoneyVM(ITrackerConfig config, ILedger ledger) : base()
         {
@@ -86,20 +72,18 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             this.LoadAccounts();
         }
 
-
         private void LoadAccounts()
         {
             List<MoneyAccountType> bankTypes = new List<MoneyAccountType>() { MoneyAccountType.Checking, MoneyAccountType.Savings };
             _listBanks.Clear();
-            if(_config.AccountsList.Any(x => bankTypes.Contains(x.AccountType)))
+            if (_config.AccountsList.Any(x => bankTypes.Contains(x.AccountType)))
             {
-                foreach(var act in _config.AccountsList.Where(x => bankTypes.Contains(x.AccountType)).OrderBy(o => o.Description))
+                foreach (var act in _config.AccountsList.Where(x => bankTypes.Contains(x.AccountType)).OrderBy(o => o.Description))
                 {
                     _listBanks.Add(new SpecialDropListItem<MoneyAccount>(act.Description, act));
                 }
             }
         }
-
 
         public void Clear()
         {
@@ -136,10 +120,5 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             _ledger.SaveToFile();
             this.Clear();
         }
-
-
-
-
-
     }
 }

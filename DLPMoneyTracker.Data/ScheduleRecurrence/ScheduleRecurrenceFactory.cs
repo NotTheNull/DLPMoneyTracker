@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DLPMoneyTracker.Data.ScheduleRecurrence
 {
@@ -15,12 +13,14 @@ namespace DLPMoneyTracker.Data.ScheduleRecurrence
             if (breakdown is null) return null;
             if (breakdown.Count() < 2) return null;
 
-            switch(breakdown[0])
+            switch (breakdown[0])
             {
                 case IScheduleRecurrence.FREQUENCY_ANNUAL:
                     return new AnnualRecurrence(fileData);
+
                 case IScheduleRecurrence.FREQUENCY_MONTHLY:
                     return new MonthlyRecurrence(fileData);
+
                 case IScheduleRecurrence.FREQUENCY_SEMI_ANNUAL:
                     return new SemiAnnualRecurrence(fileData);
             }
@@ -37,12 +37,14 @@ namespace DLPMoneyTracker.Data.ScheduleRecurrence
 
         public static IScheduleRecurrence Build(RecurrenceFrequency type, DateTime dateStart)
         {
-            switch(type)
+            switch (type)
             {
                 case RecurrenceFrequency.Annual:
                     return new AnnualRecurrence() { StartDate = dateStart };
+
                 case RecurrenceFrequency.SemiAnnual:
                     return new SemiAnnualRecurrence() { StartDate = dateStart };
+
                 default:
                     throw new InvalidOperationException("Arguments provided do not match Recurrence Type");
             }

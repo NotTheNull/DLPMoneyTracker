@@ -6,13 +6,11 @@ using DLPMoneyTracker.ReportViews;
 using DLPMoneyTracker.ReportViews.LedgerViews;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace DLPMoneyTracker
 {
     // TODO: Add ability to backup/close Ledger and transfer balances to NEW ledger
     // TODO: Add Monthly Expense Report by Category
-
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -30,14 +28,13 @@ namespace DLPMoneyTracker
             _uiAccountSummary = uiAccountSummary;
 
             uiFullLedger.ShowFullLedgerDetail();
-            
+
             panelTransactions.Children.Add(uiFullLedger);
             _uiFullLedger = uiFullLedger;
 
             panelBudget.Children.Add(uiBudgetPlanner);
             _uiBudgetPlanner = uiBudgetPlanner;
         }
-                
 
         private void Exit()
         {

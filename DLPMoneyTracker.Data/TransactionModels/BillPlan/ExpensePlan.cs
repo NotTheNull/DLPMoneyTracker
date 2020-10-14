@@ -1,8 +1,6 @@
 ﻿using DLPMoneyTracker.Data.ConfigModels;
 using DLPMoneyTracker.Data.ScheduleRecurrence;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.Json.Serialization;
 
 namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
@@ -16,17 +14,16 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
 
         public int PriorityOrder { get { return 2; } }
 
-
         private TransactionCategory _cat;
 
         [JsonIgnore]
         public TransactionCategory Category
         {
             get { return _cat; }
-            set 
+            set
             {
                 if (value.CategoryType != CategoryType.Expense) throw new InvalidOperationException("Only Expense Categories are allowed");
-                _cat = value; 
+                _cat = value;
             }
         }
 
@@ -42,8 +39,6 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
         public MoneyAccount Account { get; set; }
 
         public string AccountID { get { return this.Account?.ID ?? string.Empty; } }
-
-
 
         public string Description { get; set; }
 
@@ -62,7 +57,6 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
         [JsonIgnore]
         public RecurrenceFrequency Frequency { get { return this.Recurrence.Frequency; } }
 
-
         [JsonIgnore]
         public DateTime NotificationDate { get { return this.Recurrence?.NotificationDate ?? DateTime.MinValue; } }
 
@@ -70,7 +64,6 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
         public DateTime NextOccurrence { get { return this.Recurrence?.NextOccurence ?? DateTime.MaxValue; } }
 
         public decimal ExpectedAmount { get; set; }
-
 
         public ExpensePlan()
         {

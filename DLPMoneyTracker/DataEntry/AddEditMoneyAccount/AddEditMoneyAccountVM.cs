@@ -12,6 +12,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
     public class AddEditMoneyAccountVM : BaseViewModel, IDisposable
     {
         #region Objects and Properties
+
         private ITrackerConfig _config;
         private ILedger _ledger;
         private MoneyAccountVM _data;
@@ -70,12 +71,10 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
             }
         }
 
-        
-
         public decimal InitialAmount
         {
             get { return this.SelectedAccount?.InitialAmount ?? decimal.Zero; }
-            set 
+            set
             {
                 if (this.SelectedAccount is null) return;
                 this.SelectedAccount.InitialAmount = value;
@@ -83,22 +82,18 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
             }
         }
 
-
         public bool IsEnabled { get { return !(this.SelectedAccount is null); } }
-
-
-
 
         public ObservableCollection<MoneyAccountVM> MoneyAccountList { get; set; }
 
         public List<SpecialDropListItem<MoneyAccountType>> AccountTypeList { get; set; }
 
-
-        #endregion
-
+        #endregion Objects and Properties
 
         #region Commands
+
         private RelayCommand _cmdEditMoneyAccount;
+
         public RelayCommand CommandEditMoneyAccount
         {
             get
@@ -116,6 +111,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
         }
 
         private RelayCommand _cmdDelMoneyAcct;
+
         public RelayCommand CommandDeleteMoneyAccount
         {
             get
@@ -130,8 +126,8 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
             }
         }
 
-
         private RelayCommand _cmdClear;
+
         public RelayCommand CommandClear
         {
             get
@@ -143,8 +139,8 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
             }
         }
 
-
         private RelayCommand _cmdAddNew;
+
         public RelayCommand CommandAddNew
         {
             get
@@ -163,8 +159,8 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
             }
         }
 
-
         private RelayCommand _cmdSaveChanges;
+
         public RelayCommand CommandSaveChanges
         {
             get
@@ -177,8 +173,8 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
             }
         }
 
-
         private RelayCommand _cmdDiscard;
+
         public RelayCommand CommandDiscardChanges
         {
             get
@@ -191,8 +187,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
             }
         }
 
-        #endregion
-
+        #endregion Commands
 
         public AddEditMoneyAccountVM(ITrackerConfig config, ILedger ledger) : base()
         {
@@ -211,7 +206,11 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
 
             this.Clear();
         }
-        ~AddEditMoneyAccountVM() { this.Dispose(); }
+
+        ~AddEditMoneyAccountVM()
+        {
+            this.Dispose();
+        }
 
         public void DiscardChanges()
         {
@@ -231,7 +230,6 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
                 }
             }
         }
-
 
         public void CommitChanges()
         {
@@ -259,13 +257,11 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
             if (this.MoneyAccountList.Contains(act)) this.MoneyAccountList.Remove(act);
         }
 
-
         public void Clear()
         {
             _data = null;
             this.NotifyAll();
         }
-
 
         public void NotifyAll()
         {
@@ -291,13 +287,13 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
                 this.MoneyAccountList = null;
             }
 
-            if(!(this.AccountTypeList is null))
+            if (!(this.AccountTypeList is null))
             {
                 this.AccountTypeList.Clear();
                 this.AccountTypeList = null;
             }
 
-            if(!(_data is null))
+            if (!(_data is null))
             {
                 _data.Dispose();
                 _data = null;

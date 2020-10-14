@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows;
 using System.Windows.Data;
 
@@ -14,10 +11,10 @@ namespace DLPMoneyTracker.Core.Converters
         {
             Visibility hide = Visibility.Collapsed;
             string args = string.Empty;
-            if(!(parameter is null))
+            if (!(parameter is null))
             {
                 args = parameter.ToString();
-                if(args.Contains("H"))
+                if (args.Contains("H"))
                 {
                     hide = Visibility.Hidden;
                 }
@@ -25,7 +22,7 @@ namespace DLPMoneyTracker.Core.Converters
 
             if (value is null) return hide;
 
-            if(value is bool flag)
+            if (value is bool flag)
             {
                 if (args.Contains("R"))
                     return flag ? hide : Visibility.Visible;

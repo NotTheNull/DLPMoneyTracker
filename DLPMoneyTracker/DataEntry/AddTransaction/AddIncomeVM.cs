@@ -13,18 +13,14 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
         private ILedger _ledger;
         private ITrackerConfig _config;
 
-
-
         public Guid TransactionId { get; set; }
-
-
 
         private DateTime _dateTrans;
 
         public DateTime TransactionDate
         {
             get { return _dateTrans; }
-            set 
+            set
             {
                 _dateTrans = value;
                 NotifyPropertyChanged(nameof(this.TransactionDate));
@@ -36,8 +32,8 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
         public MoneyAccount BankAccount
         {
             get { return _act; }
-            set 
-            { 
+            set
+            {
                 _act = value;
                 NotifyPropertyChanged(nameof(this.BankAccount));
                 NotifyPropertyChanged(nameof(this.BankAccountId));
@@ -53,14 +49,13 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             }
         }
 
-
         private TransactionCategory _cat;
 
         public TransactionCategory Category
         {
             get { return _cat; }
-            set 
-            { 
+            set
+            {
                 _cat = value;
                 NotifyPropertyChanged(nameof(this.Category));
                 NotifyPropertyChanged(nameof(this.CategoryId));
@@ -76,53 +71,41 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             }
         }
 
-
-
-
-
         private string _desc;
 
         public string Description
         {
             get { return _desc; }
-            set 
-            { 
+            set
+            {
                 _desc = value;
                 NotifyPropertyChanged(nameof(this.Description));
             }
         }
-
 
         private decimal _amt;
 
         public decimal Amount
         {
             get { return _amt; }
-            set 
-            { 
+            set
+            {
                 _amt = value;
                 NotifyPropertyChanged(nameof(this.Amount));
             }
         }
 
-
-
-
-
         private List<SpecialDropListItem<TransactionCategory>> _listCategories = new List<SpecialDropListItem<TransactionCategory>>();
         public List<SpecialDropListItem<TransactionCategory>> CategoryList { get { return _listCategories; } }
 
-
         private List<SpecialDropListItem<MoneyAccount>> _listBanks = new List<SpecialDropListItem<MoneyAccount>>();
         public List<SpecialDropListItem<MoneyAccount>> BankAccountList { get { return _listBanks; } }
-
 
         public AddIncomeVM(ITrackerConfig config, ILedger ledger) : base()
         {
             _ledger = ledger;
             _config = config;
             this.TransactionId = Guid.Empty;
-
 
             this.LoadAccounts();
             this.LoadCategories();
@@ -133,22 +116,21 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
         {
             List<MoneyAccountType> bankTypes = new List<MoneyAccountType>() { MoneyAccountType.Checking, MoneyAccountType.Savings };
             _listBanks.Clear();
-            if(_config.AccountsList.Any(x => bankTypes.Contains(x.AccountType)))
+            if (_config.AccountsList.Any(x => bankTypes.Contains(x.AccountType)))
             {
-                foreach(var act in _config.AccountsList.Where(x => bankTypes.Contains(x.AccountType)).OrderBy(o => o.Description))
+                foreach (var act in _config.AccountsList.Where(x => bankTypes.Contains(x.AccountType)).OrderBy(o => o.Description))
                 {
                     _listBanks.Add(new SpecialDropListItem<MoneyAccount>(act.Description, act));
                 }
             }
-
         }
 
         private void LoadCategories()
         {
             _listCategories.Clear();
-            if(_config.CategoryList.Any(x => x.CategoryType == CategoryType.Income))
+            if (_config.CategoryList.Any(x => x.CategoryType == CategoryType.Income))
             {
-                foreach(var cat in _config.CategoryList.Where(x => x.CategoryType == CategoryType.Income).OrderBy(o => o.Name))
+                foreach (var cat in _config.CategoryList.Where(x => x.CategoryType == CategoryType.Income).OrderBy(o => o.Name))
                 {
                     _listCategories.Add(new SpecialDropListItem<TransactionCategory>(cat.Name, cat));
                 }
@@ -170,15 +152,13 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             if (this.Category is null) throw new InvalidOperationException("Category cannot be NULL");
             if (this.Amount <= decimal.Zero) throw new InvalidOperationException("Amount must be provided");
 
-
             IMoneyRecord newRecord = null;
             if (this.TransactionId != Guid.Empty)
             {
                 newRecord = _ledger.TransactionList.FirstOrDefault(x => x.TransactionId == this.TransactionId);
             }
 
-
-            if(newRecord is null)
+            if (newRecord is null)
             {
                 _ledger.AddTransaction(new MoneyRecord()
                 {
@@ -192,7 +172,7 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             }
             else
             {
-                if(newRecord is MoneyRecord transaction)
+                if (newRecord is MoneyRecord transaction)
                 {
                     transaction.TransDate = this.TransactionDate;
                     transaction.Account = this.BankAccount;
@@ -202,11 +182,7 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
                 }
             }
 
-
-
-
             this.Clear();
         }
-
     }
 }

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DLPMoneyTracker.Data.ScheduleRecurrence
 {
@@ -28,27 +26,20 @@ namespace DLPMoneyTracker.Data.ScheduleRecurrence
 
         public RecurrenceFrequency Frequency { get { return RecurrenceFrequency.SemiAnnual; } }
 
-
-
         public DateTime StartDate { get; set; }
-        
 
         public DateTime AnniversaryDate { get { return new DateTime(DateTime.Now.Year, this.StartDate.Month, this.StartDate.Day); } }
         public DateTime AlternateDate { get { return this.AnniversaryDate.AddMonths(6); } }
-
-
-
 
         public SemiAnnualRecurrence()
         {
             this.StartDate = DateTime.Today;
         }
+
         public SemiAnnualRecurrence(string fileData)
         {
             this.LoadFileData(fileData);
         }
-
-
 
         public string GetFileData()
         {
@@ -61,7 +52,7 @@ namespace DLPMoneyTracker.Data.ScheduleRecurrence
             if (breakdown is null) return;
             if (breakdown.Count() < 2) return;
 
-            if(DateTime.TryParse(breakdown[1], out DateTime date))
+            if (DateTime.TryParse(breakdown[1], out DateTime date))
             {
                 this.StartDate = date;
             }

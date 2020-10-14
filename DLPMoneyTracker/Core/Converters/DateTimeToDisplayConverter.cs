@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Windows.Data;
 
 namespace DLPMoneyTracker.Core.Converters
@@ -11,9 +9,9 @@ namespace DLPMoneyTracker.Core.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is null) return DateTime.MinValue;
-            if(value is DateTime date)
+            if (value is DateTime date)
             {
-                if(parameter is null)
+                if (parameter is null)
                 {
                     return date.ToString();
                 }

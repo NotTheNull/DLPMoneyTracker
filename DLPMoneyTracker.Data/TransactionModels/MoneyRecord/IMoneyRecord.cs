@@ -1,9 +1,4 @@
-﻿using DLPMoneyTracker.Data.ConfigModels;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using System.Text.Json.Serialization;
+﻿using System;
 
 namespace DLPMoneyTracker.Data.TransactionModels
 {
@@ -15,9 +10,5 @@ namespace DLPMoneyTracker.Data.TransactionModels
         Guid CategoryUID { get; }
         string Description { get; }
         decimal TransAmount { get; }
-
     }
-
-
-
 }

@@ -2,19 +2,16 @@
 using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.ConfigModels;
 using DLPMoneyTracker.Data.TransactionModels;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
 
 namespace DLPMoneyTracker.ReportViews.LedgerViews
 {
     public class LedgerDetailVM : BaseViewModel
     {
-        ITrackerConfig _config;
-        ILedger _ledger;
+        private ITrackerConfig _config;
+        private ILedger _ledger;
 
         private MoneyAccount _act;
         private TransactionCategory _cat;
@@ -22,34 +19,23 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
         private ObservableCollection<MoneyRecord> _listRecords = new ObservableCollection<MoneyRecord>();
         public ObservableCollection<MoneyRecord> DisplayRecordsList { get { return _listRecords; } }
 
-
         public string HeaderText
         {
             get
             {
-                if(!(_act is null)) return string.Format("ACCOUNT: {0}", _act.Description);
+                if (!(_act is null)) return string.Format("ACCOUNT: {0}", _act.Description);
                 if (!(_cat is null)) return string.Format("CATEGORY: {0}", _cat.Name);
 
                 return string.Empty;
             }
         }
 
-
-
-
         private RelayCommand _cmdRefresh;
+
         public RelayCommand CommandRefresh
         {
             get { return _cmdRefresh ?? (_cmdRefresh = new RelayCommand((o) => this.Reload())); }
         }
-
-
-
-
-
-
-
-
 
         public LedgerDetailVM(ILedger ledger, ITrackerConfig config) : base()
         {
@@ -74,11 +60,11 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
         public void Reload()
         {
             _listRecords.Clear();
-            if(!(_act is null))
+            if (!(_act is null))
             {
                 this.LoadRecords(_ledger.TransactionList.Where(x => x.AccountID == _act.ID));
             }
-            else if(!(_cat is null))
+            else if (!(_cat is null))
             {
                 this.LoadRecords(_ledger.TransactionList.Where(x => x.CategoryUID == _cat.ID));
             }
@@ -87,7 +73,6 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
                 this.LoadRecords(_ledger.TransactionList);
             }
         }
-        
 
         public void ShowFullLedgerDetail()
         {
@@ -115,19 +100,17 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
             this.LoadRecords(_ledger.TransactionList.Where(x => x.CategoryUID == _cat.ID));
         }
 
-
         private void LoadRecords(IEnumerable<IMoneyRecord> records)
         {
             if (records is null || !records.Any()) return;
-            
-            foreach(var rec in records)
+
+            foreach (var rec in records)
             {
-                if(rec is MoneyRecord data)
+                if (rec is MoneyRecord data)
                 {
                     _listRecords.Add(data);
                 }
             }
         }
-
     }
 }

@@ -18,8 +18,6 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             _viewModel = viewModel;
         }
 
-
-
         public void CreateTransactionFromMoneyPlan(IMoneyPlan plan)
         {
             if (plan is null) throw new ArgumentNullException("Money Plan");

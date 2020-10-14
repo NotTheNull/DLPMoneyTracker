@@ -5,7 +5,6 @@ using System.Text.Json.Serialization;
 
 namespace DLPMoneyTracker.Data.TransactionModels
 {
-
     [DebuggerDisplay("{AccountID} {Description} ${TransAmount}")]
     public class MoneyRecord : IMoneyRecord
     {
@@ -39,6 +38,5 @@ namespace DLPMoneyTracker.Data.TransactionModels
             this.Description = string.Empty;
             this.TransAmount = decimal.Zero;
         }
-
     }
 }

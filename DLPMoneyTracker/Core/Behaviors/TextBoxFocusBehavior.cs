@@ -1,15 +1,10 @@
 ﻿using Microsoft.Xaml.Behaviors;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Controls;
 
 namespace DLPMoneyTracker.Core.Behaviors
 {
     public class TextBoxFocusBehavior : Behavior<TextBox>
     {
-
-
         protected override void OnAttached()
         {
             base.OnAttached();

@@ -1,12 +1,10 @@
 ﻿using DLPMoneyTracker.Data.ConfigModels;
 using System;
 using System.Collections.Generic;
-using System.Text.Json;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using DLPMoneyTracker;
-using System.Collections.ObjectModel;
-using System.Transactions;
+using System.Text.Json;
 
 namespace DLPMoneyTracker.Data
 {
@@ -16,41 +14,41 @@ namespace DLPMoneyTracker.Data
         ReadOnlyCollection<TransactionCategory> CategoryList { get; }
 
         void LoadMoneyAccounts();
+
         void SaveMoneyAccounts();
 
         void LoadCategories();
+
         void SaveCategories();
 
         TransactionCategory GetCategory(Guid uid);
+
         MoneyAccount GetAccount(string id);
 
         void AddCategory(TransactionCategory cat);
+
         void AddMoneyAccount(MoneyAccount act);
 
         void RemoveCategory(TransactionCategory cat);
+
         void RemoveMoneyAccount(MoneyAccount act);
 
         void ClearCategoryList();
+
         void ClearMoneyAccountList();
     }
 
     public class TrackerConfig : ITrackerConfig
     {
-
-
-
         private string AccountListConfig { get { return string.Concat(AppConfigSettings.CONFIG_FOLDER_PATH, "MoneyAccounts.json"); } }
 
         private List<MoneyAccount> _listAccts = new List<MoneyAccount>();
         public ReadOnlyCollection<MoneyAccount> AccountsList { get { return _listAccts.OrderBy(o => o.ID).ToList().AsReadOnly(); } }
 
-
         private string CategoryListConfig { get { return string.Concat(AppConfigSettings.CONFIG_FOLDER_PATH, "Categories.json"); } }
 
         private List<TransactionCategory> _listCategories = new List<TransactionCategory>();
         public ReadOnlyCollection<TransactionCategory> CategoryList { get { return _listCategories.OrderBy(o => o.Name).ToList().AsReadOnly(); } }
-
-
 
         public TrackerConfig()
         {
@@ -62,8 +60,11 @@ namespace DLPMoneyTracker.Data
             this.LoadMoneyAccounts();
             this.LoadCategories();
         }
-        ~TrackerConfig() { this.Dispose(); }
 
+        ~TrackerConfig()
+        {
+            this.Dispose();
+        }
 
         public void LoadMoneyAccounts()
         {
@@ -86,7 +87,6 @@ namespace DLPMoneyTracker.Data
             File.WriteAllText(AccountListConfig, json);
         }
 
-
         public void LoadCategories()
         {
             if (!(_listCategories is null) && _listCategories.Any()) _listCategories.Clear();
@@ -102,7 +102,7 @@ namespace DLPMoneyTracker.Data
                 var dataList = (List<TransactionCategoryJSONTransferVersion>)JsonSerializer.Deserialize(json, typeof(List<TransactionCategoryJSONTransferVersion>));
                 if (dataList is null || !dataList.Any()) return;
 
-                foreach(var cat in dataList)
+                foreach (var cat in dataList)
                 {
                     _listCategories.Add(new TransactionCategory()
                     {
@@ -115,8 +115,6 @@ namespace DLPMoneyTracker.Data
 
                 this.SaveCategories();
             }
-
-
         }
 
         public void SaveCategories()
@@ -124,8 +122,6 @@ namespace DLPMoneyTracker.Data
             string json = JsonSerializer.Serialize(_listCategories.Where(x => x.ID != Guid.Empty).ToList(), typeof(List<TransactionCategory>));
             File.WriteAllText(CategoryListConfig, json);
         }
-
-
 
         public TransactionCategory GetCategory(Guid uid)
         {
@@ -182,11 +178,6 @@ namespace DLPMoneyTracker.Data
         {
             _listAccts.Clear();
         }
-
-
-
-
-
 
         public void Dispose()
         {

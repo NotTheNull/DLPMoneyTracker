@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace DLPMoneyTracker.Data
 {
@@ -15,31 +13,28 @@ namespace DLPMoneyTracker.Data
         ReadOnlyCollection<IBudget> BudgetList { get; }
 
         void AddBudget(IBudget record);
+
         void RemoveBudget(IBudget record);
+
         void ClearBudget();
+
         decimal GetBudgetAmount(Guid categoryId);
     }
-
 
     public class BudgetTracker : IBudgetTracker
     {
         private ITrackerConfig _config;
-        
+
         public string FilePath { get { return string.Concat(AppConfigSettings.DATA_FOLDER_PATH, "Budget.json"); } }
-
-
 
         private List<IBudget> _listBudgets = new List<IBudget>();
         public ReadOnlyCollection<IBudget> BudgetList { get { return _listBudgets.AsReadOnly(); } }
-
-
-
 
         public BudgetTracker(ITrackerConfig config)
         {
             _config = config;
 
-            if(!Directory.Exists(AppConfigSettings.DATA_FOLDER_PATH))
+            if (!Directory.Exists(AppConfigSettings.DATA_FOLDER_PATH))
             {
                 Directory.CreateDirectory(AppConfigSettings.DATA_FOLDER_PATH);
             }
@@ -50,7 +45,7 @@ namespace DLPMoneyTracker.Data
         public void AddBudget(IBudget record)
         {
             IBudget existing = _listBudgets.FirstOrDefault(x => x.CategoryId == record.CategoryId);
-            if(existing is null)
+            if (existing is null)
             {
                 _listBudgets.Add(record);
             }
@@ -58,7 +53,6 @@ namespace DLPMoneyTracker.Data
             {
                 existing.BudgetAmount = record.BudgetAmount;
             }
-
         }
 
         public void RemoveBudget(IBudget record)
@@ -77,7 +71,6 @@ namespace DLPMoneyTracker.Data
             return _listBudgets.FirstOrDefault(x => x.CategoryId == categoryId)?.BudgetAmount ?? decimal.Zero;
         }
 
-
         public void LoadFromFile()
         {
             _listBudgets.Clear();
@@ -89,7 +82,7 @@ namespace DLPMoneyTracker.Data
             var dataList = (List<BudgetJSON>)JsonSerializer.Deserialize(json, typeof(List<BudgetJSON>));
             if (dataList is null || !dataList.Any()) return;
 
-            foreach(var record in dataList)
+            foreach (var record in dataList)
             {
                 MonthlyBudget budget = new MonthlyBudget()
                 {

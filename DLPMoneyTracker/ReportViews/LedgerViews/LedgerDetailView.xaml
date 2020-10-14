@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DLPMoneyTracker.ReportViews.LedgerViews"
         mc:Ignorable="d"
-        Height="450" 
+        Height="450"
         Width="750">
     <Grid Style="{StaticResource MainGridStyle}">
         <Grid.RowDefinitions>
@@ -18,8 +18,7 @@
         <TextBlock Grid.Row="0"
                    Text="{Binding Path=HeaderText, FallbackValue=TITLE}"
                    Style="{StaticResource StandardHeaderLabel}"
-                   FontSize="22"
-                   />
+                   FontSize="22" />
 
         <Button Grid.Row="0"
                 HorizontalAlignment="Right"
@@ -32,31 +31,29 @@
         </Button>
 
         <DataGrid Grid.Row="1"
-                  ItemsSource="{Binding Path=DisplayRecordsList}"
-                  >
+                  ItemsSource="{Binding Path=DisplayRecordsList}">
             <DataGrid.Columns>
                 <DataGridTextColumn SortDirection="Ascending"
-                                    Header="Transaction Date" 
+                                    Header="Transaction Date"
                                     Binding="{Binding TransDate}" />
-                
-                <DataGridTextColumn Header="Account" 
+
+                <DataGridTextColumn Header="Account"
                                     Binding="{Binding AccountName}" />
 
                 <DataGridTemplateColumn Header="Category">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="10" 
-                                           Height="10" 
+                                <Rectangle Width="10"
+                                           Height="10"
                                            Fill="{Binding Path=CategoryType, Converter={StaticResource convertCategoryTypeToBgColor}}" />
-                                <TextBlock Text="{Binding Path=CategoryName}" 
-                                           Margin="5, 0, 0, 0"
-                                           />
+                                <TextBlock Text="{Binding Path=CategoryName}"
+                                           Margin="5, 0, 0, 0" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                
+
                 <!--<DataGridTextColumn Header="Category" Binding="{Binding CategoryName}" />-->
                 <DataGridTextColumn Header="Description" Binding="{Binding Description}" />
                 <DataGridTemplateColumn Header="Amount">
@@ -64,23 +61,20 @@
                         <DataTemplate>
                             <StackPanel>
                                 <TextBlock Text="{Binding TransAmount, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
-                                           HorizontalAlignment="Right"
-                                           />
+                                           HorizontalAlignment="Right" />
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                
-                <!--<DataGridTextColumn Header="Amount" 
-                                    Binding="{Binding TransAmount, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"/>-->
+
+                <!--<DataGridTextColumn Header="Amount"
+                                    Binding="{Binding TransAmount, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}" />-->
             </DataGrid.Columns>
         </DataGrid>
 
         <Button x:Name="btnClose"
                 Grid.Row="2"
                 Content="Close"
-                Click="btnClose_Click"
-                />
-
+                Click="btnClose_Click" />
     </Grid>
 </UserControl>

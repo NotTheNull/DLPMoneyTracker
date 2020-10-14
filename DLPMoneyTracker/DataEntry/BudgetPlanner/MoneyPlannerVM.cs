@@ -7,15 +7,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 
 namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 {
     /// <summary>
-    /// A Money Plan is a fixed recurring expense or income that has, hopefully, limited variability.  
+    /// A Money Plan is a fixed recurring expense or income that has, hopefully, limited variability.
     /// Such items include Utility Bills, Subscriptions, Paychecks, etc
     /// </summary>
-    
+
     public class MoneyPlannerVM : BaseViewModel, IDisposable
     {
         private ITrackerConfig _config;
@@ -24,6 +23,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         #region Editing Control Properties
 
         private MoneyPlanRecordVM _record;
+
         private MoneyPlanRecordVM Source
         {
             get { return _record; }
@@ -43,12 +43,10 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             }
         }
 
-
         public Guid UID
         {
             get { return _record?.UID ?? Guid.Empty; }
         }
-
 
         private bool _isExp;
 
@@ -66,9 +64,6 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             }
         }
 
-
-
-
         public TransactionCategory SelectedCategory
         {
             get { return this.Source?.Category; }
@@ -79,7 +74,6 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
                 NotifyPropertyChanged(nameof(this.SelectedCategory));
             }
         }
-
 
         public MoneyAccount SelectedAccount
         {
@@ -92,7 +86,6 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             }
         }
 
-
         public string Description
         {
             get { return this.Source?.Description ?? string.Empty; }
@@ -104,9 +97,6 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             }
         }
 
-
-
-
         public decimal Amount
         {
             get { return this.Source?.Amount ?? decimal.Zero; }
@@ -117,8 +107,6 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
                 NotifyPropertyChanged(nameof(this.Amount));
             }
         }
-
-
 
         public IScheduleRecurrence Recurrence
         {
@@ -140,11 +128,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             }
         }
 
-
-        #endregion
-
-
-
+        #endregion Editing Control Properties
 
         private ObservableCollection<MoneyPlanRecordVM> _listExpenses = new ObservableCollection<MoneyPlanRecordVM>();
         public ObservableCollection<MoneyPlanRecordVM> ExpenseList { get { return _listExpenses; } }
@@ -152,20 +136,16 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         private ObservableCollection<MoneyPlanRecordVM> _listIncome = new ObservableCollection<MoneyPlanRecordVM>();
         public ObservableCollection<MoneyPlanRecordVM> IncomeList { get { return _listIncome; } }
 
-
-
-        ObservableCollection<SpecialDropListItem<TransactionCategory>> _listCategories = new ObservableCollection<SpecialDropListItem<TransactionCategory>>();
+        private ObservableCollection<SpecialDropListItem<TransactionCategory>> _listCategories = new ObservableCollection<SpecialDropListItem<TransactionCategory>>();
         public ObservableCollection<SpecialDropListItem<TransactionCategory>> CategoryList { get { return _listCategories; } }
 
-
-        ObservableCollection<SpecialDropListItem<MoneyAccount>> _listAccounts = new ObservableCollection<SpecialDropListItem<MoneyAccount>>();
+        private ObservableCollection<SpecialDropListItem<MoneyAccount>> _listAccounts = new ObservableCollection<SpecialDropListItem<MoneyAccount>>();
         public ObservableCollection<SpecialDropListItem<MoneyAccount>> AccountList { get { return _listAccounts; } }
-
-
 
         #region Commands
 
         private RelayCommand _cmdAddNew;
+
         public RelayCommand CommandAddNew
         {
             get
@@ -177,8 +157,8 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             }
         }
 
-
         private RelayCommand _cmdSave;
+
         public RelayCommand CommandSaveChanges
         {
             get
@@ -191,6 +171,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         }
 
         private RelayCommand _cmdDiscard;
+
         public RelayCommand CommandDiscardChanges
         {
             get
@@ -203,6 +184,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         }
 
         private RelayCommand _cmdEditRecord;
+
         public RelayCommand CommandEditRecord
         {
             get
@@ -218,6 +200,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         }
 
         private RelayCommand _cmdAddRecord;
+
         public RelayCommand CommandAddRecord
         {
             get
@@ -230,6 +213,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         }
 
         private RelayCommand _cmdDeleteRecord;
+
         public RelayCommand CommandDeleteRecord
         {
             get
@@ -245,6 +229,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         }
 
         private RelayCommand _cmdClear;
+
         public RelayCommand CommandClear
         {
             get
@@ -256,14 +241,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             }
         }
 
-        #endregion
-
-
-
-
-
-
-
+        #endregion Commands
 
         public MoneyPlannerVM(ITrackerConfig config, IMoneyPlanner planner) : base()
         {
@@ -274,8 +252,11 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             this.LoadMoneyPlan();
             this.Clear();
         }
-        ~MoneyPlannerVM() { this.Dispose(); }
 
+        ~MoneyPlannerVM()
+        {
+            this.Dispose();
+        }
 
         private void Clear()
         {
@@ -290,15 +271,14 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             if (!_moneyPlanner.MoneyPlanList.Any()) return;
             foreach (var record in _moneyPlanner.MoneyPlanList)
             {
-                if(record is IncomePlan income)
+                if (record is IncomePlan income)
                 {
                     this.IncomeList.Add(new MoneyPlanRecordVM(_config, income));
                 }
-                else if(record is ExpensePlan expense)
+                else if (record is ExpensePlan expense)
                 {
                     this.ExpenseList.Add(new MoneyPlanRecordVM(_config, expense));
                 }
-
             }
         }
 
@@ -362,7 +342,6 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             this.LoadMoneyPlan();
         }
 
-
         private void AddMoneyPlanRecord()
         {
             if (this.IsExpense)
@@ -381,7 +360,6 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             }
         }
 
-
         private void RemoveMoneyPlanRecord(MoneyPlanRecordVM record)
         {
             if (record is null) throw new ArgumentNullException("Budget Record VM");
@@ -394,9 +372,6 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
                 this.IncomeList.Remove(record);
             }
         }
-
-
-
 
         public void NotifyAll()
         {

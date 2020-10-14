@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 
 namespace DLPMoneyTracker.DataEntry.AddEditCategories
 {
@@ -13,8 +12,6 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
     {
         private ITrackerConfig _config;
         private TransactionCategoryVM _data;
-
-
 
         public Guid UID
         {
@@ -27,7 +24,6 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
             }
         }
 
-
         public string Name
         {
             get { return _data?.Name ?? string.Empty; }
@@ -38,7 +34,6 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
                 NotifyPropertyChanged(nameof(this.Name));
             }
         }
-
 
         public CategoryType SelectedCategoryType
         {
@@ -51,7 +46,6 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
             }
         }
 
-
         public bool ExcludeFromBudget
         {
             get { return _data?.ExcludeFromBudget ?? false; }
@@ -63,20 +57,18 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
             }
         }
 
-
         public bool IsEnabled { get { return !(_data is null); } }
-
 
         private ObservableCollection<TransactionCategoryVM> _listCategory = new ObservableCollection<TransactionCategoryVM>();
         public ObservableCollection<TransactionCategoryVM> CategoryList { get { return _listCategory; } }
 
-
         private List<SpecialDropListItem<CategoryType>> _listCategoryType;
         public List<SpecialDropListItem<CategoryType>> CategoryTypeList { get { return _listCategoryType; } }
 
-
         #region Commands
+
         private RelayCommand _cmdEditMoneyAccount;
+
         public RelayCommand CommandEditMoneyAccount
         {
             get
@@ -93,6 +85,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
         }
 
         private RelayCommand _cmdDelMoneyAcct;
+
         public RelayCommand CommandDeleteMoneyAccount
         {
             get
@@ -108,6 +101,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
         }
 
         private RelayCommand _cmdClear;
+
         public RelayCommand CommandClear
         {
             get
@@ -119,8 +113,8 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
             }
         }
 
-
         private RelayCommand _cmdAddNew;
+
         public RelayCommand CommandAddNew
         {
             get
@@ -137,8 +131,8 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
             }
         }
 
-
         private RelayCommand _cmdSaveChanges;
+
         public RelayCommand CommandSaveChanges
         {
             get
@@ -151,8 +145,8 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
             }
         }
 
-
         private RelayCommand _cmdDiscard;
+
         public RelayCommand CommandDiscardChanges
         {
             get
@@ -165,8 +159,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
             }
         }
 
-        #endregion
-
+        #endregion Commands
 
         public AddEditCategoryVM(ITrackerConfig config) : base()
         {
@@ -206,7 +199,6 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
             this.LoadCategories();
         }
 
-
         public void LoadCategories()
         {
             this.CategoryList.Clear();
@@ -217,7 +209,6 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
                     this.CategoryList.Add(new TransactionCategoryVM(c));
                 }
             }
-
         }
 
         private void RemoveCategory(TransactionCategoryVM cat)
@@ -228,8 +219,6 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
                 this.CategoryList.Remove(cat);
             }
         }
-
-
 
         public void NotifyAll()
         {

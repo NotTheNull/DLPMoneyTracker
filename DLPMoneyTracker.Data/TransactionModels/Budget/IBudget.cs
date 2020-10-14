@@ -1,7 +1,4 @@
-﻿using DLPMoneyTracker.Data.ConfigModels;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace DLPMoneyTracker.Data.TransactionModels.Budget
 {

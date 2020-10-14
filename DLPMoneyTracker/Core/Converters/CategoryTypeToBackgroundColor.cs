@@ -1,8 +1,6 @@
 ﻿using DLPMoneyTracker.Data.ConfigModels;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -13,22 +11,28 @@ namespace DLPMoneyTracker.Core.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is null) return Brushes.Transparent;
-            if(value is CategoryType catType)
+            if (value is CategoryType catType)
             {
-                switch(catType)
+                switch (catType)
                 {
                     case CategoryType.Expense:
                         return Brushes.Red;
+
                     case CategoryType.Income:
                         return Brushes.Green;
+
                     case CategoryType.Payment: // Debt Payment
                         return Brushes.Orange;
+
                     case CategoryType.TransferFrom:
                         return Brushes.Red;
+
                     case CategoryType.TransferTo:
                         return Brushes.Green;
+
                     case CategoryType.UntrackedAdjustment:
                         return Brushes.Blue;
+
                     default:
                         return Brushes.White;
                 }

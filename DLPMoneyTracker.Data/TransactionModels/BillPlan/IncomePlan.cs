@@ -1,10 +1,7 @@
 ﻿using DLPMoneyTracker.Data.ConfigModels;
 using DLPMoneyTracker.Data.ScheduleRecurrence;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.Json.Serialization;
-
 
 namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
 {
@@ -36,15 +33,12 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
         [JsonIgnore]
         public bool ExcludeFromBudgetPlanner { get { return this.Category?.ExcludeFromBudget ?? false; } }
 
-
         public Guid CategoryID { get { return this.Category?.ID ?? Guid.Empty; } }
 
         [JsonIgnore]
         public MoneyAccount Account { get; set; }
 
         public string AccountID { get { return this.Account?.ID ?? string.Empty; } }
-
-
 
         public string Description { get; set; }
 
@@ -60,7 +54,6 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
             }
         }
 
-
         [JsonIgnore]
         public RecurrenceFrequency Frequency { get { return this.Recurrence.Frequency; } }
 
@@ -71,8 +64,6 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
         public DateTime NextOccurrence { get { return this.Recurrence?.NextOccurence ?? DateTime.MaxValue; } }
 
         public decimal ExpectedAmount { get; set; }
-
-
 
         public IncomePlan()
         {

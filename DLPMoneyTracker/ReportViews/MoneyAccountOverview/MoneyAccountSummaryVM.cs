@@ -6,11 +6,8 @@ using DLPMoneyTracker.DataEntry.AddTransaction;
 using DLPMoneyTracker.DataEntry.BudgetPlanner;
 using DLPMoneyTracker.ReportViews.LedgerViews;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Windows;
 
 namespace DLPMoneyTracker.ReportViews
@@ -54,39 +51,31 @@ namespace DLPMoneyTracker.ReportViews
             }
         }
 
-
-
-
-
-
-
-
-
-
-
-        ObservableCollection<MoneyPlanRecordVM> _listBudgets = new ObservableCollection<MoneyPlanRecordVM>();
+        private ObservableCollection<MoneyPlanRecordVM> _listBudgets = new ObservableCollection<MoneyPlanRecordVM>();
         public ObservableCollection<MoneyPlanRecordVM> MoneyPlanList { get { return _listBudgets; } }
 
         public bool ShowBudgetData { get { return _listBudgets.Any(); } }
 
-        public decimal BudgetBalance 
-        { 
+        public decimal BudgetBalance
+        {
             get
             {
                 decimal bal = this.Balance;
                 if (!this.MoneyPlanList.Any()) return bal;
 
-                foreach(var budget in this.MoneyPlanList)
+                foreach (var budget in this.MoneyPlanList)
                 {
                     bal = _ledger.ApplyTransactionToBalance(_act, bal, budget.Category, budget.Amount);
                 }
 
                 return bal;
-            } 
+            }
         }
 
         #region Commands
+
         private RelayCommand _cmdDetails;
+
         public RelayCommand CommandDetails
         {
             get
@@ -108,15 +97,15 @@ namespace DLPMoneyTracker.ReportViews
             }
         }
 
-
         private RelayCommand _cmdCreateTransaction;
+
         public RelayCommand CommandCreateTransaction
         {
             get
             {
                 return _cmdCreateTransaction ?? (_cmdCreateTransaction = new RelayCommand((o) =>
                 {
-                    if(o is MoneyPlanRecordVM plan)
+                    if (o is MoneyPlanRecordVM plan)
                     {
                         this.CreateTransaction(plan.GetSource());
                     }
@@ -124,10 +113,7 @@ namespace DLPMoneyTracker.ReportViews
             }
         }
 
-        #endregion
-
-
-
+        #endregion Commands
 
         public MoneyAccountSummaryVM(MoneyAccount act, ILedger ledger, IMoneyPlanner budget, ITrackerConfig config)
         {
@@ -147,7 +133,7 @@ namespace DLPMoneyTracker.ReportViews
             var moneyList = _budget.GetUpcomingMoneyPlansForAccount(this.AccountID);
             if (moneyList is null || !moneyList.Any()) return;
 
-            foreach(var budget in moneyList.OrderBy(o => o.NotificationDate).ThenBy(o => o.PriorityOrder))
+            foreach (var budget in moneyList.OrderBy(o => o.NotificationDate).ThenBy(o => o.PriorityOrder))
             {
                 this.MoneyPlanList.Add(new MoneyPlanRecordVM(_config, budget));
             }
@@ -155,24 +141,21 @@ namespace DLPMoneyTracker.ReportViews
             NotifyPropertyChanged(nameof(this.ShowBudgetData));
         }
 
-
         public void CreateTransaction(IMoneyPlan plan)
         {
-            if(plan is ExpensePlan expense)
+            if (plan is ExpensePlan expense)
             {
                 AddExpenseView uiAddExpense = UICore.DependencyHost.GetService<AddExpenseView>();
                 uiAddExpense.CreateTransactionFromMoneyPlan(expense);
                 uiAddExpense.Show();
             }
-            else if(plan is IncomePlan income)
+            else if (plan is IncomePlan income)
             {
                 AddIncomeView uiAddIncome = UICore.DependencyHost.GetService<AddIncomeView>();
                 uiAddIncome.CreateTransactionFromMoneyPlan(income);
                 uiAddIncome.Show();
             }
         }
-
-
 
         public void Refresh()
         {

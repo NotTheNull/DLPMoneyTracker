@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DLPMoneyTracker.Data.ScheduleRecurrence
 {
@@ -18,9 +16,9 @@ namespace DLPMoneyTracker.Data.ScheduleRecurrence
 
                 if (day > numberOfDaysInMonth) day = numberOfDaysInMonth;
                 // Get current month then check if we're past that date
-                
+
                 DateTime next = new DateTime(year, month, day);
-                if(next < DateTime.Today)
+                if (next < DateTime.Today)
                 {
                     month++;
                     numberOfDaysInMonth = DateTime.DaysInMonth(year, month);
@@ -42,8 +40,6 @@ namespace DLPMoneyTracker.Data.ScheduleRecurrence
 
         public RecurrenceFrequency Frequency { get { return RecurrenceFrequency.Monthly; } }
 
-
-
         private int _dayOfMonth;
 
         public int DayOfMonth
@@ -57,19 +53,15 @@ namespace DLPMoneyTracker.Data.ScheduleRecurrence
             }
         }
 
-
-
         public MonthlyRecurrence()
         {
             _dayOfMonth = 1;
         }
+
         public MonthlyRecurrence(string fileData)
         {
             this.LoadFileData(fileData);
         }
-
-
-
 
         public string GetFileData()
         {
@@ -82,14 +74,14 @@ namespace DLPMoneyTracker.Data.ScheduleRecurrence
             if (breakdown is null) return;
             if (breakdown.Count() < 2) return;
 
-            if(int.TryParse(breakdown[1], out int day))
+            if (int.TryParse(breakdown[1], out int day))
             {
                 this.DayOfMonth = day;
             }
             else
             {
                 this.DayOfMonth = 1;
-            }            
+            }
         }
     }
 }
