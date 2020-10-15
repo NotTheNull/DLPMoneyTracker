@@ -136,7 +136,21 @@ namespace DLPMoneyTracker.ReportViews
             foreach (var budget in moneyList.OrderBy(o => o.NotificationDate).ThenBy(o => o.PriorityOrder))
             {
                 // Check to see if there's a ledger record that matches; if so, skip the money plan so we're not misled
-                if (_ledger.TransactionList.Any(x => x.CategoryUID == budget.CategoryID && x.Description == budget.Description && x.TransDate >= budget.NotificationDate)) continue;
+                if(budget.CategoryName.Contains("Transfer"))
+                {
+                    // Transfers should be handled especially
+                    if (_ledger.TransactionList.Any(x => 
+                        (
+                            x.CategoryUID == TransactionCategory.TransferTo.ID 
+                            || x.CategoryUID == TransactionCategory.TransferFrom.ID
+                        )
+                        && x.Description == budget.Description 
+                        && x.TransDate >= budget.NotificationDate)) continue;
+                }
+                else
+                {
+                    if (_ledger.TransactionList.Any(x => x.CategoryUID == budget.CategoryID && x.Description == budget.Description && x.TransDate >= budget.NotificationDate)) continue;
+                }
 
                 this.MoneyPlanList.Add(new MoneyPlanRecordVM(_config, budget));
             }
