@@ -139,13 +139,16 @@ namespace DLPMoneyTracker.ReportViews
                 if(budget.CategoryName.Contains("Transfer"))
                 {
                     // Transfers should be handled especially
-                    if (_ledger.TransactionList.Any(x => 
+                    if (_ledger.TransactionList.Any(x =>
                         (
-                            x.CategoryUID == TransactionCategory.TransferTo.ID 
+                            x.CategoryUID == TransactionCategory.TransferTo.ID
                             || x.CategoryUID == TransactionCategory.TransferFrom.ID
                         )
-                        && x.Description == budget.Description 
-                        && x.TransDate >= budget.NotificationDate)) continue;
+                        && x.AccountID == budget.AccountID
+                        && x.TransDate >= budget.NotificationDate))
+                    {
+                        continue;
+                    }
                 }
                 else
                 {

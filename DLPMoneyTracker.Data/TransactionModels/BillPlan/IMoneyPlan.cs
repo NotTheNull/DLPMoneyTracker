@@ -32,6 +32,8 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
         bool ExcludeFromBudgetPlanner { get; }
 
         string AccountID { get; }
+        [JsonIgnore]
+        string AccountName { get; }
 
         string RecurrenceJSON { get; }
 
@@ -80,5 +82,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
 
         [JsonIgnore]
         public bool ExcludeFromBudgetPlanner { get; set; }
+        [JsonIgnore]
+        public string AccountName { get; set; }
     }
 }

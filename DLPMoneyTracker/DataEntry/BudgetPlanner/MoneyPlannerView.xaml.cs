@@ -4,6 +4,8 @@ using System.Windows;
 
 namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 {
+    // TODO: Noticed a problem with going back and forth between editing an expense and editing an income.  Does not seem to load the right radio button option on occasions
+
     /// <summary>
     /// Interaction logic for BudgetPlannerView.xaml
     /// </summary>
