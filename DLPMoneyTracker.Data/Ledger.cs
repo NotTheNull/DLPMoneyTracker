@@ -159,6 +159,15 @@ namespace DLPMoneyTracker.Data
                         // No matter the account type, it's a reduction
                         balance -= transAmount;
                         break;
+                    case CategoryType.TransferFrom:
+                        if (act.AccountType != MoneyAccountType.Checking && act.AccountType != MoneyAccountType.Savings) throw new InvalidOperationException("Transfers only permitted with Checking and Savings accounts");
+                        balance -= transAmount;
+                        break;
+                    case CategoryType.TransferTo:
+                        if (act.AccountType != MoneyAccountType.Checking && act.AccountType != MoneyAccountType.Savings) throw new InvalidOperationException("Transfers only permitted with Checking and Savings accounts");
+                        balance += transAmount;
+                        break;
+
                 }
             }
 
