@@ -104,7 +104,7 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
         {
             if (records is null || !records.Any()) return;
 
-            foreach (var rec in records)
+            foreach (var rec in records.OrderBy(o => o.TransDate).ThenBy(o => o.Description))
             {
                 if (rec is MoneyRecord data)
                 {
