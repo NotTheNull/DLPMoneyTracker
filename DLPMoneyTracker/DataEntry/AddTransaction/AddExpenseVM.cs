@@ -107,7 +107,8 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             _config = config;
             this.TransactionId = Guid.Empty;
 
-            this.FillLists();
+            this.LoadMoneyAccounts();
+            this.LoadCategories();
             this.Clear();
         }
 
@@ -120,19 +121,23 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             this.Description = string.Empty;
         }
 
-        private void FillLists()
+        private void LoadMoneyAccounts()
         {
-            // Fill account with Checking & credit card; Savings should be transferred from, not direct pay FOR NOW
-            List<MoneyAccountType> validMoneyAccounts = new List<MoneyAccountType>() { MoneyAccountType.Checking, MoneyAccountType.CreditCard };
+            List<MoneyAccountType> validMoneyAccounts = new List<MoneyAccountType>() { MoneyAccountType.Checking, MoneyAccountType.CreditCard, MoneyAccountType.Savings };
 
             _listAccts.Clear();
             foreach (var act in _config.AccountsList.Where(x => validMoneyAccounts.Contains(x.AccountType)))
             {
                 _listAccts.Add(new SpecialDropListItem<MoneyAccount>(act.Description, act));
             }
-            NotifyPropertyChanged(nameof(this.MoneyAccountList));
+            NotifyPropertyChanged(nameof(this.MoneyAccountList));            
+        }
 
-            // Fill category with Expenses and Adjustment
+
+
+
+        private void LoadCategories()
+        {
             List<CategoryType> validCategories = new List<CategoryType>() { CategoryType.Expense, CategoryType.UntrackedAdjustment };
 
             _listCat.Clear();
@@ -142,6 +147,8 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             }
             NotifyPropertyChanged(nameof(this.CategoryList));
         }
+
+
 
         public void SaveTransaction()
         {
