@@ -150,9 +150,20 @@ namespace DLPMoneyTracker.ReportViews
                         continue;
                     }
                 }
+                else if(budget.CategoryName.Contains("Debt"))
+                {
+                    // Debt payments also have to be handled especially
+                    if(_ledger.TransactionList.Any(x => x.CategoryUID == TransactionCategory.DebtPayment.ID && x.AccountID == budget.AccountID && x.TransDate > budget.NotificationDate))
+                    {
+                        continue;
+                    }
+                }
                 else
                 {
-                    if (_ledger.TransactionList.Any(x => x.CategoryUID == budget.CategoryID && x.Description == budget.Description && x.TransDate >= budget.NotificationDate)) continue;
+                    if (_ledger.TransactionList.Any(x => x.CategoryUID == budget.CategoryID && x.Description == budget.Description && x.TransDate >= budget.NotificationDate))
+                    {
+                        continue;
+                    }
                 }
 
                 this.MoneyPlanList.Add(new MoneyPlanRecordVM(_config, budget));
