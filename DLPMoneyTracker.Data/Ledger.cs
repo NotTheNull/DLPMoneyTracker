@@ -29,7 +29,11 @@ namespace DLPMoneyTracker.Data
 
         decimal GetCategoryTotal(TransactionCategory cat);
 
-        decimal GetCategoryMonthlyTotal(TransactionCategory cat);
+        decimal GetCategoryTotal_CurrentMonth(TransactionCategory cat);
+
+        decimal GetCategoryTotal_Monthly(TransactionCategory cat, int month); // May eventually include a way to handle year
+
+        decimal GetCategoryTotal_DateRange(TransactionCategory cat, DateTime beg, DateTime end);
     }
 
     public class Ledger : ILedger
@@ -184,21 +188,39 @@ namespace DLPMoneyTracker.Data
             return decimal.Zero;
         }
 
-        public decimal GetCategoryMonthlyTotal(TransactionCategory cat)
+        public decimal GetCategoryTotal_CurrentMonth(TransactionCategory cat)
         {
-            bool isCurrentMonth(IMoneyRecord record)
+            return GetCategoryTotal_Monthly(cat, DateTime.Today.Month);
+        }
+
+        public decimal GetCategoryTotal_Monthly(TransactionCategory cat, int month)
+        {
+            DateTime beg = new DateTime(DateTime.Today.Year, month, 1);
+            int dayCount = DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month);
+            DateTime end = new DateTime(DateTime.Today.Year, month, dayCount);
+
+            return GetCategoryTotal_DateRange(cat, beg, end);
+        }
+
+        public decimal GetCategoryTotal_DateRange(TransactionCategory cat, DateTime beg, DateTime end)
+        {
+            bool isWithinRange(IMoneyRecord record)
             {
                 return record.CategoryUID == cat.ID
-                    && record.TransDate.Month == DateTime.Today.Month;
+                    && record.TransDate >= beg
+                    && record.TransDate <= end;
             };
 
-            if (_listTransactions.Any(isCurrentMonth))
+            if(_listTransactions.Any(isWithinRange))
             {
-                return _listTransactions.Where(isCurrentMonth).Sum(s => s.TransAmount);
+                return _listTransactions.Where(isWithinRange).Sum(s => s.TransAmount);
             }
 
             return decimal.Zero;
         }
+
+
+
 
         public void SaveToFile()
         {

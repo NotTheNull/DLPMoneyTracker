@@ -162,7 +162,6 @@
               HorizontalAlignment="Right"
               Background="#FFF0CC8B"
               Margin="0, 0, 20, 0"
-              Visibility="{Binding Path=HasCategoriesOverBudget, Converter={StaticResource convertBoolToVisibility}}"
               Grid.Row="3">
 
             <Grid.ColumnDefinitions>
@@ -182,6 +181,7 @@
         <Grid x:Name="panelOverBudget"
               HorizontalAlignment="Right"
               Background="#FFC93030"
+              Visibility="{Binding Path=HasCategoriesOverBudget, Converter={StaticResource convertBoolToVisibility}}"
               Grid.Row="4"
               Height="30"
               Margin="0, 0, 20, 0">

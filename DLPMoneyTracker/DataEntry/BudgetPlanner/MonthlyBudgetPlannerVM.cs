@@ -103,12 +103,12 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
         {
             foreach (var budget in _listFixed)
             {
-                budget.CurrentValue = _ledger.GetCategoryMonthlyTotal(budget.Category);
+                budget.CurrentValue = _ledger.GetCategoryTotal_CurrentMonth(budget.Category);
             }
 
             foreach (var budget in _listBudget)
             {
-                budget.CurrentValue = _ledger.GetCategoryMonthlyTotal(budget.Category);
+                budget.CurrentValue = _ledger.GetCategoryTotal_CurrentMonth(budget.Category);
             }
         }
 

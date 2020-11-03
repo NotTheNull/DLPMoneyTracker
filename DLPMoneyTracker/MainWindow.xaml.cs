@@ -2,6 +2,8 @@
 using DLPMoneyTracker.DataEntry.AddEditMoneyAccount;
 using DLPMoneyTracker.DataEntry.AddTransaction;
 using DLPMoneyTracker.DataEntry.BudgetPlanner;
+using DLPMoneyTracker.HTMLReports;
+using DLPMoneyTracker.HTMLReports.MonthlyExpense;
 using DLPMoneyTracker.ReportViews;
 using DLPMoneyTracker.ReportViews.LedgerViews;
 using Microsoft.Extensions.DependencyInjection;
@@ -88,6 +90,13 @@ namespace DLPMoneyTracker
         {
             MoneyPlannerView uiModifyBudget = UICore.DependencyHost.GetService<MoneyPlannerView>();
             uiModifyBudget.Show();
+        }
+
+        private void MenuItemMonthlyExpenseReport_Click(object sender, RoutedEventArgs e)
+        {
+            MonthlyExpenseReportVM viewModel = UICore.DependencyHost.GetService<MonthlyExpenseReportVM>();
+            WebReportViewer uiReport = new WebReportViewer(viewModel);
+            uiReport.Show();
         }
     }
 }

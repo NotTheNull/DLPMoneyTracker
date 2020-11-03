@@ -6,10 +6,14 @@ using DLPMoneyTracker.DataEntry.AddEditMoneyAccount;
 using DLPMoneyTracker.DataEntry.AddTransaction;
 using DLPMoneyTracker.DataEntry.BudgetPlanner;
 using DLPMoneyTracker.DataEntry.ScheduleRecurrence;
+using DLPMoneyTracker.HTMLReports.MonthlyExpense;
 using DLPMoneyTracker.ReportViews;
 using DLPMoneyTracker.ReportViews.LedgerViews;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace DLPMoneyTracker
 {
@@ -63,6 +67,24 @@ namespace DLPMoneyTracker
 
             services.AddTransient<MonthlyBudgetPlannerView>();
             services.AddTransient<MonthlyBudgetPlannerVM>();
+
+            services.AddTransient<MonthlyExpenseReportVM>();
+        }
+
+        public static string GetResourceText(string resourceName)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+#if DEBUG
+            var resourceList = assembly.GetManifestResourceNames().ToList(); 
+#endif
+            string resourcePath = assembly.GetManifestResourceNames().Single(s => s.EndsWith(resourceName));
+            using (Stream stream = assembly.GetManifestResourceStream(resourcePath))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
         }
     }
 

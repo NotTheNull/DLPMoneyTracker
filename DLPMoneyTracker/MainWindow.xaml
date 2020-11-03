@@ -60,6 +60,15 @@
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
+
+                <MenuItem Header="_Report">
+                    <MenuItem Header="_Monthly Expense Report" Click="MenuItemMonthlyExpenseReport_Click">
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/Stock-Exchange-256.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                
                 <MenuItem Header="_Config">
                     <MenuItem Header="_Edit Money Accounts" Click="MenuItemEditMoneyAccount_Click">
                         <MenuItem.Icon>
