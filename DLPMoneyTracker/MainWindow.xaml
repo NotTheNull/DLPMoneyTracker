@@ -20,7 +20,7 @@
         </Style>
     </Window.Resources>
 
-    <DockPanel>
+    <DockPanel Background="{StaticResource DefaultUIBackgroundColor}">
         <StackPanel DockPanel.Dock="Top"
                     Orientation="Vertical">
 
@@ -87,6 +87,7 @@
                         Background="LightGray"
                         Height="30">
                 <Button x:Name="btnExit"
+                        Margin="5, 0, 0, 0"
                         Style="{StaticResource MenuButton}"
                         ToolTip="Exit"
                         Click="MenuItemExit_Click">
@@ -120,7 +121,10 @@
             </StackPanel>
         </StackPanel>
 
-        <Grid Background="{StaticResource DefaultUIBackgroundColor}">
+        <Grid x:Name="gridTabs"
+              Height="520"
+              VerticalAlignment="Top"
+              >
             <TabControl Background="Transparent">
                 <TabItem>
                     <TabItem.Header>
