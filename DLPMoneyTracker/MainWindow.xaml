@@ -122,7 +122,6 @@
         </StackPanel>
 
         <Grid x:Name="gridTabs"
-              Height="520"
               VerticalAlignment="Top"
               >
             <TabControl Background="Transparent">
