@@ -21,6 +21,11 @@ namespace DLPMoneyTracker.Data.ScheduleRecurrence
                 if (next < DateTime.Today)
                 {
                     month++;
+                    if(month > 12)
+                    {
+                        year++;
+                        month = 1;
+                    }
                     numberOfDaysInMonth = DateTime.DaysInMonth(year, month);
                     if (day > numberOfDaysInMonth) day = numberOfDaysInMonth;
                     next = new DateTime(year, month, day);
