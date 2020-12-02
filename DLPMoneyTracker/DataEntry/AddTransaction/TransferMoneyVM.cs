@@ -71,6 +71,7 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             _config = config;
 
             this.LoadAccounts();
+            this.Clear();
         }
 
         private void LoadAccounts()
