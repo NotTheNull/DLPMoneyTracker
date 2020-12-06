@@ -98,5 +98,10 @@ namespace DLPMoneyTracker
             WebReportViewer uiReport = new WebReportViewer(viewModel);
             uiReport.Show();
         }
+
+        private void MenuItemCreateNewYear_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
