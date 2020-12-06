@@ -19,24 +19,30 @@ namespace DLPMoneyTracker.Data
         void ClearBudget();
 
         decimal GetBudgetAmount(Guid categoryId);
+
+        void Copy(IBudgetTracker tracker);
     }
 
     public class BudgetTracker : IBudgetTracker
     {
         private ITrackerConfig _config;
+        private int _year;
 
-        public string FilePath { get { return string.Concat(AppConfigSettings.DATA_FOLDER_PATH, "Budget.json"); } }
+        private string FolderPath { get { return AppConfigSettings.DATA_FOLDER_PATH.Replace(AppConfigSettings.YEAR_FOLDER_PLACEHOLDER, _year.ToString()); } }
+        public string FilePath { get { return string.Concat(this.FolderPath, "Budget.json"); } }
 
         private List<IBudget> _listBudgets = new List<IBudget>();
         public ReadOnlyCollection<IBudget> BudgetList { get { return _listBudgets.AsReadOnly(); } }
 
-        public BudgetTracker(ITrackerConfig config)
+        public BudgetTracker(ITrackerConfig config) : this(config, DateTime.Today.Year) { }
+        public BudgetTracker(ITrackerConfig config, int year)
         {
+            _year = year;
             _config = config;
 
-            if (!Directory.Exists(AppConfigSettings.DATA_FOLDER_PATH))
+            if (!Directory.Exists(this.FolderPath))
             {
-                Directory.CreateDirectory(AppConfigSettings.DATA_FOLDER_PATH);
+                Directory.CreateDirectory(this.FolderPath);
             }
 
             this.LoadFromFile();
@@ -99,6 +105,15 @@ namespace DLPMoneyTracker.Data
         {
             string json = JsonSerializer.Serialize(_listBudgets);
             File.WriteAllText(FilePath, json);
+        }
+
+        public void Copy(IBudgetTracker tracker)
+        {
+            this.ClearBudget();
+            foreach(var budget in tracker.BudgetList)
+            {
+                this.AddBudget(budget);
+            }
         }
     }
 }

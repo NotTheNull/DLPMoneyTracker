@@ -19,23 +19,30 @@ namespace DLPMoneyTracker.Data
         void ClearRecordList();
 
         IEnumerable<IMoneyPlan> GetUpcomingMoneyPlansForAccount(string accountID);
+
+        void Copy(IMoneyPlanner planner);
     }
 
     public class MoneyPlanner : IMoneyPlanner
     {
-        public string FilePath { get { return string.Concat(AppConfigSettings.DATA_FOLDER_PATH, "MoneyPlan.json"); } }
+        
+        private string FolderPath { get { return AppConfigSettings.DATA_FOLDER_PATH.Replace(AppConfigSettings.YEAR_FOLDER_PLACEHOLDER, _year.ToString()); } }
+        public string FilePath { get { return string.Concat(this.FolderPath, "MoneyPlan.json"); } }
 
         private ITrackerConfig _config;
+        private int _year;
 
         private List<IMoneyPlan> _listMoneyPlans = new List<IMoneyPlan>();
         public ReadOnlyCollection<IMoneyPlan> MoneyPlanList { get { return _listMoneyPlans.AsReadOnly(); } }
 
-        public MoneyPlanner(ITrackerConfig config)
+        public MoneyPlanner(ITrackerConfig config) : this(config, DateTime.Today.Year) { }
+        public MoneyPlanner(ITrackerConfig config, int year)
         {
+            _year = year;
             _config = config;
-            if (!Directory.Exists(AppConfigSettings.DATA_FOLDER_PATH))
+            if (!Directory.Exists(this.FolderPath))
             {
-                Directory.CreateDirectory(AppConfigSettings.DATA_FOLDER_PATH);
+                Directory.CreateDirectory(this.FolderPath);
             }
             this.LoadFromFile();
         }
@@ -95,6 +102,15 @@ namespace DLPMoneyTracker.Data
             }
 
             return dataList;
+        }
+
+        public void Copy(IMoneyPlanner planner)
+        {
+            this.ClearRecordList();
+            foreach(var plan in this.MoneyPlanList)
+            {
+                this.AddMoneyPlan(plan);
+            }
         }
     }
 }

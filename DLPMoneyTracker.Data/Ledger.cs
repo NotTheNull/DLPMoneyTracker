@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Transactions;
 
 namespace DLPMoneyTracker.Data
 {
@@ -34,26 +35,35 @@ namespace DLPMoneyTracker.Data
         decimal GetCategoryTotal_Monthly(TransactionCategory cat, int month); // May eventually include a way to handle year
 
         decimal GetCategoryTotal_DateRange(TransactionCategory cat, DateTime beg, DateTime end);
+
     }
+
 
     public class Ledger : ILedger
     {
         public event LedgerModifiedHandler LedgerModified;
 
-        public string FilePath { get { return string.Concat(AppConfigSettings.DATA_FOLDER_PATH, "Ledger.json"); } }
+        private string FolderPath { get { return AppConfigSettings.DATA_FOLDER_PATH.Replace(AppConfigSettings.YEAR_FOLDER_PLACEHOLDER, _year.ToString()); } }
+
+        public string FilePath { get { return string.Concat(this.FolderPath, "Ledger.json"); } }
 
         private ITrackerConfig _config;
+        private int _year;
 
         private List<IMoneyRecord> _listTransactions = new List<IMoneyRecord>();
 
         public ReadOnlyCollection<IMoneyRecord> TransactionList { get { return _listTransactions.AsReadOnly(); } }
 
-        public Ledger(ITrackerConfig config)
+        public Ledger(ITrackerConfig config) : this(config, DateTime.Today.Year) { }
+        public Ledger(ITrackerConfig config, int year)
         {
             _config = config;
-            if (!Directory.Exists(AppConfigSettings.DATA_FOLDER_PATH))
+            _year = year;
+
+
+            if (!Directory.Exists(this.FolderPath))
             {
-                Directory.CreateDirectory(AppConfigSettings.DATA_FOLDER_PATH);
+                Directory.CreateDirectory(this.FolderPath);
             }
 
             this.LoadFromFile();
@@ -61,10 +71,10 @@ namespace DLPMoneyTracker.Data
 
         public void AddTransaction(IMoneyRecord trans)
         {
-            if (trans.CategoryUID == Guid.Empty)
+            if (trans.CategoryUID == TransactionCategory.InitialBalance.ID)
             {
                 // This is the UID of the Initial Account Balance category.  There should only be ONE per Money Account
-                var initialRecord = _listTransactions.FirstOrDefault(x => x.CategoryUID == Guid.Empty && x.AccountID == trans.AccountID);
+                var initialRecord = _listTransactions.Find(x => x.CategoryUID == TransactionCategory.InitialBalance.ID && x.AccountID == trans.AccountID);
                 if (initialRecord is null)
                 {
                     _listTransactions.Add(trans);
@@ -239,7 +249,7 @@ namespace DLPMoneyTracker.Data
             if (string.IsNullOrWhiteSpace(json)) return;
 
             var dataList = (List<MoneyRecordJSON>)JsonSerializer.Deserialize(json, typeof(List<MoneyRecordJSON>));
-            if (dataList is null || !dataList.Any()) return;
+            if (dataList?.Any() != true) return;
 
             foreach (var trans in dataList)
             {
@@ -255,5 +265,8 @@ namespace DLPMoneyTracker.Data
                 _listTransactions.Add(record);
             }
         }
+
+
+
     }
 }

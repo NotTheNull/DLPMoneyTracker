@@ -36,25 +36,35 @@ namespace DLPMoneyTracker.Data
         void ClearCategoryList();
 
         void ClearMoneyAccountList();
+
+        void Copy(ITrackerConfig config);
     }
 
     public class TrackerConfig : ITrackerConfig
     {
-        private string AccountListConfig { get { return string.Concat(AppConfigSettings.CONFIG_FOLDER_PATH, "MoneyAccounts.json"); } }
+        private int _year;
+        private string FolderPath { get { return AppConfigSettings.CONFIG_FOLDER_PATH.Replace(AppConfigSettings.YEAR_FOLDER_PLACEHOLDER, _year.ToString()); } }
+
+        private string AccountListConfig { get { return string.Concat(this.FolderPath, "MoneyAccounts.json"); } }
 
         private List<MoneyAccount> _listAccts = new List<MoneyAccount>();
         public ReadOnlyCollection<MoneyAccount> AccountsList { get { return _listAccts.OrderBy(o => o.ID).ToList().AsReadOnly(); } }
 
-        private string CategoryListConfig { get { return string.Concat(AppConfigSettings.CONFIG_FOLDER_PATH, "Categories.json"); } }
+        private string CategoryListConfig { get { return string.Concat(this.FolderPath, "Categories.json"); } }
 
         private List<TransactionCategory> _listCategories = new List<TransactionCategory>();
         public ReadOnlyCollection<TransactionCategory> CategoryList { get { return _listCategories.OrderBy(o => o.Name).ToList().AsReadOnly(); } }
 
-        public TrackerConfig()
+
+        public TrackerConfig() : this(DateTime.Today.Year) { }
+
+        public TrackerConfig(int year)
         {
-            if (!Directory.Exists(AppConfigSettings.CONFIG_FOLDER_PATH))
+            _year = year;
+
+            if (!Directory.Exists(this.FolderPath))
             {
-                Directory.CreateDirectory(AppConfigSettings.CONFIG_FOLDER_PATH);
+                Directory.CreateDirectory(this.FolderPath);
             }
 
             this.LoadMoneyAccounts();
@@ -68,7 +78,7 @@ namespace DLPMoneyTracker.Data
 
         public void LoadMoneyAccounts()
         {
-            if (!(_listAccts is null) && _listAccts.Any()) _listAccts.Clear();
+            if (_listAccts?.Any() == true) _listAccts.Clear();
 
             if (File.Exists(AccountListConfig))
             {
@@ -178,6 +188,23 @@ namespace DLPMoneyTracker.Data
         {
             _listAccts.Clear();
         }
+
+
+        public void Copy(ITrackerConfig config)
+        {
+            this.ClearMoneyAccountList();
+            foreach(var act in config.AccountsList)
+            {
+                this.AddMoneyAccount(act);
+            }
+
+            this.ClearCategoryList();
+            foreach(var cat in config.CategoryList)
+            {
+                this.AddCategory(cat);
+            }
+        }
+
 
         public void Dispose()
         {
