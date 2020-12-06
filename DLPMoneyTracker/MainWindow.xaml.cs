@@ -7,6 +7,7 @@ using DLPMoneyTracker.HTMLReports.MonthlyExpense;
 using DLPMoneyTracker.ReportViews;
 using DLPMoneyTracker.ReportViews.LedgerViews;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Windows;
 
 namespace DLPMoneyTracker
@@ -101,7 +102,12 @@ namespace DLPMoneyTracker
 
         private void MenuItemCreateNewYear_Click(object sender, RoutedEventArgs e)
         {
+            // Make sure that it's near the end of the year
+            DateTime nextYear = new DateTime(DateTime.Today.Year + 1, 1, 1);
+            TimeSpan timeToEndOfYear = nextYear - DateTime.Today;
+            if (timeToEndOfYear.Days > 7 || timeToEndOfYear.Days < 0) return;
 
+            DLPMoneyTracker.Data.NewYearBuilder.Execute(nextYear.Year);
         }
     }
 }
