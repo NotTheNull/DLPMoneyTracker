@@ -95,7 +95,8 @@ namespace DLPMoneyTracker.Data
             List<IMoneyPlan> dataList = new List<IMoneyPlan>();
             foreach (var record in this.MoneyPlanList.Where(x => x.AccountID == accountID))
             {
-                if (record.NotificationDate <= DateTime.Today && record.NextOccurrence >= DateTime.Today)
+                // Adding three days for Next Occurrence check to account for weekends & holidays that might delay the bill posting
+                if (record.NotificationDate <= DateTime.Today && record.NextOccurrence >= DateTime.Today.AddDays(3))
                 {
                     dataList.Add(record);
                 }
