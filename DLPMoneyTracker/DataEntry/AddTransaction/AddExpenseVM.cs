@@ -154,7 +154,7 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
         {
             if (this.SelectedAccount is null) throw new InvalidOperationException("You MUST select an Account");
             if (this.SelectedCategory is null) throw new InvalidOperationException("You MUST select a Category");
-            if (this.Amount <= decimal.Zero) throw new InvalidOperationException("Amount must be a positive value");
+            if (this.Amount <= decimal.Zero && this.SelectedCategory.CategoryType != CategoryType.UntrackedAdjustment) throw new InvalidOperationException("Amount must be a positive value");
 
             IMoneyRecord newRecord = null;
             if (this.TransactionId != Guid.Empty)
