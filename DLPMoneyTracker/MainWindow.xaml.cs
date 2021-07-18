@@ -37,6 +37,8 @@ namespace DLPMoneyTracker
 
             panelBudget.Children.Add(uiBudgetPlanner);
             _uiBudgetPlanner = uiBudgetPlanner;
+
+            lblPath.Text = uiFullLedger.LedgerPath;
         }
 
         private void Exit()

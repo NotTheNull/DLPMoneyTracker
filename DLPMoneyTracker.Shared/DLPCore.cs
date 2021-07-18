@@ -6,7 +6,14 @@ namespace DLPMoneyTracker.Shared
 {
     public static class DLPCore
     {
-        public const string CONFIG_PATH = @"D:\Program Files\DLP Money Tracker\Config\";
+        //public const string CONFIG_PATH = @"D:\Program Files\DLP Money Tracker\Config\";
+        public static string CONFIG_PATH 
+        {
+            get 
+            { 
+                return string.Format("{0}\\Config", Directory.GetCurrentDirectory());
+            }
+        }
 
         public static IServiceProvider DependencyHost { get; set; }
 

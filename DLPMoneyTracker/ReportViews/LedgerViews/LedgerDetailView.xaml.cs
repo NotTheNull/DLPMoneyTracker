@@ -14,6 +14,8 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
         private LedgerDetailVM _viewModel;
         private bool _canClose;
 
+        public string LedgerPath { get { return _viewModel.LedgerPath; } }
+
         public LedgerDetailView(LedgerDetailVM viewModel)
         {
             InitializeComponent();

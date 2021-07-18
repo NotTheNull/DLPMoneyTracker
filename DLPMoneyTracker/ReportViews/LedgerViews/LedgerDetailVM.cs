@@ -19,6 +19,9 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
         private ObservableCollection<MoneyRecord> _listRecords = new ObservableCollection<MoneyRecord>();
         public ObservableCollection<MoneyRecord> DisplayRecordsList { get { return _listRecords; } }
 
+        public string LedgerPath { get { return _ledger.FilePath; } }
+
+
         public string HeaderText
         {
             get
