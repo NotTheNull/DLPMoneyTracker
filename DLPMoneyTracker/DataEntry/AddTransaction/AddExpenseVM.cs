@@ -130,11 +130,8 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             {
                 _listAccts.Add(new SpecialDropListItem<MoneyAccount>(act.Description, act));
             }
-            NotifyPropertyChanged(nameof(this.MoneyAccountList));            
+            NotifyPropertyChanged(nameof(this.MoneyAccountList));
         }
-
-
-
 
         private void LoadCategories()
         {
@@ -147,8 +144,6 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
             }
             NotifyPropertyChanged(nameof(this.CategoryList));
         }
-
-
 
         public void SaveTransaction()
         {

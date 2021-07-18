@@ -1,9 +1,6 @@
 ﻿using DLPMoneyTracker.Data.ConfigModels;
 using DLPMoneyTracker.Data.TransactionModels;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Transactions;
 
 namespace DLPMoneyTracker.Data
 {
@@ -22,9 +19,9 @@ namespace DLPMoneyTracker.Data
             buildIt.BuildNewLedger();
         }
 
+        private ITrackerConfig _oldConfig, _newConfig;
+        private int _newYear;
 
-        ITrackerConfig _oldConfig, _newConfig;
-        int _newYear;
         private NewYearBuilder(int newYear)
         {
             _newYear = newYear;
@@ -63,7 +60,7 @@ namespace DLPMoneyTracker.Data
             Ledger oldLedger = new Ledger(_oldConfig, _newYear - 1);
             Ledger newLedger = new Ledger(_newConfig, _newYear);
 
-            foreach(var acct in _newConfig.AccountsList)
+            foreach (var acct in _newConfig.AccountsList)
             {
                 decimal balance = oldLedger.GetAccountBalance(acct);
                 newLedger.AddTransaction(new MoneyRecord()
@@ -78,7 +75,5 @@ namespace DLPMoneyTracker.Data
 
             newLedger.SaveToFile();
         }
-
-
     }
 }

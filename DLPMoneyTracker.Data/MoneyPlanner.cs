@@ -25,7 +25,6 @@ namespace DLPMoneyTracker.Data
 
     public class MoneyPlanner : IMoneyPlanner
     {
-        
         private string FolderPath { get { return AppConfigSettings.DATA_FOLDER_PATH.Replace(AppConfigSettings.YEAR_FOLDER_PLACEHOLDER, _year.ToString()); } }
         public string FilePath { get { return string.Concat(this.FolderPath, "MoneyPlan.json"); } }
 
@@ -35,7 +34,10 @@ namespace DLPMoneyTracker.Data
         private List<IMoneyPlan> _listMoneyPlans = new List<IMoneyPlan>();
         public ReadOnlyCollection<IMoneyPlan> MoneyPlanList { get { return _listMoneyPlans.AsReadOnly(); } }
 
-        public MoneyPlanner(ITrackerConfig config) : this(config, DateTime.Today.Year) { }
+        public MoneyPlanner(ITrackerConfig config) : this(config, DateTime.Today.Year)
+        {
+        }
+
         public MoneyPlanner(ITrackerConfig config, int year)
         {
             _year = year;
@@ -108,7 +110,7 @@ namespace DLPMoneyTracker.Data
         public void Copy(IMoneyPlanner planner)
         {
             this.ClearRecordList();
-            foreach(var plan in this.MoneyPlanList)
+            foreach (var plan in this.MoneyPlanList)
             {
                 this.AddMoneyPlan(plan);
             }

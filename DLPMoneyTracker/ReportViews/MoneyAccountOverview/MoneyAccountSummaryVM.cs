@@ -136,7 +136,7 @@ namespace DLPMoneyTracker.ReportViews
             foreach (var budget in moneyList.OrderBy(o => o.NotificationDate).ThenBy(o => o.PriorityOrder))
             {
                 // Check to see if there's a ledger record that matches; if so, skip the money plan so we're not misled
-                if(budget.CategoryName.Contains("Transfer"))
+                if (budget.CategoryName.Contains("Transfer"))
                 {
                     // Transfers should be handled especially
                     if (_ledger.TransactionList.Any(x =>
@@ -150,10 +150,10 @@ namespace DLPMoneyTracker.ReportViews
                         continue;
                     }
                 }
-                else if(budget.CategoryName.Contains("Debt"))
+                else if (budget.CategoryName.Contains("Debt"))
                 {
                     // Debt payments also have to be handled especially
-                    if(_ledger.TransactionList.Any(x => x.CategoryUID == TransactionCategory.DebtPayment.ID && x.AccountID == budget.AccountID && x.TransDate > budget.NotificationDate))
+                    if (_ledger.TransactionList.Any(x => x.CategoryUID == TransactionCategory.DebtPayment.ID && x.AccountID == budget.AccountID && x.TransDate > budget.NotificationDate))
                     {
                         continue;
                     }

@@ -34,7 +34,10 @@ namespace DLPMoneyTracker.Data
         private List<IBudget> _listBudgets = new List<IBudget>();
         public ReadOnlyCollection<IBudget> BudgetList { get { return _listBudgets.AsReadOnly(); } }
 
-        public BudgetTracker(ITrackerConfig config) : this(config, DateTime.Today.Year) { }
+        public BudgetTracker(ITrackerConfig config) : this(config, DateTime.Today.Year)
+        {
+        }
+
         public BudgetTracker(ITrackerConfig config, int year)
         {
             _year = year;
@@ -110,7 +113,7 @@ namespace DLPMoneyTracker.Data
         public void Copy(IBudgetTracker tracker)
         {
             this.ClearBudget();
-            foreach(var budget in tracker.BudgetList)
+            foreach (var budget in tracker.BudgetList)
             {
                 this.AddBudget(budget);
             }

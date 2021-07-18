@@ -21,7 +21,7 @@ namespace DLPMoneyTracker.Data.ScheduleRecurrence
                 if (next < DateTime.Today)
                 {
                     month++;
-                    if(month > 12)
+                    if (month > 12)
                     {
                         year++;
                         month = 1;

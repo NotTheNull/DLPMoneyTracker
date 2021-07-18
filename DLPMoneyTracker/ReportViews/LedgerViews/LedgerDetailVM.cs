@@ -21,7 +21,6 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
 
         public string LedgerPath { get { return _ledger.FilePath; } }
 
-
         public string HeaderText
         {
             get

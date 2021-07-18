@@ -35,9 +35,7 @@ namespace DLPMoneyTracker.Data
         decimal GetCategoryTotal_Monthly(TransactionCategory cat, int month); // May eventually include a way to handle year
 
         decimal GetCategoryTotal_DateRange(TransactionCategory cat, DateTime beg, DateTime end);
-
     }
-
 
     public class Ledger : ILedger
     {
@@ -54,12 +52,14 @@ namespace DLPMoneyTracker.Data
 
         public ReadOnlyCollection<IMoneyRecord> TransactionList { get { return _listTransactions.AsReadOnly(); } }
 
-        public Ledger(ITrackerConfig config) : this(config, DateTime.Today.Year) { }
+        public Ledger(ITrackerConfig config) : this(config, DateTime.Today.Year)
+        {
+        }
+
         public Ledger(ITrackerConfig config, int year)
         {
             _config = config;
             _year = year;
-
 
             if (!Directory.Exists(this.FolderPath))
             {
@@ -173,15 +173,16 @@ namespace DLPMoneyTracker.Data
                         // No matter the account type, it's a reduction
                         balance -= transAmount;
                         break;
+
                     case CategoryType.TransferFrom:
                         if (act.AccountType != MoneyAccountType.Checking && act.AccountType != MoneyAccountType.Savings) throw new InvalidOperationException("Transfers only permitted with Checking and Savings accounts");
                         balance -= transAmount;
                         break;
+
                     case CategoryType.TransferTo:
                         if (act.AccountType != MoneyAccountType.Checking && act.AccountType != MoneyAccountType.Savings) throw new InvalidOperationException("Transfers only permitted with Checking and Savings accounts");
                         balance += transAmount;
                         break;
-
                 }
             }
 
@@ -229,9 +230,6 @@ namespace DLPMoneyTracker.Data
             return decimal.Zero;
         }
 
-
-
-
         public void SaveToFile()
         {
             string json = JsonSerializer.Serialize(_listTransactions);
@@ -265,8 +263,5 @@ namespace DLPMoneyTracker.Data
                 _listTransactions.Add(record);
             }
         }
-
-
-
     }
 }

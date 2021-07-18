@@ -37,6 +37,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
 
         [JsonIgnore]
         public MoneyAccount Account { get; set; }
+
         [JsonIgnore]
         public string AccountName { get { return this.Account?.Description ?? string.Empty; } }
 

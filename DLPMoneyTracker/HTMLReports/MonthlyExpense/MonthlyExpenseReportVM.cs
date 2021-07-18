@@ -1,11 +1,8 @@
 ﻿using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Data;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 
 namespace DLPMoneyTracker.HTMLReports.MonthlyExpense
@@ -19,11 +16,11 @@ namespace DLPMoneyTracker.HTMLReports.MonthlyExpense
         private ILedger _ledger;
         private ITrackerConfig _config;
 
-
         private string _html;
         public string HTMLSource { get { return _html; } }
 
         private int _month;
+
         public int SelectedMonth
         {
             get { return _month; }
@@ -36,11 +33,9 @@ namespace DLPMoneyTracker.HTMLReports.MonthlyExpense
             }
         }
 
-
         private const string RESOURCE_ROW = "PART_MoneyChartRow.html";
         private const string RESOURCE_CHART = "PART_MoneyChart.html";
         private const string RESOURCE_REPORT = "MonthlyExpenseTemplate.html";
-        
 
         public MonthlyExpenseReportVM(ILedger ledger, ITrackerConfig config) : base()
         {
@@ -52,9 +47,6 @@ namespace DLPMoneyTracker.HTMLReports.MonthlyExpense
             htmlReportTemplate = UICore.GetResourceText(RESOURCE_REPORT);
         }
 
-        
-
-
         private const string ID_ROW_DESC = "{*DESCRIPTION*}";
         private const string ID_ROW_TOTAL = "{*TOTAL*}";
         private const string ID_CHART_DETAIL = "{*MONEY ROWS*}";
@@ -64,7 +56,7 @@ namespace DLPMoneyTracker.HTMLReports.MonthlyExpense
         private const string ID_REPORT_EXPENSES = "{*EXPENSES*}";
         private const string ID_REPORT_INCOME = "{*INCOME*}";
 
-        public void BuildHTML() 
+        public void BuildHTML()
         {
             int year = DateTime.Today.Year;
             int month = _month;

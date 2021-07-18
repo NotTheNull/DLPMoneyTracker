@@ -75,7 +75,7 @@ namespace DLPMoneyTracker
         {
             var assembly = Assembly.GetExecutingAssembly();
 #if DEBUG
-            var resourceList = assembly.GetManifestResourceNames().ToList(); 
+            var resourceList = assembly.GetManifestResourceNames().ToList();
 #endif
             string resourcePath = assembly.GetManifestResourceNames().Single(s => s.EndsWith(resourceName));
             using (Stream stream = assembly.GetManifestResourceStream(resourcePath))

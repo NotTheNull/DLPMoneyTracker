@@ -1,7 +1,4 @@
 ﻿using Microsoft.Toolkit.Wpf.UI.Controls;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 
 namespace DLPMoneyTracker.Core.Behaviors
@@ -21,11 +18,10 @@ namespace DLPMoneyTracker.Core.Behaviors
             d.SetValue(HTMLProperty, value);
         }
 
-
-        static void OnHTMLChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnHTMLChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is null) return;
-            if(d is WebView view)
+            if (d is WebView view)
             {
                 view.NavigateToString(e.NewValue as string);
             }

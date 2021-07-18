@@ -29,7 +29,6 @@
 
                     <MenuItem Click="MenuItemCreateNewYear_Click" Header="_Setup New Year" />
 
-
                     <MenuItem Click="MenuItemExit_Click" Header="_Exit">
                         <MenuItem.Icon>
                             <Image Source="/Icons/Leave-256.png" />

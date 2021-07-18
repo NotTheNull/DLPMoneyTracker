@@ -55,8 +55,9 @@ namespace DLPMoneyTracker.Data
         private List<TransactionCategory> _listCategories = new List<TransactionCategory>();
         public ReadOnlyCollection<TransactionCategory> CategoryList { get { return _listCategories.OrderBy(o => o.Name).ToList().AsReadOnly(); } }
 
-
-        public TrackerConfig() : this(DateTime.Today.Year) { }
+        public TrackerConfig() : this(DateTime.Today.Year)
+        {
+        }
 
         public TrackerConfig(int year)
         {
@@ -189,22 +190,20 @@ namespace DLPMoneyTracker.Data
             _listAccts.Clear();
         }
 
-
         public void Copy(ITrackerConfig config)
         {
             this.ClearMoneyAccountList();
-            foreach(var act in config.AccountsList)
+            foreach (var act in config.AccountsList)
             {
                 this.AddMoneyAccount(act);
             }
 
             this.ClearCategoryList();
-            foreach(var cat in config.CategoryList)
+            foreach (var cat in config.CategoryList)
             {
                 this.AddCategory(cat);
             }
         }
-
 
         public void Dispose()
         {
