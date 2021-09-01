@@ -44,6 +44,12 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
             this.DataContext = _viewModel;
         }
 
+        public void ShowFilteredLedger(LedgerDetailFilter filter)
+        {
+            _viewModel = new StandardLedgerDetailVM(filter, _ledger, _config);
+            this.DataContext = _viewModel;            
+        }
+
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
             if (!_viewModel.IsCloseButtonVisible) return;

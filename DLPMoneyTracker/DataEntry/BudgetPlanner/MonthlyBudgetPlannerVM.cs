@@ -1,11 +1,15 @@
 ﻿using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Data;
+using DLPMoneyTracker.Data.Common;
 using DLPMoneyTracker.Data.ConfigModels;
 using DLPMoneyTracker.Data.TransactionModels.BillPlan;
+using DLPMoneyTracker.ReportViews.LedgerViews;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 
 namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 {
@@ -75,6 +79,39 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
                 return _cmdSave ?? (_cmdSave = new RelayCommand((o) =>
                 {
                     this.CommitChanges();
+                }));
+            }
+        }
+
+
+        private RelayCommand _cmdShowDetail;
+        public RelayCommand CommandShowDetail
+        {
+            get
+            {
+                return _cmdShowDetail ?? (_cmdShowDetail = new RelayCommand((objCategory) =>
+                {
+                    if (objCategory is TransactionCategory cat)
+                    {
+                        DateRange monthRange = new DateRange(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1), new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month)));
+                        LedgerDetailFilter filter = new LedgerDetailFilter(cat, monthRange);
+
+                        LedgerDetailView uiAccountLedger = UICore.DependencyHost.GetService<LedgerDetailView>();
+                        uiAccountLedger.ShowFilteredLedger(filter);
+                        Window windowLedger = new Window()
+                        {
+                            Content = uiAccountLedger,
+                            WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                            Title = "Ledger Detail",
+                            Width = 750,
+                            Height = 500
+                        };
+                        windowLedger.Show();
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException(string.Format("Type {0} is not supported for Budget Planner Detail", objCategory.GetType().FullName));
+                    }
                 }));
             }
         }

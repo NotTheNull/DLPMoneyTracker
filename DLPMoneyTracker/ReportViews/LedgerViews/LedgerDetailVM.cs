@@ -33,6 +33,7 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
         public LedgerDetailFilter(TransactionCategory cat) : this(null, cat, null, string.Empty) { }
         public LedgerDetailFilter(DateRange dates) : this(null, null, dates, string.Empty) { }
         public LedgerDetailFilter(string srch) : this(null, null, null, srch) { }
+        public LedgerDetailFilter(TransactionCategory cat, DateRange dates) : this(null, cat, dates, string.Empty) { }
 
         public LedgerDetailFilter(MoneyAccount act, TransactionCategory cat, DateRange dates, string srch)
         {
@@ -151,6 +152,11 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
         {
             this.LoadRecords(ledger.TransactionList);
         }
+        public StandardLedgerDetailVM(LedgerDetailFilter filter, ILedger ledger, ITrackerConfig config) : base(ledger, config)
+        {
+            _filter = filter;
+            this.Reload();
+        }
 
         public override string HeaderText { get { return string.Empty; } }
 
@@ -187,7 +193,7 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
             this.LoadRecords(records);
         }
 
-        public void Search(LedgerDetailFilter filter)
+        public void SetFilter(LedgerDetailFilter filter)
         {
             _filter = filter;
             this.Reload();
