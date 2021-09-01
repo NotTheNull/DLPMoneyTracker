@@ -15,5 +15,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             this.DataContext = viewModel;
             _viewModel = viewModel;
         }
+
+        // TODO: Add button within each grid that will display a list of the transactions for that category for the Month
     }
 }

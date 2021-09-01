@@ -12,7 +12,7 @@ using System.Windows;
 
 namespace DLPMoneyTracker
 {
-    // TODO: Add ability to backup/close Ledger and transfer balances to NEW ledger
+    
     // TODO: Add Monthly Expense Report by Category
 
     /// <summary>

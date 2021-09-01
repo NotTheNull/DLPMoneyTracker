@@ -8,7 +8,6 @@ using System.Linq;
 
 namespace DLPMoneyTracker.DataEntry.AddTransaction
 {
-    // TODO: Date Time is getting saved as MIN Value
     public class TransferMoneyVM : BaseViewModel
     {
         private ILedger _ledger;

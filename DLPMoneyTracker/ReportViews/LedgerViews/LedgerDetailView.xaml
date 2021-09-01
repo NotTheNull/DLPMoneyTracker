@@ -75,6 +75,8 @@
         <Button x:Name="btnClose"
                 Grid.Row="2"
                 Content="Close"
+                Visibility="{Binding Path=IsCloseButtonVisible, Converter={StaticResource convertBoolToVisibility}}"
+                IsEnabled="{Binding Path=IsCloseButtonVisible}"
                 Click="btnClose_Click" />
     </Grid>
 </UserControl>

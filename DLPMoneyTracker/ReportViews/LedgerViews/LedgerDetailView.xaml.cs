@@ -1,4 +1,5 @@
-﻿using DLPMoneyTracker.Data.ConfigModels;
+﻿using DLPMoneyTracker.Data;
+using DLPMoneyTracker.Data.ConfigModels;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -10,41 +11,42 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
     public partial class LedgerDetailView : UserControl
     {
         // TODO: Consider adding filtering controls, at least for the Main Ledger
+        //       Filtering added to View Models; still need UI Controls
 
+        private readonly ILedger _ledger;
+        private readonly ITrackerConfig _config;
         private LedgerDetailVM _viewModel;
-        private bool _canClose;
+        
+        public string LedgerPath { get { return _viewModel?.LedgerPath ?? string.Empty; } }
 
-        public string LedgerPath { get { return _viewModel.LedgerPath; } }
-
-        public LedgerDetailView(LedgerDetailVM viewModel)
+        public LedgerDetailView(ILedger ledger, ITrackerConfig config)
         {
             InitializeComponent();
-            this.DataContext = viewModel;
-            _viewModel = viewModel;
-            _canClose = true;
+            _ledger = ledger;
+            _config = config;
         }
 
         public void ShowAccountDetail(MoneyAccount act)
         {
-            _viewModel.ShowAccountDetail(act);
+            _viewModel = new MoneyAccountLedgerDetailVM(act, _ledger, _config);
+            this.DataContext = _viewModel;
         }
 
         public void ShowCategoryDetail(TransactionCategory cat)
         {
-            _viewModel.ShowCategoryDetail(cat);
+            _viewModel = new TransactionCategoryLedgerDetailVM(cat, _ledger, _config);
+            this.DataContext = _viewModel;
         }
 
         public void ShowFullLedgerDetail()
         {
-            _viewModel.ShowFullLedgerDetail();
-            _canClose = false;
-            btnClose.Visibility = Visibility.Collapsed;
-            btnClose.IsEnabled = false;
+            _viewModel = new StandardLedgerDetailVM(_ledger, _config);
+            this.DataContext = _viewModel;
         }
 
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
-            if (!_canClose) return;
+            if (!_viewModel.IsCloseButtonVisible) return;
             var win = Window.GetWindow(this);
             win.Close();
         }

@@ -57,7 +57,6 @@ namespace DLPMoneyTracker
             services.AddTransient<TransferMoneyVM>();
 
             services.AddTransient<LedgerDetailView>();
-            services.AddTransient<LedgerDetailVM>();
 
             services.AddTransient<RecurrenceEditorView>();
             services.AddTransient<RecurrenceEditorVM>();
