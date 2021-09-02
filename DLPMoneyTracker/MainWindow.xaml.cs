@@ -13,8 +13,7 @@ using System.Windows;
 namespace DLPMoneyTracker
 {
     
-    // TODO: Add Monthly Expense Report by Category
-
+    
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>

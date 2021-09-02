@@ -125,11 +125,15 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
     public class TransactionCategoryLedgerDetailVM : LedgerDetailVM
     {
         private readonly TransactionCategory _cat;
+        private readonly DateRange _dates;
 
-        public TransactionCategoryLedgerDetailVM(TransactionCategory cat, ILedger ledger, ITrackerConfig config) : base(ledger, config)
+        public TransactionCategoryLedgerDetailVM(TransactionCategory cat, ILedger ledger, ITrackerConfig config) : this(cat, null, ledger, config) { }
+        public TransactionCategoryLedgerDetailVM(TransactionCategory cat, DateRange range, ILedger ledger, ITrackerConfig config) : base(ledger, config)
         {
             _cat = cat;
+            _dates = range;
             NotifyPropertyChanged(nameof(this.HeaderText));
+            this.Reload();
         }
 
         public override string HeaderText { get { return string.Format("CATEGORY: {0}", _cat?.Name ?? "** N/A **"); } }
@@ -140,7 +144,14 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
         {
             this.Clear();
             if (_ledger.TransactionList is null) return;
-            this.LoadRecords(_ledger.TransactionList.Where(x => x.CategoryUID == _cat.ID));
+
+            var records = _ledger.TransactionList.Where(x => x.CategoryUID == _cat.ID);
+            if(_dates != null)
+            {
+                records = records.Where(x => x.TransDate >= _dates.Begin && x.TransDate <= _dates.End);
+            }
+
+            this.LoadRecords(records);
         }
     }
 

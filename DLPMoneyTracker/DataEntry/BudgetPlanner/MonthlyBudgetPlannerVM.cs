@@ -94,10 +94,9 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
                     if (objCategory is TransactionCategory cat)
                     {
                         DateRange monthRange = new DateRange(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1), new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month)));
-                        LedgerDetailFilter filter = new LedgerDetailFilter(cat, monthRange);
-
+                        
                         LedgerDetailView uiAccountLedger = UICore.DependencyHost.GetService<LedgerDetailView>();
-                        uiAccountLedger.ShowFilteredLedger(filter);
+                        uiAccountLedger.ShowCategoryDetail(cat, monthRange);
                         Window windowLedger = new Window()
                         {
                             Content = uiAccountLedger,

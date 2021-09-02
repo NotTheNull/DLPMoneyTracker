@@ -1,4 +1,5 @@
 ﻿using DLPMoneyTracker.Data;
+using DLPMoneyTracker.Data.Common;
 using DLPMoneyTracker.Data.ConfigModels;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,8 +11,7 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
     /// </summary>
     public partial class LedgerDetailView : UserControl
     {
-        // TODO: Consider adding filtering controls, at least for the Main Ledger
-        //       Filtering added to View Models; still need UI Controls
+        // TODO: Add filter controls
 
         private readonly ILedger _ledger;
         private readonly ITrackerConfig _config;
@@ -32,9 +32,9 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
             this.DataContext = _viewModel;
         }
 
-        public void ShowCategoryDetail(TransactionCategory cat)
+        public void ShowCategoryDetail(TransactionCategory cat, DateRange dates = null)
         {
-            _viewModel = new TransactionCategoryLedgerDetailVM(cat, _ledger, _config);
+            _viewModel = new TransactionCategoryLedgerDetailVM(cat, dates, _ledger, _config);
             this.DataContext = _viewModel;
         }
 
