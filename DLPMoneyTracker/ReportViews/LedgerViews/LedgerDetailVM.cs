@@ -103,11 +103,16 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
     public class MoneyAccountLedgerDetailVM : LedgerDetailVM
     {
         private readonly MoneyAccount _act;
+        private readonly DateRange _dates;
 
-        public MoneyAccountLedgerDetailVM(MoneyAccount act, ILedger ledger, ITrackerConfig config) : base(ledger, config)
+        public MoneyAccountLedgerDetailVM(MoneyAccount act, ILedger ledger, ITrackerConfig config) : this(act, null, ledger, config) { }
+
+        public MoneyAccountLedgerDetailVM(MoneyAccount act, DateRange dates, ILedger ledger, ITrackerConfig config) : base(ledger, config)
         {
             _act = act;
+            _dates = dates;
             NotifyPropertyChanged(nameof(this.HeaderText));
+            this.Reload();
         }
 
         public override string HeaderText { get { return string.Format("ACCOUNT: {0}", _act?.Description ?? "** N/A **"); } }
@@ -118,7 +123,14 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
         {
             this.Clear();
             if (_ledger.TransactionList is null) return;
-            this.LoadRecords(_ledger.TransactionList.Where(x => x.AccountID == _act.ID));
+
+            var records = _ledger.TransactionList.Where(x => x.AccountID == _act.ID);
+            if (_dates != null)
+            {
+                records = records.Where(x => x.TransDate >= _dates.Begin && x.TransDate <= _dates.End);
+            }
+
+            this.LoadRecords(records);
         }
     }
 

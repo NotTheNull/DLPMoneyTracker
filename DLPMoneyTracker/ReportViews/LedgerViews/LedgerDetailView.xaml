@@ -38,9 +38,10 @@
                                     Binding="{Binding TransDate}" />
 
                 <DataGridTextColumn Header="Account"
+                                    MinWidth="120"
                                     Binding="{Binding AccountName}" />
 
-                <DataGridTemplateColumn Header="Category">
+                <DataGridTemplateColumn Header="Category" MinWidth="100">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -54,9 +55,13 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <!--<DataGridTextColumn Header="Category" Binding="{Binding CategoryName}" />-->
-                <DataGridTextColumn Header="Description" Binding="{Binding Description}" />
-                <DataGridTemplateColumn Header="Amount">
+
+                <DataGridTextColumn 
+                    Header="Description" 
+                    MinWidth="240"
+                    Binding="{Binding Description}" />
+                
+                <DataGridTemplateColumn Header="Amount" MinWidth="100">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel>
@@ -67,8 +72,6 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <!--<DataGridTextColumn Header="Amount"
-                                    Binding="{Binding TransAmount, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}" />-->
             </DataGrid.Columns>
         </DataGrid>
 
