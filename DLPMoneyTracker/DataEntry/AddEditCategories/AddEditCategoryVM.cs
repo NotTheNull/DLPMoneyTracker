@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace DLPMoneyTracker.DataEntry.AddEditCategories
 {
+    // TODO: Change ability to delete Categories to use a DELETED date so that history is preserved
     public class AddEditCategoryVM : BaseViewModel
     {
         private ITrackerConfig _config;

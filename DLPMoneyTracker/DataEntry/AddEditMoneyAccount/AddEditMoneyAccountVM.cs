@@ -9,6 +9,7 @@ using System.Linq;
 
 namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
 {
+    // TODO: Modify ability to delete Accounts; change it to having a "Closed" i.e. Deleted date.  This way we retain historical data.
     public class AddEditMoneyAccountVM : BaseViewModel, IDisposable
     {
         #region Objects and Properties

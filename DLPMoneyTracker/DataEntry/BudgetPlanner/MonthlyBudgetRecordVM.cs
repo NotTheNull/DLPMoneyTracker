@@ -7,6 +7,7 @@ using System.Windows.Media;
 
 namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 {
+    // TODO: Figure out a way to Preserve the Budget at End of Month for historical referencing
     public class MonthlyBudgetRecordVM : BaseViewModel, ILinkDataModelToViewModel<IBudget>
     {
         public event SimpleNotification BudgetAmountModified;
