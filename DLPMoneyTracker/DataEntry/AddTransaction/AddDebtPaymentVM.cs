@@ -10,8 +10,8 @@ namespace DLPMoneyTracker.DataEntry.AddTransaction
 {
     public class AddDebtPaymentVM : BaseViewModel
     {
-        private ILedger _ledger;
-        private ITrackerConfig _config;
+        private readonly ILedger _ledger;
+        private readonly ITrackerConfig _config;
 
         private DateTime _dateTrans;
 

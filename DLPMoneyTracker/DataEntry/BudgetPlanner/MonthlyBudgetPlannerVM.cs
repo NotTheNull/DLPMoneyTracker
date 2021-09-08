@@ -15,10 +15,10 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 {
     public class MonthlyBudgetPlannerVM : BaseViewModel
     {
-        private ITrackerConfig _config;
-        private IBudgetTracker _budget;
-        private IMoneyPlanner _moneyPlanner;
-        private ILedger _ledger;
+        private readonly ITrackerConfig _config;
+        private readonly IBudgetTracker _budget;
+        private readonly IMoneyPlanner _moneyPlanner;
+        private readonly ILedger _ledger;
 
         private decimal _incomeTotal;
 

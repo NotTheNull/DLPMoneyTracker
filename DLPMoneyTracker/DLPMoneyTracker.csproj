@@ -8,10 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="HTMLReports\**" />
+    <Compile Remove="ReportViews\CategoryOverview\**" />
+    <EmbeddedResource Remove="HTMLReports\**" />
+    <EmbeddedResource Remove="ReportViews\CategoryOverview\**" />
+    <None Remove="HTMLReports\**" />
+    <None Remove="ReportViews\CategoryOverview\**" />
+    <Page Remove="HTMLReports\**" />
+    <Page Remove="ReportViews\CategoryOverview\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Cash-64.ico" />
-    <None Remove="HTMLReports\MonthlyExpense\MonthlyExpenseTemplate.html" />
-    <None Remove="HTMLReports\MonthlyExpense\PART_MoneyChart.html" />
-    <None Remove="HTMLReports\MonthlyExpense\PART_MoneyChartRow.html" />
     <None Remove="Icons\Add-New-256.png" />
     <None Remove="Icons\Cancel-256.png" />
     <None Remove="Icons\Credit-Card-256.png" />
@@ -41,9 +49,6 @@
 
   <ItemGroup>
     <Resource Include="Cash-64.ico" />
-    <EmbeddedResource Include="HTMLReports\MonthlyExpense\MonthlyExpenseTemplate.html" />
-    <EmbeddedResource Include="HTMLReports\MonthlyExpense\PART_MoneyChart.html" />
-    <EmbeddedResource Include="HTMLReports\MonthlyExpense\PART_MoneyChartRow.html" />
     <Resource Include="Icons\Add-New-256.png" />
     <Resource Include="Icons\Cancel-256.png" />
     <Resource Include="Icons\Credit-Card-256.png" />
@@ -59,10 +64,6 @@
     <Resource Include="Icons\Save-256.png" />
     <Resource Include="Icons\Settings-01-256.png" />
     <Resource Include="Icons\Stock-Exchange-256.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ReportViews\CategoryOverview\" />
   </ItemGroup>
 
 </Project>

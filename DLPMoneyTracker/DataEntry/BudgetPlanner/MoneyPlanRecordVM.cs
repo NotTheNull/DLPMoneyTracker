@@ -9,7 +9,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 {
     public class MoneyPlanRecordVM : BaseViewModel, ILinkDataModelToViewModel<IMoneyPlan>
     {
-        private ITrackerConfig _config;
+        private readonly ITrackerConfig _config;
 
         private Guid _id;
 

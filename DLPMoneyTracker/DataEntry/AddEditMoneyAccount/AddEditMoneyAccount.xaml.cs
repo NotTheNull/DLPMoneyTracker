@@ -8,7 +8,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
     /// </summary>
     public partial class AddEditMoneyAccount : Window
     {
-        private ITrackerConfig _config;
+        private readonly ITrackerConfig _config;
 
         private AddEditMoneyAccountVM ViewModel
         {

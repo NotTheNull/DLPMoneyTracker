@@ -25,7 +25,7 @@ namespace DLPMoneyTracker.Data
 
     public class BudgetTracker : IBudgetTracker
     {
-        private ITrackerConfig _config;
+        private readonly ITrackerConfig _config;
         private int _year;
 
         private string FolderPath { get { return AppConfigSettings.DATA_FOLDER_PATH.Replace(AppConfigSettings.YEAR_FOLDER_PLACEHOLDER, _year.ToString()); } }

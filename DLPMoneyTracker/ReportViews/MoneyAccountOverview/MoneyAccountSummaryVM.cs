@@ -14,9 +14,9 @@ namespace DLPMoneyTracker.ReportViews
 {
     public class MoneyAccountSummaryVM : BaseViewModel
     {
-        private ITrackerConfig _config;
-        private IMoneyPlanner _budget;
-        private ILedger _ledger;
+        private readonly ITrackerConfig _config;
+        private readonly IMoneyPlanner _budget;
+        private readonly ILedger _ledger;
         private MoneyAccount _act;
 
         public string AccountID { get { return _act?.ID ?? string.Empty; } }

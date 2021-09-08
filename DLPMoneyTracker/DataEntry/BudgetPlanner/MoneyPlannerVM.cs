@@ -17,8 +17,8 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 
     public class MoneyPlannerVM : BaseViewModel, IDisposable
     {
-        private ITrackerConfig _config;
-        private IMoneyPlanner _moneyPlanner;
+        private readonly ITrackerConfig _config;
+        private readonly IMoneyPlanner _moneyPlanner;
 
         #region Editing Control Properties
 
@@ -406,8 +406,6 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             }
 
             _record = null;
-            _config = null;
-            _moneyPlanner = null;
         }
     }
 }

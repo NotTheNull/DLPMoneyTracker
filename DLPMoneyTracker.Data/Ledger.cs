@@ -12,11 +12,16 @@ namespace DLPMoneyTracker.Data
 {
     public delegate void LedgerModifiedHandler();
 
-    public interface ILedger : IJSONFileMaker
+    public interface ILedger 
     {
         event LedgerModifiedHandler LedgerModified;
 
+        string FilePath { get; }
         ReadOnlyCollection<IMoneyRecord> TransactionList { get; }
+
+        void LoadFromFile(int year);
+
+        void SaveToFile();
 
         void AddTransaction(IMoneyRecord trans);
 
@@ -45,7 +50,7 @@ namespace DLPMoneyTracker.Data
 
         public string FilePath { get { return string.Concat(this.FolderPath, "Ledger.json"); } }
 
-        private ITrackerConfig _config;
+        private readonly ITrackerConfig _config;
         private int _year;
 
         private List<IMoneyRecord> _listTransactions = new List<IMoneyRecord>();
@@ -59,14 +64,8 @@ namespace DLPMoneyTracker.Data
         public Ledger(ITrackerConfig config, int year)
         {
             _config = config;
-            _year = year;
-
-            if (!Directory.Exists(this.FolderPath))
-            {
-                Directory.CreateDirectory(this.FolderPath);
-            }
-
-            this.LoadFromFile();
+                                    
+            this.LoadFromFile(year);
         }
 
         public void AddTransaction(IMoneyRecord trans)
@@ -237,8 +236,14 @@ namespace DLPMoneyTracker.Data
             LedgerModified?.Invoke();
         }
 
-        public void LoadFromFile()
+        public void LoadFromFile(int year)
         {
+            _year = year;
+            if (!Directory.Exists(this.FolderPath))
+            {
+                Directory.CreateDirectory(this.FolderPath);
+            }
+
             if (_listTransactions is null) _listTransactions = new List<IMoneyRecord>();
             _listTransactions.Clear();
             if (!File.Exists(FilePath)) return;

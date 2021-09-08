@@ -62,20 +62,20 @@
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="388*" />
+                <ColumnDefinition Width="142*" />
+                <ColumnDefinition Width="245*"/>
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="Fixed Expenses"
                        Style="{StaticResource StandardHeaderLabel}"
-                       HorizontalAlignment="Center"
+                       HorizontalAlignment="Left"
                        FontSize="16"
-                       Grid.Column="0"
-                       Grid.Row="0" />
+                       Grid.Column="0" Margin="131,0,0,0" />
 
             <DataGrid Grid.Column="0"
                       Grid.Row="1"
-                      Margin="0, 0, 5, 0"
+                      Margin="0,0,6,0"
                       ItemsSource="{Binding Path=FixedExpenseList}"
                       x:Name="dataFixedExpenses">
                 <DataGrid.Columns>
@@ -128,16 +128,15 @@
 
             <TextBlock Text="Variable Expenses"
                        Style="{StaticResource StandardHeaderLabel}"
-                       HorizontalAlignment="Center"
+                       HorizontalAlignment="Left"
                        FontSize="16"
-                       Grid.Column="1"
-                       Grid.Row="0" />
+                       Grid.Column="1" Grid.ColumnSpan="2" Margin="120,0,0,0" />
 
             <DataGrid Grid.Column="1"
                       Grid.Row="1"
-                      Margin="0, 0, 5, 0"
+                      Margin="0,0,5,0"
                       ItemsSource="{Binding Path=VariableExpenseList}"
-                      x:Name="dataVariableExpense">
+                      x:Name="dataVariableExpense" Grid.ColumnSpan="2">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Description"
                                         Width="150"

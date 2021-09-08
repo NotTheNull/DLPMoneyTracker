@@ -8,9 +8,9 @@ namespace DLPMoneyTracker.ReportViews
 {
     public class MoneyAccountOverviewVM : BaseViewModel
     {
-        private IMoneyPlanner _budget;
-        private ITrackerConfig _config;
-        private ILedger _ledger;
+        private readonly IMoneyPlanner _budget;
+        private readonly ITrackerConfig _config;
+        private readonly ILedger _ledger;
 
         private ObservableCollection<MoneyAccountSummaryVM> _listAcctSummary = new ObservableCollection<MoneyAccountSummaryVM>();
         public ObservableCollection<MoneyAccountSummaryVM> AccountSummaryList { get { return _listAcctSummary; } }

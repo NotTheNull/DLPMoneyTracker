@@ -13,6 +13,8 @@ namespace DLPMoneyTracker.Data
         ReadOnlyCollection<MoneyAccount> AccountsList { get; }
         ReadOnlyCollection<TransactionCategory> CategoryList { get; }
 
+        void LoadFromFile(int year);
+        
         void LoadMoneyAccounts();
 
         void SaveMoneyAccounts();
@@ -57,6 +59,16 @@ namespace DLPMoneyTracker.Data
 
         public TrackerConfig(int year)
         {
+            this.LoadFromFile(year);            
+        }
+
+        ~TrackerConfig()
+        {
+            this.Dispose();
+        }
+
+        public void LoadFromFile(int year)
+        {
             _year = year;
 
             if (!Directory.Exists(this.FolderPath))
@@ -66,11 +78,6 @@ namespace DLPMoneyTracker.Data
 
             this.LoadMoneyAccounts();
             this.LoadCategories();
-        }
-
-        ~TrackerConfig()
-        {
-            this.Dispose();
         }
 
         public void LoadMoneyAccounts()

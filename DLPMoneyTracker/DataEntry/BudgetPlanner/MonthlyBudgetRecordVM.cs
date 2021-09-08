@@ -12,7 +12,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
     {
         public event SimpleNotification BudgetAmountModified;
 
-        private ITrackerConfig _config;
+        private readonly ITrackerConfig _config;
 
         public Guid UID { get { return this.Category?.ID ?? Guid.Empty; } }
 

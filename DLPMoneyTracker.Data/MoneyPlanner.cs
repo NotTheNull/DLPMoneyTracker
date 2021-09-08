@@ -28,7 +28,7 @@ namespace DLPMoneyTracker.Data
         private string FolderPath { get { return AppConfigSettings.DATA_FOLDER_PATH.Replace(AppConfigSettings.YEAR_FOLDER_PLACEHOLDER, _year.ToString()); } }
         public string FilePath { get { return string.Concat(this.FolderPath, "MoneyPlan.json"); } }
 
-        private ITrackerConfig _config;
+        private readonly ITrackerConfig _config;
         private int _year;
 
         private List<IMoneyPlan> _listMoneyPlans = new List<IMoneyPlan>();
