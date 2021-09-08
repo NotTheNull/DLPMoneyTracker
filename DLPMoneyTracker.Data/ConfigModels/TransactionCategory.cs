@@ -25,7 +25,7 @@ namespace DLPMoneyTracker.Data.ConfigModels
         public string Name { get; set; }
         public CategoryType CategoryType { get; set; }
         public bool ExcludeFromBudget { get; set; } // Determines whether it will be visible on the Budget Planner as well as whether it will affect the Budget totals
-        public DateTime? DateDeleted { get; set; } // If set, will no longer be available for NEW transactions
+        public DateTime? DateDeletedUTC { get; set; } // If set, will no longer be available for NEW transactions
 
 
         public TransactionCategory()
@@ -33,6 +33,14 @@ namespace DLPMoneyTracker.Data.ConfigModels
             this.ID = Guid.NewGuid();
             this.Name = string.Empty;
             this.CategoryType = CategoryType.NotSet;
+        }
+
+        public void Copy(TransactionCategory src)
+        {
+            this.Name = src.Name;
+            this.CategoryType = src.CategoryType;
+            this.ExcludeFromBudget = src.ExcludeFromBudget;
+            this.DateDeletedUTC = src.DateDeletedUTC;
         }
     }
 

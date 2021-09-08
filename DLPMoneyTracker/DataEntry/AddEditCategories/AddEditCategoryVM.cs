@@ -8,10 +8,9 @@ using System.Linq;
 
 namespace DLPMoneyTracker.DataEntry.AddEditCategories
 {
-    // TODO: Change ability to delete Categories to use a DELETED date so that history is preserved
     public class AddEditCategoryVM : BaseViewModel
     {
-        private ITrackerConfig _config;
+        private readonly ITrackerConfig _config;
         private TransactionCategoryVM _data;
 
         public Guid UID
@@ -184,12 +183,20 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
 
         public void CommitChanges()
         {
-            _config.ClearCategoryList();
             if (this.CategoryList.Any())
             {
                 foreach (var c in this.CategoryList)
                 {
-                    _config.AddCategory(c.GetSource());
+                    var src = c.GetSource();
+                    var category = _config.GetCategory(c.UID);
+                    if(category is null)
+                    {
+                        _config.AddCategory(src);
+                    }
+                    else
+                    {
+                        category.Copy(src);
+                    }
                 }
                 _config.SaveCategories();
             }
@@ -205,7 +212,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
             this.CategoryList.Clear();
             if (_config.CategoryList.Any())
             {
-                foreach (var c in _config.CategoryList)
+                foreach (var c in _config.CategoryList.Where(x => x.DateDeletedUTC is null))
                 {
                     this.CategoryList.Add(new TransactionCategoryVM(c));
                 }
@@ -215,6 +222,10 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
         private void RemoveCategory(TransactionCategoryVM cat)
         {
             if (cat is null) throw new ArgumentNullException("Category");
+
+            var removeThis = _config.GetCategory(cat.UID);
+            removeThis.DateDeletedUTC = DateTime.UtcNow;
+
             if (this.CategoryList.Contains(cat))
             {
                 this.CategoryList.Remove(cat);
