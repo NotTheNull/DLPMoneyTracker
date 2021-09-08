@@ -71,6 +71,19 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
             }
         }
 
+        private DateTime? _dateClosed;
+
+        public DateTime? DateClosedUTC
+        {
+            get { return _dateClosed; }
+            set 
+            {
+                _dateClosed = value;
+                NotifyPropertyChanged(nameof(this.DateClosedUTC));
+            }
+        }
+
+
         public MoneyAccountVM() : base()
         {
             this.ID = this.Description = this.WebAddress = string.Empty;
@@ -96,6 +109,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
             this.AccountType = src.AccountType;
             this.Description = src.Description?.Trim() ?? string.Empty;
             this.WebAddress = src.WebAddress?.Trim() ?? string.Empty;
+            this.DateClosedUTC = src.DateClosedUTC;
         }
 
         public MoneyAccount GetSource()
@@ -107,7 +121,8 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
                 ID = this.ID.Trim(),
                 AccountType = this.AccountType,
                 Description = this.Description.Trim(),
-                WebAddress = this.WebAddress.Trim()
+                WebAddress = this.WebAddress.Trim(),
+                DateClosedUTC = this.DateClosedUTC
             };
         }
 
@@ -118,6 +133,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
             NotifyPropertyChanged(nameof(this.Description));
             NotifyPropertyChanged(nameof(this.WebAddress));
             NotifyPropertyChanged(nameof(this.InitialAmount));
+            NotifyPropertyChanged(nameof(this.DateClosedUTC));
         }
 
         public void Dispose()

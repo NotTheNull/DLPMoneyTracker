@@ -25,6 +25,8 @@ namespace DLPMoneyTracker.Data.ConfigModels
         public string Name { get; set; }
         public CategoryType CategoryType { get; set; }
         public bool ExcludeFromBudget { get; set; } // Determines whether it will be visible on the Budget Planner as well as whether it will affect the Budget totals
+        public DateTime? DateDeleted { get; set; } // If set, will no longer be available for NEW transactions
+
 
         public TransactionCategory()
         {

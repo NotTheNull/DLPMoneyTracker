@@ -33,10 +33,6 @@ namespace DLPMoneyTracker.Data
 
         void RemoveMoneyAccount(MoneyAccount act);
 
-        void ClearCategoryList();
-
-        void ClearMoneyAccountList();
-
         void Copy(ITrackerConfig config);
     }
 
@@ -180,25 +176,15 @@ namespace DLPMoneyTracker.Data
             _listAccts.Remove(act);
         }
 
-        public void ClearCategoryList()
-        {
-            _listCategories.Clear();
-        }
-
-        public void ClearMoneyAccountList()
-        {
-            _listAccts.Clear();
-        }
-
         public void Copy(ITrackerConfig config)
         {
-            this.ClearMoneyAccountList();
+            _listAccts.Clear();
             foreach (var act in config.AccountsList)
             {
                 this.AddMoneyAccount(act);
             }
 
-            this.ClearCategoryList();
+            _listCategories.Clear();
             foreach (var cat in config.CategoryList)
             {
                 this.AddCategory(cat);

@@ -9,13 +9,12 @@ using System.Linq;
 
 namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
 {
-    // TODO: Modify ability to delete Accounts; change it to having a "Closed" i.e. Deleted date.  This way we retain historical data.
     public class AddEditMoneyAccountVM : BaseViewModel, IDisposable
     {
         #region Objects and Properties
 
-        private ITrackerConfig _config;
-        private ILedger _ledger;
+        private readonly ITrackerConfig _config;
+        private readonly ILedger _ledger;
         private MoneyAccountVM _data;
 
         public MoneyAccountVM SelectedAccount
@@ -88,6 +87,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
         public ObservableCollection<MoneyAccountVM> MoneyAccountList { get; set; }
 
         public List<SpecialDropListItem<MoneyAccountType>> AccountTypeList { get; set; }
+
 
         #endregion Objects and Properties
 
@@ -223,7 +223,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
             this.MoneyAccountList.Clear();
             if (_config.AccountsList.Any())
             {
-                foreach (var act in _config.AccountsList.Where(x => !string.IsNullOrWhiteSpace(x.ID)))
+                foreach (var act in _config.AccountsList.Where(x => !string.IsNullOrWhiteSpace(x.ID) && x.DateClosedUTC is null))
                 {
                     MoneyAccountVM vm = new MoneyAccountVM(act);
                     vm.InitialAmount = _ledger.GetInitialBalance(act);
@@ -234,19 +234,26 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
 
         public void CommitChanges()
         {
-            _config.ClearMoneyAccountList();
             foreach (var acct in this.MoneyAccountList)
             {
-                MoneyAccount src = acct.GetSource();
-                _config.AddMoneyAccount(src);
-                _ledger.AddTransaction(new MoneyRecord()
+                var src = acct.GetSource();
+                var account = _config.GetAccount(acct.ID);
+                if (account is null)
                 {
-                    Account = src,
-                    Category = TransactionCategory.InitialBalance,
-                    Description = "Initial Balance",
-                    TransDate = new DateTime(DateTime.Today.Year, 1, 1),
-                    TransAmount = acct.InitialAmount
-                });
+                    _config.AddMoneyAccount(src);
+                    _ledger.AddTransaction(new MoneyRecord()
+                    {
+                        Account = src,
+                        Category = TransactionCategory.InitialBalance,
+                        Description = "Initial Balance",
+                        TransDate = new DateTime(DateTime.Today.Year, 1, 1),
+                        TransAmount = acct.InitialAmount
+                    });
+                }
+                else
+                {
+                    account.Copy(src);
+                }
             }
 
             _config.SaveMoneyAccounts();
@@ -255,6 +262,9 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
 
         public void RemoveAccount(MoneyAccountVM act)
         {
+            var account = _config.GetAccount(act.ID);
+            account.DateClosedUTC = DateTime.UtcNow;
+
             if (this.MoneyAccountList.Contains(act)) this.MoneyAccountList.Remove(act);
         }
 
@@ -300,7 +310,6 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
                 _data = null;
             }
 
-            _config = null;
         }
     }
 }

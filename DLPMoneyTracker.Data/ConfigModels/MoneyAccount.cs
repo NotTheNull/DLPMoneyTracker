@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 namespace DLPMoneyTracker.Data.ConfigModels
@@ -23,6 +24,8 @@ namespace DLPMoneyTracker.Data.ConfigModels
 
         public string WebAddress { get; set; }
 
+        public DateTime? DateClosedUTC { get; set; } // If set, Money Account will no longer be displayed on Main tab
+
         [JsonIgnore]
         public int OrderBy
         {
@@ -43,6 +46,14 @@ namespace DLPMoneyTracker.Data.ConfigModels
         {
             this.ID = this.Description = this.WebAddress = string.Empty;
             this.AccountType = MoneyAccountType.NotSet;
+        }
+
+        public void Copy(MoneyAccount moneyAccount)
+        {
+            this.Description = moneyAccount.Description;
+            this.AccountType = moneyAccount.AccountType;
+            this.WebAddress = moneyAccount.WebAddress;
+            this.DateClosedUTC = moneyAccount.DateClosedUTC;
         }
     }
 }
