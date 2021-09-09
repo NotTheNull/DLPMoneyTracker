@@ -50,7 +50,7 @@
                            Style="{StaticResource FilterLabels}"
                            />
                 <TextBox 
-                    Text="{Binding Path=Year, Mode=TwoWay, Converter={StaticResource convertNumberToDisplay}, FallbackValue=2021}"
+                    Text="{Binding Path=Year, Mode=TwoWay, Converter={StaticResource convertNumberToDisplay}, UpdateSourceTrigger=PropertyChanged}"
                     MaxLength="4"
                     Width="40"
                     Height="20"
@@ -65,7 +65,7 @@
                     ItemsSource="{Binding Path=CalendarMonths}"
                     DisplayMemberPath="Display"
                     SelectedValuePath="Value"
-                    SelectedItem="{Binding Path=Month, Mode=TwoWay}"
+                    SelectedValue="{Binding Path=Month, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     Width="120"
                     Height="25"
                     />

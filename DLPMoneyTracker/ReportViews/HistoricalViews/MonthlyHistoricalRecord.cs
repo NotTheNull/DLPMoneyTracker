@@ -17,6 +17,7 @@ namespace DLPMoneyTracker.ReportViews.HistoricalViews
     {
         private readonly ITrackerConfig _config;
         private readonly ILedger _ledger;
+        private int _month, _year;
 
         public MonthlyHistoricalRecord(ITrackerConfig config, ILedger ledger)
         {
@@ -52,9 +53,9 @@ namespace DLPMoneyTracker.ReportViews.HistoricalViews
             {
                 return _cmdShowDetail ?? (_cmdShowDetail = new RelayCommand((o) =>
                 {
-                    DateRange monthRange = new DateRange(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1), new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month)));
+                    DateRange monthRange = new DateRange(_year, _month);
 
-                    LedgerDetailView uiAccountLedger = UICore.DependencyHost.GetService<LedgerDetailView>();
+                    LedgerDetailView uiAccountLedger = new LedgerDetailView(_ledger, _config);
                     uiAccountLedger.ShowCategoryDetail(this.Category, monthRange);
                     Window windowLedger = new Window()
                     {
@@ -71,9 +72,11 @@ namespace DLPMoneyTracker.ReportViews.HistoricalViews
         #endregion
 
 
-        public void LoadCategory(TransactionCategory cat, int month)
+        public void LoadCategory(TransactionCategory cat, int month, int year)
         {
             _cat = cat;
+            _month = month;
+            _year = year;
             _total = _ledger.GetCategoryTotal_Monthly(cat, month);
         }
 

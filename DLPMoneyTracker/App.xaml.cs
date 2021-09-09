@@ -20,5 +20,4 @@ namespace DLPMoneyTracker
         }
     }
 
-    // TODO: Reports aren't doing it; Replace them with a clone of the Budget Planner UI that has Month/Year filters
 }

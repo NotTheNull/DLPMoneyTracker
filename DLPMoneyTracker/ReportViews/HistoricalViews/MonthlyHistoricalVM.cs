@@ -57,7 +57,7 @@ namespace DLPMoneyTracker.ReportViews.HistoricalViews
         public decimal TotalExpense { get { return _expenses.Count > 0 ? _expenses.Sum(s => s.MonthlyTotal) : decimal.Zero; } }
         public decimal Balance { get { return this.TotalIncome - this.TotalExpense; } }
 
-        private List<SpecialDropListItem<int>> _months;
+        private List<SpecialDropListItem<int>> _months = new List<SpecialDropListItem<int>>();
         public ReadOnlyCollection<SpecialDropListItem<int>> CalendarMonths { get { return _months.AsReadOnly(); } }
 
         private List<MonthlyHistoricalRecord> _incomes = new List<MonthlyHistoricalRecord>();
@@ -98,12 +98,14 @@ namespace DLPMoneyTracker.ReportViews.HistoricalViews
             _months.Add(new SpecialDropListItem<int>("November", 11));
             _months.Add(new SpecialDropListItem<int>("December", 12));
 
+            this.Year = DateTime.Now.Year;
+            this.Month = DateTime.Now.Month;
         }
 
         private void Load()
         {
-            if (this.Year > DateTime.Today.Year) throw new InvalidOperationException("Cannot use a future year");
-            if (this.Year == DateTime.Today.Year && this.Month > DateTime.Today.Month) throw new InvalidOperationException("Cannot use a future Month");
+            if (this.Year > DateTime.Now.Year) throw new InvalidOperationException("Cannot use a future year");
+            if (this.Year == DateTime.Now.Year && this.Month > DateTime.Now.Month) throw new InvalidOperationException("Cannot use a future Month");
 
             _config.LoadFromFile(this.Year);
             _ledger.LoadFromFile(this.Year);
@@ -112,7 +114,7 @@ namespace DLPMoneyTracker.ReportViews.HistoricalViews
             foreach(var cat in _config.CategoryList.Where(x => x.CategoryType == CategoryType.Income))
             {
                 MonthlyHistoricalRecord record = new MonthlyHistoricalRecord(_config, _ledger);
-                record.LoadCategory(cat, this.Month);
+                record.LoadCategory(cat, this.Month, this.Year);
                 _incomes.Add(record);
             }
 
@@ -120,7 +122,7 @@ namespace DLPMoneyTracker.ReportViews.HistoricalViews
             foreach(var cat in _config.CategoryList.Where(x => x.CategoryType == CategoryType.Expense || x.CategoryType == CategoryType.Payment))
             {
                 MonthlyHistoricalRecord record = new MonthlyHistoricalRecord(_config, _ledger);
-                record.LoadCategory(cat, this.Month);
+                record.LoadCategory(cat, this.Month, this.Year);
                 _expenses.Add(record);
             }
 
