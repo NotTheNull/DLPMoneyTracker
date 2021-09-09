@@ -62,15 +62,13 @@
                             <Image Source="/Icons/Stock-Exchange-256.png" />
                         </MenuItem.Icon>
                     </MenuItem>
-                </MenuItem>
-
-                <MenuItem Header="_Report">
-                    <MenuItem Click="MenuItemMonthlyExpenseReport_Click" Header="_Monthly Expense Report">
+                    <MenuItem Click="MenuItemShowHistory_Click" Header="Show History" >
                         <MenuItem.Icon>
-                            <Image Source="/Icons/Stock-Exchange-256.png" />
+                            <Image Source="/Icons/Library-Books-256.png" />
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
+
 
                 <MenuItem Header="_Config">
                     <MenuItem Click="MenuItemEditMoneyAccount_Click" Header="_Edit Money Accounts">
@@ -127,6 +125,17 @@
                     </Button.Content>
                 </Button>
 
+                <Button
+                    x:Name="btnShowHistory"
+                    Click="MenuItemShowHistory_Click"
+                    Style="{StaticResource MenuButton}"
+                    ToolTip="History">
+                    <Button.Content>
+                        <Image Source="/Icons/Library-Books-256.png" />
+                    </Button.Content>
+                </Button>
+                
+                
                 <TextBlock
                     Margin="30,0,0,0"
                     VerticalAlignment="Center"

@@ -2,8 +2,7 @@
 using DLPMoneyTracker.DataEntry.AddEditMoneyAccount;
 using DLPMoneyTracker.DataEntry.AddTransaction;
 using DLPMoneyTracker.DataEntry.BudgetPlanner;
-using DLPMoneyTracker.HTMLReports;
-using DLPMoneyTracker.HTMLReports.MonthlyExpense;
+using DLPMoneyTracker.ReportViews.HistoricalViews;
 using DLPMoneyTracker.ReportViews;
 using DLPMoneyTracker.ReportViews.LedgerViews;
 using Microsoft.Extensions.DependencyInjection;
@@ -94,13 +93,6 @@ namespace DLPMoneyTracker
             uiModifyBudget.Show();
         }
 
-        private void MenuItemMonthlyExpenseReport_Click(object sender, RoutedEventArgs e)
-        {
-            MonthlyExpenseReportVM viewModel = UICore.DependencyHost.GetService<MonthlyExpenseReportVM>();
-            WebReportViewer uiReport = new WebReportViewer(viewModel);
-            uiReport.Show();
-        }
-
         private void MenuItemCreateNewYear_Click(object sender, RoutedEventArgs e)
         {
             // Make sure that it's near the end of the year
@@ -110,5 +102,13 @@ namespace DLPMoneyTracker
 
             DLPMoneyTracker.Data.NewYearBuilder.Execute(nextYear.Year);
         }
+
+
+        private void MenuItemShowHistory_Click(object sender, RoutedEventArgs e)
+        {
+            var uiHistory = UICore.DependencyHost.GetService<MonthlyHistoricalView>();
+            uiHistory.Show();
+        }
+
     }
 }

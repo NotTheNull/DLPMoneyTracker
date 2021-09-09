@@ -6,8 +6,8 @@ using DLPMoneyTracker.DataEntry.AddEditMoneyAccount;
 using DLPMoneyTracker.DataEntry.AddTransaction;
 using DLPMoneyTracker.DataEntry.BudgetPlanner;
 using DLPMoneyTracker.DataEntry.ScheduleRecurrence;
-using DLPMoneyTracker.HTMLReports.MonthlyExpense;
 using DLPMoneyTracker.ReportViews;
+using DLPMoneyTracker.ReportViews.HistoricalViews;
 using DLPMoneyTracker.ReportViews.LedgerViews;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -67,7 +67,8 @@ namespace DLPMoneyTracker
             services.AddTransient<MonthlyBudgetPlannerView>();
             services.AddTransient<MonthlyBudgetPlannerVM>();
 
-            services.AddTransient<MonthlyExpenseReportVM>();
+            services.AddTransient<MonthlyHistoricalView>();
+            services.AddTransient<MonthlyHistoricalVM>();
         }
 
         public static string GetResourceText(string resourceName)

@@ -8,8 +8,9 @@ using System.Text.Json;
 
 namespace DLPMoneyTracker.Data
 {
-    public interface IMoneyPlanner : IJSONFileMaker
+    public interface IMoneyPlanner 
     {
+        string FilePath { get; }
         ReadOnlyCollection<IMoneyPlan> MoneyPlanList { get; }
 
         void AddMoneyPlan(IMoneyPlan record);
@@ -17,6 +18,8 @@ namespace DLPMoneyTracker.Data
         void RemoveMoneyPlan(IMoneyPlan record);
 
         void ClearRecordList();
+        void LoadFromFile();
+        void SaveToFile();
 
         IEnumerable<IMoneyPlan> GetUpcomingMoneyPlansForAccount(string accountID);
 

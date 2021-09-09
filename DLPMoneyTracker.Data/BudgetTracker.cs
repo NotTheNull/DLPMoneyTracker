@@ -8,8 +8,9 @@ using System.Text.Json;
 
 namespace DLPMoneyTracker.Data
 {
-    public interface IBudgetTracker : IJSONFileMaker
+    public interface IBudgetTracker
     {
+        string FilePath { get; }
         ReadOnlyCollection<IBudget> BudgetList { get; }
 
         void AddBudget(IBudget record);
@@ -17,6 +18,8 @@ namespace DLPMoneyTracker.Data
         void RemoveBudget(IBudget record);
 
         void ClearBudget();
+        void LoadFromFile();
+        void SaveToFile();
 
         decimal GetBudgetAmount(Guid categoryId);
 

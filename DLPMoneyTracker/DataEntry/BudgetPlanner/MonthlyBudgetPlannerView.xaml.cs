@@ -7,7 +7,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
     /// </summary>
     public partial class MonthlyBudgetPlannerView : UserControl
     {
-        private MonthlyBudgetPlannerVM _viewModel;
+        private readonly MonthlyBudgetPlannerVM _viewModel;
 
         public MonthlyBudgetPlannerView(MonthlyBudgetPlannerVM viewModel)
         {

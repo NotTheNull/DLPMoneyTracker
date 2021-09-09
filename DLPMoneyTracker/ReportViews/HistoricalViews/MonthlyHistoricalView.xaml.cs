@@ -17,9 +17,12 @@ namespace DLPMoneyTracker.ReportViews.HistoricalViews
     /// </summary>
     public partial class MonthlyHistoricalView : Window
     {
-        public MonthlyHistoricalView()
+        private readonly MonthlyHistoricalVM _viewModel;
+        public MonthlyHistoricalView(MonthlyHistoricalVM viewModel)
         {
             InitializeComponent();
+            this.DataContext = viewModel;
+            _viewModel = viewModel;
         }
     }
 }
