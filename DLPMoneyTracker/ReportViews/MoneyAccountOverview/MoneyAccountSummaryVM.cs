@@ -131,7 +131,7 @@ namespace DLPMoneyTracker.ReportViews
             this.MoneyPlanList.Clear();
 
             var moneyList = _budget.GetUpcomingMoneyPlansForAccount(this.AccountID);
-            if (moneyList is null || !moneyList.Any()) return;
+            if (moneyList?.Any() != true) return;
 
             foreach (var budget in moneyList.OrderBy(o => o.NotificationDate).ThenBy(o => o.PriorityOrder))
             {

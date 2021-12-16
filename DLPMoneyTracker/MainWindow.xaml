@@ -21,6 +21,7 @@
         </Style>
     </Window.Resources>
 
+    <Viewbox>
     <DockPanel Background="{StaticResource DefaultUIBackgroundColor}">
         <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
 
@@ -191,4 +192,5 @@
             </TabControl>
         </Grid>
     </DockPanel>
+    </Viewbox>
 </Window>
