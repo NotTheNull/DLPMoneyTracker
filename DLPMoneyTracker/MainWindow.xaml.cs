@@ -11,8 +11,8 @@ using System.Windows;
 
 namespace DLPMoneyTracker
 {
-    
-    
+
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -96,9 +96,17 @@ namespace DLPMoneyTracker
         private void MenuItemCreateNewYear_Click(object sender, RoutedEventArgs e)
         {
             // Make sure that it's near the end of the year
-            DateTime nextYear = new DateTime(DateTime.Today.Year + 1, 1, 1);
+            DateTime nextYear;
+            if (DateTime.Today.Month == 12)
+            {
+                nextYear = new DateTime(DateTime.Today.Year + 1, 1, 1);
+            }
+            else
+            {
+                nextYear = new DateTime(DateTime.Today.Year, 1, 1);
+            }
             TimeSpan timeToEndOfYear = nextYear - DateTime.Today;
-            if (timeToEndOfYear.Days > 7 || timeToEndOfYear.Days < 0) return;
+            if (timeToEndOfYear.Days > 7 || timeToEndOfYear.Days < -7) return;
 
             DLPMoneyTracker.Data.NewYearBuilder.Execute(nextYear.Year);
         }
