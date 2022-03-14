@@ -77,7 +77,7 @@ namespace DLPMoneyTracker.ReportViews.HistoricalViews
             _cat = cat;
             _month = month;
             _year = year;
-            _total = _ledger.GetCategoryTotal_Monthly(cat, month);
+            _total = _ledger.GetCategoryTotal_Monthly(cat, year, month);
         }
 
         private void NotifyAll()

@@ -37,7 +37,7 @@ namespace DLPMoneyTracker.Data
 
         decimal GetCategoryTotal_CurrentMonth(TransactionCategory cat);
 
-        decimal GetCategoryTotal_Monthly(TransactionCategory cat, int month); // May eventually include a way to handle year
+        decimal GetCategoryTotal_Monthly(TransactionCategory cat, int year, int month); 
 
         decimal GetCategoryTotal_DateRange(TransactionCategory cat, DateTime beg, DateTime end);
     }
@@ -200,14 +200,17 @@ namespace DLPMoneyTracker.Data
 
         public decimal GetCategoryTotal_CurrentMonth(TransactionCategory cat)
         {
-            return GetCategoryTotal_Monthly(cat, DateTime.Today.Month);
+            return GetCategoryTotal_Monthly(cat, DateTime.Today.Year, DateTime.Today.Month);
         }
 
-        public decimal GetCategoryTotal_Monthly(TransactionCategory cat, int month)
+        public decimal GetCategoryTotal_Monthly(TransactionCategory cat, int year, int month)
         {
-            DateTime beg = new DateTime(DateTime.Today.Year, month, 1);
-            int dayCount = DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month);
-            DateTime end = new DateTime(DateTime.Today.Year, month, dayCount);
+            if (cat is null) throw new ArgumentNullException("Transaction Category");
+            if (month < 1 || month > 12) throw new InvalidOperationException(String.Format("Month #{0} is not valid", month));
+
+            DateTime beg = new DateTime(year, month, 1);
+            int dayCount = DateTime.DaysInMonth(year, month);
+            DateTime end = new DateTime(year, month, dayCount);
 
             return GetCategoryTotal_DateRange(cat, beg, end);
         }
