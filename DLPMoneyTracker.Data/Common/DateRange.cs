@@ -6,8 +6,8 @@ namespace DLPMoneyTracker.Data.Common
 {
     public class DateRange
     {
-        public readonly DateTime Begin;
-        public readonly DateTime End;
+        public DateTime Begin;
+        public DateTime End;
 
         /// <summary>
         /// Sets the date range to the given values

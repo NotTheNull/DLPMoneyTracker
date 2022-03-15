@@ -7,6 +7,19 @@
         mc:Ignorable="d"
         Height="450"
         Width="750">
+
+    <UserControl.Resources>
+        <Style x:Key="LocalLabel" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Margin" Value="5, 0" />
+        </Style>
+
+        <Style x:Key="LocalDatePicker" TargetType="DatePicker">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </UserControl.Resources>
+    
     <Grid Style="{StaticResource MainGridStyle}">
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
@@ -18,18 +31,56 @@
         <TextBlock Grid.Row="0"
                    Text="{Binding Path=HeaderText, FallbackValue=TITLE}"
                    Style="{StaticResource StandardHeaderLabel}"
+                   Visibility="{Binding Path=IsFiltersVisible, Converter={StaticResource convertBoolToVisibility}, ConverterParameter=R}"
                    FontSize="22" />
 
         <Button Grid.Row="0"
                 HorizontalAlignment="Right"
                 Command="{Binding CommandRefresh}"
                 Margin="0, 0, 15, 0"
+                Visibility="{Binding Path=IsFiltersVisible, Converter={StaticResource convertBoolToVisibility}, ConverterParameter=R}"
                 Style="{StaticResource MenuButton}">
             <Button.Content>
                 <Image Source="/Icons/Refresh-256.png" />
             </Button.Content>
         </Button>
+        
+        <!-- Filter Controls -->
+        <StackPanel Orientation="Horizontal"
+                    Visibility="{Binding Path=IsFiltersVisible, Converter={StaticResource convertBoolToVisibility}}"
+                    Height="30"
+                    Grid.Row="0">
+            <TextBlock Text="Date Range"
+                       Style="{StaticResource LocalLabel}"
+                       />
+            <DatePicker Style="{StaticResource LocalDatePicker}" 
+                        SelectedDate="{Binding Path=StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        />
+            <TextBlock Text="To"
+                       Style="{StaticResource LocalLabel}"
+                       />
+            <DatePicker Style="{StaticResource LocalDatePicker}" 
+                        SelectedDate="{Binding Path=EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        />
 
+            <TextBlock Text="Search Text"
+                       Margin="20, 0, 5, 0"
+                       Style="{StaticResource LocalLabel}"/>
+            <TextBox Margin="5"
+                     Width="200"
+                     FontSize="12"
+                     Text="{Binding Path=SearchText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                     />
+            <Button Style="{StaticResource MenuButton}"
+                    Command="{Binding Path=CommandSearch}"
+                    >
+                <Button.Content>
+                    <Image Source="/Icons/Light-Bulb-256.png" />
+                </Button.Content>
+            </Button>
+        </StackPanel>
+
+        <!-- Grid View -->
         <DataGrid Grid.Row="1"
                   ItemsSource="{Binding Path=DisplayRecordsList}">
             <DataGrid.Columns>
@@ -75,6 +126,7 @@
             </DataGrid.Columns>
         </DataGrid>
 
+        <!-- Main Commands -->
         <Button x:Name="btnClose"
                 Grid.Row="2"
                 Content="Close"

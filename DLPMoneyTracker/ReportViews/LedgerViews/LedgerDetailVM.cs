@@ -6,15 +6,16 @@ using DLPMoneyTracker.Data.TransactionModels;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System;
 
 namespace DLPMoneyTracker.ReportViews.LedgerViews
 {
-    public struct LedgerDetailFilter
+    public class LedgerDetailFilter
     {
-        public readonly MoneyAccount Account;
-        public readonly TransactionCategory Category;
-        public readonly DateRange FilterDates;
-        public readonly string SearchText;
+        public MoneyAccount Account;
+        public TransactionCategory Category;
+        public DateRange FilterDates;
+        public string SearchText;
 
         public bool IsFilterEnabled
         {
@@ -29,6 +30,7 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
             }
         }
 
+        public LedgerDetailFilter() : this(null, null, null, string.Empty) { }
         public LedgerDetailFilter(MoneyAccount act) : this(act, null, null, string.Empty) { }
         public LedgerDetailFilter(TransactionCategory cat) : this(null, cat, null, string.Empty) { }
         public LedgerDetailFilter(DateRange dates) : this(null, null, dates, string.Empty) { }
@@ -39,7 +41,7 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
         {
             this.Account = act;
             this.Category = cat;
-            this.FilterDates = dates;
+            this.FilterDates = dates ?? new DateRange(DateTime.MinValue, DateTime.Today);
             this.SearchText = srch;
         }
     }
@@ -56,14 +58,21 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
         public string LedgerPath { get { return _ledger.FilePath; } }
 
         public abstract string HeaderText { get; }
-        
+
         public abstract bool IsCloseButtonVisible { get; }
+        public abstract bool IsFiltersVisible { get; }
 
         private RelayCommand _cmdRefresh;
 
         public RelayCommand CommandRefresh
         {
             get { return _cmdRefresh ?? (_cmdRefresh = new RelayCommand((o) => this.Reload())); }
+        }
+
+        private RelayCommand _cmdFilter;
+        public RelayCommand CommandSearch
+        {
+            get { return _cmdFilter ?? (_cmdFilter = new RelayCommand((o) => this.Reload())); }
         }
 
         public LedgerDetailVM(ILedger ledger, ITrackerConfig config) : base()
@@ -85,7 +94,7 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
         }
 
         public abstract void Reload();
-        
+
         protected void LoadRecords(IEnumerable<IMoneyRecord> records)
         {
             if (records?.Any() != true) return;
@@ -118,6 +127,7 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
         public override string HeaderText { get { return string.Format("ACCOUNT: {0}", _act?.Description ?? "** N/A **"); } }
 
         public override bool IsCloseButtonVisible { get { return true; } }
+        public override bool IsFiltersVisible { get { return false; } }
 
         public override void Reload()
         {
@@ -151,6 +161,7 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
         public override string HeaderText { get { return string.Format("CATEGORY: {0}", _cat?.Name ?? "** N/A **"); } }
 
         public override bool IsCloseButtonVisible { get { return true; } }
+        public override bool IsFiltersVisible { get { return false; } }
 
         public override void Reload()
         {
@@ -158,7 +169,7 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
             if (_ledger.TransactionList is null) return;
 
             var records = _ledger.TransactionList.Where(x => x.CategoryUID == _cat.ID);
-            if(_dates != null)
+            if (_dates != null)
             {
                 records = records.Where(x => x.TransDate >= _dates.Begin && x.TransDate <= _dates.End);
             }
@@ -173,6 +184,7 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
 
         public StandardLedgerDetailVM(ILedger ledger, ITrackerConfig config) : base(ledger, config)
         {
+            _filter = new LedgerDetailFilter();
             this.LoadRecords(ledger.TransactionList);
         }
         public StandardLedgerDetailVM(LedgerDetailFilter filter, ILedger ledger, ITrackerConfig config) : base(ledger, config)
@@ -181,33 +193,70 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
             this.Reload();
         }
 
+
+        public DateTime StartDate
+        {
+            get { return _filter.FilterDates.Begin; }
+            set
+            {
+                _filter.FilterDates.Begin = value;
+                NotifyPropertyChanged(nameof(StartDate));
+            }
+        }
+
+        public DateTime EndDate 
+        {
+            get { return _filter.FilterDates.End; }
+            set
+            {
+                _filter.FilterDates.End = value;
+                NotifyPropertyChanged(nameof(EndDate));
+            }
+        }
+        public String SearchText 
+        {
+            get { return _filter.SearchText; }
+            set
+            {
+                _filter.SearchText = value.Trim();
+                NotifyPropertyChanged(nameof(SearchText));
+            }
+        }
+
+
+
+
+
+
         public override string HeaderText { get { return string.Empty; } }
 
         public override bool IsCloseButtonVisible { get { return false; } }
+
+        public override bool IsFiltersVisible { get { return true; } }
 
         public override void Reload()
         {
             this.Clear();
             var records = _ledger.TransactionList.ToList();
 
-            if(_filter.IsFilterEnabled)
+            if (_filter.IsFilterEnabled)
             {
-                if(_filter.Account != null)
+                if (_filter.Account != null)
                 {
                     records = records.Where(x => x.AccountID == _filter.Account.ID).ToList();
                 }
 
-                if(_filter.Category != null)
+                if (_filter.Category != null)
                 {
                     records = records.Where(x => x.CategoryUID == _filter.Category.ID).ToList();
                 }
 
-                if(_filter.FilterDates != null)
+                if (_filter.FilterDates != null)
                 {
                     records = records.Where(x => x.TransDate >= _filter.FilterDates.Begin && x.TransDate <= _filter.FilterDates.End).ToList();
                 }
 
-                if(!string.IsNullOrWhiteSpace(_filter.SearchText))
+                if (!string.IsNullOrWhiteSpace(_filter.SearchText))
                 {
                     records = records.Where(x => x.Description.Contains(_filter.SearchText)).ToList();
                 }
