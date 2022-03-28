@@ -11,7 +11,7 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
     /// </summary>
     public partial class LedgerDetailView : UserControl
     {
-        // TODO: Add filter controls
+        
         // TODO: Add ability to edit transactions
 
         private readonly ILedger _ledger;

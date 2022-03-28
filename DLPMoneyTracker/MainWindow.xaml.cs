@@ -11,7 +11,7 @@ using System.Windows;
 
 namespace DLPMoneyTracker
 {
-
+    // TODO: Change all editing windows to use a sliding panel instead
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
