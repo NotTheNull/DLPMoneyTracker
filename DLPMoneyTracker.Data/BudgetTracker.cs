@@ -21,7 +21,7 @@ namespace DLPMoneyTracker.Data
         void LoadFromFile();
         void SaveToFile();
 
-        decimal GetBudgetAmount(Guid categoryId);
+        decimal? GetBudgetAmount(Guid categoryId, int year, int month);
 
         void Copy(IBudgetTracker tracker);
     }
@@ -78,9 +78,9 @@ namespace DLPMoneyTracker.Data
             _listBudgets.Clear();
         }
 
-        public decimal GetBudgetAmount(Guid categoryId)
+        public decimal? GetBudgetAmount(Guid categoryId, int year, int month)
         {
-            return _listBudgets.FirstOrDefault(x => x.CategoryId == categoryId)?.BudgetAmount ?? decimal.Zero;
+            return _listBudgets.FirstOrDefault(x => x.CategoryId == categoryId && x.Year == year && x.Month == month)?.BudgetAmount;
         }
 
         public void LoadFromFile()
@@ -99,6 +99,8 @@ namespace DLPMoneyTracker.Data
                 MonthlyBudget budget = new MonthlyBudget()
                 {
                     BudgetAmount = record.BudgetAmount,
+                    Year = record.Year,
+                    Month = record.Month,
                     Category = _config.GetCategory(record.CategoryId)
                 };
                 if (budget.Category.ExcludeFromBudget) continue;

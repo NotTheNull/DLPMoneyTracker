@@ -179,7 +179,7 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
                 }
                 else
                 {
-                    record.BudgetAmount = _budget.GetBudgetAmount(cat.ID);
+                    record.BudgetAmount = _budget.GetBudgetAmount(cat.ID, DateTime.Today.Year, DateTime.Today.Month) ?? cat.DefaultMonthlyBudget;
                     record.BudgetAmountModified += Record_BudgetAmountModified;
                     _listBudget.Add(record);
                 }

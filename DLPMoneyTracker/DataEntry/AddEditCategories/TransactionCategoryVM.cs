@@ -85,6 +85,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
             this.Name = src.Name.Trim();
             this.CategoryType = src.CategoryType;
             this.ExcludeFromBudget = src.ExcludeFromBudget;
+            this.MonthlyBudget = src.DefaultMonthlyBudget;
         }
 
         public TransactionCategory GetSource()
@@ -94,7 +95,8 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
                 ID = this.UID,
                 Name = this.Name.Trim(),
                 CategoryType = this.CategoryType,
-                ExcludeFromBudget = this.ExcludeFromBudget
+                ExcludeFromBudget = this.ExcludeFromBudget,
+                DefaultMonthlyBudget = this.MonthlyBudget
             };
         }
 
@@ -103,6 +105,7 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
             NotifyPropertyChanged(nameof(this.Name));
             NotifyPropertyChanged(nameof(this.CategoryType));
             NotifyPropertyChanged(nameof(this.ExcludeFromBudget));
+            NotifyPropertyChanged(nameof(this.MonthlyBudget));
         }
     }
 }

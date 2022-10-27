@@ -11,7 +11,6 @@ using System.Windows;
 
 namespace DLPMoneyTracker
 {
-    // TODO: Add ability to set a default Monthly Budget that is, instead, saved to an Override field when the textboxes are used
     // TODO: Change all editing windows to use a sliding panel instead
 
     /// <summary>

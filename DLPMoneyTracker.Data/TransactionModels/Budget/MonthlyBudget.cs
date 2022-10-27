@@ -11,6 +11,10 @@ namespace DLPMoneyTracker.Data.TransactionModels.Budget
 
         public Guid CategoryId { get { return this.Category?.ID ?? Guid.Empty; } }
 
+        public int Year { get; set; }
+        public int Month { get; set; }
+
+
         public decimal BudgetAmount { get; set; }
     }
 }

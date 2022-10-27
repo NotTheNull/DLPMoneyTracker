@@ -7,8 +7,6 @@ using System.Windows.Media;
 
 namespace DLPMoneyTracker.DataEntry.BudgetPlanner
 {
-    // TODO: Figure out a way to Preserve the Budget at End of Month for historical referencing
-    // TODO: Better yet, add a way to Save a Budget as the "Default" and then each month will have a separate listing of the budget values thus preserving the overrides
     public class MonthlyBudgetRecordVM : BaseViewModel, ILinkDataModelToViewModel<IBudget>
     {
         public event SimpleNotification BudgetAmountModified;
@@ -103,7 +101,9 @@ namespace DLPMoneyTracker.DataEntry.BudgetPlanner
             return new MonthlyBudget()
             {
                 Category = this.Category,
-                BudgetAmount = this.BudgetAmount
+                BudgetAmount = this.BudgetAmount,
+                Year = DateTime.Today.Year,
+                Month = DateTime.Today.Month
             };
         }
 

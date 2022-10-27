@@ -160,14 +160,13 @@
             <TextBlock Text="Monthly Budget"
                        Grid.Row="2"
                        Grid.Column="1"
-                       Visibility="{Binding Path=IsMonthlyBudgetVisible, Converter={StaticResource convertBoolToVisibility}, UpdateSourceTrigger=PropertyChanged}"
                        Style="{StaticResource StandardHeaderLabel}" />
 
             <TextBox Grid.Row="2"
                      Grid.Column="2"
                      Style="{StaticResource LocalTextbox}"
                      Width="120"
-                     Visibility="{Binding Path=IsMonthlyBudgetVisible, Converter={StaticResource convertBoolToVisibility}, UpdateSourceTrigger=PropertyChanged}"
+                     IsEnabled="{Binding Path=IsMonthlyBudgetVisible, UpdateSourceTrigger=PropertyChanged}"
                      Text="{Binding Path=MonthlyBudget, Converter={StaticResource convertDecimalToDisplay}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                      />
 
