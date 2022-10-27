@@ -13,6 +13,7 @@ using System.Windows;
 
 namespace DLPMoneyTracker.ReportViews.HistoricalViews
 {
+    // TODO: Historical data does not include transactions on the last day of the month
     public class MonthlyHistoricalVM : BaseViewModel
     {
         private readonly ITrackerConfig _config;
