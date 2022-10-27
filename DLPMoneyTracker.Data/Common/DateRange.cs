@@ -28,7 +28,7 @@ namespace DLPMoneyTracker.Data.Common
         public DateRange(int year, int month)
         {
             this.Begin = new DateTime(year, month, 1);
-            this.End = new DateTime(year, month, DateTime.DaysInMonth(year, month));
+            this.End = new DateTime(year, month, DateTime.DaysInMonth(year, month)).AddDays(1).AddMilliseconds(-1);
         }
     }
 }

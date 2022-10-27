@@ -208,9 +208,10 @@ namespace DLPMoneyTracker.Data
             if (cat is null) throw new ArgumentNullException("Transaction Category");
             if (month < 1 || month > 12) throw new InvalidOperationException(String.Format("Month #{0} is not valid", month));
 
+            // REMINDER: If not specified, TIME will be set to 00:00; if you want to INCLUDE the end day, either set time to 23:59 or add one to day
             DateTime beg = new DateTime(year, month, 1);
             int dayCount = DateTime.DaysInMonth(year, month);
-            DateTime end = new DateTime(year, month, dayCount);
+            DateTime end = new DateTime(year, month, dayCount).AddDays(1);
 
             return GetCategoryTotal_DateRange(cat, beg, end);
         }
@@ -221,7 +222,7 @@ namespace DLPMoneyTracker.Data
             {
                 return record.CategoryUID == cat.ID
                     && record.TransDate >= beg
-                    && record.TransDate <= end;
+                    && record.TransDate < end;
             };
 
             if(_listTransactions.Any(isWithinRange))
