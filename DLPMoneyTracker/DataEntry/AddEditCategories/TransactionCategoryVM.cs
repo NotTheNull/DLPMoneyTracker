@@ -54,6 +54,19 @@ namespace DLPMoneyTracker.DataEntry.AddEditCategories
             }
         }
 
+        private decimal _monthlyBudget;
+
+        public decimal MonthlyBudget
+        {
+            get { return this.ExcludeFromBudget ? 0m : _monthlyBudget; }
+            set 
+            {
+                _monthlyBudget = value;
+                NotifyPropertyChanged(nameof(this.MonthlyBudget));
+            }
+        }
+
+
         public TransactionCategoryVM() : base()
         {
             this.UID = Guid.NewGuid();

@@ -14,6 +14,24 @@
         Height="450"
         Width="500">
 
+    <Window.Resources>
+        <ResourceDictionary>
+            <Style x:Key="LocalTextbox" TargetType="TextBox">
+                <Setter Property="Margin" Value="10,0,0,0"/>
+                <Setter Property="MaxLength" Value="50" />
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <Binding Path="IsEnabled" 
+                                 UpdateSourceTrigger="PropertyChanged"
+                                 RelativeSource="{RelativeSource Self}" 
+                                 Converter="{StaticResource convertEnabledToBgColor}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="HorizontalAlignment" Value="Left" />
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+    
     <Grid Style="{StaticResource MainGridStyle}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -103,6 +121,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Text="Category Name"
@@ -113,12 +132,9 @@
             <TextBox x:Name="txtCategoryName"
                      Grid.Row="0"
                      Grid.Column="2"
+                     Style="{StaticResource LocalTextbox}"
                      Width="200"
-                     MaxLength="50"
-                     Margin="10,0,0,0"
-                     HorizontalAlignment="Left"
                      IsEnabled="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}"
-                     Background="{Binding Path=IsEnabled, Converter={StaticResource convertEnabledToBgColor}, UpdateSourceTrigger=PropertyChanged}"
                      Text="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <i:Interaction.Behaviors>
                     <behave:TextBoxFocusBehavior />
@@ -141,13 +157,28 @@
                       SelectedValuePath="Value"
                       SelectedValue="{Binding Path=SelectedCategoryType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-            <TextBlock Text="Exclude From Budget"
+            <TextBlock Text="Monthly Budget"
                        Grid.Row="2"
+                       Grid.Column="1"
+                       Visibility="{Binding Path=IsMonthlyBudgetVisible, Converter={StaticResource convertBoolToVisibility}, UpdateSourceTrigger=PropertyChanged}"
+                       Style="{StaticResource StandardHeaderLabel}" />
+
+            <TextBox Grid.Row="2"
+                     Grid.Column="2"
+                     Style="{StaticResource LocalTextbox}"
+                     Width="120"
+                     Visibility="{Binding Path=IsMonthlyBudgetVisible, Converter={StaticResource convertBoolToVisibility}, UpdateSourceTrigger=PropertyChanged}"
+                     Text="{Binding Path=MonthlyBudget, Converter={StaticResource convertDecimalToDisplay}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                     />
+
+
+            <TextBlock Text="Exclude From Budget"
+                       Grid.Row="3"
                        Grid.Column="1"
                        Style="{StaticResource StandardHeaderLabel}" />
 
             <CheckBox Margin="10, 5, 0, 5"
-                      Grid.Row="2"
+                      Grid.Row="3"
                       Grid.Column="2"
                       IsChecked="{Binding Path=ExcludeFromBudget, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </Grid>
