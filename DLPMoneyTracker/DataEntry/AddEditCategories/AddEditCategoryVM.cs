@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace DLPMoneyTracker.DataEntry.AddEditCategories
 {
+    // TODO: Add ability to hide a category
     public class AddEditCategoryVM : BaseViewModel
     {
         private readonly ITrackerConfig _config;
