@@ -11,7 +11,7 @@
         Icon="\Cash-64.ico"
         WindowStartupLocation="CenterScreen"
         Title="Add/Edit Money Account"
-        Height="500"
+        Height="530"
         Width="550">
 
     <Window.Resources>
@@ -125,6 +125,7 @@
                 <RowDefinition Height="30" />
                 <RowDefinition Height="30" />
                 <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
                 <RowDefinition Height="15" />
             </Grid.RowDefinitions>
 
@@ -213,6 +214,23 @@
                      Background="{Binding Path=IsEnabled, Converter={StaticResource convertEnabledToBgColor}, UpdateSourceTrigger=PropertyChanged}"
                      IsEnabled="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}"
                      Text="{Binding Path=InitialAmount, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=0.00,  Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+
+            <TextBlock Text="Close"
+                       Grid.Column="1"
+                       Grid.Row="6"
+                       Style="{StaticResource HeaderLabel}" />
+            <CheckBox Grid.Column="2"
+                      Grid.Row="6"
+                      Margin="10,0,0,0"
+                      VerticalAlignment="Center"
+                      Visibility="{Binding Path=IsClosed, Converter={StaticResource convertBoolToVisibility}, ConverterParameter=R, UpdateSourceTrigger=PropertyChanged}"
+                      />
+            <TextBlock Grid.Column="2"
+                       Grid.Row="6"
+                       FontSize="12"
+                       Text="{Binding Path=DateClosedText}"
+                       Visibility="{Binding Path=IsClosed, Converter={StaticResource convertBoolToVisibility}, UpdateSourceTrigger=PropertyChanged}"
+                       />
         </Grid>
     </Grid>
 </Window>

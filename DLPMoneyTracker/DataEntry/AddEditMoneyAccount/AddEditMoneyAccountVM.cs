@@ -83,6 +83,39 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
             }
         }
 
+        public bool IsClosed
+        {
+            get { return this.SelectedAccount?.DateClosedUTC != null; }
+            set
+            {
+                if (this.SelectedAccount is null) return;
+                this.SelectedAccount.DateClosedUTC = DateTime.UtcNow;
+                NotifyPropertyChanged(nameof(this.IsClosed));
+                NotifyPropertyChanged(nameof(this.DateClosedLocal));
+                NotifyPropertyChanged(nameof(this.DateClosedText));
+            }
+        }
+
+        public DateTime? DateClosedLocal
+        {
+            get { return this.SelectedAccount?.DateClosedUTC?.ToLocalTime(); }
+        }
+
+        public string DateClosedText
+        {
+            get
+            {
+                if(this.IsClosed)
+                {
+                    return string.Format("{0:yyyy/MM/dd}", this.DateClosedLocal);
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+        }
+
         public bool IsEnabled { get { return !(this.SelectedAccount is null); } }
 
         public ObservableCollection<MoneyAccountVM> MoneyAccountList { get; set; }
@@ -286,6 +319,9 @@ namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
             NotifyPropertyChanged(nameof(this.IsEnabled));
             NotifyPropertyChanged(nameof(this.MoneyAccountList));
             NotifyPropertyChanged(nameof(this.InitialAmount));
+            NotifyPropertyChanged(nameof(this.IsClosed));
+            NotifyPropertyChanged(nameof(this.DateClosedLocal));
+            NotifyPropertyChanged(nameof(this.DateClosedText));
         }
 
         public void Dispose()
