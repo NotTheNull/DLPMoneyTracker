@@ -223,6 +223,8 @@
                       Grid.Row="6"
                       Margin="10,0,0,0"
                       VerticalAlignment="Center"
+                      Background="{Binding Path=IsEnabled, Converter={StaticResource convertEnabledToBgColor}, UpdateSourceTrigger=PropertyChanged}"
+                      IsEnabled="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}"
                       Visibility="{Binding Path=IsClosed, Converter={StaticResource convertBoolToVisibility}, ConverterParameter=R, UpdateSourceTrigger=PropertyChanged}"
                       />
             <TextBlock Grid.Column="2"
