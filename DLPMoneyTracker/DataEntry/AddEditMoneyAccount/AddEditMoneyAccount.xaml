@@ -223,6 +223,7 @@
                       Grid.Row="6"
                       Margin="10,0,0,0"
                       VerticalAlignment="Center"
+                      IsChecked="{Binding Path=IsClosed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       Background="{Binding Path=IsEnabled, Converter={StaticResource convertEnabledToBgColor}, UpdateSourceTrigger=PropertyChanged}"
                       IsEnabled="{Binding Path=IsEnabled, UpdateSourceTrigger=PropertyChanged}"
                       Visibility="{Binding Path=IsClosed, Converter={StaticResource convertBoolToVisibility}, ConverterParameter=R, UpdateSourceTrigger=PropertyChanged}"
