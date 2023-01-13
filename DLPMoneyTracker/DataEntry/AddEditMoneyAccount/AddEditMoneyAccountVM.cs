@@ -9,7 +9,6 @@ using System.Linq;
 
 namespace DLPMoneyTracker.DataEntry.AddEditMoneyAccount
 {
-    // TODO: Add ability to close an account thus hiding it from Summary screen
     public class AddEditMoneyAccountVM : BaseViewModel, IDisposable
     {
         #region Objects and Properties
