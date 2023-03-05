@@ -9,6 +9,7 @@ using System.Linq;
 namespace DLPMoneyTracker.DataEntry.AddEditCategories
 {
     // TODO: Add ability to hide a category
+    // TODO: DEBT PAYMENTS are a special category in Ledger; need way of flagging ONE user category to represent the Debt Payments
     public class AddEditCategoryVM : BaseViewModel
     {
         private readonly ITrackerConfig _config;

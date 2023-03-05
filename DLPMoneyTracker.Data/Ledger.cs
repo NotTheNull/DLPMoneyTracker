@@ -224,7 +224,8 @@ namespace DLPMoneyTracker.Data
                     && record.TransDate >= beg
                     && record.TransDate < end;
             };
-
+            // TODO: DEBT PAYMENT category should only account for one side of a transaction to properly reflect Total Paid
+            
             if(_listTransactions.Any(isWithinRange))
             {
                 return _listTransactions.Where(isWithinRange).Sum(s => s.TransAmount);
