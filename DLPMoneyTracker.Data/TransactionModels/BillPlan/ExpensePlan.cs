@@ -61,7 +61,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
         public RecurrenceFrequency Frequency { get { return this.Recurrence.Frequency; } }
 
         [JsonIgnore]
-        public DateTime NotificationDate { get { return this.Recurrence?.NotificationDate ?? DateTime.MinValue; } }
+        public DateTime NotificationDate { get { return this.Recurrence?.NotificationDate.AddDays(1).AddMilliseconds(-1) ?? DateTime.MinValue; } }
 
         [JsonIgnore]
         public DateTime NextOccurrence { get { return this.Recurrence?.NextOccurence ?? DateTime.MaxValue; } }
