@@ -13,6 +13,7 @@ using System.Windows;
 
 namespace DLPMoneyTracker.ReportViews.HistoricalViews
 {
+    // TODO: Historical DEBT records aren't summing; coming up as ZERO
     public class MonthlyHistoricalRecord : BaseViewModel
     {
         private readonly ITrackerConfig _config;
