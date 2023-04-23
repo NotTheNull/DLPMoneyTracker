@@ -1,5 +1,7 @@
-﻿using DLPMoneyTrackerWeb.Data;
+﻿using DLPMoneyTracker.Data;
+using DLPMoneyTrackerWeb.Data;
 using Microsoft.AspNetCore.Components.WebView.Maui;
+using Microsoft.Extensions.Logging;
 
 namespace DLPMoneyTrackerWeb
 {
@@ -20,7 +22,14 @@ namespace DLPMoneyTrackerWeb
 		builder.Services.AddBlazorWebViewDeveloperTools();
 #endif
 
-            builder.Services.AddSingleton<WeatherForecastService>();
+            builder.Services.AddSingleton<ITrackerConfig, TrackerConfig>();
+            builder.Services.AddSingleton<ILedger, Ledger>();
+            builder.Services.AddSingleton<IMoneyPlanner, MoneyPlanner>();
+            builder.Services.AddSingleton<IBudgetTracker, BudgetTracker>();
+
+            builder.Services.AddTransient<MoneyAccountSummaryVM>();
+            builder.Services.AddTransient<MoneyAccountDetailVM>();
+            
 
             return builder.Build();
         }

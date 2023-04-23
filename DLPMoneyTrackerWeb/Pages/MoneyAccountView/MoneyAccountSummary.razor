@@ -1,0 +1,87 @@
+﻿
+@inject MoneyAccountSummaryVM viewModel
+
+<div class="row" id="uiMoneyAccountSummary">
+    <div class="row">
+        <!-- Account Type -->
+        <div class="col-10">
+            @viewModel.AccountType.ToString()
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Summary Information -->
+        <div class="col-6">@viewModel.AccountDesc</div>
+        <div class="col-3">Balance:</div>
+        <div class="col-2">@viewModel.CurrentBalance</div>
+        <div class="col-1"><img src="icons\Stock-Exchange-256.png" /></div>
+    </div>
+
+    <div class="row">
+        <!-- Data grid for the Upcoming events -->
+        @if(viewModel.UpcomingMoneyEvents.Count > 0)
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Budget Description</th>
+                        <th>Category</th>
+                        <th>Next Date</th>
+                        <th>Amount</th>
+                        <th><!-- Action Buttons --></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                @foreach(var budget in viewModel.UpcomingMoneyEvents)
+                {
+                    <tr>
+                        <td>@budget.Description</td>
+                        <td>@budget.CategoryName</td>
+                        <td>@budget.NextOccurrence</td>
+                        <td>@budget.ExpectedAmount</td>
+                        <td><button><img src="icons\Money-Transfer-256.png" /></button></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        } else
+        {
+            <div class="col-11"> </div>
+        }
+    </div>
+
+    <div class="row">
+        <!-- Expected Balance -->
+        <div class="col-6"></div>
+        <div class="col-3">New Balance:</div>
+        <div class="col-2">@viewModel.FutureBalance</div>
+    </div>
+    
+</div>
+
+@code {
+
+    private string _id;
+
+    [Parameter]
+    public string MoneyAccountID
+    {
+        get { return _id; }
+        set
+        {
+            _id = value;
+            viewModel.LoadAccount(_id);
+            StateHasChanged();
+        }
+    }
+
+    public void Refresh()
+    {
+        viewModel.Refresh();
+        StateHasChanged();
+    }
+
+    
+
+}

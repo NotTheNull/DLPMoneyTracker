@@ -61,8 +61,6 @@
 
     <ItemGroup>
       <None Remove="Resources\AppIcon\Add-New-256.png" />
-      <None Remove="Resources\AppIcon\appicon.svg" />
-      <None Remove="Resources\AppIcon\appiconfg.svg" />
       <None Remove="Resources\AppIcon\Cancel-256.png" />
       <None Remove="Resources\AppIcon\Credit-Card-256.png" />
       <None Remove="Resources\AppIcon\Dollar-256.png" />
@@ -80,25 +78,25 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Data\" />
+      <ProjectReference Include="..\DLPMoneyTracker.Data\DLPMoneyTracker.Data.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <Resource Include="Resources\AppIcon\Add-New-256.png" />
-      <Resource Include="Resources\AppIcon\Cancel-256.png" />
-      <Resource Include="Resources\AppIcon\Credit-Card-256.png" />
-      <Resource Include="Resources\AppIcon\Dollar-256.png" />
-      <Resource Include="Resources\AppIcon\Edit-Pencil-256.png" />
-      <Resource Include="Resources\AppIcon\Garbage-Closed-256.png" />
-      <Resource Include="Resources\AppIcon\Leave-256.png" />
-      <Resource Include="Resources\AppIcon\Library-Books-256.png" />
-      <Resource Include="Resources\AppIcon\Light-Bulb-256.png" />
-      <Resource Include="Resources\AppIcon\Money-Transfer-256.png" />
-      <Resource Include="Resources\AppIcon\Payment-256.png" />
-      <Resource Include="Resources\AppIcon\Refresh-256.png" />
-      <Resource Include="Resources\AppIcon\Save-256.png" />
-      <Resource Include="Resources\AppIcon\Settings-01-256.png" />
-      <Resource Include="Resources\AppIcon\Stock-Exchange-256.png" />
+      <Resource Include="wwwroot\icons\Add-New-256.png" />
+      <Resource Include="wwwroot\icons\Cancel-256.png" />
+      <Resource Include="wwwroot\icons\Credit-Card-256.png" />
+      <Resource Include="wwwroot\icons\Dollar-256.png" />
+      <Resource Include="wwwroot\icons\Edit-Pencil-256.png" />
+      <Resource Include="wwwroot\icons\Garbage-Closed-256.png" />
+      <Resource Include="wwwroot\icons\Leave-256.png" />
+      <Resource Include="wwwroot\icons\Library-Books-256.png" />
+      <Resource Include="wwwroot\icons\Light-Bulb-256.png" />
+      <Resource Include="wwwroot\icons\Money-Transfer-256.png" />
+      <Resource Include="wwwroot\icons\Payment-256.png" />
+      <Resource Include="wwwroot\icons\Refresh-256.png" />
+      <Resource Include="wwwroot\icons\Save-256.png" />
+      <Resource Include="wwwroot\icons\Settings-01-256.png" />
+      <Resource Include="wwwroot\icons\Stock-Exchange-256.png" />
     </ItemGroup>
 
 </Project>
