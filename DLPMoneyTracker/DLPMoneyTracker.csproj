@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0-windows10.0.22621.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Cash-64.ico</ApplicationIcon>
     <StartupObject>DLPMoneyTracker.App</StartupObject>
@@ -19,6 +19,10 @@
     <None Remove="ReportViews\CategoryOverview\**" />
     <Page Remove="HTMLReports\**" />
     <Page Remove="ReportViews\CategoryOverview\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Core\Behaviors\WebViewHTMLStringBehavior.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,7 +46,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.8" />
-    <PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls.WebView" Version="6.1.2" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
   </ItemGroup>
 
