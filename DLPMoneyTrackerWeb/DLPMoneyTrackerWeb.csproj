@@ -32,7 +32,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- App Icon -->
+	    <!-- App Icon -->
+	    <MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#512BD4" />
 
         <!-- Splash Screen -->
         <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
@@ -49,54 +50,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="Data\WeatherForecast.cs" />
-      <Compile Remove="Data\WeatherForecastService.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Remove="Pages\Counter.razor" />
-      <Content Remove="Pages\FetchData.razor" />
-      <Content Remove="Shared\SurveyPrompt.razor" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="Resources\AppIcon\Add-New-256.png" />
-      <None Remove="Resources\AppIcon\Cancel-256.png" />
-      <None Remove="Resources\AppIcon\Credit-Card-256.png" />
-      <None Remove="Resources\AppIcon\Dollar-256.png" />
-      <None Remove="Resources\AppIcon\Edit-Pencil-256.png" />
-      <None Remove="Resources\AppIcon\Garbage-Closed-256.png" />
-      <None Remove="Resources\AppIcon\Leave-256.png" />
-      <None Remove="Resources\AppIcon\Library-Books-256.png" />
-      <None Remove="Resources\AppIcon\Light-Bulb-256.png" />
-      <None Remove="Resources\AppIcon\Money-Transfer-256.png" />
-      <None Remove="Resources\AppIcon\Payment-256.png" />
-      <None Remove="Resources\AppIcon\Refresh-256.png" />
-      <None Remove="Resources\AppIcon\Save-256.png" />
-      <None Remove="Resources\AppIcon\Settings-01-256.png" />
-      <None Remove="Resources\AppIcon\Stock-Exchange-256.png" />
+      <PackageReference Include="Serilog" Version="2.12.0" />
+      <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
+      <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\DLPMoneyTracker.Data\DLPMoneyTracker.Data.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Resource Include="wwwroot\icons\Add-New-256.png" />
-      <Resource Include="wwwroot\icons\Cancel-256.png" />
-      <Resource Include="wwwroot\icons\Credit-Card-256.png" />
-      <Resource Include="wwwroot\icons\Dollar-256.png" />
-      <Resource Include="wwwroot\icons\Edit-Pencil-256.png" />
-      <Resource Include="wwwroot\icons\Garbage-Closed-256.png" />
-      <Resource Include="wwwroot\icons\Leave-256.png" />
-      <Resource Include="wwwroot\icons\Library-Books-256.png" />
-      <Resource Include="wwwroot\icons\Light-Bulb-256.png" />
-      <Resource Include="wwwroot\icons\Money-Transfer-256.png" />
-      <Resource Include="wwwroot\icons\Payment-256.png" />
-      <Resource Include="wwwroot\icons\Refresh-256.png" />
-      <Resource Include="wwwroot\icons\Save-256.png" />
-      <Resource Include="wwwroot\icons\Settings-01-256.png" />
-      <Resource Include="wwwroot\icons\Stock-Exchange-256.png" />
     </ItemGroup>
 
 </Project>
