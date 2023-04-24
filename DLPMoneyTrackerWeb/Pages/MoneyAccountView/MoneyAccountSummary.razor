@@ -1,63 +1,66 @@
-﻿
+﻿@using DLPMoneyTracker.Data.ConfigModels;
+
 @inject MoneyAccountSummaryVM viewModel
 
-<div class="row" id="uiMoneyAccountSummary">
-    <div class="row">
-        <!-- Account Type -->
-        <div class="col-10">
-            @viewModel.AccountType.ToString()
+<div class="card">
+<div class="row">
+    <div style="@this.BackgroundColor()">
+        <div class="row">
+            <!-- Account Type -->
+            <div class="col-10">
+                <h3>@viewModel.AccountType.ToString()</h3>
+            </div>
         </div>
-    </div>
 
-    <div class="row">
-        <!-- Summary Information -->
-        <div class="col-6">@viewModel.AccountDesc</div>
-        <div class="col-3">Balance:</div>
-        <div class="col-2">@viewModel.CurrentBalance</div>
-        <div class="col-1"><img src="icons\Stock-Exchange-256.png" /></div>
-    </div>
+        <div class="row">
+            <!-- Summary Information -->
+            <div class="col-6"><h2>@viewModel.AccountDesc</h2></div>
+            <div class="col-3"><h2>Balance:</h2></div>
+            <div class="col-2"><h2>@string.Format("{0:c}", viewModel.CurrentBalance)</h2></div>
+                <div class="col-1"><a href="MoneyAccountDetail\@viewModel.AccountID"><img src="icons\Stock-Exchange-256.png" /></a></div>
+        </div>
 
-    <div class="row">
-        <!-- Data grid for the Upcoming events -->
-        @if(viewModel.UpcomingMoneyEvents.Count > 0)
-        {
-            <table>
-                <thead>
-                    <tr>
-                        <th>Budget Description</th>
-                        <th>Category</th>
-                        <th>Next Date</th>
-                        <th>Amount</th>
-                        <th><!-- Action Buttons --></th>
-                    </tr>
-                </thead>
+        <div class="row">
+            
+            <!-- Data grid for the Upcoming events -->
+            @if(viewModel.UpcomingMoneyEvents.Count > 0)
+            {
+                <table align="center" width="80%">
+                    <thead>
+                        <tr>
+                            <th>Budget Description</th>
+                            <th>Category</th>
+                            <th>Next Date</th>
+                            <th>Amount</th>
+                            <th><!-- Action Buttons --></th>
+                        </tr>
+                    </thead>
 
-                <tbody>
-                @foreach(var budget in viewModel.UpcomingMoneyEvents)
-                {
-                    <tr>
-                        <td>@budget.Description</td>
-                        <td>@budget.CategoryName</td>
-                        <td>@budget.NextOccurrence</td>
-                        <td>@budget.ExpectedAmount</td>
-                        <td><button><img src="icons\Money-Transfer-256.png" /></button></td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-        } else
-        {
-            <div class="col-11"> </div>
-        }
-    </div>
+                    <tbody>
+                    @foreach(var budget in viewModel.UpcomingMoneyEvents)
+                    {
+                        <tr>
+                            <td>@budget.Description</td>
+                            <td>@budget.CategoryName</td>
+                            <td>@budget.NextOccurrence</td>
+                            <td>@string.Format("{0:c}", budget.ExpectedAmount)</td>
+                            <td><img src="icons\Payment-256.png" /></td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            } 
+        </div>
 
-    <div class="row">
-        <!-- Expected Balance -->
-        <div class="col-6"></div>
-        <div class="col-3">New Balance:</div>
-        <div class="col-2">@viewModel.FutureBalance</div>
-    </div>
+        <div class="row">
+            <!-- Expected Balance -->
+            <div class="col-6"></div>
+                <div class="col-3"><h2>New Balance:</h2></div>
+                <div class="col-2"><h2>@string.Format("{0:c}", viewModel.FutureBalance)</h2></div>
+        </div>
     
+    </div>
+</div>
 </div>
 
 @code {
@@ -72,6 +75,7 @@
         {
             _id = value;
             viewModel.LoadAccount(_id);
+
             StateHasChanged();
         }
     }
@@ -82,6 +86,31 @@
         StateHasChanged();
     }
 
-    
+    private string BackgroundColor()
+    {
+        string bgGradient;
+
+        switch (viewModel.AccountType)
+        {
+            case MoneyAccountType.Savings:
+                bgGradient = "aquamarine";
+                break;
+            case MoneyAccountType.Checking:
+                bgGradient = "lawngreen";
+                break;
+            case MoneyAccountType.CreditCard:
+                bgGradient = "yellow";
+                break;
+            case MoneyAccountType.Loan:
+                bgGradient = "orange";
+                break;
+            default:
+                bgGradient = "gray";
+                break;
+        }
+
+        return string.Format("background-image: linear-gradient(white, {0}, white);", bgGradient);
+    }
+
 
 }

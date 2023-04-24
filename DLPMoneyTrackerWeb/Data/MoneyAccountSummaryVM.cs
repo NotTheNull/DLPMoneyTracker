@@ -101,7 +101,7 @@ namespace DLPMoneyTrackerWeb.Data
         {
             decimal bal = this.CurrentBalance;
             decimal budgetTotal = _listBudgets.Sum(s => s.ExpectedAmount);
-            this.FutureBalance = bal - budgetTotal;
+            this.FutureBalance = bal + budgetTotal;
 
         }
     }
