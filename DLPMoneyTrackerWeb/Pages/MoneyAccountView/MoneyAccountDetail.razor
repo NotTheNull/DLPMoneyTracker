@@ -1,4 +1,6 @@
 ﻿@page "/MoneyAccountDetail/{AccountID}"
+@using DLPMoneyTracker.Data.TransactionModels;
+@using DLPMoneyTracker.Data.ConfigModels;
 
 @inject MoneyAccountDetailVM viewModel
 
@@ -21,14 +23,26 @@
             </thead>
 
             <tbody>
-                @foreach(var money in viewModel.Transactions)
+                @if (viewModel.Transactions?.Count > 0)
                 {
-                    <tr>
-                        <td>@money.TransDate</td>
-                        <td>@viewModel.GetCategoryName(money.CategoryUID)</td>
-                        <td>@money.Description</td>
-                        <td>@money.TransAmount</td>
-                    </tr>
+                    int rowCount = 0;
+                    foreach (var money in viewModel.Transactions)
+                    {
+                        rowCount++;
+                        
+                        <tr style="@string.Format("background-color: {0};", (rowCount % 2 == 0) ? "lightyellow" : "white")">
+                            <td>@money.TransDate</td>
+                            <td>
+                                
+                                <div style="@RectangleStyle(money.CategoryUID)" ></div> 
+                                @GetCategoryName(money.CategoryUID)
+                                
+                            </td>
+                            <td>@money.Description</td>
+                            <td>@string.Format("{0:c}", money.TransAmount)</td>
+                        </tr>                            
+                                                    
+                    }
                 }
             </tbody>
 
@@ -52,11 +66,51 @@
         }
     }
 
+
     public void Refresh()
     {
         viewModel.Refresh();
         StateHasChanged();
     }
 
+    private string GetCategoryName(Guid uid)
+    {
+        var category = viewModel.GetCategory(uid);
+        return category?.Name ?? "*MISSING*";
+    }
+
+    private string RectangleStyle(Guid catId)
+    {
+        string color;
+        var category = viewModel.GetCategory(catId);
+
+        switch(category.CategoryType)
+        {
+            case CategoryType.Expense:
+                color = "red";
+                break;
+            case CategoryType.Income:
+                color = "green";
+                break;
+            case CategoryType.Payment: // Debt Payment
+                color = "orange";
+                break;
+            case CategoryType.TransferFrom:
+                color = "red";
+                break;
+            case CategoryType.TransferTo:
+                color = "green";
+                break;
+            case CategoryType.UntrackedAdjustment:
+                color = "blue";
+                break;
+            default:
+                color = "black";
+                break;
+
+        }
+
+        return string.Format("float: left; margin-right: 5px; width: 10px; height: 10px; background-color: {0};", color);
+    }
 
 }

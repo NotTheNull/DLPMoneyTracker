@@ -8,15 +8,15 @@
         <div class="row">
             <!-- Account Type -->
             <div class="col-10">
-                <h3>@viewModel.AccountType.ToString()</h3>
+                <h4>@viewModel.AccountType.ToString()</h4>
             </div>
         </div>
 
         <div class="row">
             <!-- Summary Information -->
-            <div class="col-6"><h2>@viewModel.AccountDesc</h2></div>
-            <div class="col-3"><h2>Balance:</h2></div>
-            <div class="col-2"><h2>@string.Format("{0:c}", viewModel.CurrentBalance)</h2></div>
+            <div class="col-6"><h3>@viewModel.AccountDesc</h3></div>
+            <div class="col-3"><h3>Balance:</h3></div>
+            <div class="col-2"><h3>@string.Format("{0:c}", viewModel.CurrentBalance)</h3></div>
                 <div class="col-1"><a href="MoneyAccountDetail\@viewModel.AccountID"><img src="icons\Stock-Exchange-256.png" /></a></div>
         </div>
 
@@ -49,14 +49,19 @@
                     }
                     </tbody>
                 </table>
+
+
             } 
         </div>
 
         <div class="row">
-            <!-- Expected Balance -->
+        @if (viewModel.UpcomingMoneyEvents.Count > 0)
+        {
+                <!-- Expected Balance -->
             <div class="col-6"></div>
-                <div class="col-3"><h2>New Balance:</h2></div>
-                <div class="col-2"><h2>@string.Format("{0:c}", viewModel.FutureBalance)</h2></div>
+            <div class="col-3"><h3>New Balance:</h3></div>
+            <div class="col-2"><h3>@string.Format("{0:c}", viewModel.FutureBalance)</h3></div>
+        }
         </div>
     
     </div>
@@ -109,7 +114,7 @@
                 break;
         }
 
-        return string.Format("background-image: linear-gradient(white, {0}, white);", bgGradient);
+        return string.Format("background-image: linear-gradient(white, {0}, {0}, {0}, white);", bgGradient);
     }
 
 

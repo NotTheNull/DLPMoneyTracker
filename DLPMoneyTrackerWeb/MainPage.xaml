@@ -5,7 +5,13 @@
              x:Class="DLPMoneyTrackerWeb.MainPage"
              BackgroundColor="{DynamicResource PageBackgroundColor}">
 
-    <BlazorWebView HostPage="wwwroot/index.html">
+    <BlazorWebView HostPage="wwwroot/index.html" 
+                    MinimumHeightRequest="720"
+                    MinimumWidthRequest="1080"
+                    MaximumHeightRequest="1080"
+                    MaximumWidthRequest="1920"
+                   >
+
         <BlazorWebView.RootComponents>
             <RootComponent Selector="#app" ComponentType="{x:Type local:Main}" />
         </BlazorWebView.RootComponents>

@@ -1,0 +1,32 @@
+﻿body {
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-style: italic;
+}
+
+table {
+    width: 100%;
+}
+
+th {
+    background-color: lightblue;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+td {
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    border-color: black;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+}
+
+.rectangle {
+    width: 10px;
+    height: 10px;
+}

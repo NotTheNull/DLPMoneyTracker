@@ -52,10 +52,9 @@ namespace DLPMoneyTrackerWeb.Data
         }
 
 
-        public string GetCategoryName(Guid catId)
+        public TransactionCategory GetCategory(Guid catId)
         {
-            return _config.GetCategory(catId)?.Name ?? "*MISSING*";
+            return _config.GetCategory(catId);
         }
-
     }
 }
