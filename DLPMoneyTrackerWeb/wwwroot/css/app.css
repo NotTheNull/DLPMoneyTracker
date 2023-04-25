@@ -1,8 +1,8 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-html, body {
+body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-image: linear-gradient(white, #9999FF, #9999FF, #9999FF, white);
+    background-color: #9999FF;
 }
 
 h1:focus {

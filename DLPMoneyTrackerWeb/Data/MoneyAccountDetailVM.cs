@@ -13,14 +13,12 @@ namespace DLPMoneyTrackerWeb.Data
     internal class MoneyAccountDetailVM
     {
         private readonly ITrackerConfig _config;
-        private readonly IMoneyPlanner _budget;
         private readonly ILedger _ledger;
         private MoneyAccount _act;
 
-        public MoneyAccountDetailVM(ITrackerConfig config, IMoneyPlanner budget, ILedger ledger)
+        public MoneyAccountDetailVM(ITrackerConfig config, ILedger ledger)
         {
             _config = config;
-            _budget = budget;
             _ledger = ledger;
         }
 

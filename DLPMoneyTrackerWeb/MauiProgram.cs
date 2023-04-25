@@ -33,6 +33,7 @@ namespace DLPMoneyTrackerWeb
 
             builder.Services.AddTransient<MoneyAccountSummaryVM>();
             builder.Services.AddTransient<MoneyAccountDetailVM>();
+            builder.Services.AddTransient<FullLedgerVM>();
 
             return builder.Build();
         }

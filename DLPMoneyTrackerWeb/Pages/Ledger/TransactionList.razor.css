@@ -8,6 +8,7 @@ h1 {
 
 table {
     width: 100%;
+    margin-top: 10px;
 }
 
 th {
@@ -24,7 +25,21 @@ td {
     border-bottom-style: solid;
 }
 
-.rectangle {
-    width: 10px;
-    height: 10px;
+.FormFilters {
+    display: inline;
 }
+
+input {
+    margin-right: 5px;
+}
+
+label {
+    margin-right: 5px;
+    font-weight: bold;
+}
+
+img {
+    width: 20px;
+    height: 20px;
+}
+
