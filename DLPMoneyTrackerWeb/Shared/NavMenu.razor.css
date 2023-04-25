@@ -50,6 +50,13 @@
     color: white;
 }
 
+img {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    float: left;
+}
+
 @media (min-width: 641px) {
     .navbar-toggler {
         display: none;
