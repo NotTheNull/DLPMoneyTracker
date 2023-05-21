@@ -1,0 +1,22 @@
+﻿section {
+    width: 300px;
+}
+
+h3 {
+    font-size: 32px;
+    font-weight: bold;
+    font-family: 'Times New Roman', Times, serif;
+    background-color: lightgray;
+}
+
+#divEditCategory {
+    background-color: #9999FF;
+}
+
+#divHeader {
+    background-color: lightgray;
+}
+
+#divFooter {
+    background-color: lightgray;
+}

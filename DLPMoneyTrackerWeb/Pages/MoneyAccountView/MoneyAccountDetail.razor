@@ -30,7 +30,7 @@
                     {
                         rowCount++;
                         
-                        <tr style="@string.Format("background-color: {0};", (rowCount % 2 == 0) ? "lightyellow" : "white")">
+                        <tr class="@((rowCount % 2 == 0) ? "altRowColor" : "stdRowColor")">
                             <td>@money.TransDate</td>
                             <td>
                                 

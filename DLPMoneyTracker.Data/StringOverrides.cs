@@ -50,6 +50,21 @@ namespace DLPMoneyTracker.Data
             }
         }
 
+        public static CategoryType ToCategoryType(this string catType)
+        {
+            switch(catType)
+            {
+                case "Expense":
+                    return CategoryType.Expense;
+                case "Income":
+                    return CategoryType.Income;
+                case "Adjustment":
+                    return CategoryType.UntrackedAdjustment;
+                default:
+                    return CategoryType.NotSet;
+            }
+        }
+
         public static string ToDisplayText(this RecurrenceFrequency recurType)
         {
             switch (recurType)

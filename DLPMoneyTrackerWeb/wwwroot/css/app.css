@@ -83,3 +83,44 @@ a, .btn-link {
 		padding-left: env(safe-area-inset-left);
 	}
 }
+
+.action-icon {
+    width: 20px;
+    height: 20px;
+    background-color: lightgray;
+}
+
+.action-btn {
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+}
+
+
+th {
+    background-color: lightblue;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+td {
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    border-color: black;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+}
+
+.stdRowColor {
+    background-color: white;
+}
+.altRowColor {
+    background-color: lightyellow;
+}
+
+.formLabelHead {
+    font-size: 18px;
+    font-family: 'Times New Roman', Times, serif;
+    color: maroon;
+    font-weight: bold;
+}

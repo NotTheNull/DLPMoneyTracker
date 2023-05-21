@@ -3,69 +3,81 @@
 @inject MoneyAccountSummaryVM viewModel
 
 <div class="card">
-<div class="row">
-    <div style="@this.BackgroundColor()">
-        <div class="row">
-            <!-- Account Type -->
-            <div class="col-10">
-                <h4>@viewModel.AccountType.ToString()</h4>
+    <div class="row">
+        <div style="@this.BackgroundColor()">
+            <div class="row">
+                <!-- Account Type -->
+                <div class="col-10">
+                    <h4>@viewModel.AccountType.ToDisplayText()</h4>
+                </div>
             </div>
+
+            <div class="row">
+                <!-- Summary Information -->
+                <div class="col-6"><h3>@viewModel.AccountDesc</h3></div>
+                <div class="col-3"><h3>Balance:</h3></div>
+                <div class="col-2"><h3>@string.Format("{0:c}", viewModel.CurrentBalance)</h3></div>
+                <div class="col-1"><a href="MoneyAccountDetail\@viewModel.AccountID"><img class="action-icon" src="icons\Stock-Exchange-256.png" /></a></div>
+            </div>
+
+            <div class="row">
+
+                <!-- Data grid for the Upcoming events -->
+                @if (viewModel.UpcomingMoneyEvents.Count > 0)
+                {
+                    <table align="center" width="80%">
+                        <thead>
+                            <tr>
+                                <th>Budget Description</th>
+                                <th>Category</th>
+                                <th>Next Date</th>
+                                <th>Amount</th>
+                                <th><!-- Action Buttons --></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @{
+                                int rowCount = 0;
+                                foreach (var budget in viewModel.UpcomingMoneyEvents)
+                                {
+                                    rowCount++;
+                                    <tr class="@((rowCount % 2) == 0 ? "altRowColor" : "stdRowColor")">
+                                        <td>@budget.Description</td>
+                                        <td>@budget.CategoryName</td>
+                                        <td>@budget.NextOccurrence</td>
+                                        <td>@string.Format("{0:c}", budget.ExpectedAmount)</td>
+                                        <td>
+                                            <!--
+                                                This should open a modal popup window
+                                                OR
+                                                it could slide a tray out
+                                            -->
+                                            <img class="action-icon" src="icons\Payment-256.png" />
+
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+
+                }
+            </div>
+
+            <div class="row">
+                @if (viewModel.UpcomingMoneyEvents.Count > 0)
+                {
+                    <!-- Expected Balance -->
+                    <div class="col-6"></div>
+                    <div class="col-3"><h3>New Balance:</h3></div>
+                    <div class="col-2"><h3>@string.Format("{0:c}", viewModel.FutureBalance)</h3></div>
+                }
+            </div>
+
         </div>
-
-        <div class="row">
-            <!-- Summary Information -->
-            <div class="col-6"><h3>@viewModel.AccountDesc</h3></div>
-            <div class="col-3"><h3>Balance:</h3></div>
-            <div class="col-2"><h3>@string.Format("{0:c}", viewModel.CurrentBalance)</h3></div>
-                <div class="col-1"><a href="MoneyAccountDetail\@viewModel.AccountID"><img src="icons\Stock-Exchange-256.png" /></a></div>
-        </div>
-
-        <div class="row">
-            
-            <!-- Data grid for the Upcoming events -->
-            @if(viewModel.UpcomingMoneyEvents.Count > 0)
-            {
-                <table align="center" width="80%">
-                    <thead>
-                        <tr>
-                            <th>Budget Description</th>
-                            <th>Category</th>
-                            <th>Next Date</th>
-                            <th>Amount</th>
-                            <th><!-- Action Buttons --></th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                    @foreach(var budget in viewModel.UpcomingMoneyEvents)
-                    {
-                        <tr>
-                            <td>@budget.Description</td>
-                            <td>@budget.CategoryName</td>
-                            <td>@budget.NextOccurrence</td>
-                            <td>@string.Format("{0:c}", budget.ExpectedAmount)</td>
-                            <td><img src="icons\Payment-256.png" /></td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
-
-
-            } 
-        </div>
-
-        <div class="row">
-        @if (viewModel.UpcomingMoneyEvents.Count > 0)
-        {
-                <!-- Expected Balance -->
-            <div class="col-6"></div>
-            <div class="col-3"><h3>New Balance:</h3></div>
-            <div class="col-2"><h3>@string.Format("{0:c}", viewModel.FutureBalance)</h3></div>
-        }
-        </div>
-    
     </div>
-</div>
 </div>
 
 @code {

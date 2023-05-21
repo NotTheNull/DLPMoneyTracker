@@ -21,7 +21,7 @@
                         <input id="txtFilter" type="text" @bind-value="_filter.SearchText" />
                     </div>
                     <div class="col-1">
-                        <button type="submit"><img src="icons\Light-Bulb-256.png" /></button>
+                        <button type="submit"><img class="action-btn" src="icons\Light-Bulb-256.png" /></button>
                     </div>
                 
             </div>
@@ -50,7 +50,7 @@
                         {
                             rowCount++;
 
-                            <tr style="@string.Format("background-color: {0};", (rowCount % 2 == 0) ? "lightyellow" : "white")">
+                            <tr class="@((rowCount % 2 == 0) ? "altRowColor" : "stdRowColor")">
                                 <td>@money.TransDate</td>
                                 <td>@GetAccountName(money.AccountID)</td>
                                 <td>

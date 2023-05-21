@@ -35,6 +35,10 @@ namespace DLPMoneyTracker.Data.ConfigModels
             this.CategoryType = CategoryType.NotSet;
             this.DefaultMonthlyBudget = 0m;
         }
+        public TransactionCategory(TransactionCategory cpy)
+        {
+            this.Copy(cpy);
+        }
 
         public void Copy(TransactionCategory src)
         {
