@@ -3,10 +3,16 @@
 }
 
 h3 {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: bold;
     font-family: 'Times New Roman', Times, serif;
     background-color: lightgray;
+    margin: 4px;
+    padding: 1px;
+}
+
+input {
+    vertical-align: central;
 }
 
 #divEditCategory {
@@ -15,6 +21,7 @@ h3 {
 
 #divHeader {
     background-color: lightgray;
+    height: 60px;
 }
 
 #divFooter {
