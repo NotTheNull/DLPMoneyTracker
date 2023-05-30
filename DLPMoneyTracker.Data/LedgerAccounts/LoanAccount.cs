@@ -23,5 +23,26 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
         public string MoneyAccountId { get; set; }
 
         public MoneyAccountType AccountType { get { return MoneyAccountType.Loan; } }
+
+        public LoanAccount()
+        {
+            this.Id = Guid.NewGuid();
+        }
+
+#pragma warning disable CS0612 // Type or member is obsolete
+        public LoanAccount(MoneyAccount old) : this()
+
+        {
+            this.Convert(old);
+        }
+
+        public void Convert(MoneyAccount act)
+        {
+            MoneyAccountId = act.ID;
+            Description = act.Description;
+            OrderBy = act.OrderBy;
+            DateClosedUTC = act.DateClosedUTC;
+        }
+#pragma warning restore CS0612 // Type or member is obsolete
     }
 }

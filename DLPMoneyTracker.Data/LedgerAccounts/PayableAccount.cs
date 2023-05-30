@@ -30,6 +30,11 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
         }
 
 #pragma warning disable CS0612 // Type or member is obsolete
+        public PayableAccount(TransactionCategory old) : this()
+        {
+            this.Convert(old);
+        }
+
         public void Convert(TransactionCategory cat)
         {
             CategoryId = cat.ID;

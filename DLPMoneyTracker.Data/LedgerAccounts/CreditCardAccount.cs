@@ -31,8 +31,12 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
             Id = Guid.NewGuid();
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
+        public CreditCardAccount(MoneyAccount old) : this()
 
-
+        {
+            this.Convert(old);
+        }
 
         public void Convert(MoneyAccount act)
         {
@@ -41,5 +45,6 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
             OrderBy = act.OrderBy;
             DateClosedUTC = act.DateClosedUTC;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
     }
 }

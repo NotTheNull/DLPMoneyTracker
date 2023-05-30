@@ -27,6 +27,11 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
             Id = Guid.NewGuid();
         }
 
+#pragma warning disable CS0612 // Type or member is obsolete
+        public BankAccount(MoneyAccount old) : this()
+        {
+            this.Convert(old);
+        }
 
 
         public void Convert(MoneyAccount act)
@@ -37,5 +42,6 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
             DateClosedUTC = act.DateClosedUTC;
             AccountType = act.AccountType;
         }
+#pragma warning restore CS0612 // Type or member is obsolete
     }
 }
