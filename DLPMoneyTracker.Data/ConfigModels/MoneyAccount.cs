@@ -14,6 +14,7 @@ namespace DLPMoneyTracker.Data.ConfigModels
     }
 
     [DebuggerDisplay("{ID} {Description}")]
+    [Obsolete]
     public class MoneyAccount
     {
         public string ID { get; set; }

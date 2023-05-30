@@ -14,6 +14,7 @@ namespace DLPMoneyTracker.Data.ConfigModels
         TransferTo
     }
 
+    [Obsolete]
     public class TransactionCategory
     {
         public static TransactionCategory InitialBalance { get { return new TransactionCategory() { ID = Guid.Empty, Name = "*STARTING BALANCE*", CategoryType = CategoryType.InitialBalance }; } }
