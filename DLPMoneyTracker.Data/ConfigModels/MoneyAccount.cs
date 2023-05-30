@@ -47,6 +47,11 @@ namespace DLPMoneyTracker.Data.ConfigModels
             this.ID = this.Description = this.WebAddress = string.Empty;
             this.AccountType = MoneyAccountType.NotSet;
         }
+        public MoneyAccount(MoneyAccount cpy)
+        {
+            this.ID = cpy.ID;
+            this.Copy(cpy);
+        }
 
         public void Copy(MoneyAccount moneyAccount)
         {

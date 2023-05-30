@@ -1,0 +1,34 @@
+﻿@page "/Config/MoneyAccount"
+@using DLPMoneyTracker.Data.ConfigModels;
+
+
+<div class="top-row px-4">
+    <button type="button" @onclick="@((e) => AddNewMoneyAccount())"><img class="action-btn" src="icons\Add-New-256.png" alt="Add New" /></button>
+</div>
+
+<section id="gridMoneyAccounts">
+    <div class="row">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Description</th>
+                    <th>Account Type</th>
+                    <th>Initial Bal</th>
+                    <th><!-- Action Buttons --></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</section>
+
+
+@code {
+    private AddEditMoneyAccounts popupEdit;
+    private MoneyAccount _editAccount;
+
+    private void AddNewMoneyAccount()
+    {
+        
+    }
+}

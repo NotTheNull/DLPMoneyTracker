@@ -45,7 +45,7 @@ namespace DLPMoneyTrackerWeb.Data
 
         public void DeleteCategory(Guid catId)
         {
-            var category = this.Categories.FirstOrDefault(x => x.ID == catId);
+            var category = this.GetCategory(catId);
             if (category is null) return;
 
             _config.RemoveCategory(category);

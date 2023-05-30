@@ -60,7 +60,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Pages\Config\MoneyAccounts\" />
       <Folder Include="Pages\Config\Budget\" />
     </ItemGroup>
 
