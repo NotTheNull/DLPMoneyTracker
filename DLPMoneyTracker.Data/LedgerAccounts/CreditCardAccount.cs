@@ -9,7 +9,7 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 {
     public class CreditCardAccount : ILedgerAccount, IMoneyAccountReference
     {
-        public Guid Id { get; private set; }
+        public Guid Id { get; set; }
 
         public string Description { get; set; }
 

@@ -18,9 +18,9 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
     public interface ILedgerAccount
     {
         Guid Id { get; }
-        string Description { get; set; }
-        LedgerTypes LedgerType { get; }
+        string Description { get; }
+        LedgerTypes LedgerType { get;}
         
-        DateTime? DateClosedUTC { get; set; }
+        DateTime? DateClosedUTC { get; }
     }
 }
