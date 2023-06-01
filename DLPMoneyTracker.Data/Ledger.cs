@@ -12,6 +12,7 @@ namespace DLPMoneyTracker.Data
 {
     public delegate void LedgerModifiedHandler();
 
+    [Obsolete]
     public interface ILedger 
     {
         event LedgerModifiedHandler LedgerModified;
@@ -42,6 +43,7 @@ namespace DLPMoneyTracker.Data
         decimal GetCategoryTotal_DateRange(TransactionCategory cat, DateTime beg, DateTime end);
     }
 
+    [Obsolete]
     public class Ledger : ILedger
     {
         public event LedgerModifiedHandler LedgerModified;

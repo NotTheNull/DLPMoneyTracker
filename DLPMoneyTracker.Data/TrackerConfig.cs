@@ -11,6 +11,7 @@ namespace DLPMoneyTracker.Data
 {
     public interface ITrackerConfig : IDisposable
     {
+
         [Obsolete]
         ReadOnlyCollection<MoneyAccount> AccountsList { get; }
         [Obsolete]
@@ -18,6 +19,8 @@ namespace DLPMoneyTracker.Data
 
         ReadOnlyCollection<ILedgerAccount> LedgerAccountsList { get; }
 
+        List<IMoneyAccountReference> MoneyAccountsList { get; }
+        List<ITransactionCategoryReference> CategoryReferenceList { get; }
         ReadOnlyCollection<IMoneyAccountReference> PaymentAccounts { get; }
         ReadOnlyCollection<ILedgerAccount> AccountsReceivable { get; }
         ReadOnlyCollection<ILedgerAccount> AccountsPayable { get; }
@@ -79,7 +82,8 @@ namespace DLPMoneyTracker.Data
 
         private List<ILedgerAccount> _listLedgerAccounts = new List<ILedgerAccount>();
 
-        private List<IMoneyAccountReference> MoneyAccountsList
+        [Obsolete("Only use for conversion")]
+        public List<IMoneyAccountReference> MoneyAccountsList
         {
             get
             {
@@ -88,7 +92,9 @@ namespace DLPMoneyTracker.Data
                     .ToList();
             }
         }
-        private List<ITransactionCategoryReference> CategoryReferenceList
+
+        [Obsolete("Only use for conversion")]
+        public List<ITransactionCategoryReference> CategoryReferenceList
         {
             get
             {
@@ -106,7 +112,7 @@ namespace DLPMoneyTracker.Data
                 return MoneyAccountsList
                     .Where(x => x.AccountType != MoneyAccountType.Loan)
                     .ToList()
-                    .AsReadOnly())
+                    .AsReadOnly();
             }
         }
 

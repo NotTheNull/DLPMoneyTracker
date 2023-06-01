@@ -9,6 +9,8 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 {
     public class ReceivableAccount : ILedgerAccount, ITransactionCategoryReference
     {
+
+
         public Guid Id { get; set; }
 
         public string Description { get; set; }

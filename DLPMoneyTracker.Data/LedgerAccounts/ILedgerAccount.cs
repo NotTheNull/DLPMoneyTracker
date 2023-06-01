@@ -12,7 +12,8 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
         LiabilityCard,
         LiabilityLoan,
         Receivable,
-        Payable
+        Payable,
+        NotSet
     }
 
     public interface ILedgerAccount
