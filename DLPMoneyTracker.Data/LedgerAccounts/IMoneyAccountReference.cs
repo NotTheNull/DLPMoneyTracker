@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Data.LedgerAccounts
 {
+    [Obsolete("Only needed for Conversion")]
     public interface IMoneyAccountReference
     {
         Guid Id { get; }
@@ -16,8 +17,7 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
         string MoneyAccountId { get; }
         MoneyAccountType AccountType { get; }
 
-#pragma warning disable CS0612 // Type or member is obsolete
         void Convert(MoneyAccount act);
-#pragma warning restore CS0612 // Type or member is obsolete
+
     }
 }

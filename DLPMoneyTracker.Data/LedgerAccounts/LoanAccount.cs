@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Data.LedgerAccounts
 {
-    public class LoanAccount : ILedgerAccount, IMoneyAccountReference
+    public class LoanAccount : ILedgerAccount
     {
         public Guid Id { get; set; }
 
@@ -24,9 +24,27 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         public MoneyAccountType AccountType { get { return MoneyAccountType.Loan; } }
 
+        public Guid CategoryId { get { return Guid.Empty; } }
+
         public LoanAccount()
         {
             this.Id = Guid.NewGuid();
+        }
+        public LoanAccount(ILedgerAccount cpy)
+        {
+            this.Copy(cpy);
+        }
+
+        public void Copy(ILedgerAccount cpy)
+        {
+            if (cpy.LedgerType != this.LedgerType) throw new InvalidOperationException("Copy MUST be a Loan Account");
+
+            this.Id = cpy.Id;
+            this.Description = cpy.Description;
+            this.OrderBy = cpy.OrderBy;
+            this.DateClosedUTC = cpy.DateClosedUTC;
+            this.MoneyAccountId = cpy.MoneyAccountId;
+            
         }
 
 #pragma warning disable CS0612 // Type or member is obsolete

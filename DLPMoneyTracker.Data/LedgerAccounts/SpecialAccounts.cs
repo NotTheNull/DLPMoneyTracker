@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DLPMoneyTracker.Data.ConfigModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,5 +19,18 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
         public LedgerTypes LedgerType { get { return LedgerTypes.NotSet; } }
 
         public DateTime? DateClosedUTC { get { return null; } }
+
+        public int OrderBy { get { return 0; } }
+
+        public string MoneyAccountId { get { return string.Empty; } }
+
+        public MoneyAccountType AccountType { get { return MoneyAccountType.NotSet; } }
+
+        public Guid CategoryId { get { return Guid.Empty; } }
+
+        public void Copy(ILedgerAccount cpy)
+        {
+            return;
+        }
     }
 }

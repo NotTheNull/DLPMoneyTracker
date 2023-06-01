@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace DLPMoneyTracker.Data.TransactionModels
 {
+    [Obsolete("Switch to JournalEntry")]
     [DebuggerDisplay("{AccountID} {Description} ${TransAmount}")]
     public class MoneyRecord : IMoneyRecord
     {

@@ -1,5 +1,6 @@
 ﻿using DLPMoneyTracker.Data.ConfigModels;
 using DLPMoneyTracker.Data.LedgerAccounts;
+using DLPMoneyTracker.Data.TransactionModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,23 +19,23 @@ namespace DLPMoneyTracker.Data
         ReadOnlyCollection<TransactionCategory> CategoryList { get; }
 
         ReadOnlyCollection<ILedgerAccount> LedgerAccountsList { get; }
-
-        List<IMoneyAccountReference> MoneyAccountsList { get; }
-        List<ITransactionCategoryReference> CategoryReferenceList { get; }
-        ReadOnlyCollection<IMoneyAccountReference> PaymentAccounts { get; }
+        ReadOnlyCollection<ILedgerAccount> PaymentAccounts { get; }
         ReadOnlyCollection<ILedgerAccount> AccountsReceivable { get; }
         ReadOnlyCollection<ILedgerAccount> AccountsPayable { get; }
 
 
 
         void LoadFromFile(int year);
+        void SaveLedgerAccounts();
+        void LoadLedgerAccounts();
 
+        [Obsolete]
         void LoadMoneyAccounts();
-
+        [Obsolete]
         void SaveMoneyAccounts();
-
+        [Obsolete]
         void LoadCategories();
-
+        [Obsolete]
         void SaveCategories();
 
         [Obsolete]
@@ -71,46 +72,28 @@ namespace DLPMoneyTracker.Data
 
         private string AccountListConfig { get { return string.Concat(this.FolderPath, "MoneyAccounts.json"); } }
 
+        [Obsolete("Switch to ILedger Accounts")]
         private List<MoneyAccount> _listAccts = new List<MoneyAccount>();
+        [Obsolete("Switch to ILedger Accounts")]
         public ReadOnlyCollection<MoneyAccount> AccountsList { get { return _listAccts.OrderBy(o => o.ID).ToList().AsReadOnly(); } }
 
         private string CategoryListConfig { get { return string.Concat(this.FolderPath, "Categories.json"); } }
 
+        [Obsolete("Switch to ILedger Accounts")]
         private List<TransactionCategory> _listCategories = new List<TransactionCategory>();
+        [Obsolete("Switch to ILedger Accounts")]
         public ReadOnlyCollection<TransactionCategory> CategoryList { get { return _listCategories.OrderBy(o => o.Name).ToList().AsReadOnly(); } }
         #endregion
 
         private List<ILedgerAccount> _listLedgerAccounts = new List<ILedgerAccount>();
 
-        [Obsolete("Only use for conversion")]
-        public List<IMoneyAccountReference> MoneyAccountsList
-        {
-            get
-            {
-                return ((List<IMoneyAccountReference>)(_listLedgerAccounts
-                    .Where(x => x.GetType() == typeof(IMoneyAccountReference))))
-                    .ToList();
-            }
-        }
-
-        [Obsolete("Only use for conversion")]
-        public List<ITransactionCategoryReference> CategoryReferenceList
-        {
-            get
-            {
-                return ((List<ITransactionCategoryReference>)(_listLedgerAccounts
-                    .Where(x => x.GetType() == typeof(ITransactionCategoryReference))))
-                    .ToList();
-            }
-        }
-
         public ReadOnlyCollection<ILedgerAccount> LedgerAccountsList { get { return _listLedgerAccounts.AsReadOnly(); } }
-        public ReadOnlyCollection<IMoneyAccountReference> PaymentAccounts
+        public ReadOnlyCollection<ILedgerAccount> PaymentAccounts
         {
             get
             {
-                return MoneyAccountsList
-                    .Where(x => x.AccountType != MoneyAccountType.Loan)
+                return _listLedgerAccounts
+                    .Where(x => x.LedgerType == LedgerTypes.Bank || x.LedgerType == LedgerTypes.LiabilityCard)
                     .ToList()
                     .AsReadOnly();
             }
@@ -128,7 +111,7 @@ namespace DLPMoneyTracker.Data
         {
             get
             {
-                return _listLedgerAccounts.Where(x => x.LedgerType == LedgerTypes.Payable || x.LedgerType == LedgerTypes.LiabilityLoan).ToList().AsReadOnly();
+                return _listLedgerAccounts.Where(x => x.LedgerType == LedgerTypes.Payable || x.LedgerType == LedgerTypes.LiabilityLoan || x.LedgerType == LedgerTypes.LiabilityCard).ToList().AsReadOnly();
             }
         }
 
@@ -157,10 +140,62 @@ namespace DLPMoneyTracker.Data
                 Directory.CreateDirectory(this.FolderPath);
             }
 
+#pragma warning disable CS0612 // Type or member is obsolete
+            // Will have to keep these until the conversion is done
             this.LoadMoneyAccounts();
             this.LoadCategories();
+#pragma warning restore CS0612 // Type or member is obsolete
+            this.LoadLedgerAccounts();
         }
 
+        public void SaveLedgerAccounts()
+        {
+            string json = JsonSerializer.Serialize(_listLedgerAccounts, typeof(List<ILedgerAccount>));
+            File.WriteAllText(LedgerAccountsConfig, json);
+        }
+
+        public void LoadLedgerAccounts()
+        {
+            _listLedgerAccounts ??= new List<ILedgerAccount>();
+            _listLedgerAccounts.Clear();
+            _listLedgerAccounts.Add(SpecialAccount.InitialBalance);
+            _listLedgerAccounts.Add(SpecialAccount.Unlisted);
+
+            if(File.Exists(LedgerAccountsConfig))
+            {
+                string json = File.ReadAllText(LedgerAccountsConfig);
+                var dataList = (List<ILedgerAccount>)JsonSerializer.Deserialize(json, typeof(List<ILedgerAccount>));
+                foreach(var data in dataList)
+                {
+                    switch(data.LedgerType)
+                    {
+                        case LedgerTypes.Bank:
+                            BankAccount bank = new BankAccount(data);
+                            _listLedgerAccounts.Add(bank);
+                            break;
+                        case LedgerTypes.LiabilityCard:
+                            CreditCardAccount card = new CreditCardAccount(data);
+                            _listLedgerAccounts.Add(card);
+                            break;
+                        case LedgerTypes.LiabilityLoan:
+                            LoanAccount loan = new LoanAccount(data);
+                            _listLedgerAccounts.Add(loan);
+                            break; ;
+                        case LedgerTypes.Payable:
+                            PayableAccount payable = new PayableAccount(data);
+                            _listLedgerAccounts.Add(payable);
+                            break;
+                        case LedgerTypes.Receivable:
+                            ReceivableAccount receivable = new ReceivableAccount(data);
+                            _listLedgerAccounts.Add(receivable);
+                            break;
+                        default:
+                            throw new NotSupportedException(string.Format("Ledger Type [{0}] is not supported", data.LedgerType.ToString()));
+                    }
+                }
+            }
+
+        }
 
         #region Obsolete Methods
         [Obsolete]
@@ -277,6 +312,7 @@ namespace DLPMoneyTracker.Data
         }
 
 #pragma warning disable CS0612 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete
         /// <summary>
         /// Converts Money Accounts and Transaction Categories into Ledger Accounts
         /// </summary>
@@ -288,7 +324,7 @@ namespace DLPMoneyTracker.Data
                 foreach (var act in loopAccounts)
                 {
                     // If the account already exists, still need to remove the legacy
-                    if (!MoneyAccountsList.Any(x => x.MoneyAccountId == act.ID))
+                    if (!LedgerAccountsList.Any(x => x.AccountType != MoneyAccountType.NotSet && x.MoneyAccountId == act.ID))
                     {
                         switch (act.AccountType)
                         {
@@ -313,13 +349,13 @@ namespace DLPMoneyTracker.Data
             }
 
 
-            if(_listCategories?.Any() == true)
+            if (_listCategories?.Any() == true)
             {
                 var loopCategories = _listCategories.ToList();
                 foreach(var cat in loopCategories)
                 {
                     // If the category already exists, still need to remove the legacy
-                    if(!CategoryReferenceList.Any(x => x.CategoryId == cat.ID))
+                    if(!LedgerAccountsList.Any(x => x.AccountType == MoneyAccountType.NotSet && x.CategoryId == cat.ID))
                     {
                         switch(cat.CategoryType)
                         {
@@ -347,9 +383,10 @@ namespace DLPMoneyTracker.Data
                 }
                 SaveCategories();
             }
-
+            SaveLedgerAccounts();
 
         }
+#pragma warning restore CS0618 // Type or member is obsolete
 #pragma warning restore CS0612 // Type or member is obsolete
 
 
@@ -357,6 +394,9 @@ namespace DLPMoneyTracker.Data
 
         public void Copy(ITrackerConfig config)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
+#pragma warning disable CS0612 // Type or member is obsolete
+            // Until the conversion is done, this will need to stayu
             _listAccts.Clear();
             foreach (var act in config.AccountsList)
             {
@@ -368,6 +408,8 @@ namespace DLPMoneyTracker.Data
             {
                 this.AddCategory(cat);
             }
+#pragma warning restore CS0612 // Type or member is obsolete
+#pragma warning restore CS0618 // Type or member is obsolete
 
             _listLedgerAccounts.Clear();
             foreach(var gl in config.LedgerAccountsList)
@@ -381,6 +423,8 @@ namespace DLPMoneyTracker.Data
         {
             GC.SuppressFinalize(this);
 
+#pragma warning disable CS0618 // Type or member is obsolete
+            // Will need to keep until conversion is done
             if (_listAccts is not null)
             {
                 _listAccts.Clear();
@@ -391,6 +435,13 @@ namespace DLPMoneyTracker.Data
             {
                 _listCategories.Clear();
                 _listCategories = null;
+            }
+#pragma warning restore CS0618 // Type or member is obsolete
+
+            if(_listLedgerAccounts is not null)
+            {
+                _listLedgerAccounts.Clear();
+                _listLedgerAccounts = null;
             }
         }
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Data.LedgerAccounts
 {
-    public class ReceivableAccount : ILedgerAccount, ITransactionCategoryReference
+    public class ReceivableAccount : ILedgerAccount
     {
 
 
@@ -24,12 +24,31 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
         public bool ShouldAffectBudget { get; set; }
         public decimal DefaultMonthlyBudget { get; set; }
 
+        public string MoneyAccountId { get { return string.Empty; } }
+        public MoneyAccountType AccountType { get { return MoneyAccountType.NotSet; } }
         public Guid CategoryId { get; set; }
 
         public ReceivableAccount()
         {
             Id = Guid.NewGuid();
         }
+        public ReceivableAccount(ILedgerAccount cpy)
+        {
+            this.Copy(cpy);
+        }
+
+
+        public void Copy(ILedgerAccount cpy)
+        {
+            if (cpy.LedgerType != this.LedgerType) throw new InvalidOperationException("Copy MUST be a Receivable Account");
+
+            this.Id = cpy.Id;
+            this.Description = cpy.Description;
+            this.OrderBy = cpy.OrderBy;
+            this.DateClosedUTC = cpy.DateClosedUTC;
+            this.CategoryId = cpy.CategoryId;
+        }
+
 
 #pragma warning disable CS0612 // Type or member is obsolete
         public ReceivableAccount(TransactionCategory old) : this()

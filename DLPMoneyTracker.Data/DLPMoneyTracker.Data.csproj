@@ -6,6 +6,8 @@
 
   <ItemGroup>
     <Compile Remove="IJSONFileMaker.cs" />
+    <Compile Remove="LedgerAccounts\IMoneyAccountReference.cs" />
+    <Compile Remove="LedgerAccounts\ITransactionCategoryReference.cs" />
   </ItemGroup>
 
   <ItemGroup>

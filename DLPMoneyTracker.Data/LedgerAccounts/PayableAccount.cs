@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Data.LedgerAccounts
 {
-    public class PayableAccount : ILedgerAccount, ITransactionCategoryReference
+    public class PayableAccount : ILedgerAccount
     {
         public Guid Id { get; set; }
 
@@ -22,12 +22,30 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
         public bool ShouldAffectBudget { get; set; }
         public decimal DefaultMonthlyBudget { get; set; }
 
+        public string MoneyAccountId { get { return string.Empty; } }
+        public MoneyAccountType AccountType { get { return MoneyAccountType.NotSet; } }
         public Guid CategoryId { get; set; }
 
         public PayableAccount()
         {
             Id = Guid.NewGuid();
         }
+        public PayableAccount(ILedgerAccount cpy)
+        {
+            this.Copy(cpy);
+        }
+
+        public void Copy(ILedgerAccount cpy)
+        {
+            if (cpy.LedgerType != this.LedgerType) throw new InvalidOperationException("Copy MUST be a Payable Account");
+
+            this.Id = cpy.Id;
+            this.Description = cpy.Description;
+            this.OrderBy = cpy.OrderBy;
+            this.DateClosedUTC = cpy.DateClosedUTC;
+            this.CategoryId = cpy.CategoryId;
+        }
+
 
 #pragma warning disable CS0612 // Type or member is obsolete
         public PayableAccount(TransactionCategory old) : this()

@@ -169,10 +169,11 @@ namespace DLPMoneyTracker.Data
             _listTransactions.Clear();
             bool needNextRecord = false;
             JournalEntry newRecord = null;
-            foreach (var t in ledger.TransactionList)
+            var ledgerList = ledger.TransactionList.ToList();
+            foreach (var t in ledgerList)
             {
                 // Find Money Account
-                var money = _config.MoneyAccountsList.FirstOrDefault(x => x.MoneyAccountId == t.AccountID);
+                var money = _config.LedgerAccountsList.FirstOrDefault(x => x.AccountType != ConfigModels.MoneyAccountType.NotSet && x.MoneyAccountId == t.AccountID);
 
 
                 var legacyCategory = _config.GetCategory(t.CategoryUID);
@@ -311,7 +312,7 @@ namespace DLPMoneyTracker.Data
 
 
                     // Need to find new category account
-                    var category = _config.CategoryReferenceList.FirstOrDefault(x => x.CategoryId == t.CategoryUID);
+                    var category = _config.LedgerAccountsList.FirstOrDefault(x => x.AccountType == ConfigModels.MoneyAccountType.NotSet && x.CategoryId == t.CategoryUID);
                     if (category is null)
                     {
                         // Possible that it's an untracked adjustment
@@ -356,10 +357,12 @@ namespace DLPMoneyTracker.Data
 
 
                 _listTransactions.Add(newRecord);
+                ledger.RemoveTransaction(t);
                 newRecord = null;
             }
 
-            SaveToFile();
+            this.SaveToFile();
+            ledger.SaveToFile();
         }
 #pragma warning restore CS0612 // Type or member is obsolete
     }

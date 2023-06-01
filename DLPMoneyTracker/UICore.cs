@@ -31,7 +31,13 @@ namespace DLPMoneyTracker
         private static void ConfigureServices(ServiceCollection services)
         {
             services.AddSingleton<ITrackerConfig, TrackerConfig>();
+
+#pragma warning disable CS0612 // Type or member is obsolete
+            // Keep until conversion is done
             services.AddSingleton<ILedger, Ledger>();
+#pragma warning restore CS0612 // Type or member is obsolete
+
+            services.AddSingleton<IJournal, DLPJournal>();
             services.AddSingleton<IMoneyPlanner, MoneyPlanner>();
             services.AddSingleton<IBudgetTracker, BudgetTracker>();
             services.AddSingleton<MainWindow>();
