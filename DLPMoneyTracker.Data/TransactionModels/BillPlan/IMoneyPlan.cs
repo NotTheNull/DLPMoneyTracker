@@ -51,6 +51,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
         DateTime NextOccurrence { get; }
     }
 
+    [Obsolete]
     public class MoneyPlanRecordJSON : IMoneyPlan
     {
         public Guid UID { get; set; }
