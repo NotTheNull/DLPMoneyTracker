@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Data.TransactionModels
@@ -12,7 +13,9 @@ namespace DLPMoneyTracker.Data.TransactionModels
         Guid Id { get; }
         DateTime TransactionDate { get; }
         Guid DebitAccountId { get; } 
+        string DebitAccountName { get; }
         Guid CreditAccountId { get; }
+        string CreditAccountName { get; }
         string Description { get; }
         decimal TransactionAmount { get; }
 
@@ -26,10 +29,15 @@ namespace DLPMoneyTracker.Data.TransactionModels
 
         public DateTime TransactionDate { get; set; }
 
-        public Guid DebitAccountId { get; set; } 
+        public Guid DebitAccountId { get; set; }
+        
+        [JsonIgnore]
+        public string DebitAccountName { get; set; }
 
         public Guid CreditAccountId { get; set; }
 
+        [JsonIgnore]
+        public string CreditAccountName { get; set; }
         public string Description { get; set; }
 
         public decimal TransactionAmount { get; set; }
@@ -67,9 +75,11 @@ namespace DLPMoneyTracker.Data.TransactionModels
         public DateTime TransactionDate { get; set; }
 
         public ILedgerAccount DebitAccount { get; set; }
-        public Guid DebitAccountId { get { return DebitAccount.Id; } }
+        public Guid DebitAccountId { get { return DebitAccount?.Id ?? Guid.Empty; } }
+        public string DebitAccountName { get { return DebitAccount?.Description ?? string.Empty; } }
         public ILedgerAccount CreditAccount { get; set; }
-        public Guid CreditAccountId { get { return CreditAccount.Id; } }
+        public Guid CreditAccountId { get { return CreditAccount?.Id ?? Guid.Empty; } }
+        public string CreditAccountName { get { return CreditAccount?.Description ?? string.Empty; } }
 
         public string Description { get; set; }
         public decimal TransactionAmount { get; set; }

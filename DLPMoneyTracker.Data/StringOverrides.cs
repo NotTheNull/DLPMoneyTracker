@@ -1,4 +1,5 @@
 ﻿using DLPMoneyTracker.Data.ConfigModels;
+using DLPMoneyTracker.Data.LedgerAccounts;
 using DLPMoneyTracker.Data.ScheduleRecurrence;
 using System;
 using System.Collections.Generic;
@@ -11,59 +12,78 @@ namespace DLPMoneyTracker.Data
 
     public static class StringExtensions
     {
-        public static string ToDisplayText(this MoneyAccountType actType)
+        public static string ToDisplayText(this ILedgerAccount account)
         {
-            switch (actType)
+            switch(account.LedgerType)
             {
-                case MoneyAccountType.Checking:
-                    return "Checking";
-
-                case MoneyAccountType.CreditCard:
-                    return "Credit Card";
-
-                case MoneyAccountType.Loan:
+                case LedgerTypes.Payable:
+                    return "Accounts Payable";
+                case LedgerTypes.LiabilityLoan:
                     return "Loan";
-
-                case MoneyAccountType.Savings:
-                    return "Savings";
-
+                case LedgerTypes.LiabilityCard:
+                    return "Credit Card";
+                case LedgerTypes.Receivable:
+                    return "Accounts Receivable";
+                case LedgerTypes.Bank:
+                    return "Bank";
                 default:
                     return "*N/A*";
             }
         }
 
-        public static string ToDisplayText(this CategoryType catType)
-        {
-            switch (catType)
-            {
-                case CategoryType.Expense:
-                    return "Expense";
+        //public static string ToDisplayText(this MoneyAccountType actType)
+        //{
+        //    switch (actType)
+        //    {
+        //        case MoneyAccountType.Checking:
+        //            return "Checking";
 
-                case CategoryType.Income:
-                    return "Income";
+        //        case MoneyAccountType.CreditCard:
+        //            return "Credit Card";
 
-                case CategoryType.UntrackedAdjustment:
-                    return "Adjustment";
+        //        case MoneyAccountType.Loan:
+        //            return "Loan";
 
-                default:
-                    return "*N/A*";
-            }
-        }
+        //        case MoneyAccountType.Savings:
+        //            return "Savings";
 
-        public static CategoryType ToCategoryType(this string catType)
-        {
-            switch(catType)
-            {
-                case "Expense":
-                    return CategoryType.Expense;
-                case "Income":
-                    return CategoryType.Income;
-                case "Adjustment":
-                    return CategoryType.UntrackedAdjustment;
-                default:
-                    return CategoryType.NotSet;
-            }
-        }
+        //        default:
+        //            return "*N/A*";
+        //    }
+        //}
+
+        //public static string ToDisplayText(this CategoryType catType)
+        //{
+        //    switch (catType)
+        //    {
+        //        case CategoryType.Expense:
+        //            return "Expense";
+
+        //        case CategoryType.Income:
+        //            return "Income";
+
+        //        case CategoryType.UntrackedAdjustment:
+        //            return "Adjustment";
+
+        //        default:
+        //            return "*N/A*";
+        //    }
+        //}
+
+        //public static CategoryType ToCategoryType(this string catType)
+        //{
+        //    switch(catType)
+        //    {
+        //        case "Expense":
+        //            return CategoryType.Expense;
+        //        case "Income":
+        //            return CategoryType.Income;
+        //        case "Adjustment":
+        //            return CategoryType.UntrackedAdjustment;
+        //        default:
+        //            return CategoryType.NotSet;
+        //    }
+        //}
 
         public static string ToDisplayText(this RecurrenceFrequency recurType)
         {

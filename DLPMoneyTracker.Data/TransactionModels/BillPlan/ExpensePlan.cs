@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
 {
+    [Obsolete]
     public class ExpensePlan : IMoneyPlan
     {
         public Guid UID { get; set; }

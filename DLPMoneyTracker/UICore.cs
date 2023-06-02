@@ -8,6 +8,7 @@ using DLPMoneyTracker.DataEntry.BudgetPlanner;
 using DLPMoneyTracker.DataEntry.ScheduleRecurrence;
 using DLPMoneyTracker.ReportViews;
 using DLPMoneyTracker.ReportViews.HistoricalViews;
+using DLPMoneyTracker.ReportViews.JournalViews;
 using DLPMoneyTracker.ReportViews.LedgerViews;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -41,40 +42,44 @@ namespace DLPMoneyTracker
             services.AddSingleton<IMoneyPlanner, MoneyPlanner>();
             services.AddSingleton<IBudgetTracker, BudgetTracker>();
             services.AddSingleton<MainWindow>();
-            services.AddSingleton<MoneyAccountsOverview>();
-            services.AddSingleton<MoneyAccountOverviewVM>();
 
-            services.AddTransient<AddEditMoneyAccount>();
-            services.AddTransient<AddEditMoneyAccountVM>();
+            services.AddTransient<JournalDetailView>();
+            services.AddTransient<JournalDetailVM>();
 
-            services.AddTransient<AddEditCategory>();
-            services.AddTransient<AddEditCategoryVM>();
+            //services.AddSingleton<MoneyAccountsOverview>();
+            //services.AddSingleton<MoneyAccountOverviewVM>();
 
-            services.AddTransient<AddIncomeView>();
-            services.AddTransient<AddIncomeVM>();
+            //services.AddTransient<AddEditMoneyAccount>();
+            //services.AddTransient<AddEditMoneyAccountVM>();
 
-            services.AddTransient<AddExpenseView>();
-            services.AddTransient<AddExpenseVM>();
+            //services.AddTransient<AddEditCategory>();
+            //services.AddTransient<AddEditCategoryVM>();
 
-            services.AddTransient<AddDebtPayment>();
-            services.AddTransient<AddDebtPaymentVM>();
+            //services.AddTransient<AddIncomeView>();
+            //services.AddTransient<AddIncomeVM>();
 
-            services.AddTransient<TransferMoney>();
-            services.AddTransient<TransferMoneyVM>();
+            //services.AddTransient<AddExpenseView>();
+            //services.AddTransient<AddExpenseVM>();
 
-            services.AddTransient<LedgerDetailView>();
+            //services.AddTransient<AddDebtPayment>();
+            //services.AddTransient<AddDebtPaymentVM>();
 
-            services.AddTransient<RecurrenceEditorView>();
-            services.AddTransient<RecurrenceEditorVM>();
+            //services.AddTransient<TransferMoney>();
+            //services.AddTransient<TransferMoneyVM>();
 
-            services.AddTransient<MoneyPlannerView>();
-            services.AddTransient<MoneyPlannerVM>();
+            //services.AddTransient<LedgerDetailView>();
 
-            services.AddTransient<MonthlyBudgetPlannerView>();
-            services.AddTransient<MonthlyBudgetPlannerVM>();
+            //services.AddTransient<RecurrenceEditorView>();
+            //services.AddTransient<RecurrenceEditorVM>();
 
-            services.AddTransient<MonthlyHistoricalView>();
-            services.AddTransient<MonthlyHistoricalVM>();
+            //services.AddTransient<MoneyPlannerView>();
+            //services.AddTransient<MoneyPlannerVM>();
+
+            //services.AddTransient<MonthlyBudgetPlannerView>();
+            //services.AddTransient<MonthlyBudgetPlannerVM>();
+
+            //services.AddTransient<MonthlyHistoricalView>();
+            //services.AddTransient<MonthlyHistoricalVM>();
         }
 
         public static string GetResourceText(string resourceName)

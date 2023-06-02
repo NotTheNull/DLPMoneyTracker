@@ -4,6 +4,7 @@ using System;
 
 namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
 {
+    [Obsolete]
     public class MoneyPlanFactory
     {
         public static IMoneyPlan Build(ITrackerConfig config, MoneyPlanRecordJSON jsonRecord)

@@ -13,12 +13,16 @@
   <ItemGroup>
     <Compile Remove="HTMLReports\**" />
     <Compile Remove="ReportViews\CategoryOverview\**" />
+    <Compile Remove="ReportViews\LedgerViews\**" />
     <EmbeddedResource Remove="HTMLReports\**" />
     <EmbeddedResource Remove="ReportViews\CategoryOverview\**" />
+    <EmbeddedResource Remove="ReportViews\LedgerViews\**" />
     <None Remove="HTMLReports\**" />
     <None Remove="ReportViews\CategoryOverview\**" />
+    <None Remove="ReportViews\LedgerViews\**" />
     <Page Remove="HTMLReports\**" />
     <Page Remove="ReportViews\CategoryOverview\**" />
+    <Page Remove="ReportViews\LedgerViews\**" />
   </ItemGroup>
 
   <ItemGroup>

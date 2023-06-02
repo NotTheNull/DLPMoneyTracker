@@ -11,6 +11,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
         NotSet
     }
 
+    [Obsolete]
     public interface IMoneyPlan
     {
         Guid UID { get; }

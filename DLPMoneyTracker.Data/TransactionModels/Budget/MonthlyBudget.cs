@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace DLPMoneyTracker.Data.TransactionModels.Budget
 {
+    [Obsolete]
     public class MonthlyBudget : IBudget
     {
         [JsonIgnore]

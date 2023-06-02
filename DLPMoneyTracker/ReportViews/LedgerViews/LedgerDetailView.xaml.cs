@@ -11,19 +11,20 @@ namespace DLPMoneyTracker.ReportViews.LedgerViews
     /// </summary>
     public partial class LedgerDetailView : UserControl
     {
-        
+
         // TODO: Add ability to edit transactions
 
-        private readonly ILedger _ledger;
+        private readonly IJournal _journal;
+        //private readonly ILedger _ledger;
         private readonly ITrackerConfig _config;
         private LedgerDetailVM _viewModel;
         
         public string LedgerPath { get { return _viewModel?.LedgerPath ?? string.Empty; } }
 
-        public LedgerDetailView(ILedger ledger, ITrackerConfig config)
+        public LedgerDetailView(IJournal journal, ITrackerConfig config)
         {
             InitializeComponent();
-            _ledger = ledger;
+            _journal = journal;
             _config = config;
         }
 

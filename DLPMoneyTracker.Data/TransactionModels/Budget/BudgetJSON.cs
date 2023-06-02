@@ -2,6 +2,7 @@
 
 namespace DLPMoneyTracker.Data.TransactionModels.Budget
 {
+    [Obsolete]
     public class BudgetJSON : IBudget
     {
         public Guid CategoryId { get; set; }

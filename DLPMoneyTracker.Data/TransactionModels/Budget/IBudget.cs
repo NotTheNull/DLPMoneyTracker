@@ -2,6 +2,7 @@
 
 namespace DLPMoneyTracker.Data.TransactionModels.Budget
 {
+    [Obsolete]
     public interface IBudget
     {
         Guid CategoryId { get; }
