@@ -2,7 +2,7 @@
 
 namespace DLPMoneyTracker.Data.TransactionModels.Budget
 {
-    [Obsolete]
+    [Obsolete("Budget Amount is on the Ledger Account")]
     public interface IBudget
     {
         Guid CategoryId { get; }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Data.LedgerAccounts
 {
-    public class ReceivableAccount : ILedgerAccount
+    public class ReceivableAccount : IJournalAccount
     {
 
 
@@ -15,7 +15,7 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         public string Description { get; set; }
 
-        public LedgerTypes LedgerType { get { return LedgerTypes.Receivable; } }
+        public JounalAccountType JournalType { get { return JounalAccountType.Receivable; } }
 
         public int OrderBy { get; set; }
 
@@ -28,19 +28,21 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
         public MoneyAccountType AccountType { get { return MoneyAccountType.NotSet; } }
         public Guid CategoryId { get; set; }
 
+        public decimal MonthlyBudgetAmount { get { return decimal.Zero; } }
+
         public ReceivableAccount()
         {
             Id = Guid.NewGuid();
         }
-        public ReceivableAccount(ILedgerAccount cpy)
+        public ReceivableAccount(IJournalAccount cpy)
         {
             this.Copy(cpy);
         }
 
 
-        public void Copy(ILedgerAccount cpy)
+        public void Copy(IJournalAccount cpy)
         {
-            if (cpy.LedgerType != this.LedgerType) throw new InvalidOperationException("Copy MUST be a Receivable Account");
+            if (cpy.JournalType != this.JournalType) throw new InvalidOperationException("Copy MUST be a Receivable Account");
 
             this.Id = cpy.Id;
             this.Description = cpy.Description;

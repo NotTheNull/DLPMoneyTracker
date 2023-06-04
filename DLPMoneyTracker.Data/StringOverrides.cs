@@ -12,19 +12,19 @@ namespace DLPMoneyTracker.Data
 
     public static class StringExtensions
     {
-        public static string ToDisplayText(this ILedgerAccount account)
+        public static string ToDisplayText(this IJournalAccount account)
         {
-            switch(account.LedgerType)
+            switch(account.JournalType)
             {
-                case LedgerTypes.Payable:
+                case JounalAccountType.Payable:
                     return "Accounts Payable";
-                case LedgerTypes.LiabilityLoan:
+                case JounalAccountType.LiabilityLoan:
                     return "Loan";
-                case LedgerTypes.LiabilityCard:
+                case JounalAccountType.LiabilityCard:
                     return "Credit Card";
-                case LedgerTypes.Receivable:
+                case JounalAccountType.Receivable:
                     return "Accounts Receivable";
-                case LedgerTypes.Bank:
+                case JounalAccountType.Bank:
                     return "Bank";
                 default:
                     return "*N/A*";

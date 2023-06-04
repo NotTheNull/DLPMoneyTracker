@@ -8,6 +8,7 @@ using System.Text.Json;
 
 namespace DLPMoneyTracker.Data
 {
+    [Obsolete("Use IJournalPlanner")]
     public interface IMoneyPlanner 
     {
         string FilePath { get; }
@@ -26,6 +27,7 @@ namespace DLPMoneyTracker.Data
         void Copy(IMoneyPlanner planner);
     }
 
+    [Obsolete("Use JournalPlanner")]
     public class MoneyPlanner : IMoneyPlanner
     {
         private string FolderPath { get { return AppConfigSettings.DATA_FOLDER_PATH.Replace(AppConfigSettings.YEAR_FOLDER_PLACEHOLDER, _year.ToString()); } }

@@ -8,6 +8,7 @@ using System.Text.Json;
 
 namespace DLPMoneyTracker.Data
 {
+    [Obsolete("Budgets are now stored on the JournalAccount")]
     public interface IBudgetTracker
     {
         string FilePath { get; }
@@ -24,8 +25,11 @@ namespace DLPMoneyTracker.Data
         decimal? GetBudgetAmount(Guid categoryId, int year, int month);
 
         void Copy(IBudgetTracker tracker);
+
+        
     }
 
+    [Obsolete("Budgets are now stored on the JournalAccount")]
     public class BudgetTracker : IBudgetTracker
     {
         private readonly ITrackerConfig _config;

@@ -35,7 +35,7 @@ namespace DLPMoneyTracker.ReportViews.JournalViews
 
         private JournalDetailFilter _filter = new JournalDetailFilter();
 
-        public ILedgerAccount FilterAccount
+        public IJournalAccount FilterAccount
         {
             get { return _filter.LedgerAccount; }
             set
@@ -214,7 +214,7 @@ namespace DLPMoneyTracker.ReportViews.JournalViews
 
     public class JournalDetailFilter
     {
-        public ILedgerAccount LedgerAccount;
+        public IJournalAccount LedgerAccount;
         public DateRange FilterDates;
         public string SearchText;
 
@@ -232,7 +232,7 @@ namespace DLPMoneyTracker.ReportViews.JournalViews
         }
 
         public JournalDetailFilter() { }
-        public JournalDetailFilter(ILedgerAccount account, DateRange dates, string search)
+        public JournalDetailFilter(IJournalAccount account, DateRange dates, string search)
         {
             this.LedgerAccount = account;
             this.FilterDates = dates ?? new DateRange(DateTime.MinValue, DateTime.MaxValue);

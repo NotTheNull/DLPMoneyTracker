@@ -74,10 +74,10 @@ namespace DLPMoneyTracker.Data.TransactionModels
         public Guid Id { get; set; }
         public DateTime TransactionDate { get; set; }
 
-        public ILedgerAccount DebitAccount { get; set; }
+        public IJournalAccount DebitAccount { get; set; }
         public Guid DebitAccountId { get { return DebitAccount?.Id ?? Guid.Empty; } }
         public string DebitAccountName { get { return DebitAccount?.Description ?? string.Empty; } }
-        public ILedgerAccount CreditAccount { get; set; }
+        public IJournalAccount CreditAccount { get; set; }
         public Guid CreditAccountId { get { return CreditAccount?.Id ?? Guid.Empty; } }
         public string CreditAccountName { get { return CreditAccount?.Description ?? string.Empty; } }
 

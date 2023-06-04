@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Data.LedgerAccounts
 {
-    public class PayableAccount : ILedgerAccount
+    public class PayableAccount : IJournalAccount
     {
         public Guid Id { get; set; }
 
         public string Description { get; set; }
 
-        public LedgerTypes LedgerType { get { return LedgerTypes.Payable; } }
+        public JounalAccountType JournalType { get { return JounalAccountType.Payable; } }
 
         public int OrderBy { get; set; }
 
@@ -26,18 +26,24 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
         public MoneyAccountType AccountType { get { return MoneyAccountType.NotSet; } }
         public Guid CategoryId { get; set; }
 
+        // Exclusive Properties
+        public decimal MonthlyBudgetAmount { get; set; }
+
+
+
+
         public PayableAccount()
         {
             Id = Guid.NewGuid();
         }
-        public PayableAccount(ILedgerAccount cpy)
+        public PayableAccount(IJournalAccount cpy)
         {
             this.Copy(cpy);
         }
 
-        public void Copy(ILedgerAccount cpy)
+        public void Copy(IJournalAccount cpy)
         {
-            if (cpy.LedgerType != this.LedgerType) throw new InvalidOperationException("Copy MUST be a Payable Account");
+            if (cpy.JournalType != this.JournalType) throw new InvalidOperationException("Copy MUST be a Payable Account");
 
             this.Id = cpy.Id;
             this.Description = cpy.Description;

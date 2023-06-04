@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Data.LedgerAccounts
 {
-    public class SpecialAccount : ILedgerAccount
+    public class SpecialAccount : IJournalAccount
     {
         public static SpecialAccount InitialBalance { get { return new SpecialAccount() { Id = Guid.Empty, Description = "*STARTING BALANCE*" }; } }
         public static SpecialAccount Unlisted { get { return new SpecialAccount() { Id = new Guid("99999999-8888-7777-6666-555555555555"), Description = "*UNDEFINED*" }; } }
@@ -16,7 +16,7 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         public string Description { get; set; }
 
-        public LedgerTypes LedgerType { get { return LedgerTypes.NotSet; } }
+        public JounalAccountType JournalType { get { return JounalAccountType.NotSet; } }
 
         public DateTime? DateClosedUTC { get { return null; } }
 
@@ -28,7 +28,9 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         public Guid CategoryId { get { return Guid.Empty; } }
 
-        public void Copy(ILedgerAccount cpy)
+        public decimal MonthlyBudgetAmount { get { return decimal.Zero; } }
+
+        public void Copy(IJournalAccount cpy)
         {
             return;
         }

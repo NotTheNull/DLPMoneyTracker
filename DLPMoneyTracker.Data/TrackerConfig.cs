@@ -18,16 +18,16 @@ namespace DLPMoneyTracker.Data
         [Obsolete]
         ReadOnlyCollection<TransactionCategory> CategoryList { get; }
 
-        ReadOnlyCollection<ILedgerAccount> LedgerAccountsList { get; }
-        ReadOnlyCollection<ILedgerAccount> PaymentAccounts { get; }
-        ReadOnlyCollection<ILedgerAccount> AccountsReceivable { get; }
-        ReadOnlyCollection<ILedgerAccount> AccountsPayable { get; }
+        ReadOnlyCollection<IJournalAccount> LedgerAccountsList { get; }
+        ReadOnlyCollection<IJournalAccount> PaymentAccounts { get; }
+        ReadOnlyCollection<IJournalAccount> AccountsReceivable { get; }
+        ReadOnlyCollection<IJournalAccount> AccountsPayable { get; }
 
 
 
         void LoadFromFile(int year);
-        void SaveLedgerAccounts();
-        void LoadLedgerAccounts();
+        void SaveJournalAccounts();
+        void LoadJournalAccounts();
 
         [Obsolete]
         void LoadMoneyAccounts();
@@ -85,33 +85,33 @@ namespace DLPMoneyTracker.Data
         public ReadOnlyCollection<TransactionCategory> CategoryList { get { return _listCategories.OrderBy(o => o.Name).ToList().AsReadOnly(); } }
         #endregion
 
-        private List<ILedgerAccount> _listLedgerAccounts = new List<ILedgerAccount>();
+        private List<IJournalAccount> _listLedgerAccounts = new List<IJournalAccount>();
 
-        public ReadOnlyCollection<ILedgerAccount> LedgerAccountsList { get { return _listLedgerAccounts.AsReadOnly(); } }
-        public ReadOnlyCollection<ILedgerAccount> PaymentAccounts
+        public ReadOnlyCollection<IJournalAccount> LedgerAccountsList { get { return _listLedgerAccounts.AsReadOnly(); } }
+        public ReadOnlyCollection<IJournalAccount> PaymentAccounts
         {
             get
             {
                 return _listLedgerAccounts
-                    .Where(x => x.LedgerType == LedgerTypes.Bank || x.LedgerType == LedgerTypes.LiabilityCard)
+                    .Where(x => x.JournalType == JounalAccountType.Bank || x.JournalType == JounalAccountType.LiabilityCard)
                     .ToList()
                     .AsReadOnly();
             }
         }
 
-        public ReadOnlyCollection<ILedgerAccount> AccountsReceivable
+        public ReadOnlyCollection<IJournalAccount> AccountsReceivable
         {
             get
             {
-                return _listLedgerAccounts.Where(x => x.LedgerType == LedgerTypes.Receivable).ToList().AsReadOnly();
+                return _listLedgerAccounts.Where(x => x.JournalType == JounalAccountType.Receivable).ToList().AsReadOnly();
             }
         }
 
-        public ReadOnlyCollection<ILedgerAccount> AccountsPayable
+        public ReadOnlyCollection<IJournalAccount> AccountsPayable
         {
             get
             {
-                return _listLedgerAccounts.Where(x => x.LedgerType == LedgerTypes.Payable || x.LedgerType == LedgerTypes.LiabilityLoan || x.LedgerType == LedgerTypes.LiabilityCard).ToList().AsReadOnly();
+                return _listLedgerAccounts.Where(x => x.JournalType == JounalAccountType.Payable || x.JournalType == JounalAccountType.LiabilityLoan || x.JournalType == JounalAccountType.LiabilityCard).ToList().AsReadOnly();
             }
         }
 
@@ -145,18 +145,18 @@ namespace DLPMoneyTracker.Data
             this.LoadMoneyAccounts();
             this.LoadCategories();
 #pragma warning restore CS0612 // Type or member is obsolete
-            this.LoadLedgerAccounts();
+            this.LoadJournalAccounts();
         }
 
-        public void SaveLedgerAccounts()
+        public void SaveJournalAccounts()
         {
-            string json = JsonSerializer.Serialize(_listLedgerAccounts, typeof(List<ILedgerAccount>));
+            string json = JsonSerializer.Serialize(_listLedgerAccounts, typeof(List<IJournalAccount>));
             File.WriteAllText(LedgerAccountsConfig, json);
         }
 
-        public void LoadLedgerAccounts()
+        public void LoadJournalAccounts()
         {
-            _listLedgerAccounts ??= new List<ILedgerAccount>();
+            _listLedgerAccounts ??= new List<IJournalAccount>();
             _listLedgerAccounts.Clear();
             _listLedgerAccounts.Add(SpecialAccount.InitialBalance);
             _listLedgerAccounts.Add(SpecialAccount.Unlisted);
@@ -164,34 +164,10 @@ namespace DLPMoneyTracker.Data
             if(File.Exists(LedgerAccountsConfig))
             {
                 string json = File.ReadAllText(LedgerAccountsConfig);
-                var dataList = (List<ILedgerAccount>)JsonSerializer.Deserialize(json, typeof(List<ILedgerAccount>));
+                var dataList = (List<JournalAccountJSON>)JsonSerializer.Deserialize(json, typeof(List<JournalAccountJSON>));
                 foreach(var data in dataList)
                 {
-                    switch(data.LedgerType)
-                    {
-                        case LedgerTypes.Bank:
-                            BankAccount bank = new BankAccount(data);
-                            _listLedgerAccounts.Add(bank);
-                            break;
-                        case LedgerTypes.LiabilityCard:
-                            CreditCardAccount card = new CreditCardAccount(data);
-                            _listLedgerAccounts.Add(card);
-                            break;
-                        case LedgerTypes.LiabilityLoan:
-                            LoanAccount loan = new LoanAccount(data);
-                            _listLedgerAccounts.Add(loan);
-                            break; ;
-                        case LedgerTypes.Payable:
-                            PayableAccount payable = new PayableAccount(data);
-                            _listLedgerAccounts.Add(payable);
-                            break;
-                        case LedgerTypes.Receivable:
-                            ReceivableAccount receivable = new ReceivableAccount(data);
-                            _listLedgerAccounts.Add(receivable);
-                            break;
-                        default:
-                            throw new NotSupportedException(string.Format("Ledger Type [{0}] is not supported", data.LedgerType.ToString()));
-                    }
+                    _listLedgerAccounts.Add(JournalAccountFactory.Build(data));
                 }
             }
 
@@ -303,7 +279,7 @@ namespace DLPMoneyTracker.Data
         }
         #endregion
 
-        public void AddLedgerAccount(ILedgerAccount act) 
+        public void AddLedgerAccount(IJournalAccount act) 
         {
             if(act is null) return;
             if(act.Id == Guid.Empty) return;
@@ -383,7 +359,7 @@ namespace DLPMoneyTracker.Data
                 }
                 SaveCategories();
             }
-            SaveLedgerAccounts();
+            SaveJournalAccounts();
 
         }
 #pragma warning restore CS0618 // Type or member is obsolete

@@ -52,7 +52,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
     }
 
     [Obsolete]
-    public class MoneyPlanRecordJSON : IMoneyPlan
+    public sealed class MoneyPlanRecordJSON : IMoneyPlan
     {
         public Guid UID { get; set; }
 

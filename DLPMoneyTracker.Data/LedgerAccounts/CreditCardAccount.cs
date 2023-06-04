@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Data.LedgerAccounts
 {
-    public class CreditCardAccount : ILedgerAccount
+    public class CreditCardAccount : IJournalAccount
     {
         public Guid Id { get; set; }
 
         public string Description { get; set; }
 
-        public LedgerTypes LedgerType { get { return LedgerTypes.LiabilityCard; } }
+        public JounalAccountType JournalType { get { return JounalAccountType.LiabilityCard; } }
 
         public int OrderBy { get; set; }
 
@@ -26,18 +26,20 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         public Guid CategoryId { get { return Guid.Empty; } }
 
+        public decimal MonthlyBudgetAmount { get { return decimal.Zero; } }
+
         public CreditCardAccount()
         {
             Id = Guid.NewGuid();
         }
-        public CreditCardAccount(ILedgerAccount cpy)
+        public CreditCardAccount(IJournalAccount cpy)
         {
             this.Copy(cpy);
         }
 
-        public void Copy(ILedgerAccount cpy)
+        public void Copy(IJournalAccount cpy)
         {
-            if (cpy.LedgerType != this.LedgerType) throw new InvalidOperationException("Copy MUST be a Credit Card Account");
+            if (cpy.JournalType != this.JournalType) throw new InvalidOperationException("Copy MUST be a Credit Card Account");
 
             this.Id = cpy.Id;
             this.Description = cpy.Description;

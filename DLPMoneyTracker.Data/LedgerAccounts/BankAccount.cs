@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Data.LedgerAccounts
 {
-    public class BankAccount : ILedgerAccount
+    public class BankAccount : IJournalAccount
     {
         public Guid Id { get; set; }
 
         public string Description { get; set; }
 
-        public LedgerTypes LedgerType { get { return LedgerTypes.Bank; } }
+        public JounalAccountType JournalType { get { return JounalAccountType.Bank; } }
         public int OrderBy { get; set; }
         public DateTime? DateClosedUTC { get; set; }
 
@@ -25,18 +25,20 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         public Guid CategoryId { get { return Guid.Empty; } }
 
+        public decimal MonthlyBudgetAmount { get { return decimal.Zero; } }
+
         public BankAccount()
         {
             Id = Guid.NewGuid();
         }
-        public BankAccount(ILedgerAccount cpy)
+        public BankAccount(IJournalAccount cpy)
         {
             this.Copy(cpy);
         }
 
-        public void Copy(ILedgerAccount cpy)
+        public void Copy(IJournalAccount cpy)
         {
-            if (cpy.LedgerType != this.LedgerType) throw new InvalidOperationException("Copy MUST be a Bank Account");
+            if (cpy.JournalType != this.JournalType) throw new InvalidOperationException("Copy MUST be a Bank Account");
 
             this.Id = cpy.Id;
             this.Description = cpy.Description;

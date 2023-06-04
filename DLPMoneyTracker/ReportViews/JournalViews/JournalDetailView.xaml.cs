@@ -36,7 +36,7 @@ namespace DLPMoneyTracker.ReportViews.JournalViews
             this.DataContext = _viewModel;
         }
 
-        public void ShowAccountDetail(ILedgerAccount act)
+        public void ShowAccountDetail(IJournalAccount act)
         {
             _viewModel.FilterAccount = act;
             _viewModel.IsFiltersVisible = true;
