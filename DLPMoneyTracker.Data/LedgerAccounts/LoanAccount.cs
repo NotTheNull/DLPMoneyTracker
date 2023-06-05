@@ -13,7 +13,7 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         public string Description { get; set; }
 
-        public JounalAccountType JournalType { get { return JounalAccountType.LiabilityLoan; } }
+        public JournalAccountType JournalType { get { return JournalAccountType.LiabilityLoan; } }
 
         public int OrderBy { get; set; }
 

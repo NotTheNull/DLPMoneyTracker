@@ -93,7 +93,7 @@ namespace DLPMoneyTracker.Data
             get
             {
                 return _listLedgerAccounts
-                    .Where(x => x.JournalType == JounalAccountType.Bank || x.JournalType == JounalAccountType.LiabilityCard)
+                    .Where(x => x.JournalType == JournalAccountType.Bank || x.JournalType == JournalAccountType.LiabilityCard)
                     .ToList()
                     .AsReadOnly();
             }
@@ -103,7 +103,7 @@ namespace DLPMoneyTracker.Data
         {
             get
             {
-                return _listLedgerAccounts.Where(x => x.JournalType == JounalAccountType.Receivable).ToList().AsReadOnly();
+                return _listLedgerAccounts.Where(x => x.JournalType == JournalAccountType.Receivable).ToList().AsReadOnly();
             }
         }
 
@@ -111,7 +111,7 @@ namespace DLPMoneyTracker.Data
         {
             get
             {
-                return _listLedgerAccounts.Where(x => x.JournalType == JounalAccountType.Payable || x.JournalType == JounalAccountType.LiabilityLoan || x.JournalType == JounalAccountType.LiabilityCard).ToList().AsReadOnly();
+                return _listLedgerAccounts.Where(x => x.JournalType == JournalAccountType.Payable || x.JournalType == JournalAccountType.LiabilityLoan || x.JournalType == JournalAccountType.LiabilityCard).ToList().AsReadOnly();
             }
         }
 

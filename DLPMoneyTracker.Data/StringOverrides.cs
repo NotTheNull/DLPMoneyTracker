@@ -16,15 +16,15 @@ namespace DLPMoneyTracker.Data
         {
             switch(account.JournalType)
             {
-                case JounalAccountType.Payable:
+                case JournalAccountType.Payable:
                     return "Accounts Payable";
-                case JounalAccountType.LiabilityLoan:
+                case JournalAccountType.LiabilityLoan:
                     return "Loan";
-                case JounalAccountType.LiabilityCard:
+                case JournalAccountType.LiabilityCard:
                     return "Credit Card";
-                case JounalAccountType.Receivable:
+                case JournalAccountType.Receivable:
                     return "Accounts Receivable";
-                case JounalAccountType.Bank:
+                case JournalAccountType.Bank:
                     return "Bank";
                 default:
                     return "*N/A*";

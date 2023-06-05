@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Data.LedgerAccounts
 {
-    public enum JounalAccountType
+    public enum JournalAccountType
     {
         Bank,
         LiabilityCard,
@@ -21,7 +21,7 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
     {
         Guid Id { get; }
         string Description { get; }
-        JounalAccountType JournalType { get; }
+        JournalAccountType JournalType { get; }
         int OrderBy { get; }
         DateTime? DateClosedUTC { get; }
 
@@ -40,7 +40,7 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         public string Description { get; set; }
 
-        public JounalAccountType JournalType { get; set; }
+        public JournalAccountType JournalType { get; set; }
 
         public int OrderBy { get; set; }
 

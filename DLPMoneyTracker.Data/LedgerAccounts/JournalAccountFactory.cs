@@ -12,15 +12,15 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
         {
             switch (data.JournalType)
             {
-                case JounalAccountType.Bank:
+                case JournalAccountType.Bank:
                     return new BankAccount(data);
-                case JounalAccountType.LiabilityCard:
+                case JournalAccountType.LiabilityCard:
                     return new CreditCardAccount(data);
-                case JounalAccountType.LiabilityLoan:
+                case JournalAccountType.LiabilityLoan:
                     return new LoanAccount(data);
-                case JounalAccountType.Payable:
+                case JournalAccountType.Payable:
                     return new PayableAccount(data);
-                case JounalAccountType.Receivable:
+                case JournalAccountType.Receivable:
                     return new ReceivableAccount(data);
                 default:
                     throw new NotSupportedException(string.Format("Ledger Type [{0}] is not supported", data.JournalType.ToString()));

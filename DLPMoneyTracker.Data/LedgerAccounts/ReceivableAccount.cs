@@ -15,7 +15,7 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         public string Description { get; set; }
 
-        public JounalAccountType JournalType { get { return JounalAccountType.Receivable; } }
+        public JournalAccountType JournalType { get { return JournalAccountType.Receivable; } }
 
         public int OrderBy { get; set; }
 

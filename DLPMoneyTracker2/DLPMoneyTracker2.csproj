@@ -1,33 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows10.0.22621.0</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>Cash-64.ico</ApplicationIcon>
-    <StartupObject>DLPMoneyTracker.App</StartupObject>
-    <AssemblyVersion>1.2022.314.1</AssemblyVersion>
-    <FileVersion>1.2022.314.1</FileVersion>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="HTMLReports\**" />
-    <Compile Remove="ReportViews\CategoryOverview\**" />
-    <Compile Remove="ReportViews\LedgerViews\**" />
-    <EmbeddedResource Remove="HTMLReports\**" />
-    <EmbeddedResource Remove="ReportViews\CategoryOverview\**" />
-    <EmbeddedResource Remove="ReportViews\LedgerViews\**" />
-    <None Remove="HTMLReports\**" />
-    <None Remove="ReportViews\CategoryOverview\**" />
-    <None Remove="ReportViews\LedgerViews\**" />
-    <Page Remove="HTMLReports\**" />
-    <Page Remove="ReportViews\CategoryOverview\**" />
-    <Page Remove="ReportViews\LedgerViews\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Core\Behaviors\WebViewHTMLStringBehavior.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Remove="Cash-64.ico" />
