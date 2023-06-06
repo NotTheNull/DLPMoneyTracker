@@ -187,7 +187,7 @@
                      Width="80"
                      Background="{Binding Path=CanEdit, Converter={StaticResource convertEnabledToBgColor}, UpdateSourceTrigger=PropertyChanged}"
                      IsEnabled="{Binding Path=CanEdit, UpdateSourceTrigger=PropertyChanged}"
-                     
+                     Text="{Binding Path=EditAccount.DisplayOrder, Converter={StaticResource convertNumberToDisplay}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                      />
         </Grid>
         

@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Core\Converters\CategoryTypeToBackgroundColor.cs" />
+    <Compile Remove="Core\Converters\CategoryTypeToDisplayText.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Cash-64.ico" />
     <None Remove="Icons\Add-New-256.png" />
     <None Remove="Icons\Cancel-256.png" />

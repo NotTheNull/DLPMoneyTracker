@@ -11,8 +11,7 @@
         <convert:EnabledBooleanToBackgroundColor x:Key="convertEnabledToBgColor" />
         <convert:AccountTypeToBackgroundColor x:Key="convertMoneyAccountToBgColor" />
         <convert:DecimalToDisplayTextConverter x:Key="convertDecimalToDisplay" />
-        <convert:CategoryTypeToDisplayText x:Key="convertCategoryTypeToDisplay" />
-        <convert:CategoryTypeToBackgroundColor x:Key="convertCategoryTypeToBgColor" />
+        <convert:JournalPlanTypeToBackgroundColor x:Key="convertPlanTypeToBgColor" />
         <convert:NumberToTextConverter x:Key="convertNumberToDisplay" />
         <convert:BooleanToVisibilityConverter x:Key="convertBoolToVisibility" />
         <convert:BooleanInverterConverter x:Key="convertBoolInverter" />

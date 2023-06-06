@@ -1,4 +1,5 @@
 ﻿using DLPMoneyTracker.Data.ConfigModels;
+using DLPMoneyTracker.Data.LedgerAccounts;
 using System;
 using System.Globalization;
 using System.Windows.Data;
@@ -11,24 +12,20 @@ namespace DLPMoneyTracker2.Core.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is null) return Brushes.White;
-            if (value is MoneyAccountType acctType)
+            if (value is JournalAccountType acctType)
             {
                 Color primaryColor = Colors.White;
                 switch (acctType)
                 {
-                    case MoneyAccountType.Checking:
+                    case JournalAccountType.Bank:
                         primaryColor = Colors.LightGreen;
                         break;
 
-                    case MoneyAccountType.Savings:
-                        primaryColor = Colors.Aquamarine;
-                        break;
-
-                    case MoneyAccountType.CreditCard:
+                    case JournalAccountType.LiabilityCard:
                         primaryColor = Colors.Yellow;
                         break;
 
-                    case MoneyAccountType.Loan:
+                    case JournalAccountType.LiabilityLoan:
                         primaryColor = Colors.Orange;
                         break;
 

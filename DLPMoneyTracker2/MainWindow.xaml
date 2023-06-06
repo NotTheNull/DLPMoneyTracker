@@ -35,6 +35,7 @@
                             </MenuItem.Icon>
                         </MenuItem>
                     </MenuItem>
+                    
                     <MenuItem Header="_Ledger">
                         <MenuItem x:Name="MenuRecordIncome" Header="Add _Income">
                             <MenuItem.Icon>
