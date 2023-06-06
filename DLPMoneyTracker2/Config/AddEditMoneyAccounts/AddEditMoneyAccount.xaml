@@ -116,22 +116,9 @@
                 <RowDefinition Height="30" />
                 <RowDefinition Height="30" />
                 <RowDefinition Height="30" />
-                <RowDefinition Height="30" />
-                <RowDefinition Height="30" />
-                <RowDefinition Height="30" />
                 <RowDefinition Height="15" />
             </Grid.RowDefinitions>
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="15" />
-                <RowDefinition Height="30" />
-                <RowDefinition Height="30" />
-                <RowDefinition Height="30" />
-                <RowDefinition Height="30" />
-                <RowDefinition Height="30" />
-                <RowDefinition Height="30" />
-                <RowDefinition Height="15" />
-            </Grid.RowDefinitions>
 
 
             <TextBlock Text="Description"
