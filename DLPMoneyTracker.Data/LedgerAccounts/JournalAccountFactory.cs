@@ -45,5 +45,31 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
                     throw new NotSupportedException(string.Format("Ledger Type [{0}] is not supported", jtype.ToString()));
             }
         }
+
+        public static void Update(ref IJournalAccount account, string desc,  decimal budget = decimal.Zero)
+        {
+            if(account is BankAccount bank)
+            {
+                bank.Description = desc;
+            }
+            else if(account is CreditCardAccount creditCard)
+            {
+                creditCard.Description = desc;
+            }
+            else if(account is LoanAccount loanAccount) 
+            {
+                loanAccount.Description = desc; 
+            }
+            else if(account is PayableAccount payableAccount)
+            {
+                payableAccount.Description = desc;
+                payableAccount.MonthlyBudgetAmount = budget;
+            }
+            else if(account is  ReceivableAccount receivableAccount)
+            {
+                receivableAccount.Description = desc;
+                receivableAccount.MonthlyBudgetAmount = budget;
+            }
+        }
     }
 }

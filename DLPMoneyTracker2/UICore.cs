@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using DLPMoneyTracker.Data;
 using DLPMoneyTracker2.Config.AddEditMoneyAccounts;
+using DLPMoneyTracker2.Config.AddEditLedgerAccounts;
 
 namespace DLPMoneyTracker2
 {
@@ -34,7 +35,8 @@ namespace DLPMoneyTracker2
 
             services.AddTransient<AddEditMoneyAccount>();
             services.AddTransient<AddEditMoneyAccountVM>();
-            
+            services.AddTransient<AddEditLedgerAccount>();
+            services.AddTransient<AddEditLedgerAccountVM>();
 
         }
 

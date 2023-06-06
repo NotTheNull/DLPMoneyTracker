@@ -124,6 +124,11 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
                 acct = JournalAccountFactory.Build(this.Description, this.JournalType);
                 _config.AddJournalAccount(acct);
             }
+            else 
+            {
+                JournalAccountFactory.Update(ref acct, this.Description);
+            }
+            _config.SaveJournalAccounts();
 
             var initBalRecord = (JournalEntry?)_journal.TransactionList
                 .FirstOrDefault(x =>
