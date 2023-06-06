@@ -1,4 +1,7 @@
-﻿using System;
+﻿using DLPMoneyTracker2.Config.AddEditLedgerAccounts;
+using DLPMoneyTracker2.Config.AddEditMoneyAccounts;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,6 +38,18 @@ namespace DLPMoneyTracker2
         private void MenuExit_Click(object sender, RoutedEventArgs e)
         {
             this.Exit();
+        }
+
+        private void MenuEditMoneyAccounts_Click(object sender, RoutedEventArgs e)
+        {
+            AddEditMoneyAccount window = UICore.DependencyHost.GetRequiredService<AddEditMoneyAccount>();
+            window.Show();            
+        }
+
+        private void MenuEditLedgerAccounts_Click(object sender, RoutedEventArgs e)
+        {
+            AddEditLedgerAccount window = UICore.DependencyHost.GetRequiredService<AddEditLedgerAccount>();
+            window.Show();
         }
     }
 }
