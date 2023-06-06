@@ -116,6 +116,7 @@
                 <RowDefinition Height="30" />
                 <RowDefinition Height="30" />
                 <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
                 <RowDefinition Height="15" />
             </Grid.RowDefinitions>
 
@@ -174,8 +175,20 @@
                      IsEnabled="{Binding Path=CanEdit, UpdateSourceTrigger=PropertyChanged}"
                      Text="{Binding Path=EditAccount.InitialBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=0.00,  Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
 
+            <TextBlock Text="Display Order"
+                       Grid.Column="1"
+                       Grid.Row="4"
+                       Style="{StaticResource HeaderLabel}" />
 
 
+            <TextBox x:Name="txtDisplayOrder"
+                     Grid.Column="2"
+                     Grid.Row="4"
+                     Width="80"
+                     Background="{Binding Path=CanEdit, Converter={StaticResource convertEnabledToBgColor}, UpdateSourceTrigger=PropertyChanged}"
+                     IsEnabled="{Binding Path=CanEdit, UpdateSourceTrigger=PropertyChanged}"
+                     
+                     />
         </Grid>
         
         

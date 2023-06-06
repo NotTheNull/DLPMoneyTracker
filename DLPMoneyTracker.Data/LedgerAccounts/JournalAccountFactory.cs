@@ -27,16 +27,16 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
             }
         }
 
-        public static IJournalAccount Build(string desc, JournalAccountType jtype, decimal budget = decimal.Zero)
+        public static IJournalAccount Build(string desc, JournalAccountType jtype, decimal budget = decimal.Zero, int orderBy = 99)
         {
             switch (jtype)
             {
                 case JournalAccountType.Bank:
-                    return new BankAccount() { Description = desc, };
+                    return new BankAccount() { Description = desc, OrderBy = orderBy };
                 case JournalAccountType.LiabilityCard:
-                    return new CreditCardAccount() { Description = desc, };
+                    return new CreditCardAccount() { Description = desc, OrderBy = orderBy };
                 case JournalAccountType.LiabilityLoan:
-                    return new LoanAccount() { Description = desc, };
+                    return new LoanAccount() { Description = desc, OrderBy = orderBy };
                 case JournalAccountType.Payable:
                     return new PayableAccount() { Description = desc, MonthlyBudgetAmount = budget };
                 case JournalAccountType.Receivable:
@@ -46,19 +46,22 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
             }
         }
 
-        public static void Update(ref IJournalAccount account, string desc,  decimal budget = decimal.Zero)
+        public static void Update(ref IJournalAccount account, string desc,  decimal budget = decimal.Zero, int orderBy = 99)
         {
             if(account is BankAccount bank)
             {
                 bank.Description = desc;
+                bank.OrderBy = orderBy;
             }
             else if(account is CreditCardAccount creditCard)
             {
                 creditCard.Description = desc;
+                creditCard.OrderBy = orderBy;
             }
             else if(account is LoanAccount loanAccount) 
             {
                 loanAccount.Description = desc; 
+                loanAccount.OrderBy = orderBy;
             }
             else if(account is PayableAccount payableAccount)
             {

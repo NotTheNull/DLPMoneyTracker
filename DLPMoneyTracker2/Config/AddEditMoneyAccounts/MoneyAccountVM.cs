@@ -83,6 +83,18 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             }
         }
 
+        private int _order;
+
+        public int DisplayOrder
+        {
+            get { return _order; }
+            set 
+            { 
+                _order = value; 
+                NotifyPropertyChanged(nameof(DisplayOrder));
+            }
+        }
+
 
 
         public void Clear()
@@ -104,6 +116,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             Description = account.Description;
             JournalType = account.JournalType;
             DateClosedUTC = account.DateClosedUTC;
+            DisplayOrder = account.OrderBy;
 
             var initBalRecord = _journal.TransactionList
                 .FirstOrDefault(x =>
@@ -121,12 +134,12 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             var acct = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == Id);
             if (acct is null)
             {
-                acct = JournalAccountFactory.Build(this.Description, this.JournalType);
+                acct = JournalAccountFactory.Build(this.Description, this.JournalType, orderBy: this.DisplayOrder);
                 _config.AddJournalAccount(acct);
             }
             else 
             {
-                JournalAccountFactory.Update(ref acct, this.Description);
+                JournalAccountFactory.Update(ref acct, this.Description, orderBy: this.DisplayOrder);
             }
             _config.SaveJournalAccounts();
 
