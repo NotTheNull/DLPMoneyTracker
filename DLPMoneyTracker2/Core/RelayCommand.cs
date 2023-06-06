@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace DLPMoneyTracker.Core
+namespace DLPMoneyTracker2.Core
 {
     public class RelayCommand : ICommand
     {

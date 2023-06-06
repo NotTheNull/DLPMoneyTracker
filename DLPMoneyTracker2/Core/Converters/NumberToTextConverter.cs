@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace DLPMoneyTracker.Core.Converters
+namespace DLPMoneyTracker2.Core.Converters
 {
     public class NumberToTextConverter : IValueConverter
     {

@@ -18,7 +18,7 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         public JournalAccountType JournalType { get { return JournalAccountType.NotSet; } }
 
-        public DateTime? DateClosedUTC { get { return null; } }
+        public DateTime? DateClosedUTC { get { return null; } set { } }
 
         public int OrderBy { get { return 0; } }
 

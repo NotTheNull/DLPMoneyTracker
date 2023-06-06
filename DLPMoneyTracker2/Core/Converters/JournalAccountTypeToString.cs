@@ -3,15 +3,16 @@ using DLPMoneyTracker.Data;
 using System;
 using System.Globalization;
 using System.Windows.Data;
+using DLPMoneyTracker.Data.LedgerAccounts;
 
-namespace DLPMoneyTracker.Core.Converters
+namespace DLPMoneyTracker2.Core.Converters
 {
-    public class MoneyAccountTypeToString : IValueConverter
+    public class JournalAccountTypeToString : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is null) return string.Empty;
-            if (value is MoneyAccountType acctType)
+            if (value is JournalAccountType acctType)
             {
                 return acctType.ToDisplayText();
             }

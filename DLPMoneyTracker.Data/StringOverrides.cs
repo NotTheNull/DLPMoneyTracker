@@ -12,9 +12,9 @@ namespace DLPMoneyTracker.Data
 
     public static class StringExtensions
     {
-        public static string ToDisplayText(this IJournalAccount account)
+        public static string ToDisplayText(this JournalAccountType journalType)
         {
-            switch(account.JournalType)
+            switch(journalType)
             {
                 case JournalAccountType.Payable:
                     return "Accounts Payable";

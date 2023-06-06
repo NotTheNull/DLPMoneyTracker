@@ -26,6 +26,8 @@ namespace DLPMoneyTracker.Data
 
 
         void LoadFromFile(int year);
+        void AddJournalAccount(IJournalAccount act);
+        void RemoveJournalAccount(Guid accountId);
         void SaveJournalAccounts();
         void LoadJournalAccounts();
 
@@ -147,6 +149,26 @@ namespace DLPMoneyTracker.Data
 #pragma warning restore CS0612 // Type or member is obsolete
             this.LoadJournalAccounts();
         }
+
+        public void AddJournalAccount(IJournalAccount act)
+        {
+            if (act is null) throw new ArgumentNullException("Journal Account");
+            if (act.JournalType == JournalAccountType.NotSet) throw new InvalidCastException("Journal Type is NOT SET");
+            if (_listLedgerAccounts.Any(x => x.Id == act.Id)) return;
+            _listLedgerAccounts.Add(act);
+            SaveJournalAccounts();
+        }
+
+        public void RemoveJournalAccount(Guid accountId)
+        {
+            if (accountId == Guid.Empty) throw new ArgumentNullException("Account Id");
+
+            var act = _listLedgerAccounts.FirstOrDefault(x => x.Id == accountId);
+            if (act is null) return;
+            act.DateClosedUTC = DateTime.UtcNow;
+            SaveJournalAccounts();
+        }
+
 
         public void SaveJournalAccounts()
         {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Toolkit.Wpf.UI.Controls;
 using System.Windows;
 
-namespace DLPMoneyTracker.Core.Behaviors
+namespace DLPMoneyTracker2.Core.Behaviors
 {
     public class WebViewHTMLStringBehavior
     {

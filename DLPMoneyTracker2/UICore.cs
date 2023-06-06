@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using DLPMoneyTracker.Data;
+using DLPMoneyTracker2.Config.AddEditMoneyAccounts;
 
 namespace DLPMoneyTracker2
 {
@@ -30,6 +31,9 @@ namespace DLPMoneyTracker2
 #pragma warning restore CS0612 // Type or member is obsolete
 
             services.AddSingleton<MainWindow>();
+
+            services.AddTransient<AddEditMoneyAccount>();
+            services.AddTransient<AddEditMoneyAccountVM>();
             
 
         }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace DLPMoneyTracker.Core
+namespace DLPMoneyTracker2.Core
 {
     public delegate void SimpleNotification();
 

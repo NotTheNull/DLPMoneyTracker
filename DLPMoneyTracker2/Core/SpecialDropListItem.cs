@@ -1,4 +1,4 @@
-﻿namespace DLPMoneyTracker.Core
+﻿namespace DLPMoneyTracker2.Core
 {
     public class SpecialDropListItem<T>
     {

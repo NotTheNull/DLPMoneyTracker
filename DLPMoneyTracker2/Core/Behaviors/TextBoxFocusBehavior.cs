@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xaml.Behaviors;
 using System.Windows.Controls;
 
-namespace DLPMoneyTracker.Core.Behaviors
+namespace DLPMoneyTracker2.Core.Behaviors
 {
     public class TextBoxFocusBehavior : Behavior<TextBox>
     {

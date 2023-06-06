@@ -23,7 +23,7 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
         string Description { get; }
         JournalAccountType JournalType { get; }
         int OrderBy { get; }
-        DateTime? DateClosedUTC { get; }
+        DateTime? DateClosedUTC { get; set; }
 
         string MoneyAccountId { get; }
         MoneyAccountType AccountType { get; }

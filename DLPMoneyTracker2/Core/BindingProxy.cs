@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace DLPMoneyTracker.Core
+namespace DLPMoneyTracker2.Core
 {
     public class BindingProxy : Freezable
     {

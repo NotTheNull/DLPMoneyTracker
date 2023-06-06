@@ -72,21 +72,17 @@
 
                     <MenuItem Header="_Config">
 
-                        <MenuItem x:Name="MenuEditAccounts" Header="_Edit Accounts">
+                        <MenuItem x:Name="MenuEditMoneyAccounts" Header="_Edit Money Accounts">
                             <MenuItem.Icon>
                                 <Image Source="/Icons/Dollar-256.png" />
                             </MenuItem.Icon>
                         </MenuItem>
-                        <!--<MenuItem Click="MenuItemEditMoneyAccount_Click" Header="_Edit Money Accounts">
-                            <MenuItem.Icon>
-                                <Image Source="/Icons/Dollar-256.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem Click="MenuItemEditCategories_Click" Header="_Edit Categories">
+                        
+                        <MenuItem x:Name="MenuEditLedgerAccounts" Header="_Edit Ledger Accounts">
                             <MenuItem.Icon>
                                 <Image Source="/Icons/Library-Books-256.png" />
                             </MenuItem.Icon>
-                        </MenuItem>-->
+                        </MenuItem>
                     </MenuItem>
                 </Menu>
 

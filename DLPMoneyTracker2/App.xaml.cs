@@ -34,15 +34,14 @@ namespace DLPMoneyTracker2
             if (ledger?.TransactionList.Any() == true)
             {
                 var journal = UICore.DependencyHost.GetService<IJournal>();
-                journal.Convert(ledger);
+                journal?.Convert(ledger);
             }
 #pragma warning restore CS0612 // Type or member is obsolete
 
 
-
             var mainWindow = UICore.DependencyHost.GetService<MainWindow>();
-            mainWindow.Show();
+            mainWindow?.Show();
         }
     }
-    }
+    
 }
