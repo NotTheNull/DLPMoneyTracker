@@ -9,6 +9,7 @@ using DLPMoneyTracker2.Config.AddEditLedgerAccounts;
 using DLPMoneyTracker2.Main.AccountSummary;
 using DLPMoneyTracker2.Main.TransactionList;
 using DLPMoneyTracker2.Main.BudgetAnalysis;
+using DLPMoneyTracker2.Ledger;
 
 namespace DLPMoneyTracker2
 {
@@ -52,6 +53,13 @@ namespace DLPMoneyTracker2
             services.AddSingleton<TransactionDetailVM>();
 
             services.AddTransient<AccountTransactionDetailVM>();
+
+            // Ledger
+            services.AddTransient<IncomeJournalEntryVM>();
+            services.AddTransient<ExpenseJournalEntryVM>();
+            services.AddTransient<DebtPaymentJournalEntryVM>();
+            services.AddTransient<TransferJournalEntryVM>();
+            services.AddTransient<CorrectionJournalEntryVM>();
 
             // Config
             services.AddTransient<AddEditMoneyAccount>();

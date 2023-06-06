@@ -181,7 +181,7 @@ namespace DLPMoneyTracker.Data
             _listLedgerAccounts ??= new List<IJournalAccount>();
             _listLedgerAccounts.Clear();
             _listLedgerAccounts.Add(SpecialAccount.InitialBalance);
-            _listLedgerAccounts.Add(SpecialAccount.Unlisted);
+            _listLedgerAccounts.Add(SpecialAccount.UnlistedAdjusment);
 
             if(File.Exists(LedgerAccountsConfig))
             {

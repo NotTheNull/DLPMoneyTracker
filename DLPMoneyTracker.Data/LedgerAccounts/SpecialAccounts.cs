@@ -10,7 +10,7 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
     public class SpecialAccount : IJournalAccount
     {
         public static SpecialAccount InitialBalance { get { return new SpecialAccount() { Id = Guid.Empty, Description = "*STARTING BALANCE*" }; } }
-        public static SpecialAccount Unlisted { get { return new SpecialAccount() { Id = new Guid("99999999-8888-7777-6666-555555555555"), Description = "*UNDEFINED*" }; } }
+        public static SpecialAccount UnlistedAdjusment { get { return new SpecialAccount() { Id = new Guid("99999999-8888-7777-6666-555555555555"), Description = "*CORRECTION*" }; } }
 
         public Guid Id { get; set; }
 

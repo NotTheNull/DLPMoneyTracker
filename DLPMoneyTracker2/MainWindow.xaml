@@ -35,27 +35,44 @@
                             </MenuItem.Icon>
                         </MenuItem>
                     </MenuItem>
-                    
+
                     <MenuItem Header="_Ledger">
-                        <MenuItem x:Name="MenuRecordIncome" Header="Add _Income">
+                        <MenuItem x:Name="MenuRecordIncome" 
+                                  Header="Add _Income"
+                                  Click="MenuRecordIncome_Click"
+                                  >
                             <MenuItem.Icon>
                                 <Image Source="/Icons/Dollar-256.png" />
                             </MenuItem.Icon>
                         </MenuItem>
 
-                        <MenuItem x:Name="MenuRecordExpense" Header="Add _Expense">
+                        <MenuItem x:Name="MenuRecordExpense" 
+                                  Click="MenuRecordExpense_Click"
+                                  Header="Add _Expense">
                             <MenuItem.Icon>
                                 <Image Source="/Icons/Credit-Card-256.png" />
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem x:Name="MenuRecordLiabilityPayment" Header="Add _Debt Payment">
+                        <MenuItem x:Name="MenuRecordLiabilityPayment" 
+                                  Click="MenuRecordLiabilityPayment_Click"
+                                  Header="Add _Debt Payment">
                             <MenuItem.Icon>
                                 <Image Source="/Icons/Payment-256.png" />
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem x:Name="MenuRecordBankTransfer" Header="_Transfer Money">
+                        <MenuItem x:Name="MenuRecordBankTransfer" 
+                                  Click="MenuRecordBankTransfer_Click"
+                                  Header="_Transfer Money">
                             <MenuItem.Icon>
                                 <Image Source="/Icons/Money-Transfer-256.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem x:Name="MenuAccountCorrection"
+                                  Header="Add _Correction"
+                                  Click="MenuAccountCorrection_Click"
+                                  >
+                            <MenuItem.Icon>
+                                <Image Source="/Icons/Edit-Pencil-256.png" />
                             </MenuItem.Icon>
                         </MenuItem>
                         <!--<MenuItem Click="MenuItemModifyBudget_Click" Header="Modify Fixed Expense/Income Budget">
@@ -63,11 +80,11 @@
                                 <Image Source="/Icons/Stock-Exchange-256.png" />
                             </MenuItem.Icon>
                         </MenuItem>-->
-                        <MenuItem x:Name="MenuShowHistory" Header="Show History" >
+                        <!--<MenuItem x:Name="MenuShowHistory" Header="Show History" >
                             <MenuItem.Icon>
                                 <Image Source="/Icons/Library-Books-256.png" />
                             </MenuItem.Icon>
-                        </MenuItem>
+                        </MenuItem>-->
                     </MenuItem>
 
 
@@ -81,7 +98,7 @@
                                 <Image Source="/Icons/Dollar-256.png" />
                             </MenuItem.Icon>
                         </MenuItem>
-                        
+
                         <MenuItem x:Name="MenuEditLedgerAccounts" 
                                   Header="_Edit Ledger Accounts"
                                   Click="MenuEditLedgerAccounts_Click"
@@ -94,68 +111,68 @@
                 </Menu>
 
                 <StackPanel
-                Height="30"
-                Background="LightGray"
-                Orientation="Horizontal">
+                    Height="30"
+                    Background="LightGray"
+                    Orientation="Horizontal">
                     <Button
-                    x:Name="btnExit"
-                    Margin="5,0,0,0"
-                    Click="MenuExit_Click"
-                    Style="{StaticResource MenuButton}"
-                    ToolTip="Exit">
-                        <Button.Content>
-                            <Image Source="/Icons/Leave-256.png" />
-                        </Button.Content>
-                    </Button>
+                        x:Name="btnExit"
+                        Margin="5,0,0,0"
+                        Click="MenuExit_Click"
+                        Style="{StaticResource MenuButton}"
+                        ToolTip="Exit">
+                            <Button.Content>
+                                <Image Source="/Icons/Leave-256.png" />
+                            </Button.Content>
+                        </Button>
 
                     <Rectangle
-                    Width="2"
-                    Height="30"
-                    Margin="5"
-                    Fill="Silver" />
+                        Width="2"
+                        Height="30"
+                        Margin="5"
+                        Fill="Silver" />
 
                     <Button
-                    x:Name="btnAddExpense"
-                    
-                    Style="{StaticResource MenuButton}"
-                    ToolTip="Add Expense">
+                        x:Name="btnAddExpense"
+                        Click="MenuRecordExpense_Click"
+                        Style="{StaticResource MenuButton}"
+                        ToolTip="Add Expense">
                         <Button.Content>
                             <Image Source="/Icons/Credit-Card-256.png" />
                         </Button.Content>
                     </Button>
 
                     <Button
-                    x:Name="btnAddLiabilityPayment"
-                    
-                    Style="{StaticResource MenuButton}"
-                    ToolTip="Liability Payment">
+                        x:Name="btnAddLiabilityPayment"
+                    Click="MenuRecordLiabilityPayment_Click"
+                        Style="{StaticResource MenuButton}"
+                        ToolTip="Liability Payment">
                         <Button.Content>
                             <Image Source="/Icons/Payment-256.png" />
                         </Button.Content>
                     </Button>
 
-                    <Button
-                    x:Name="btnShowHistory"
+                    <!--<Button
+                        x:Name="btnShowHistory"
                     
-                    Style="{StaticResource MenuButton}"
-                    ToolTip="History">
+                        Style="{StaticResource MenuButton}"
+                        ToolTip="History">
                         <Button.Content>
                             <Image Source="/Icons/Library-Books-256.png" />
                         </Button.Content>
-                    </Button>
+                    </Button>-->
 
 
+                    <!--<TextBlock
+                        Margin="30,0,0,0"
+                        VerticalAlignment="Center"
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Text="Path: " />
                     <TextBlock
-                    Margin="30,0,0,0"
-                    VerticalAlignment="Center"
-                    FontSize="18"
-                    FontWeight="Bold"
-                    Text="Path: " />
-                    <TextBlock
-                    x:Name="lblPath"
-                    VerticalAlignment="Center"
-                    FontSize="18"
-                    Foreground="Blue" />
+                        x:Name="lblPath"
+                        VerticalAlignment="Center"
+                        FontSize="18"
+                        Foreground="Blue" />-->
                 </StackPanel>
             </StackPanel>
 

@@ -1,5 +1,6 @@
 ﻿using DLPMoneyTracker2.Config.AddEditLedgerAccounts;
 using DLPMoneyTracker2.Config.AddEditMoneyAccounts;
+using DLPMoneyTracker2.Ledger;
 using DLPMoneyTracker2.Main.AccountSummary;
 using DLPMoneyTracker2.Main.BudgetAnalysis;
 using DLPMoneyTracker2.Main.TransactionList;
@@ -68,6 +69,41 @@ namespace DLPMoneyTracker2
         private void MenuEditLedgerAccounts_Click(object sender, RoutedEventArgs e)
         {
             AddEditLedgerAccount window = UICore.DependencyHost.GetRequiredService<AddEditLedgerAccount>();
+            window.Show();
+        }
+
+        private void MenuRecordIncome_Click(object sender, RoutedEventArgs e)
+        {
+            IncomeJournalEntryVM viewModel = UICore.DependencyHost.GetRequiredService<IncomeJournalEntryVM>();
+            RecordJournalEntry window = new RecordJournalEntry(viewModel);
+            window.Show();
+        }
+
+        private void MenuRecordExpense_Click(object sender, RoutedEventArgs e)
+        {
+            ExpenseJournalEntryVM viewModel = UICore.DependencyHost.GetRequiredService<ExpenseJournalEntryVM>();
+            RecordJournalEntry window = new RecordJournalEntry(viewModel);
+            window.Show();
+        }
+
+        private void MenuRecordLiabilityPayment_Click(object sender, RoutedEventArgs e)
+        {
+            DebtPaymentJournalEntryVM viewModel = UICore.DependencyHost.GetRequiredService<DebtPaymentJournalEntryVM>();
+            RecordJournalEntry window = new RecordJournalEntry(viewModel);
+            window.Show();
+        }
+
+        private void MenuRecordBankTransfer_Click(object sender, RoutedEventArgs e)
+        {
+            TransferJournalEntryVM viewModel = UICore.DependencyHost.GetRequiredService<TransferJournalEntryVM>();
+            RecordJournalEntry window = new RecordJournalEntry(viewModel);
+            window.Show();
+        }
+
+        private void MenuAccountCorrection_Click(object sender, RoutedEventArgs e)
+        {
+            CorrectionJournalEntryVM viewModel = UICore.DependencyHost.GetRequiredService<CorrectionJournalEntryVM>();
+            RecordJournalEntry window = new RecordJournalEntry(viewModel);
             window.Show();
         }
     }
