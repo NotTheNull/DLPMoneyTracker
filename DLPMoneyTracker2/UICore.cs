@@ -7,6 +7,8 @@ using DLPMoneyTracker.Data;
 using DLPMoneyTracker2.Config.AddEditMoneyAccounts;
 using DLPMoneyTracker2.Config.AddEditLedgerAccounts;
 using DLPMoneyTracker2.Main.AccountSummary;
+using DLPMoneyTracker2.Main.TransactionList;
+using DLPMoneyTracker2.Main.BudgetAnalysis;
 
 namespace DLPMoneyTracker2
 {
@@ -36,10 +38,18 @@ namespace DLPMoneyTracker2
 
             // Main UI
             services.AddSingleton<MainWindow>();
+
             services.AddSingleton<MoneyAccountOverview>();
             services.AddSingleton<MoneyAccountOverviewVM>();
             services.AddTransient<MoneyAccountSummary>();
             services.AddTransient<MoneyAccountSummaryVM>();
+
+            services.AddSingleton<CurrentMonthBudget>();
+            services.AddSingleton<CurrentMonthBudgetVM>();
+            services.AddTransient<JournalAccountBudgetVM>();
+
+            services.AddSingleton<TransactionDetail>();
+            services.AddSingleton<TransactionDetailVM>();
             
             // Config
             services.AddTransient<AddEditMoneyAccount>();

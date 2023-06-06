@@ -1,6 +1,7 @@
 ﻿using DLPMoneyTracker2.Config.AddEditLedgerAccounts;
 using DLPMoneyTracker2.Config.AddEditMoneyAccounts;
 using DLPMoneyTracker2.Main.AccountSummary;
+using DLPMoneyTracker2.Main.BudgetAnalysis;
 using DLPMoneyTracker2.Main.TransactionList;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -28,13 +29,17 @@ namespace DLPMoneyTracker2
     {
         private readonly MoneyAccountOverview _viewMoneyAccounts;
         private readonly TransactionDetail _viewTransactions;
+        private readonly CurrentMonthBudget _viewBudgetAnalysis;
 
-        public MainWindow(MoneyAccountOverview viewMain, TransactionDetail viewDetail)
+        public MainWindow(MoneyAccountOverview viewMain, CurrentMonthBudget viewBudget, TransactionDetail viewDetail)
         {
             InitializeComponent();
 
             panelAccountSummary.Children.Add(viewMain);
             _viewMoneyAccounts = viewMain;
+
+            panelBudget.Children.Add(viewBudget);
+            _viewBudgetAnalysis = viewBudget;
 
             panelTransactions.Children.Add(viewDetail);
             _viewTransactions = viewDetail;
