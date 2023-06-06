@@ -1,9 +1,12 @@
 ﻿using DLPMoneyTracker2.Config.AddEditLedgerAccounts;
 using DLPMoneyTracker2.Config.AddEditMoneyAccounts;
+using DLPMoneyTracker2.Main.AccountSummary;
+using DLPMoneyTracker2.Main.TransactionList;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,9 +26,20 @@ namespace DLPMoneyTracker2
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        private readonly MoneyAccountOverview _viewMoneyAccounts;
+        private readonly TransactionDetail _viewTransactions;
+
+        public MainWindow(MoneyAccountOverview viewMain, TransactionDetail viewDetail)
         {
             InitializeComponent();
+
+            panelAccountSummary.Children.Add(viewMain);
+            _viewMoneyAccounts = viewMain;
+
+            panelTransactions.Children.Add(viewDetail);
+            _viewTransactions = viewDetail;
+
+            
         }
 
         private void Exit()
