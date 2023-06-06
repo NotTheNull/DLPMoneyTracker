@@ -1,11 +1,13 @@
 ﻿using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.LedgerAccounts;
 using DLPMoneyTracker2.Core;
+using DLPMoneyTracker2.Main.TransactionList;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -52,7 +54,19 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
             {
                 return _cmdShowDetail ?? (_cmdShowDetail = new RelayCommand((act) =>
                 {
-                    // TODO: Show transaction listing for this account
+                    if (act is IJournalAccount ja)
+                    {
+                        DateTime start = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+                        DateTime end = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month));
+                        TransDetailFilter filter = new TransDetailFilter()
+                        {
+                            Account = ja,
+                            FilterDates = new DLPMoneyTracker.Data.Common.DateRange(start, end),
+                            AreFilterControlsVisible = false
+                        };
+                        AccountTransactionDetail window = new AccountTransactionDetail(filter);
+                        window.Show();
+                    }
                 }));
             }
         }

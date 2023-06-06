@@ -2,6 +2,7 @@
 using DLPMoneyTracker.Data.LedgerAccounts;
 using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
 using DLPMoneyTracker2.Core;
+using DLPMoneyTracker2.Main.TransactionList;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -95,7 +96,9 @@ namespace DLPMoneyTracker2.Main.AccountSummary
             {
                 return _cmdDetail ?? (_cmdDetail = new RelayCommand((o) =>
                 {
-                    // TODO: Display the Ledger Detail
+                    TransDetailFilter filter = new TransDetailFilter() { Account = _account };
+                    AccountTransactionDetail window = new AccountTransactionDetail(filter);
+                    window.Show();
                 }));
             }
         }

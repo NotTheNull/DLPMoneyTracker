@@ -50,13 +50,14 @@ namespace DLPMoneyTracker2
 
             services.AddSingleton<TransactionDetail>();
             services.AddSingleton<TransactionDetailVM>();
-            
+
+            services.AddTransient<AccountTransactionDetailVM>();
+
             // Config
             services.AddTransient<AddEditMoneyAccount>();
             services.AddTransient<AddEditMoneyAccountVM>();
             services.AddTransient<AddEditLedgerAccount>();
             services.AddTransient<AddEditLedgerAccountVM>();
-
         }
 
     }

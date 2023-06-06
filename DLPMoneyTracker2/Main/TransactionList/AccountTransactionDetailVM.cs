@@ -1,5 +1,4 @@
 ﻿using DLPMoneyTracker.Data;
-using DLPMoneyTracker.Data.Common;
 using DLPMoneyTracker.Data.LedgerAccounts;
 using DLPMoneyTracker.Data.TransactionModels;
 using DLPMoneyTracker2.Core;
@@ -12,14 +11,12 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.Main.TransactionList
 {
-    public class TransactionDetailVM : BaseViewModel
+    public class AccountTransactionDetailVM : BaseViewModel
     {
         private readonly ITrackerConfig _config;
         private readonly IJournal _journal;
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        public TransactionDetailVM(ITrackerConfig config, IJournal journal) : base()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        public AccountTransactionDetailVM(ITrackerConfig config, IJournal journal)
         {
             _config = config;
             _journal = journal;
@@ -27,10 +24,14 @@ namespace DLPMoneyTracker2.Main.TransactionList
             _journal.JournalModified += _journal_JournalModified;
         }
 
+        public string HeaderText
+        {
+            get { return string.Format("{0}: {1}", this.FilterAccount.JournalType.ToDisplayText().ToUpper(), this.FilterAccount.Description); }
+        }
 
+        private ObservableCollection<SingleAccountDetailVM> _listRecords = new ObservableCollection<SingleAccountDetailVM>();
+        public ObservableCollection<SingleAccountDetailVM> DisplayRecordsList { get { return _listRecords; } }
 
-        private ObservableCollection<IJournalEntry> _listRecords;
-        public ObservableCollection<IJournalEntry> DisplayRecordsList { get { return _listRecords; } }
 
         #region Filter Related
 
@@ -41,7 +42,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
         {
             get { return _filter.Account; }
         }
-        
+
         public DateTime FilterBeginDate
         {
             get { return _filter.FilterDates.Begin; }
@@ -71,30 +72,15 @@ namespace DLPMoneyTracker2.Main.TransactionList
                 NotifyPropertyChanged(nameof(FilterText));
             }
         }
-
-        private bool _isCloseVis;
-
-        public bool IsCloseButtonVisible
+        
+        public bool AreFiltersVisible
         {
-            get { return _isCloseVis; }
-            set
+            get
             {
-                _isCloseVis = value;
-                NotifyPropertyChanged(nameof(IsCloseButtonVisible));
+                return _filter.AreFilterControlsVisible;
             }
         }
-
-        private bool _isFiltered;
-
-        public bool IsFiltersVisible
-        {
-            get { return _isFiltered; }
-            set
-            {
-                _isFiltered = value;
-                NotifyPropertyChanged(nameof(IsFiltersVisible));
-            }
-        }
+        
 
 
         #endregion
@@ -134,6 +120,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
         #endregion
 
 
+
         /// <summary>
         /// Copies the filter options into the model's filter.
         /// By setting the values in this manner, we avoid the issue of zombie memory objects
@@ -142,10 +129,14 @@ namespace DLPMoneyTracker2.Main.TransactionList
         /// <param name="filter"></param>
         public void ApplyFilters(TransDetailFilter filter)
         {
-            _filter.Account = filter.Account;
-            this.FilterBeginDate = filter.FilterDates?.Begin ?? DateTime.MinValue;
-            this.FilterEndDate = filter.FilterDates?.End ?? DateTime.MaxValue;
-            this.FilterText = filter.SearchText?.Trim() ?? string.Empty;
+            _filter = filter;
+            NotifyPropertyChanged(nameof(this.FilterAccount));
+            NotifyPropertyChanged(nameof(this.FilterBeginDate));
+            NotifyPropertyChanged(nameof(this.FilterEndDate));
+            NotifyPropertyChanged(nameof(this.FilterText));
+            //this.FilterBeginDate = filter.FilterDates?.Begin ?? DateTime.MinValue;
+            //this.FilterEndDate = filter.FilterDates?.End ?? DateTime.MaxValue;
+            //this.FilterText = filter.SearchText?.Trim() ?? string.Empty;
         }
 
 
@@ -163,7 +154,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
             var records = _journal.TransactionList.Where(x => x != null);
             if (_filter?.IsFilterEnabled == true)
             {
-                if(this.FilterAccount != null)
+                if (this.FilterAccount != null)
                 {
                     records = records.Where(x => x.DebitAccountId == this.FilterAccount.Id || x.CreditAccountId == this.FilterAccount.Id);
                 }
@@ -192,52 +183,41 @@ namespace DLPMoneyTracker2.Main.TransactionList
 
             foreach (var rec in records.OrderBy(o => o.TransactionDate).ThenBy(o => o.Description))
             {
-                if (rec is JournalEntry je)
-                {
-                    _listRecords.Add(je);
-                }
+                SingleAccountDetailVM vm = new SingleAccountDetailVM(FilterAccount, rec);
+                _listRecords.Add(vm);
             }
         }
     }
 
 
-    public class TransDetailFilter
+    public class SingleAccountDetailVM : BaseViewModel
     {
-        public IJournalAccount? Account;
-        public DateRange FilterDates;
-        public string SearchText;
-        public bool AreFilterControlsVisible;
+        private readonly IJournalEntry _je;
+        private readonly IJournalAccount _parent;
 
-        public bool IsFilterEnabled
+        public SingleAccountDetailVM(IJournalAccount parent, IJournalEntry entry) : base()
+        {
+            _je = entry;
+            _parent = parent;
+        }
+
+        public Guid ParentId { get { return _parent.Id; } }
+        public bool IsCredit { get { return _je.CreditAccountId == ParentId; } }
+        public string AccountName { get { return IsCredit ? _je.DebitAccountName : _je.CreditAccountName; } }
+        public string TransactionDescription { get { return _je.Description; } }
+        public decimal TransactionAmount
         {
             get
             {
-                if (this.FilterDates != null) return true;
-                if (this.FilterDates?.Begin > DateTime.MinValue || this.FilterDates?.End < DateTime.MaxValue) return true;
-                if (!string.IsNullOrWhiteSpace(this.SearchText)) return true;
-
-                return false;
+                if (_parent.JournalType == JournalAccountType.LiabilityCard || _parent.JournalType == JournalAccountType.LiabilityLoan)
+                {
+                    return IsCredit ? _je.TransactionAmount : _je.TransactionAmount * -1;
+                }
+                else
+                {
+                    return IsCredit ? _je.TransactionAmount * -1 : _je.TransactionAmount;
+                }
             }
-        }
-
-        public TransDetailFilter() 
-        {
-            this.FilterDates = new DateRange(DateTime.MinValue, DateTime.MaxValue);
-            this.SearchText = string.Empty;
-            AreFilterControlsVisible = true;
-        }
-        public TransDetailFilter(IJournalAccount account, DateRange dates, string search)
-        {
-            this.Account = account;
-            this.FilterDates = dates ?? new DateRange(DateTime.MinValue, DateTime.MaxValue);
-            this.SearchText = search;
-            AreFilterControlsVisible = true;
-        }
-
-        public void Clear()
-        {
-            this.FilterDates = new DateRange(DateTime.MinValue, DateTime.MaxValue);
-            this.SearchText = string.Empty;
         }
 
     }
