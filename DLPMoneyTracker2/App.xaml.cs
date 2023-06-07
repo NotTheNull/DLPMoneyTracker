@@ -24,26 +24,26 @@ namespace DLPMoneyTracker2
         {
             // Handle conversions
 #pragma warning disable CS0612 // Type or member is obsolete
-            var config = UICore.DependencyHost.GetService<ITrackerConfig>();
-            if (config?.AccountsList?.Any() == true || config?.CategoryList?.Any() == true)
-            {
-                config.Convert();
-            }
+            //var config = UICore.DependencyHost.GetService<ITrackerConfig>();
+            //if (config?.AccountsList?.Any() == true || config?.CategoryList?.Any() == true)
+            //{
+            //    config.Convert();
+            //}
 
-            var ledger = UICore.DependencyHost.GetService<ILedger>();
-            if (ledger?.TransactionList.Any() == true)
-            {
-                var journal = UICore.DependencyHost.GetService<IJournal>();
-                journal?.Convert(ledger);
-            }
+            //var ledger = UICore.DependencyHost.GetService<ILedger>();
+            //if (ledger?.TransactionList.Any() == true)
+            //{
+            //    var journal = UICore.DependencyHost.GetService<IJournal>();
+            //    journal?.Convert(ledger);
+            //}
 
-            var oldPlanner = UICore.DependencyHost.GetService<IMoneyPlanner>();
-            oldPlanner.LoadFromFile();
-            if(oldPlanner?.MoneyPlanList.Any() == true)
-            {
-                var planner = UICore.DependencyHost.GetService<IJournalPlanner>();
-                planner.Convert(oldPlanner);
-            }
+            //var oldPlanner = UICore.DependencyHost.GetService<IMoneyPlanner>();
+            //oldPlanner.LoadFromFile();
+            //if(oldPlanner?.MoneyPlanList.Any() == true)
+            //{
+            //    var planner = UICore.DependencyHost.GetService<IJournalPlanner>();
+            //    planner.Convert(oldPlanner);
+            //}
             
 #pragma warning restore CS0612 // Type or member is obsolete
 

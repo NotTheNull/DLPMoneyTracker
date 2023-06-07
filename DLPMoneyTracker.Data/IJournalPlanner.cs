@@ -130,16 +130,17 @@ namespace DLPMoneyTracker.Data
 #pragma warning disable CS0618 // Type or member is obsolete
         public void Convert(IMoneyPlanner moneyPlanner)
         {
-            if (moneyPlanner?.MoneyPlanList?.Any() != true) return;
+            return;
+            //if (moneyPlanner?.MoneyPlanList?.Any() != true) return;
 
-            _planList.Clear();
-            foreach(var m in moneyPlanner.MoneyPlanList)
-            {
-                var plan = JournalPlanFactory.Build(_config, m);
-                if (plan is null) continue;
-                _planList.Add(plan);
-            }
-            this.SaveToFile();
+            //_planList.Clear();
+            //foreach(var m in moneyPlanner.MoneyPlanList)
+            //{
+            //    var plan = JournalPlanFactory.Build(_config, m);
+            //    if (plan is null) continue;
+            //    _planList.Add(plan);
+            //}
+            //this.SaveToFile();
 
             // Hold off on deleting
             //moneyPlanner.ClearRecordList();
