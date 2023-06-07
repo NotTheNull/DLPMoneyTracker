@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:DLPMoneyTracker2.Main.TransactionList"
              mc:Ignorable="d" 
              Height="450"
-             Width="750">
+             Width="775">
 
     <UserControl.Resources>
         <Style x:Key="LocalLabel" TargetType="TextBlock">
