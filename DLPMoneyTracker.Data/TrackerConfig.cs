@@ -172,7 +172,7 @@ namespace DLPMoneyTracker.Data
 
         public void SaveJournalAccounts()
         {
-            string json = JsonSerializer.Serialize(_listLedgerAccounts, typeof(List<IJournalAccount>));
+            string json = JsonSerializer.Serialize(_listLedgerAccounts.Where(x => x.JournalType != JournalAccountType.NotSet).ToList(), typeof(List<IJournalAccount>));
             File.WriteAllText(LedgerAccountsConfig, json);
         }
 
@@ -316,72 +316,77 @@ namespace DLPMoneyTracker.Data
         /// </summary>
         public void Convert()
         {
-            if (_listAccts?.Any() == true)
-            {
-                var loopAccounts = _listAccts.ToList();
-                foreach (var act in loopAccounts)
-                {
-                    // If the account already exists, still need to remove the legacy
-                    if (!LedgerAccountsList.Any(x => x.AccountType != MoneyAccountType.NotSet && x.MoneyAccountId == act.ID))
-                    {
-                        switch (act.AccountType)
-                        {
-                            case MoneyAccountType.Checking:
-                            case MoneyAccountType.Savings:
-                                _listLedgerAccounts.Add(new BankAccount(act));
-                                break;
-                            case MoneyAccountType.CreditCard:
-                                _listLedgerAccounts.Add(new CreditCardAccount(act));
-                                break;
-                            case MoneyAccountType.Loan:
-                                _listLedgerAccounts.Add(new LoanAccount(act));
-                                break;
-                        }
+            // Conversion is complete
+            return;
 
-                    }
+            //if (_listAccts?.Any() == true)
+            //{
+            //    var loopAccounts = _listAccts.ToList();
+            //    foreach (var act in loopAccounts)
+            //    {
+            //        // If the account already exists, still need to remove the legacy
+            //        if (!LedgerAccountsList.Any(x => x.AccountType != MoneyAccountType.NotSet && x.MoneyAccountId == act.ID))
+            //        {
+            //            switch (act.AccountType)
+            //            {
+            //                case MoneyAccountType.Checking:
+            //                case MoneyAccountType.Savings:
+            //                    _listLedgerAccounts.Add(new BankAccount(act));
+            //                    break;
+            //                case MoneyAccountType.CreditCard:
+            //                    _listLedgerAccounts.Add(new CreditCardAccount(act));
+            //                    break;
+            //                case MoneyAccountType.Loan:
+            //                    _listLedgerAccounts.Add(new LoanAccount(act));
+            //                    break;
+            //            }
 
-                    _listAccts.Remove(act);
-                }
+            //        }
 
-                SaveMoneyAccounts();
-            }
+            //        // Do Not remove accounts until the Ledger can be converted
+            //        //_listAccts.Remove(act);
+            //    }
+
+            //    SaveMoneyAccounts();
+            //}
 
 
-            if (_listCategories?.Any() == true)
-            {
-                var loopCategories = _listCategories.ToList();
-                foreach(var cat in loopCategories)
-                {
-                    // If the category already exists, still need to remove the legacy
-                    if(!LedgerAccountsList.Any(x => x.AccountType == MoneyAccountType.NotSet && x.CategoryId == cat.ID))
-                    {
-                        switch(cat.CategoryType)
-                        {
-                            case CategoryType.Expense:
-                                PayableAccount ap = new PayableAccount(cat);
-                                _listLedgerAccounts.Add(ap);
-                                break;
-                            case CategoryType.Income:
-                                ReceivableAccount ar = new ReceivableAccount(cat);
-                                _listLedgerAccounts.Add(ar);
-                                break;
-                            case CategoryType.UntrackedAdjustment:
-                                PayableAccount pay = new PayableAccount(cat);
-                                pay.Description = string.Format("AP {0}", pay.Description);
-                                _listLedgerAccounts.Add(pay);
+            //if (_listCategories?.Any() == true)
+            //{
+            //    var loopCategories = _listCategories.ToList();
+            //    foreach(var cat in loopCategories)
+            //    {
+            //        // If the category already exists, still need to remove the legacy
+            //        if(!LedgerAccountsList.Any(x => x.AccountType == MoneyAccountType.NotSet && x.CategoryId == cat.ID))
+            //        {
+            //            switch(cat.CategoryType)
+            //            {
+            //                case CategoryType.Expense:
+            //                    PayableAccount ap = new PayableAccount(cat);
+            //                    _listLedgerAccounts.Add(ap);
+            //                    break;
+            //                case CategoryType.Income:
+            //                    ReceivableAccount ar = new ReceivableAccount(cat);
+            //                    _listLedgerAccounts.Add(ar);
+            //                    break;
+            //                case CategoryType.UntrackedAdjustment:
+            //                    PayableAccount pay = new PayableAccount(cat);
+            //                    pay.Description = string.Format("AP {0}", pay.Description);
+            //                    _listLedgerAccounts.Add(pay);
 
-                                ReceivableAccount rec = new ReceivableAccount(cat);
-                                rec.Description = string.Format("AR {0}", pay.Description);
-                                _listLedgerAccounts.Add(rec);
-                                break;
-                        }
+            //                    ReceivableAccount rec = new ReceivableAccount(cat);
+            //                    rec.Description = string.Format("AR {0}", pay.Description);
+            //                    _listLedgerAccounts.Add(rec);
+            //                    break;
+            //            }
                         
-                    }
-                    _listCategories.Remove(cat);
-                }
-                SaveCategories();
-            }
-            SaveJournalAccounts();
+            //        }
+            //        // Do Not remove accounts until the Ledger can be converted
+            //        //_listCategories.Remove(cat);
+            //    }
+            //    SaveCategories();
+            //}
+            //SaveJournalAccounts();
 
         }
 #pragma warning restore CS0618 // Type or member is obsolete

@@ -160,209 +160,212 @@ namespace DLPMoneyTracker.Data
         }
 
 #pragma warning disable CS0612 // Type or member is obsolete
-        const string XFER_CATEGORY = "*TRANSFER*";
-        const string DEBT_CATEGORY = "*DEBT PAYMENT*";
+        //const string XFER_CATEGORY = "*TRANSFER*";
+        //const string DEBT_CATEGORY = "*DEBT PAYMENT*";
         public void Convert(ILedger ledger)
         {
-            if (ledger is null) return;
+            // Conversion is complete
+            return;
 
-            _listTransactions.Clear();
-            bool needNextRecord = false;
-            JournalEntry newRecord = null;
-            var ledgerList = ledger.TransactionList.ToList();
-            foreach (var t in ledgerList)
-            {
-                // Find Money Account
-                var money = _config.LedgerAccountsList.FirstOrDefault(x => x.AccountType != ConfigModels.MoneyAccountType.NotSet && x.MoneyAccountId == t.AccountID);
+            //if (ledger is null) return;
 
-
-                var legacyCategory = _config.GetCategory(t.CategoryUID);
-                if (legacyCategory.CategoryType == ConfigModels.CategoryType.InitialBalance)
-                {
-                    if (newRecord is null)
-                    {
-                        newRecord = new JournalEntry(_config)
-                        {
-                            TransactionDate = t.TransDate,
-                            TransactionAmount = t.TransAmount,
-                            Description = "*STARTING BALANCE*"
-                        };
-                    }
-                    else
-                    {
-                        throw new MoneyRecordConversionException(t, string.Format("Expected {0} record", newRecord.Description));
-                    }
-
-                    if (money is BankAccount bank)
-                    {
-                        newRecord.DebitAccount = bank;
-                        newRecord.CreditAccount = SpecialAccount.InitialBalance;
-                    }
-                    else if (money is CreditCardAccount creditCard)
-                    {
-                        newRecord.DebitAccount = SpecialAccount.InitialBalance;
-                        newRecord.CreditAccount = creditCard;
-                    }
-                    else if (money is LoanAccount loan)
-                    {
-                        newRecord.DebitAccount = SpecialAccount.InitialBalance;
-                        newRecord.CreditAccount = loan;
-                    }
-                    else
-                    {
-                        throw new MoneyRecordConversionException(t, string.Format("Money Account Type [{0}] not supported", money.GetType().FullName));
-                    }
+            //_listTransactions.Clear();
+            //bool needNextRecord = false;
+            //JournalEntry newRecord = null;
+            //var ledgerList = ledger.TransactionList.ToList();
+            //foreach (var t in ledgerList)
+            //{
+            //    // Find Money Account
+            //    var money = _config.LedgerAccountsList.FirstOrDefault(x => x.AccountType != ConfigModels.MoneyAccountType.NotSet && x.MoneyAccountId == t.AccountID);
 
 
-                }
-                else if (legacyCategory.CategoryType == ConfigModels.CategoryType.Payment)
-                {
-                    if (newRecord is null)
-                    {
-                        newRecord = new JournalEntry(_config)
-                        {
-                            TransactionDate = t.TransDate,
-                            TransactionAmount = t.TransAmount,
-                            Description = DEBT_CATEGORY
-                        };
-                        needNextRecord = true;
-                    }
-                    else if (newRecord.Description != DEBT_CATEGORY)
-                    {
-                        throw new MoneyRecordConversionException(t, string.Format("Expected {0} entry; Actual {1}", DEBT_CATEGORY, newRecord.Description));
-                    }
+            //    var legacyCategory = _config.GetCategory(t.CategoryUID);
+            //    if (legacyCategory.CategoryType == ConfigModels.CategoryType.InitialBalance)
+            //    {
+            //        if (newRecord is null)
+            //        {
+            //            newRecord = new JournalEntry(_config)
+            //            {
+            //                TransactionDate = t.TransDate,
+            //                TransactionAmount = t.TransAmount,
+            //                Description = "*STARTING BALANCE*"
+            //            };
+            //        }
+            //        else
+            //        {
+            //            throw new MoneyRecordConversionException(t, string.Format("Expected {0} record", newRecord.Description));
+            //        }
 
-                    if (money is BankAccount bank)
-                    {
-                        newRecord.CreditAccount = bank;
-                    }
-                    else if (money is CreditCardAccount creditCard)
-                    {
-                        newRecord.DebitAccount = creditCard;
-                    }
-                    else if (money is LoanAccount loan)
-                    {
-                        newRecord.DebitAccount = loan;
-                    }
-                    else
-                    {
-                        throw new MoneyRecordConversionException(t, string.Format("Money Account Type [{0}] not supported for DEBT PAYMENT", money.GetType().FullName));
-                    }
-
-                    if (needNextRecord)
-                    {
-                        needNextRecord = false;
-                        continue;
-                    }
-                }
-                else if (legacyCategory.CategoryType == ConfigModels.CategoryType.TransferFrom || legacyCategory.CategoryType == ConfigModels.CategoryType.TransferTo)
-                {
-                    if (newRecord is null)
-                    {
-                        newRecord = new JournalEntry(_config)
-                        {
-                            TransactionDate = t.TransDate,
-                            TransactionAmount = t.TransAmount,
-                            Description = XFER_CATEGORY
-                        };
-                        needNextRecord = true;
-                    }
-                    else if (newRecord.Description != XFER_CATEGORY)
-                    {
-                        throw new MoneyRecordConversionException(t, string.Format("Expected {0} entry; Actual {1}", XFER_CATEGORY, newRecord.Description));
-                    }
-
-                    if (money is BankAccount bank)
-                    {
-                        if (legacyCategory.CategoryType == ConfigModels.CategoryType.TransferFrom)
-                        {
-                            newRecord.CreditAccount = bank;
-                        }
-                        else
-                        {
-                            newRecord.DebitAccount = bank;
-                        }
-                    }
-                    else
-                    {
-                        throw new MoneyRecordConversionException(t, string.Format("Money Account Type [{0}] not supported for TRANSFER", money.GetType().FullName));
-                    }
-
-                    if (needNextRecord)
-                    {
-                        needNextRecord = false;
-                        continue;
-                    }
-                }
-                else
-                {
-                    if (newRecord is null)
-                    {
-                        newRecord = new JournalEntry(_config)
-                        {
-                            TransactionDate = t.TransDate,
-                            TransactionAmount = t.TransAmount,
-                            Description = t.Description
-                        };
-                    }
-                    else
-                    {
-                        throw new MoneyRecordConversionException(t, string.Format("Expected {0} record", newRecord.Description));
-                    }
+            //        if (money is BankAccount bank)
+            //        {
+            //            newRecord.DebitAccount = bank;
+            //            newRecord.CreditAccount = SpecialAccount.InitialBalance;
+            //        }
+            //        else if (money is CreditCardAccount creditCard)
+            //        {
+            //            newRecord.DebitAccount = SpecialAccount.InitialBalance;
+            //            newRecord.CreditAccount = creditCard;
+            //        }
+            //        else if (money is LoanAccount loan)
+            //        {
+            //            newRecord.DebitAccount = SpecialAccount.InitialBalance;
+            //            newRecord.CreditAccount = loan;
+            //        }
+            //        else
+            //        {
+            //            throw new MoneyRecordConversionException(t, string.Format("Money Account Type [{0}] not supported", money.GetType().FullName));
+            //        }
 
 
-                    // Need to find new category account
-                    var category = _config.LedgerAccountsList.FirstOrDefault(x => x.AccountType == ConfigModels.MoneyAccountType.NotSet && x.CategoryId == t.CategoryUID);
-                    if (category is null)
-                    {
-                        // Possible that it's an untracked adjustment
-                        // I'll leave the exception here for now but I may have to replace it with the other Special Account
-                        throw new MoneyRecordConversionException(t, "Category account not found");
-                    }
-                    else if (category is PayableAccount payable)
-                    {
-                        newRecord.DebitAccount = payable;
-                        if (money is BankAccount bank)
-                        {
-                            newRecord.CreditAccount = bank;
-                        }
-                        else if (money is CreditCardAccount card)
-                        {
-                            newRecord.CreditAccount = card;
-                        }
-                        else
-                        {
-                            throw new MoneyRecordConversionException(t, string.Format("Money Account Type [{0}] not supported for this category", money.GetType().FullName));
-                        }
-                    }
-                    else if (category is ReceivableAccount receivable)
-                    {
-                        newRecord.CreditAccount = receivable;
-                        if (money is BankAccount bank)
-                        {
-                            newRecord.DebitAccount = bank;
-                        }
-                        else
-                        {
-                            throw new MoneyRecordConversionException(t, string.Format("Money Account Type [{0}] not supported for this category", money.GetType().FullName));
-                        }
-                    }
-                    else
-                    {
-                        throw new MoneyRecordConversionException(t, string.Format("Category [{0}] not supported for regular entry", category.GetType().FullName));
-                    }
+            //    }
+            //    else if (legacyCategory.CategoryType == ConfigModels.CategoryType.Payment)
+            //    {
+            //        if (newRecord is null)
+            //        {
+            //            newRecord = new JournalEntry(_config)
+            //            {
+            //                TransactionDate = t.TransDate,
+            //                TransactionAmount = t.TransAmount,
+            //                Description = DEBT_CATEGORY
+            //            };
+            //            needNextRecord = true;
+            //        }
+            //        else if (newRecord.Description != DEBT_CATEGORY)
+            //        {
+            //            throw new MoneyRecordConversionException(t, string.Format("Expected {0} entry; Actual {1}", DEBT_CATEGORY, newRecord.Description));
+            //        }
 
-                }
+            //        if (money is BankAccount bank)
+            //        {
+            //            newRecord.CreditAccount = bank;
+            //        }
+            //        else if (money is CreditCardAccount creditCard)
+            //        {
+            //            newRecord.DebitAccount = creditCard;
+            //        }
+            //        else if (money is LoanAccount loan)
+            //        {
+            //            newRecord.DebitAccount = loan;
+            //        }
+            //        else
+            //        {
+            //            throw new MoneyRecordConversionException(t, string.Format("Money Account Type [{0}] not supported for DEBT PAYMENT", money.GetType().FullName));
+            //        }
+
+            //        if (needNextRecord)
+            //        {
+            //            needNextRecord = false;
+            //            continue;
+            //        }
+            //    }
+            //    else if (legacyCategory.CategoryType == ConfigModels.CategoryType.TransferFrom || legacyCategory.CategoryType == ConfigModels.CategoryType.TransferTo)
+            //    {
+            //        if (newRecord is null)
+            //        {
+            //            newRecord = new JournalEntry(_config)
+            //            {
+            //                TransactionDate = t.TransDate,
+            //                TransactionAmount = t.TransAmount,
+            //                Description = XFER_CATEGORY
+            //            };
+            //            needNextRecord = true;
+            //        }
+            //        else if (newRecord.Description != XFER_CATEGORY)
+            //        {
+            //            throw new MoneyRecordConversionException(t, string.Format("Expected {0} entry; Actual {1}", XFER_CATEGORY, newRecord.Description));
+            //        }
+
+            //        if (money is BankAccount bank)
+            //        {
+            //            if (legacyCategory.CategoryType == ConfigModels.CategoryType.TransferFrom)
+            //            {
+            //                newRecord.CreditAccount = bank;
+            //            }
+            //            else
+            //            {
+            //                newRecord.DebitAccount = bank;
+            //            }
+            //        }
+            //        else
+            //        {
+            //            throw new MoneyRecordConversionException(t, string.Format("Money Account Type [{0}] not supported for TRANSFER", money.GetType().FullName));
+            //        }
+
+            //        if (needNextRecord)
+            //        {
+            //            needNextRecord = false;
+            //            continue;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        if (newRecord is null)
+            //        {
+            //            newRecord = new JournalEntry(_config)
+            //            {
+            //                TransactionDate = t.TransDate,
+            //                TransactionAmount = t.TransAmount,
+            //                Description = t.Description
+            //            };
+            //        }
+            //        else
+            //        {
+            //            throw new MoneyRecordConversionException(t, string.Format("Expected {0} record", newRecord.Description));
+            //        }
+
+
+            //        // Need to find new category account
+            //        var category = _config.LedgerAccountsList.FirstOrDefault(x => x.AccountType == ConfigModels.MoneyAccountType.NotSet && x.CategoryId == t.CategoryUID);
+            //        if (category is null)
+            //        {
+            //            // Possible that it's an untracked adjustment
+            //            // I'll leave the exception here for now but I may have to replace it with the other Special Account
+            //            throw new MoneyRecordConversionException(t, "Category account not found");
+            //        }
+            //        else if (category is PayableAccount payable)
+            //        {
+            //            newRecord.DebitAccount = payable;
+            //            if (money is BankAccount bank)
+            //            {
+            //                newRecord.CreditAccount = bank;
+            //            }
+            //            else if (money is CreditCardAccount card)
+            //            {
+            //                newRecord.CreditAccount = card;
+            //            }
+            //            else
+            //            {
+            //                throw new MoneyRecordConversionException(t, string.Format("Money Account Type [{0}] not supported for this category", money.GetType().FullName));
+            //            }
+            //        }
+            //        else if (category is ReceivableAccount receivable)
+            //        {
+            //            newRecord.CreditAccount = receivable;
+            //            if (money is BankAccount bank)
+            //            {
+            //                newRecord.DebitAccount = bank;
+            //            }
+            //            else
+            //            {
+            //                throw new MoneyRecordConversionException(t, string.Format("Money Account Type [{0}] not supported for this category", money.GetType().FullName));
+            //            }
+            //        }
+            //        else
+            //        {
+            //            throw new MoneyRecordConversionException(t, string.Format("Category [{0}] not supported for regular entry", category.GetType().FullName));
+            //        }
+
+            //    }
 
 
 
-                _listTransactions.Add(newRecord);
-                ledger.RemoveTransaction(t);
-                newRecord = null;
-            }
+            //    _listTransactions.Add(newRecord);
+            //    ledger.RemoveTransaction(t);
+            //    newRecord = null;
+            //}
 
-            this.SaveToFile();
-            ledger.SaveToFile();
+            //this.SaveToFile();
+            //ledger.SaveToFile();
         }
 #pragma warning restore CS0612 // Type or member is obsolete
     }
