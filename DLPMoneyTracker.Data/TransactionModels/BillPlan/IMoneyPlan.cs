@@ -1,5 +1,6 @@
 ﻿using DLPMoneyTracker.Data.ScheduleRecurrence;
 using System;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
@@ -52,6 +53,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
     }
 
     [Obsolete]
+    [DebuggerDisplay("JSON: {AccountName} to {CategoryName}")]
     public sealed class MoneyPlanRecordJSON : IMoneyPlan
     {
         public Guid UID { get; set; }

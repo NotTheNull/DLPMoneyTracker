@@ -1,11 +1,13 @@
 ﻿using DLPMoneyTracker.Data.ConfigModels;
 using DLPMoneyTracker.Data.ScheduleRecurrence;
 using System;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 namespace DLPMoneyTracker.Data.TransactionModels.BillPlan
 {
     [Obsolete]
+    [DebuggerDisplay("INCOME: {AccountName} to {CategoryName}")]
     public class IncomePlan : IMoneyPlan
     {
         public Guid UID { get; set; }
