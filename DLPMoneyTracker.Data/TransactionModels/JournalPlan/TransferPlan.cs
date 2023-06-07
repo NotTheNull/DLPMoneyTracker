@@ -65,7 +65,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
         public bool IsValid()
         {
             if(this.CreditAccount.JournalType != JournalAccountType.Bank) return false;
-            if(this.DebitAccount.JournalType == JournalAccountType.Bank) return false; 
+            if(this.DebitAccount.JournalType != JournalAccountType.Bank) return false; 
             if(ExpectedAmount <= decimal.Zero) return false;
 
             return true;
