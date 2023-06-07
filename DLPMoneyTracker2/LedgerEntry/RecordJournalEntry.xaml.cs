@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace DLPMoneyTracker2.Ledger
+namespace DLPMoneyTracker2.LedgerEntry
 {
     /// <summary>
     /// Interaction logic for RecordJournalEntry.xaml

@@ -1,6 +1,6 @@
 ﻿using DLPMoneyTracker2.Config.AddEditLedgerAccounts;
 using DLPMoneyTracker2.Config.AddEditMoneyAccounts;
-using DLPMoneyTracker2.Ledger;
+using DLPMoneyTracker2.LedgerEntry;
 using DLPMoneyTracker2.Main.AccountSummary;
 using DLPMoneyTracker2.Main.BudgetAnalysis;
 using DLPMoneyTracker2.Main.TransactionList;

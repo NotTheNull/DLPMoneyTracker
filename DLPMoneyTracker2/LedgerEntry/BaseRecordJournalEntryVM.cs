@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DLPMoneyTracker2.Ledger
+namespace DLPMoneyTracker2.LedgerEntry
 {
     public abstract class BaseRecordJournalEntryVM : BaseViewModel
     {

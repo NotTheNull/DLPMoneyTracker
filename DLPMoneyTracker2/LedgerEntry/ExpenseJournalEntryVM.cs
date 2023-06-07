@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace DLPMoneyTracker2.Ledger
+namespace DLPMoneyTracker2.LedgerEntry
 {
     public class ExpenseJournalEntryVM : BaseRecordJournalEntryVM
     {

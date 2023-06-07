@@ -9,7 +9,7 @@ using DLPMoneyTracker2.Config.AddEditLedgerAccounts;
 using DLPMoneyTracker2.Main.AccountSummary;
 using DLPMoneyTracker2.Main.TransactionList;
 using DLPMoneyTracker2.Main.BudgetAnalysis;
-using DLPMoneyTracker2.Ledger;
+using DLPMoneyTracker2.LedgerEntry;
 
 namespace DLPMoneyTracker2
 {

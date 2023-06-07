@@ -3,9 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:core="clr-namespace:DLPMoneyTracker2.Core"
              xmlns:local="clr-namespace:DLPMoneyTracker2.Main.BudgetAnalysis"
-             xmlns:behave="clr-namespace:DLPMoneyTracker.Core.Behaviors"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              Height="450"
              Width="775">

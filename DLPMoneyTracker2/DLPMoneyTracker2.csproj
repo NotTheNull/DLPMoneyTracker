@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Core\Behaviors\WebViewHTMLStringBehavior.cs" />
     <Compile Remove="Core\Converters\CategoryTypeToBackgroundColor.cs" />
     <Compile Remove="Core\Converters\CategoryTypeToDisplayText.cs" />
   </ItemGroup>
