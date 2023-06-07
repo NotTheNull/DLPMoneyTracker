@@ -20,6 +20,7 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
         public CurrentMonthBudgetVM(ITrackerConfig config)
         {
             _config = config;
+            this.Load();
         }
 
 

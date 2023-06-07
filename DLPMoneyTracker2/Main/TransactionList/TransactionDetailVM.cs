@@ -25,6 +25,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
             _journal = journal;
 
             _journal.JournalModified += _journal_JournalModified;
+            this.Reload();
         }
 
 
