@@ -14,6 +14,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
         Payable,
         Receivable,
         Transfer,
+        DebtPayment,
         NotSet
     }
 
