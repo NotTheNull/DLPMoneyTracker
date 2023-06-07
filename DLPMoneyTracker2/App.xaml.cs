@@ -36,6 +36,15 @@ namespace DLPMoneyTracker2
                 var journal = UICore.DependencyHost.GetService<IJournal>();
                 journal?.Convert(ledger);
             }
+
+            var oldPlanner = UICore.DependencyHost.GetService<IMoneyPlanner>();
+            oldPlanner.LoadFromFile();
+            if(oldPlanner?.MoneyPlanList.Any() == true)
+            {
+                var planner = UICore.DependencyHost.GetService<IJournalPlanner>();
+                planner.Convert(oldPlanner);
+            }
+            
 #pragma warning restore CS0612 // Type or member is obsolete
 
 

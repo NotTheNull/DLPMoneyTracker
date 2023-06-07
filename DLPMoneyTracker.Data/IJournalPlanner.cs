@@ -141,8 +141,9 @@ namespace DLPMoneyTracker.Data
             }
             this.SaveToFile();
 
-            moneyPlanner.ClearRecordList();
-            moneyPlanner.SaveToFile();
+            // Hold off on deleting
+            //moneyPlanner.ClearRecordList();
+            //moneyPlanner.SaveToFile();
 
         }
 #pragma warning restore CS0618 // Type or member is obsolete

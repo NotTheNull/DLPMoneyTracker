@@ -34,8 +34,11 @@ namespace DLPMoneyTracker2
             services.AddSingleton<IJournalPlanner, JournalPlanner>();
 
 #pragma warning disable CS0612 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete
             // Keep until conversion is done
             services.AddSingleton<ILedger, Ledger>();
+            services.AddSingleton<IMoneyPlanner, MoneyPlanner>();
+#pragma warning restore CS0618 // Type or member is obsolete
 #pragma warning restore CS0612 // Type or member is obsolete
 
             // Main UI
