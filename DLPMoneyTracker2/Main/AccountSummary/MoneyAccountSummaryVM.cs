@@ -2,7 +2,9 @@
 using DLPMoneyTracker.Data.LedgerAccounts;
 using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
 using DLPMoneyTracker2.Core;
+using DLPMoneyTracker2.LedgerEntry;
 using DLPMoneyTracker2.Main.TransactionList;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -90,7 +92,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
 
         #region Commands
         private RelayCommand _cmdDetail;
-        public RelayCommand CmdDetail
+        public RelayCommand CommandDetails
         {
             get
             {
@@ -112,9 +114,25 @@ namespace DLPMoneyTracker2.Main.AccountSummary
                 {
                     if (plan is JournalPlanVM jPlan)
                     {
-                        // TODO: Call the UI to create the transaction
-
-
+                        IJournalEntryVM transVM;
+                        switch(jPlan.PlanType)
+                        {
+                            case JournalPlanType.Payable:
+                                transVM = UICore.DependencyHost.GetRequiredService<ExpenseJournalEntryVM>();
+                                break;
+                            case JournalPlanType.Receivable:
+                                transVM = UICore.DependencyHost.GetRequiredService<IncomeJournalEntryVM>();
+                                break;
+                            case JournalPlanType.Transfer:
+                                transVM = UICore.DependencyHost.GetRequiredService<TransferJournalEntryVM>();
+                                break;
+                            case JournalPlanType.DebtPayment:
+                                transVM = UICore.DependencyHost.GetRequiredService<DebtPaymentJournalEntryVM>();
+                                break;
+                            default:
+                                return;
+                        }
+                        transVM.FillFromPlan(jPlan.ThePlan);
 
 
                         this.RemoveBudgetPlan(jPlan);

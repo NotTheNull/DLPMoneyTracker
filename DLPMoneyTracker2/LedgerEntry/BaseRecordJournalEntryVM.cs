@@ -1,6 +1,7 @@
 ﻿using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.LedgerAccounts;
 using DLPMoneyTracker.Data.TransactionModels;
+using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
 using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,31 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.LedgerEntry
 {
-    public abstract class BaseRecordJournalEntryVM : BaseViewModel
+    public interface IJournalEntryVM
+    {
+        bool IsValidTransaction { get; }
+        DateTime TransactionDate { get; }
+        string DebitHeader { get; }
+        ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidDebitAccounts { get; }
+        IJournalAccount SelectedDebitAccount { get; }
+
+        string CreditHeader { get; }
+        ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidCreditAccounts { get; }
+        IJournalAccount SelectedCreditAccount { get; }
+
+        bool IsCreditEnabled { get; }
+
+        string Description { get; }
+        decimal Amount { get; }
+
+        void Clear();
+        void LoadAccounts();
+        void SaveTransaction();
+        void FillFromPlan(IJournalPlan plan);
+
+    }
+
+    public abstract class BaseRecordJournalEntryVM : BaseViewModel, IJournalEntryVM
     {
         protected readonly IJournal _journal;
         protected readonly ITrackerConfig _config;
@@ -44,7 +69,7 @@ namespace DLPMoneyTracker2.LedgerEntry
 
         protected IJournalAccount _debit;
 
-        public IJournalAccount SelectedDebitAccount
+        public IJournalAccount? SelectedDebitAccount
         {
             get { return _debit; }
             set 
@@ -63,7 +88,7 @@ namespace DLPMoneyTracker2.LedgerEntry
 
         protected IJournalAccount _credit;
 
-        public IJournalAccount SelectedCreditAccount
+        public IJournalAccount? SelectedCreditAccount
         {
             get { return _credit; }
             set 
@@ -103,10 +128,10 @@ namespace DLPMoneyTracker2.LedgerEntry
         public void Clear()
         {
             this.TransactionDate = DateTime.Now;
-            this.SelectedCreditAccount = null;
-            this.SelectedDebitAccount = null;
             this.Amount = decimal.Zero;
             this.Description = string.Empty;
+            this.SelectedCreditAccount = null;
+            this.SelectedDebitAccount = null;
         }
 
         public abstract void LoadAccounts();
@@ -126,6 +151,13 @@ namespace DLPMoneyTracker2.LedgerEntry
             _journal.AddTransaction(record);
         }
         
-
+        public void FillFromPlan(IJournalPlan plan)
+        {
+            this.TransactionDate = DateTime.Today;
+            this.SelectedCreditAccount = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == plan.CreditAccountId);
+            this.SelectedDebitAccount = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == plan.DebitAccountId);
+            this.Description = plan.Description;
+            this.Amount = plan.ExpectedAmount;
+        }
     }
 }

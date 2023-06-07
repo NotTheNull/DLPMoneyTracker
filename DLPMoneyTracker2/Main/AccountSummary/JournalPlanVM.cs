@@ -21,6 +21,8 @@ namespace DLPMoneyTracker2.Main.AccountSummary
         }
 
         private Guid ParentAccountId { get { return _actParent.Id; } }
+
+        public IJournalPlan ThePlan { get { return _plan; } }
         public Guid PlanUID { get { return _plan.UID; } }
 
         public bool IsParentDebit { get { return _plan.DebitAccountId == this.ParentAccountId; } }
