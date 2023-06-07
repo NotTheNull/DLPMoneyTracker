@@ -31,6 +31,7 @@ namespace DLPMoneyTracker2
         {
             services.AddSingleton<ITrackerConfig, TrackerConfig>();
             services.AddSingleton<IJournal, DLPJournal>();
+            services.AddSingleton<IJournalPlanner, JournalPlanner>();
 
 #pragma warning disable CS0612 // Type or member is obsolete
             // Keep until conversion is done

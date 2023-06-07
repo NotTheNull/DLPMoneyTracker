@@ -37,7 +37,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
             _listAcctSummary.Clear();
             foreach(var act in _config.LedgerAccountsList.Where(x => _listValidTypes.Contains(x.JournalType) && x.DateClosedUTC is null).OrderBy(o => o.OrderBy).ThenBy(o => o.Description))
             {
-                MoneyAccountSummaryVM summary = UICore.DependencyHost.GetService<MoneyAccountSummaryVM>();
+                MoneyAccountSummaryVM summary = UICore.DependencyHost.GetRequiredService<MoneyAccountSummaryVM>();
                 summary.LoadAccount(act);
                 _listAcctSummary.Add(summary);
             }
