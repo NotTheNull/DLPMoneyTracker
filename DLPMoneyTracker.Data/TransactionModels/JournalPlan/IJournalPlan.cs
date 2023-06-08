@@ -23,12 +23,14 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
     {
         Guid UID { get; }
 
+        [JsonIgnore]
         List<JournalAccountType> ValidDebitAccountTypes { get; }
         Guid DebitAccountId { get; }
 
         [JsonIgnore]
         string DebitAccountName { get; }
 
+        [JsonIgnore]
         List<JournalAccountType> ValidCreditAccountTypes { get; }
 
         Guid CreditAccountId { get; }
@@ -36,7 +38,6 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
         [JsonIgnore]
         string CreditAccountName { get; }
 
-        [JsonIgnore]
         JournalPlanType PlanType { get; }
 
         [JsonIgnore]

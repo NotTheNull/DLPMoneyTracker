@@ -5,11 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DLPMoneyTracker2.Main.AccountSummary"
              mc:Ignorable="d" 
-             Height="500"
-             Width="775">
+             Height="650"
+             MinWidth="1000">
     <Grid>
         <ListBox Background="Transparent"
                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 HorizontalAlignment="Center"
                  ItemsSource="{Binding Path=AccountSummaryList}">
             <ListBox.ItemTemplate>
                 <DataTemplate>

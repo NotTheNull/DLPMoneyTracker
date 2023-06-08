@@ -7,7 +7,7 @@
              xmlns:core="clr-namespace:DLPMoneyTracker2.Core"
              mc:Ignorable="d"
              MinHeight="70"
-             Width="725">
+             Width="800">
     <UserControl.Resources>
         <Style x:Key="MainLabel" TargetType="TextBlock">
             <Setter Property="FontSize" Value="24" />
@@ -34,7 +34,7 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="140" />
+            <ColumnDefinition Width="200" />
             <ColumnDefinition Width="25" />
         </Grid.ColumnDefinitions>
 

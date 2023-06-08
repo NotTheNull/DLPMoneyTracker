@@ -6,8 +6,8 @@
              xmlns:core="clr-namespace:DLPMoneyTracker2.Core"
              xmlns:local="clr-namespace:DLPMoneyTracker2.Main.BudgetAnalysis"
              mc:Ignorable="d" 
-             Height="450"
-             Width="775">
+             Height="650"
+             Width="1000">
 
     <UserControl.Resources>
         <Style x:Key="LocalHeaderLabels" TargetType="TextBlock" BasedOn="{StaticResource StandardHeaderLabel}">
@@ -28,6 +28,10 @@
             <RowDefinition Height="30" />
             <RowDefinition Height="15" />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="40" />
+        </Grid.ColumnDefinitions>
 
         <Grid x:Name="panelDataGrids"
               Grid.Row="1">
@@ -40,9 +44,9 @@
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="380" />
+                <ColumnDefinition Width="450" />
                 <ColumnDefinition Width="15" />
-                <ColumnDefinition Width="380"/>
+                <ColumnDefinition Width="450"/>
             </Grid.ColumnDefinitions>
 
 
@@ -55,8 +59,8 @@
 
             <DataGrid Grid.Column="0"
                       Grid.Row="1"
-                      Margin="0,0,6,0"
-                      ItemsSource="{Binding Path=FixedExpenses}"
+                      Margin="10,0,0,0"
+                      ItemsSource="{Binding Path=FixedExpenses, UpdateSourceTrigger=PropertyChanged}"
                       x:Name="dataFixedExpenses">
 
                 <DataGrid.Columns>
@@ -102,8 +106,8 @@
             <DataGrid Grid.Column="2"
                       Grid.Row="1"
                       x:Name="dataVariableExpense"
-                      Margin="0, 0, 5, 0"
-                      ItemsSource="{Binding Path=VariableExpenses}">
+                      Margin="5, 0, 5, 0"
+                      ItemsSource="{Binding Path=VariableExpenses, UpdateSourceTrigger=PropertyChanged}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Description"
                                         Width="150"

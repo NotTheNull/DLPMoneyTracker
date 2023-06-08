@@ -100,6 +100,12 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
         {
             _account = account;
             this.CurrentMonthTotal = _journal.GetAccountBalance_CurrentMonth(this.AccountId);
+            
+            if(_planner.JournalPlanList.Any(x => x.DebitAccountId == account.Id || x.CreditAccountId == account.Id))
+            {
+                _listPlans.AddRange(_planner.JournalPlanList.Where(x => x.DebitAccountId == account.Id || x.CreditAccountId == account.Id));
+            }
+
             this.NotifyAll();
         }
 

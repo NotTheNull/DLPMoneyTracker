@@ -31,13 +31,13 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
 
         // List of Payable IJournalAccounts WITH a Journal Plan
         private ObservableCollection<JournalAccountBudgetVM> _listFixed = new ObservableCollection<JournalAccountBudgetVM>();
-        private ObservableCollection<JournalAccountBudgetVM> FixedExpenses { get { return _listFixed; } }
+        public ObservableCollection<JournalAccountBudgetVM> FixedExpenses { get { return _listFixed; } }
         public decimal FixedExpenseBudgetTotal { get { return this.FixedExpenses?.Sum(s => s.MonthlyBudget > s.CurrentMonthTotal ? s.MonthlyBudget : s.CurrentMonthTotal) ?? decimal.Zero; } }
 
 
         // The remaining Payable accounts
         private ObservableCollection<JournalAccountBudgetVM> _listVariable = new ObservableCollection<JournalAccountBudgetVM>();
-        private ObservableCollection<JournalAccountBudgetVM> VariableExpenses { get { return _listVariable; } }
+        public ObservableCollection<JournalAccountBudgetVM> VariableExpenses { get { return _listVariable; } }
         public decimal VariableExpenseBudgetTotal { get { return this.VariableExpenses?.Sum(s => s.MonthlyBudget > s.CurrentMonthTotal ? s.MonthlyBudget : s.CurrentMonthTotal) ?? decimal.Zero; } }
 
 
@@ -73,7 +73,12 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
         }
         #endregion
 
-
+        List<JournalAccountType> ValidBudgetTypes = new List<JournalAccountType>()
+        {
+            JournalAccountType.Receivable,
+            JournalAccountType.Payable,
+            JournalAccountType.LiabilityLoan
+        };
 
         public void Load()
         {
@@ -83,9 +88,10 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
 
             if (_config.LedgerAccountsList?.Any() != true) return;
 
-            foreach (var act in _config.LedgerAccountsList)
+            foreach (var act in _config.LedgerAccountsList.Where(x => ValidBudgetTypes.Contains(x.JournalType)))
             {
                 JournalAccountBudgetVM budget = UICore.DependencyHost.GetRequiredService<JournalAccountBudgetVM>();
+                budget.Load(act);
                 switch (act.JournalType)
                 {
                     case JournalAccountType.Receivable:
@@ -95,33 +101,33 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
                         }
                         break;
                     case JournalAccountType.Payable:
-                        budget.Load(act);
                         if(budget.IsVisible)
                         {
                             if(budget.IsFixedExpense)
                             {
-                                _listFixed.Add(budget);
+                                this.FixedExpenses.Add(budget);
                             }
                             else
                             {
-                                _listVariable.Add(budget);
+                                this.VariableExpenses.Add(budget);
                             }
                         }
                         break;
                     case JournalAccountType.LiabilityLoan:
-                        budget.Load(act);
                         if(budget.IsVisible)
                         {
-                            _listFixed.Add(budget);
+                            this.FixedExpenses.Add(budget);
                         }
                         break;
                 }
             }
-
+            this.NotifyAll();
         }
 
         public void NotifyAll()
         {
+            NotifyPropertyChanged(nameof(FixedExpenses));
+            NotifyPropertyChanged(nameof(VariableExpenses));
             NotifyPropertyChanged(nameof(MonthlyBalance));
             NotifyPropertyChanged(nameof(TotalExpenseBudget));
             NotifyPropertyChanged(nameof(VariableExpenseBudgetTotal));

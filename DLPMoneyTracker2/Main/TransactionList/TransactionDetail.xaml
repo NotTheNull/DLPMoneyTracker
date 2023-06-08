@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DLPMoneyTracker2.Main.TransactionList"
              mc:Ignorable="d" 
-             Height="450"
-             Width="775">
+             Height="650"
+             Width="1000">
 
     <UserControl.Resources>
         <Style x:Key="LocalLabel" TargetType="TextBlock">
