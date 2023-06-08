@@ -23,7 +23,11 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
         {
             _config = config;
             _planner = planner;
+
+            this.Reload();
         }
+
+
 
 
         private ObservableCollection<IJournalPlan> _listPlans = new ObservableCollection<IJournalPlan>();
@@ -54,7 +58,7 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
             set
             {
                 _planType = value;
-                this.LoadValidAccounts();
+                this.LoadValidJournalAccounts();
                 NotifyPropertyChanged(nameof(SelectedPlanType));
             }
         }
@@ -155,13 +159,20 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
             {
                 return _cmdSaveChanges ?? (_cmdSaveChanges = new RelayCommand((o) =>
                 {
+                    // Remove existing (if applicable) in case we're changing the Type
+
                     var plan = _planner.JournalPlanList.FirstOrDefault(x => x.UID == this.BudgetPlanId);
-                    if (plan is null)
+                    if (plan != null)
                     {
-                        plan = JournalPlanFactory.Build(_config, this.SelectedPlanType, this.Description, this.SelectedCreditAccount, this.SelectedDebitAccount, this.Amount, this.Recurrence);
+                        _planner.RemovePlan(plan);
                     }
+
+                    plan = JournalPlanFactory.Build(_config, this.SelectedPlanType, this.Description, this.SelectedCreditAccount, this.SelectedDebitAccount, this.Amount, this.Recurrence);
                     _planner.AddPlan(plan);
                     _planner.SaveToFile();
+
+                    this.Clear();
+                    this.Reload();
                 }));
             }
         }
@@ -207,7 +218,10 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
                     if (plan is IJournalPlan jplan)
                     {
                         _planner.RemovePlan(jplan);
+                        this.Clear();
+                        this.Reload();
                     }
+
                 }));
             }
         }
@@ -216,7 +230,16 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
 
 
 
+        private void Reload()
+        {
+            this.PlanList.Clear();
+            if (_planner.JournalPlanList?.Any() != true) return;
 
+            foreach (var p in _planner.JournalPlanList.OrderBy(o => o.PriorityOrder).ThenBy(o => o.Description))
+            {
+                this.PlanList.Add(p);
+            }
+        }
 
         private void Clear()
         {
@@ -229,9 +252,43 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
             this.Recurrence = ScheduleRecurrenceFactory.Build(RecurrenceFrequency.Annual, DateTime.Today);
         }
 
-
-        private void LoadValidAccounts()
+        /// <summary>
+        /// Fills the Valid Account Lists depending on the Selected Plan Type
+        /// </summary>
+        private void LoadValidJournalAccounts()
         {
+            IJournalPlan plan;
+            this.ValidCreditAccounts.Clear();
+            this.ValidDebitAccounts.Clear();
+
+            switch (this.SelectedPlanType)
+            {
+                case JournalPlanType.Receivable:
+                    plan = new ReceivablePlan();
+                    break;
+                case JournalPlanType.Payable:
+                    plan = new PayablePlan();
+                    break;
+                case JournalPlanType.Transfer:
+                    plan = new TransferPlan();
+                    break;
+                case JournalPlanType.DebtPayment:
+                    plan = new DebtPaymentPlan();
+                    break;
+                default:
+                    return;
+
+            }
+
+            foreach (var act in _config.LedgerAccountsList.Where(x => plan.ValidCreditAccountTypes.Contains(x.JournalType)).OrderBy(o => o.Description))
+            {
+                this.ValidCreditAccounts.Add(new SpecialDropListItem<IJournalAccount>(act.Description, act));
+            }
+
+            foreach (var act in _config.LedgerAccountsList.Where(x => plan.ValidDebitAccountTypes.Contains(x.JournalType)).OrderBy(o => o.Description))
+            {
+                this.ValidDebitAccounts.Add(new SpecialDropListItem<IJournalAccount>(act.Description, act));
+            }
 
         }
 
@@ -251,7 +308,7 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
             }
             else
             {
-                this.Recurrence = JsonSerializer.Deserialize<IScheduleRecurrence>(plan.RecurrenceJSON);
+                this.Recurrence = ScheduleRecurrenceFactory.Build(plan.RecurrenceJSON);
             }
         }
 

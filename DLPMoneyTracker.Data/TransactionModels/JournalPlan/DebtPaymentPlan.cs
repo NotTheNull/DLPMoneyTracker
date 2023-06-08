@@ -19,6 +19,21 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
         public Guid UID { get; set; }
 
 
+        private List<JournalAccountType> _validDebits = new List<JournalAccountType>()
+        {
+            JournalAccountType.LiabilityCard,
+            JournalAccountType.LiabilityLoan
+        };
+        public List<JournalAccountType> ValidDebitAccountTypes { get { return _validDebits; } }
+
+        private List<JournalAccountType> _validCredits = new List<JournalAccountType>()
+        {
+            JournalAccountType.Bank
+        };
+        public List<JournalAccountType> ValidCreditAccountTypes { get { return _validCredits; } }
+
+
+
         public IJournalAccount DebitAccount { get; set; }
         public Guid DebitAccountId { get { return DebitAccount?.Id ?? Guid.Empty; } }
 
@@ -58,6 +73,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
         public DateTime NextOccurrence { get { return this.Recurrence?.NextOccurence ?? DateTime.MaxValue; } }
 
         public decimal ExpectedAmount { get; set; }
+
 
         /// <summary>
         /// Verifies that the account setup is valid for a Debt Plan Plan.

@@ -16,6 +16,21 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
             UID = Guid.NewGuid();
         }
 
+
+
+        private List<JournalAccountType> _validDebits = new List<JournalAccountType>()
+        {
+            JournalAccountType.Bank
+        };
+        public List<JournalAccountType> ValidDebitAccountTypes { get { return _validDebits; } }
+
+        private List<JournalAccountType> _validCredits = new List<JournalAccountType>()
+        {
+            JournalAccountType.Receivable
+        };
+        public List<JournalAccountType> ValidCreditAccountTypes { get { return _validCredits; } }
+
+
         public Guid UID { get; set; }
 
         public IJournalAccount DebitAccount { get; set; }

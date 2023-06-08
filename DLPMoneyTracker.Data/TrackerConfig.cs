@@ -119,9 +119,7 @@ namespace DLPMoneyTracker.Data
 
 
 
-        public TrackerConfig() : this(DateTime.Today.Year)
-        {
-        }
+        public TrackerConfig() : this(DateTime.Today.Year) { }
 
         public TrackerConfig(int year)
         {
