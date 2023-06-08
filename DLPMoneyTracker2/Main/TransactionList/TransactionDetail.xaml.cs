@@ -20,9 +20,10 @@ namespace DLPMoneyTracker2.Main.TransactionList
     /// </summary>
     public partial class TransactionDetail : UserControl
     {
-        public TransactionDetail()
+        public TransactionDetail(TransactionDetailVM viewModel)
         {
             InitializeComponent();
+            this.DataContext = viewModel;
         }
     }
 }
