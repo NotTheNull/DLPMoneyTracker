@@ -137,6 +137,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
             //this.FilterBeginDate = filter.FilterDates?.Begin ?? DateTime.MinValue;
             //this.FilterEndDate = filter.FilterDates?.End ?? DateTime.MaxValue;
             //this.FilterText = filter.SearchText?.Trim() ?? string.Empty;
+            this.Reload();
         }
 
 
@@ -219,6 +220,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
                 }
             }
         }
+        public DateTime TransactionDate { get { return _je.TransactionDate; } }
 
     }
 }

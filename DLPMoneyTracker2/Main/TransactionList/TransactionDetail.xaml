@@ -94,7 +94,7 @@
                 <DataGridTextColumn 
                     Header="Description" 
                     MinWidth="240"
-                    Binding="{Binding TransactionDescription}" />
+                    Binding="{Binding Description}" />
 
                 <DataGridTemplateColumn Header="Amount" MinWidth="100">
                     <DataGridTemplateColumn.CellTemplate>
