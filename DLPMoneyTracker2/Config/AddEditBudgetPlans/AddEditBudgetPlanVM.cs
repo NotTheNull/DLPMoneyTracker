@@ -140,7 +140,20 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
 
 
 
+        private bool IsReadyForSave
+        {
+            get
+            {
+                if (this.SelectedCreditAccount is null) return false;
+                if (this.SelectedDebitAccount is null) return false;
+                if (this.SelectedPlanType == JournalPlanType.NotSet) return false;
+                if (string.IsNullOrWhiteSpace(this.Description)) return false;
+                if (this.Amount == decimal.Zero) return false;
+                if (this.Recurrence is null) return false;
 
+                return true;
+            }
+        }
 
 
 
@@ -160,15 +173,18 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
                 return _cmdSaveChanges ?? (_cmdSaveChanges = new RelayCommand((o) =>
                 {
                     // Remove existing (if applicable) in case we're changing the Type
-
-                    var plan = _planner.JournalPlanList.FirstOrDefault(x => x.UID == this.BudgetPlanId);
-                    if (plan != null)
+                    if (this.IsReadyForSave)
                     {
-                        _planner.RemovePlan(plan);
-                    }
 
-                    plan = JournalPlanFactory.Build(_config, this.SelectedPlanType, this.Description, this.SelectedCreditAccount, this.SelectedDebitAccount, this.Amount, this.Recurrence);
-                    _planner.AddPlan(plan);
+                        var plan = _planner.JournalPlanList.FirstOrDefault(x => x.UID == this.BudgetPlanId);
+                        if (plan != null)
+                        {
+                            _planner.RemovePlan(plan);
+                        }
+
+                        plan = JournalPlanFactory.Build(_config, this.SelectedPlanType, this.Description, this.SelectedCreditAccount, this.SelectedDebitAccount, this.Amount, this.Recurrence);
+                        _planner.AddPlan(plan); 
+                    }
                     _planner.SaveToFile();
 
                     this.Clear();
