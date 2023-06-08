@@ -1,4 +1,5 @@
-﻿using DLPMoneyTracker2.Config.AddEditLedgerAccounts;
+﻿using DLPMoneyTracker2.Config.AddEditBudgetPlans;
+using DLPMoneyTracker2.Config.AddEditLedgerAccounts;
 using DLPMoneyTracker2.Config.AddEditMoneyAccounts;
 using DLPMoneyTracker2.LedgerEntry;
 using DLPMoneyTracker2.Main.AccountSummary;
@@ -104,6 +105,12 @@ namespace DLPMoneyTracker2
         {
             CorrectionJournalEntryVM viewModel = UICore.DependencyHost.GetRequiredService<CorrectionJournalEntryVM>();
             RecordJournalEntry window = new RecordJournalEntry(viewModel);
+            window.Show();
+        }
+
+        private void MenuEditBudgetPlans_Click(object sender, RoutedEventArgs e)
+        {
+            AddEditBudgetPlan window = UICore.DependencyHost.GetRequiredService<AddEditBudgetPlan>();
             window.Show();
         }
     }

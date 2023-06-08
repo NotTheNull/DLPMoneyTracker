@@ -109,6 +109,7 @@
                         </MenuItem>
 
                         <MenuItem x:Name="MenuEditBudgetPlans"
+                                  Click="MenuEditBudgetPlans_Click"
                                   Header="Edit _Budget Plans">
                             <MenuItem.Icon>
                                 <Image Source="/Icons/Edit-Pencil-256.png" />
