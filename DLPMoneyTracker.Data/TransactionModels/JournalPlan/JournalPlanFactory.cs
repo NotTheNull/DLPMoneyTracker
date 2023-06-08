@@ -55,11 +55,70 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
                     };
                     if (!transfer.IsValid()) return null;
                     return transfer;
+                case JournalPlanType.DebtPayment:
+                    var debt = new DebtPaymentPlan()
+                    {
+                        UID = json.UID,
+                        CreditAccount = credit,
+                        DebitAccount = debit,
+                        Description = json.Description,
+                        Recurrence = recurrence,
+                        ExpectedAmount = json.ExpectedAmount
+                    };
+                    if (!debt.IsValid()) return null;
+                    return debt;
                 default:
                     return null;
             }
 
         }
+
+        public static IJournalPlan Build(ITrackerConfig config, JournalPlanType pType, string desc, IJournalAccount credit, IJournalAccount debit, decimal amount, IScheduleRecurrence recurrence)
+        {
+            switch(pType)
+            {
+                case JournalPlanType.Payable:
+                    return new PayablePlan()
+                    {
+                        Description = desc,
+                        CreditAccount = credit,
+                        DebitAccount = debit,
+                        Recurrence = recurrence,
+                        ExpectedAmount = amount
+                    };
+                case JournalPlanType.Receivable:
+                    return new ReceivablePlan()
+                    {
+                        Description = desc,
+                        CreditAccount = credit,
+                        DebitAccount = debit,
+                        Recurrence = recurrence,
+                        ExpectedAmount = amount
+                    };
+                case JournalPlanType.Transfer:
+                    return new TransferPlan()
+                    {
+                        Description = desc,
+                        CreditAccount = credit,
+                        DebitAccount = debit,
+                        Recurrence = recurrence,
+                        ExpectedAmount = amount
+                    };
+                case JournalPlanType.DebtPayment:
+                    return new DebtPaymentPlan()
+                    {
+                        Description = desc,
+                        CreditAccount = credit,
+                        DebitAccount = debit,
+                        Recurrence = recurrence,
+                        ExpectedAmount = amount
+                    };
+                default:
+                    return null;
+            }
+        }
+
+
 
 #pragma warning disable CS0612 // Type or member is obsolete
         public static IJournalPlan Build(ITrackerConfig config, IMoneyPlan plan)

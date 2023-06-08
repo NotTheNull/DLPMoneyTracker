@@ -91,7 +91,7 @@
                     <MenuItem Header="_Config">
 
                         <MenuItem x:Name="MenuEditMoneyAccounts" 
-                                  Header="_Edit Money Accounts"
+                                  Header="Edit _Money Accounts"
                                   Click="MenuEditMoneyAccounts_Click"
                                   >
                             <MenuItem.Icon>
@@ -100,11 +100,18 @@
                         </MenuItem>
 
                         <MenuItem x:Name="MenuEditLedgerAccounts" 
-                                  Header="_Edit Ledger Accounts"
+                                  Header="Edit _Ledger Accounts"
                                   Click="MenuEditLedgerAccounts_Click"
                                   >
                             <MenuItem.Icon>
                                 <Image Source="/Icons/Library-Books-256.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+
+                        <MenuItem x:Name="MenuEditBudgetPlans"
+                                  Header="Edit _Budget Plans">
+                            <MenuItem.Icon>
+                                <Image Source="/Icons/Edit-Pencil-256.png" />
                             </MenuItem.Icon>
                         </MenuItem>
                     </MenuItem>

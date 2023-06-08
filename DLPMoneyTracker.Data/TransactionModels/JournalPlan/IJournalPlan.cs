@@ -57,6 +57,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
 
         
         bool IsValid();
+        
     }
 
     public sealed class JournalPlanJSON : IJournalPlan
@@ -96,5 +97,6 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
 
 
         public bool IsValid() { return true; }
+
     }
 }

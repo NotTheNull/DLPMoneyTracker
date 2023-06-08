@@ -10,6 +10,7 @@ using DLPMoneyTracker2.Main.AccountSummary;
 using DLPMoneyTracker2.Main.TransactionList;
 using DLPMoneyTracker2.Main.BudgetAnalysis;
 using DLPMoneyTracker2.LedgerEntry;
+using DLPMoneyTracker2.Config.AddEditBudgetPlans;
 
 namespace DLPMoneyTracker2
 {
@@ -70,6 +71,10 @@ namespace DLPMoneyTracker2
             services.AddTransient<AddEditMoneyAccountVM>();
             services.AddTransient<AddEditLedgerAccount>();
             services.AddTransient<AddEditLedgerAccountVM>();
+            services.AddTransient<AddEditBudgetPlan>();
+            services.AddTransient<AddEditBudgetPlanVM>();
+            services.AddTransient<RecurrenceEditor>();
+            services.AddTransient<RecurrenceEditorVM>();
         }
 
     }

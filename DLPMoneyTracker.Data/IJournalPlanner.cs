@@ -56,8 +56,13 @@ namespace DLPMoneyTracker.Data
 
         public void AddPlan(IJournalPlan journalPlan)
         {
-            if (_planList.Any(x => x.UID == journalPlan.UID)) return;
+            var existing = this.JournalPlanList.FirstOrDefault(x => x.UID == journalPlan.UID);
+            if(existing != null)
+            {
+                _planList.Remove(existing);
+            }
             _planList.Add(journalPlan);
+
         }
 
         public void RemovePlan(IJournalPlan journalPlan)

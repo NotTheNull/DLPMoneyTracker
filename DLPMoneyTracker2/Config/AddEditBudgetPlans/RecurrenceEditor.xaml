@@ -1,0 +1,117 @@
+﻿<Window x:Class="DLPMoneyTracker2.Config.AddEditBudgetPlans.RecurrenceEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DLPMoneyTracker2.Config.AddEditBudgetPlans"
+        xmlns:behave="clr-namespace:DLPMoneyTracker2.Core.Behaviors"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        mc:Ignorable="d"
+        Title="Modify Recurrence"
+        WindowStartupLocation="CenterScreen"
+        Icon="\Cash-64.ico"
+        Height="180"
+        Width="420">
+    <Window.Resources>
+        <Style x:Key="LocalHeader" TargetType="TextBlock" BasedOn="{StaticResource StandardHeaderLabel}">
+            <Setter Property="Width" Value="100" />
+        </Style>
+
+        <Style x:Key="LocalButton" TargetType="Button">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Width" Value="180" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="Margin" Value="5" />
+        </Style>
+    </Window.Resources>
+    <Grid Style="{StaticResource MainGridStyle}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="15" />
+        </Grid.RowDefinitions>
+
+        <StackPanel x:Name="panelTypeSelector"
+                    Grid.Row="1"
+                    Orientation="Horizontal">
+            <TextBlock Text="Select Type"
+                       Style="{StaticResource LocalHeader}" />
+
+            <ComboBox x:Name="cboFrequency"
+                      Width="120"
+                      Margin="0, 5"
+                      ItemsSource="{Binding Path=RecurrenceFrequencyList}"
+                      DisplayMemberPath="Display"
+                      SelectedValuePath="Value"
+                      SelectedValue="{Binding Path=SelectedFrequency, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
+
+        <StackPanel x:Name="panelMonthly"
+                    Orientation="Horizontal"
+                    Visibility="{Binding Path=IsMonthly, Converter={StaticResource convertBoolToVisibility}, UpdateSourceTrigger=PropertyChanged}"
+                    Grid.Row="2">
+            <TextBlock Text="Day of Month"
+                       Style="{StaticResource LocalHeader}" />
+
+            <TextBox Text="{Binding Path=DayOfMonth, Converter={StaticResource convertNumberToDisplay}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                     MaxLength="2"
+                     Margin="0, 5"
+                     Width="40">
+                <i:Interaction.Behaviors>
+                    <behave:TextBoxFocusBehavior />
+                </i:Interaction.Behaviors>
+            </TextBox>
+        </StackPanel>
+
+        <StackPanel x:Name="panelAnnual"
+                    Orientation="Horizontal"
+                    Visibility="{Binding Path=IsMonthly, Converter={StaticResource convertBoolToVisibility}, ConverterParameter=R, UpdateSourceTrigger=PropertyChanged}"
+                    Grid.Row="3">
+            <TextBlock Text="Start Date"
+                       Style="{StaticResource LocalHeader}" />
+
+            <DatePicker x:Name="pickStartDate"
+                        SelectedDate="{Binding Path=StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Width="140"
+                        Margin="0, 5" />
+        </StackPanel>
+
+        <StackPanel x:Name="panelButtons"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Grid.Row="4">
+            <Button x:Name="btnSave"
+                    Command="{Binding Path=CommandSave}"
+                    Style="{StaticResource LocalButton}">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Icons/Save-256.png"
+                               Width="20"
+                               Height="20" />
+
+                        <TextBlock Text="Save"
+                                   Margin="10, 0, 0, 0" />
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+
+            <Button x:Name="btnCancel"
+                    Click="btnCancel_Click"
+                    Style="{StaticResource LocalButton}">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Icons/Leave-256.png"
+                               Width="20"
+                               Height="20" />
+
+                        <TextBlock Text="Cancel"
+                                   Margin="10, 0, 0, 0" />
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>
