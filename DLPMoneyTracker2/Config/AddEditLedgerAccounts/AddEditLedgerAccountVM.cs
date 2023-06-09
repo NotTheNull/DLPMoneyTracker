@@ -1,5 +1,6 @@
 ﻿using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.LedgerAccounts;
+using DLPMoneyTracker2.Config.AddEditMoneyAccounts;
 using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                 new SpecialDropListItem<JournalAccountType>("Receivable", JournalAccountType.Receivable),
                 new SpecialDropListItem<JournalAccountType>("Payable", JournalAccountType.Payable)
             };
+            this.ReloadAccounts();
         }
 
 
@@ -48,6 +50,8 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                 return _cmdSave ?? (_cmdSave = new RelayCommand((o) =>
                 {
                     _editAccount.SaveAccount();
+                    _editAccount.Clear();
+                    this.ReloadAccounts();
                 }));
             }
         }
@@ -71,11 +75,12 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             {
                 return _cmdLoad ?? (_cmdLoad = new RelayCommand((act) =>
                 {
-                    if (act is null) throw new ArgumentNullException("Account");
-                    if (act.GetType() != typeof(IJournalAccount)) throw new InvalidCastException(string.Format("Cannot Load type [{0}", act.GetType().FullName));
+                    if (act is LedgerAccountVM vm)
+                    {
+                        _editAccount.Copy(vm);
+                        NotifyPropertyChanged(nameof(EditAccount));
+                    }
 
-                    _editAccount.LoadAccount((IJournalAccount)act);
-                    NotifyPropertyChanged(nameof(EditAccount));
                 }));
             }
         }
@@ -90,8 +95,8 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                     if (act is null) throw new ArgumentNullException("Account");
                     if (act.GetType() != typeof(IJournalAccount)) throw new InvalidCastException(string.Format("Cannot Load type [{0}", act.GetType().FullName));
                     _config.RemoveJournalAccount(((IJournalAccount)act).Id);
-                    this.ReloadAccounts();
                     _editAccount.Clear();
+                    this.ReloadAccounts();
                 }));
             }
         }

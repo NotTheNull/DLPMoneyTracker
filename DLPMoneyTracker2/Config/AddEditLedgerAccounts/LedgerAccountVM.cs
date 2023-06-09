@@ -95,6 +95,14 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             this.DateClosedUTC = null;
         }
 
+        public void Copy(LedgerAccountVM cpy)
+        {
+            Id = cpy.Id;
+            Description = cpy.Description;
+            JournalType = cpy.JournalType;
+            DateClosedUTC = cpy.DateClosedUTC;
+            MonthlyBudget = cpy.MonthlyBudget;
+        }
 
         public void LoadAccount(IJournalAccount account)
         {

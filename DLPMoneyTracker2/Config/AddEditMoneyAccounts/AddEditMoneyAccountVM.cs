@@ -29,6 +29,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
                 new SpecialDropListItem<JournalAccountType>("Credit Card", JournalAccountType.LiabilityCard),
                 new SpecialDropListItem<JournalAccountType>("Loan", JournalAccountType.LiabilityLoan)
             };
+            this.ReloadAccounts();
         }
 
 
