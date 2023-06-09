@@ -133,8 +133,9 @@ namespace DLPMoneyTracker2.Main.AccountSummary
                                 return;
                         }
                         transVM.FillFromPlan(jPlan.ThePlan);
-
-
+                        RecordJournalEntry window = new RecordJournalEntry(transVM);
+                        window.Show();
+                        
                         this.RemoveBudgetPlan(jPlan);
                     }
 

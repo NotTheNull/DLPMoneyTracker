@@ -91,7 +91,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Budget Description"
                                     Width="220"
-                                    Binding="{Binding Path=PlanAccountDescription}" />
+                                    Binding="{Binding Path=Description}" />
                 
                 <DataGridTemplateColumn Header="Category" Width="120">
                     <DataGridTemplateColumn.CellTemplate>

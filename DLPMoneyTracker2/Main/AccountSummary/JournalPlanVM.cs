@@ -26,17 +26,11 @@ namespace DLPMoneyTracker2.Main.AccountSummary
         public Guid PlanUID { get { return _plan.UID; } }
 
         public bool IsParentDebit { get { return _plan.DebitAccountId == this.ParentAccountId; } }
-        public string PlanAccountDescription
-        {
-            get
-            {
-                if (_plan.CreditAccountId == this.ParentAccountId) return _plan.DebitAccountName;
-                return _plan.CreditAccountName;
-            }
-        }
+        
+        public string Description { get { return _plan.Description; } }
 
         public JournalPlanType PlanType { get { return _plan.PlanType; } }
-        public string PlanTypeDescription { get { return this.PlanType.ToString(); } }
+        public string PlanTypeDescription { get { return _plan.PlanType.ToString(); } }
 
         public decimal Amount { get { return _plan.ExpectedAmount; } }
 

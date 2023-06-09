@@ -19,9 +19,9 @@ namespace DLPMoneyTracker2.LedgerEntry
     /// </summary>
     public partial class RecordJournalEntry : Window
     {
-        private BaseRecordJournalEntryVM _viewModel;
+        private IJournalEntryVM _viewModel;
 
-        public RecordJournalEntry(BaseRecordJournalEntryVM viewModel)
+        public RecordJournalEntry(IJournalEntryVM viewModel)
         {
             InitializeComponent();
             this.DataContext = viewModel;
