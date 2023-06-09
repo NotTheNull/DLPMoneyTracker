@@ -82,8 +82,10 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
         /// <returns></returns>
         public bool IsValid()
         {
-            if (DebitAccount.JournalType != JournalAccountType.Payable) return false;
-            if (CreditAccount.JournalType != JournalAccountType.Bank && CreditAccount.JournalType != JournalAccountType.LiabilityCard) return false;
+            if (this.DebitAccount is null || this.CreditAccount is null) return false;
+            if (!this.ValidDebitAccountTypes.Contains(DebitAccount.JournalType)) return false;
+            if (!this.ValidCreditAccountTypes.Contains(CreditAccount.JournalType)) return false;
+            if (string.IsNullOrWhiteSpace(this.Description)) return false;
             if (ExpectedAmount <= decimal.Zero) return false;
 
             return true;
