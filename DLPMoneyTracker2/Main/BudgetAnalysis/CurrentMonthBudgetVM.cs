@@ -25,9 +25,9 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
 
 
         // List of Receivable IJournalAccounts; NOT TO BE DISPLAYED
-        private List<IJournalAccount> _listIncome = new List<IJournalAccount>();
+        private List<JournalAccountBudgetVM> _listIncome = new List<JournalAccountBudgetVM>();
 
-        public decimal TotalBudgetIncome { get { return _listIncome?.Sum(s => s.MonthlyBudgetAmount) ?? decimal.Zero; } }
+        public decimal TotalBudgetIncome { get { return _listIncome?.Sum(s => s.MonthlyBudget) ?? decimal.Zero; } }
 
         // List of Payable IJournalAccounts WITH a Journal Plan
         private ObservableCollection<JournalAccountBudgetVM> _listFixed = new ObservableCollection<JournalAccountBudgetVM>();
@@ -97,7 +97,7 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
                     case JournalAccountType.Receivable:
                         if (act.DateClosedUTC is null)
                         {
-                            _listIncome.Add(act);
+                            _listIncome.Add(budget);
                         }
                         break;
                     case JournalAccountType.Payable:
