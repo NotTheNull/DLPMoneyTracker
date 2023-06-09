@@ -5,6 +5,8 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <StartupObject>DLPMoneyTracker2.App</StartupObject>
+    <ApplicationIcon>Cash-64.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,6 +32,10 @@
     <None Remove="Icons\Save-256.png" />
     <None Remove="Icons\Settings-01-256.png" />
     <None Remove="Icons\Stock-Exchange-256.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Cash-64.ico" />
   </ItemGroup>
 
   <ItemGroup>
