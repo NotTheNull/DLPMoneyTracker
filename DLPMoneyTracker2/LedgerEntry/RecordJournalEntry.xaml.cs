@@ -24,6 +24,7 @@ namespace DLPMoneyTracker2.LedgerEntry
         public RecordJournalEntry(BaseRecordJournalEntryVM viewModel)
         {
             InitializeComponent();
+            this.DataContext = viewModel;
             _viewModel = viewModel;
         }
 

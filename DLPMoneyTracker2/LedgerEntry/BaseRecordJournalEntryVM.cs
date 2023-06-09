@@ -46,6 +46,8 @@ namespace DLPMoneyTracker2.LedgerEntry
             _config = config;
             _journal = journal;
             _date = DateTime.Today;
+            this.LoadAccounts();
+            this.NotifyAll();
         }
 
         private DateTime _date;
@@ -158,6 +160,14 @@ namespace DLPMoneyTracker2.LedgerEntry
             this.SelectedDebitAccount = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == plan.DebitAccountId);
             this.Description = plan.Description;
             this.Amount = plan.ExpectedAmount;
+        }
+
+        protected void NotifyAll()
+        {
+            NotifyPropertyChanged(nameof(Amount));
+            NotifyPropertyChanged(nameof(Description));
+            NotifyPropertyChanged(nameof(this.SelectedDebitAccount));
+            NotifyPropertyChanged(nameof(SelectedCreditAccount));
         }
     }
 }
