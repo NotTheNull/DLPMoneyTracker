@@ -5,7 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <StartupObject>DLPMoneyTracker2.App</StartupObject>
+    <StartupObject></StartupObject>
     <ApplicationIcon>Cash-64.ico</ApplicationIcon>
   </PropertyGroup>
 
@@ -35,7 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Cash-64.ico" />
+    <EmbeddedResource Include="Cash-64.ico" />
   </ItemGroup>
 
   <ItemGroup>

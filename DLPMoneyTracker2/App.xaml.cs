@@ -17,11 +17,13 @@ namespace DLPMoneyTracker2
     {
         public App()
         {
-            UICore.Init();
+            
         }
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            UICore.Init();
+
             // Handle conversions
 #pragma warning disable CS0612 // Type or member is obsolete
 

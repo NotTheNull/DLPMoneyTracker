@@ -26,6 +26,12 @@ namespace DLPMoneyTracker2.Main.AccountSummary
             _config = config;
             _planner = planner;
             _journal = journal;
+            _journal.JournalModified += _journal_JournalModified;
+        }
+
+        private void _journal_JournalModified()
+        {
+            this.Refresh();
         }
 
         public Guid AccountId { get { return _account.Id; } }
