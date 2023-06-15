@@ -25,7 +25,7 @@ namespace DLPMoneyTracker.Data
 
         public JournalSearchFilter(IJournalPlan plan, IJournalAccount acct)
         {
-            DateRange = new DateRange(plan.NextOccurrence.AddDays(-14), plan.NotificationDate);
+            DateRange = new DateRange(plan.NotificationDate, plan.NextOccurrence);
             SearchText = plan.Description;
             Account = acct;
         }
