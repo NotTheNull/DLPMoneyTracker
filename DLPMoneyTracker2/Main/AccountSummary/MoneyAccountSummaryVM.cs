@@ -173,6 +173,10 @@ namespace DLPMoneyTracker2.Main.AccountSummary
 
             foreach (var p in list)
             {
+                // See if we already have a transaction for this budget plan
+                var listTrans = _journal.Search(new JournalSearchFilter(p, _account));
+                if (listTrans != null) continue;
+
                 this.AddBudgetPlan(p);
             }
         }

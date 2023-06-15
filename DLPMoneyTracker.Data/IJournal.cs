@@ -1,5 +1,7 @@
-﻿using DLPMoneyTracker.Data.LedgerAccounts;
+﻿using DLPMoneyTracker.Data.Common;
+using DLPMoneyTracker.Data.LedgerAccounts;
 using DLPMoneyTracker.Data.TransactionModels;
+using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
@@ -15,6 +17,20 @@ namespace DLPMoneyTracker.Data
 {
     public delegate void JournalModifiedHandler();
 
+    public class JournalSearchFilter
+    {
+        public DateRange? DateRange;
+        public String? SearchText;
+        public IJournalAccount? Account;
+
+        public JournalSearchFilter(IJournalPlan plan, IJournalAccount acct)
+        {
+            DateRange = new DateRange(plan.NotificationDate.AddDays(-14), plan.NotificationDate);
+            SearchText = plan.Description;
+            Account = acct;
+        }
+    }
+
     public interface IJournal
     {
         event JournalModifiedHandler JournalModified;
@@ -25,6 +41,7 @@ namespace DLPMoneyTracker.Data
         void LoadFromFile(int year);
         void SaveToFile();
         void AddTransaction(IJournalEntry trans);
+        IEnumerable<IJournalEntry> Search(JournalSearchFilter filter);
 
         decimal GetAccountBalance(Guid ledgerAccountId);
         decimal GetAccountBalance_CurrentMonth(Guid ledgerAccountId);
@@ -58,8 +75,6 @@ namespace DLPMoneyTracker.Data
         public ReadOnlyCollection<IJournalEntry> TransactionList { get { return _listTransactions.AsReadOnly(); } }
 
 
-
-
         public void AddTransaction(IJournalEntry trans)
         {
             var record = _listTransactions.FirstOrDefault(x => x.Id == trans.Id);
@@ -73,6 +88,30 @@ namespace DLPMoneyTracker.Data
             }
             this.SaveToFile();
         }
+
+        public IEnumerable<IJournalEntry> Search(JournalSearchFilter filter)
+        {
+            if (filter is null) return null;
+
+            var listSearch = TransactionList.Where(x => x.Id != Guid.Empty);
+            if(filter.DateRange != null)
+            {
+                listSearch = listSearch.Where(x => filter.DateRange.IsWithinRange(x.TransactionDate));
+            }
+
+            if(filter.Account != null)
+            {
+                listSearch = listSearch.Where(x => x.CreditAccountId == filter.Account.Id || x.DebitAccountId == filter.Account.Id);
+            }
+
+            if(!string.IsNullOrWhiteSpace(filter.SearchText))
+            {
+                listSearch = listSearch.Where(x => x.Description.Contains(filter.SearchText));
+            }
+
+            return listSearch.ToList();
+        }
+
 
         public decimal GetAccountBalance(Guid ledgerAccountId)
         {
