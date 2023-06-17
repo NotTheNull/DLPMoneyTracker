@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:DLPMoneyTracker2"
         mc:Ignorable="d"
         Title="DLP Money Tracker"
-        Width="1080"
-        Height="720"
+        Width="1100"
+        Height="825"
         Icon="Cash-64.ico"
         WindowStartupLocation="CenterScreen">
 
