@@ -7,6 +7,8 @@
     <UseWPF>true</UseWPF>
     <StartupObject></StartupObject>
     <ApplicationIcon>Cash-64.ico</ApplicationIcon>
+    <Title>DLP Money Tracker</Title>
+    <AssemblyVersion>2.1.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
