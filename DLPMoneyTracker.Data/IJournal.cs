@@ -48,6 +48,8 @@ namespace DLPMoneyTracker.Data
         decimal GetAccountBalance_Month(Guid ledgerAccountId, int year, int month);
         decimal GetAccountBalance_Range(Guid ledgerAccountId, DateTime beg, DateTime end);
 
+        void BuildInitialBalances(IJournal oldJournal);
+
 #pragma warning disable CS0612 // Type or member is obsolete
         void Convert(ILedger ledger);
 #pragma warning restore CS0612 // Type or member is obsolete
@@ -197,6 +199,49 @@ namespace DLPMoneyTracker.Data
             File.WriteAllText(FilePath, json);
             JournalModified?.Invoke();
         }
+
+        /// <summary>
+        /// Rebuilds the initial balances for Money Accounts.  Payables and Receivables do NOT carry over
+        /// </summary>
+        /// <param name="oldJournal"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public void BuildInitialBalances(IJournal oldJournal)
+        {
+            if (oldJournal is null) throw new ArgumentNullException("Journal");
+
+            List<JournalAccountType> listMoneyAccounts = new List<JournalAccountType>() { JournalAccountType.Bank, JournalAccountType.LiabilityCard, JournalAccountType.LiabilityLoan };
+
+            _listTransactions.RemoveAll(x => x.DebitAccountId == SpecialAccount.InitialBalance.Id || x.CreditAccountId == SpecialAccount.InitialBalance.Id);
+            foreach(var account in _config.LedgerAccountsList.Where(x => listMoneyAccounts.Contains(x.JournalType)))
+            {
+                JournalEntry record = new JournalEntry(_config)
+                {
+                    TransactionDate = DateTime.MinValue,
+                    Description = SpecialAccount.InitialBalance.Description,
+                    TransactionAmount = oldJournal.GetAccountBalance(account.Id)
+                };
+
+
+                if (account is BankAccount bank)
+                {
+                    record.DebitAccount = bank;
+                    record.CreditAccount = SpecialAccount.InitialBalance;
+                }
+                else if (account is CreditCardAccount creditCard)
+                {
+                    record.DebitAccount = SpecialAccount.InitialBalance;
+                    record.CreditAccount = creditCard;
+                }
+                else if (account is LoanAccount loan)
+                {
+                    record.DebitAccount = SpecialAccount.InitialBalance;
+                    record.CreditAccount = loan;
+                }
+
+                this.AddTransaction(record);
+            }
+        }
+
 
 #pragma warning disable CS0612 // Type or member is obsolete
         const string XFER_CATEGORY = "*TRANSFER*";

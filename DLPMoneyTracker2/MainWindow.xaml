@@ -27,9 +27,14 @@
                 <Menu>
                     <MenuItem Header="_File">
 
-                        <MenuItem x:Name="MenuNewYearSetup" Header="_Setup New Year" />
+                        <MenuItem x:Name="MenuNewYearSetup" 
+                                  Header="_Setup New Year" 
+                                  Click="MenuNewYearSetup_Click"
+                                  />
 
-                        <MenuItem x:Name="MenuExit" Header="_Exit" Click="MenuExit_Click">
+                        <MenuItem x:Name="MenuExit" 
+                                  Header="_Exit" 
+                                  Click="MenuExit_Click">
                             <MenuItem.Icon>
                                 <Image Source="/Icons/Leave-256.png" />
                             </MenuItem.Icon>

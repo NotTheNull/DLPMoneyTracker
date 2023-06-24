@@ -1,4 +1,5 @@
-﻿using DLPMoneyTracker2.Config.AddEditBudgetPlans;
+﻿using DLPMoneyTracker.Data;
+using DLPMoneyTracker2.Config.AddEditBudgetPlans;
 using DLPMoneyTracker2.Config.AddEditLedgerAccounts;
 using DLPMoneyTracker2.Config.AddEditMoneyAccounts;
 using DLPMoneyTracker2.LedgerEntry;
@@ -112,6 +113,18 @@ namespace DLPMoneyTracker2
         {
             AddEditBudgetPlan window = UICore.DependencyHost.GetRequiredService<AddEditBudgetPlan>();
             window.Show();
+        }
+
+        /// <summary>
+        /// If its December, build the New year.  If it's January, rebuild the curren tyear
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuNewYearSetup_Click(object sender, RoutedEventArgs e)
+        {
+            if (DateTime.Today.Month == 12) NewYearBuilder.SetupNewYear();
+            else if (DateTime.Today.Month == 1) NewYearBuilder.RebuildCurrentYear();
+
         }
     }
 }
