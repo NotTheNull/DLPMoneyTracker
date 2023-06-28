@@ -12,9 +12,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.LedgerEntry
 {
-    // TODO: Add Journal Entry for Debt Reduction: e.g. Rewards cash back, Refunds
-    // TODO: Add Journal Entry for Debt Interest
-
+    
     public interface IJournalEntryVM
     {
         bool IsValidTransaction { get; }
