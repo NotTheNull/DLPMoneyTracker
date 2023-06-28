@@ -153,6 +153,16 @@
                         Margin="5"
                         Fill="Silver" />
 
+
+                    <Button x:Name="btnAddIncome"
+                            Click="MenuRecordIncome_Click"
+                            Style="{StaticResource MenuButton}"
+                            ToolTip="Add Income">
+                        <Button.Content>
+                            <Image Source="/Icons/Dollar-256.png" />
+                        </Button.Content>
+                    </Button>
+                    
                     <Button
                         x:Name="btnAddExpense"
                         Click="MenuRecordExpense_Click"
