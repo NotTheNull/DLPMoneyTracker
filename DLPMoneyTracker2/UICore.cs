@@ -65,6 +65,7 @@ namespace DLPMoneyTracker2
             services.AddTransient<DebtPaymentJournalEntryVM>();
             services.AddTransient<TransferJournalEntryVM>();
             services.AddTransient<CorrectionJournalEntryVM>();
+            services.AddTransient<DebtAdjustmentJournalEntryVM>();
 
             // Config
             services.AddTransient<AddEditMoneyAccount>();

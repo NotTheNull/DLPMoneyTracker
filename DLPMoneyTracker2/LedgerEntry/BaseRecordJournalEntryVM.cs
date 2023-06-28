@@ -141,7 +141,7 @@ namespace DLPMoneyTracker2.LedgerEntry
 
         public abstract void LoadAccounts();
 
-        public void SaveTransaction()
+        public virtual void SaveTransaction()
         {
             if (!IsValidTransaction) return;
 

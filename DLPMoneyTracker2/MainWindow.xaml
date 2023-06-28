@@ -72,6 +72,15 @@
                                 <Image Source="/Icons/Money-Transfer-256.png" />
                             </MenuItem.Icon>
                         </MenuItem>
+
+                        <MenuItem x:Name="MenuRecordDebtAdjustment"
+                                  Click="MenuRecordDebtAdjustment_Click"
+                                  Header="Debt Adjustment">
+                            <MenuItem.Icon>
+                                <Image Source="/Icons/Light-Bulb-256.png" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        
                         <MenuItem x:Name="MenuAccountCorrection"
                                   Header="Add _Correction"
                                   Click="MenuAccountCorrection_Click"

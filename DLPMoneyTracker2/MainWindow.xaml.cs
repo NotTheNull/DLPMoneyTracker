@@ -126,5 +126,12 @@ namespace DLPMoneyTracker2
             else if (DateTime.Today.Month == 1) NewYearBuilder.RebuildCurrentYear();
 
         }
+
+        private void MenuRecordDebtAdjustment_Click(object sender, RoutedEventArgs e)
+        {
+            DebtAdjustmentJournalEntryVM viewModel = UICore.DependencyHost.GetRequiredService<DebtAdjustmentJournalEntryVM>();
+            RecordJournalEntry window = new RecordJournalEntry(viewModel);
+            window.Show();
+        }
     }
 }
