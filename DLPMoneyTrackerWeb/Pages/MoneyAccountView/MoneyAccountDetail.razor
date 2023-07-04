@@ -40,9 +40,13 @@
                             </td>
                             <td>@money.Description</td>
                             <td>@string.Format("{0:c}", money.TransAmount)</td>
-                        </tr>                            
-                                                    
+                        </tr>
+
                     }
+                }
+                else
+                {
+                    <tr/>
                 }
             </tbody>
 

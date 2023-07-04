@@ -7,10 +7,10 @@
 
 @code {
     EditContext _editContext;
-    MoneyAccount _editAccount;
+    EditMoneyAccountRecord _editAccount;
 
     [Parameter]
-    public MoneyAccount EditAccount
+    public EditMoneyAccountRecord EditAccount
     {
         get { return _editAccount; }
         set { _editAccount = value; }
@@ -24,7 +24,7 @@
 
     protected override void OnInitialized()
     {
-        if (_editAccount is null) _editAccount = new MoneyAccount();
+        if (_editAccount is null) _editAccount = new EditMoneyAccountRecord();
         _editContext = new EditContext(_editAccount);
     }
 

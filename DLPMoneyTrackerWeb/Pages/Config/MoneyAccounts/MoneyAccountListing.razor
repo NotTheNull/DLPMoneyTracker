@@ -1,6 +1,7 @@
 ﻿@page "/Config/MoneyAccount"
-@using DLPMoneyTracker.Data.ConfigModels;
+@using DLPMoneyTracker.Data.LedgerAccounts;
 
+@inject EditMoneyAccountService service;
 
 <div class="top-row px-4">
     <button type="button" @onclick="@((e) => AddNewMoneyAccount())"><img class="action-btn" src="icons\Add-New-256.png" alt="Add New" /></button>
@@ -11,13 +12,33 @@
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Description</th>
                     <th>Account Type</th>
                     <th>Initial Bal</th>
                     <th><!-- Action Buttons --></th>
                 </tr>
             </thead>
+
+            <tbody>
+                @if(service.MoneyAccounts?.Count > 0) 
+                {
+                    int rowCount = 0;
+                    foreach(var acct in service.MoneyAccounts)
+                    {
+                        rowCount++;
+                        <tr class="@((rowCount % 2 == 0) ? "altRowColor" : "stdRowColor")">
+                            <td>@acct.Description</td>
+                            <td>@acct.JournalType.ToDisplayText()</td>
+                            
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr/>
+                }
+
+            </tbody>
         </table>
     </div>
 </section>
@@ -25,7 +46,7 @@
 
 @code {
     private AddEditMoneyAccounts popupEdit;
-    private MoneyAccount _editAccount;
+    
 
     private void AddNewMoneyAccount()
     {

@@ -4,6 +4,7 @@ using DLPMoneyTracker.Data.TransactionModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -14,15 +15,12 @@ namespace DLPMoneyTracker.Data
     {
 
         [Obsolete]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         ReadOnlyCollection<MoneyAccount> AccountsList { get; }
         [Obsolete]
         ReadOnlyCollection<TransactionCategory> CategoryList { get; }
 
         ReadOnlyCollection<IJournalAccount> LedgerAccountsList { get; }
-        ReadOnlyCollection<IJournalAccount> PaymentAccounts { get; }
-        ReadOnlyCollection<IJournalAccount> AccountsReceivable { get; }
-        ReadOnlyCollection<IJournalAccount> AccountsPayable { get; }
-
 
 
         void LoadFromFile(int year);
@@ -32,30 +30,43 @@ namespace DLPMoneyTracker.Data
         void LoadJournalAccounts();
 
         [Obsolete]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         void LoadMoneyAccounts();
+        
         [Obsolete]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         void SaveMoneyAccounts();
+        
         [Obsolete]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         void LoadCategories();
+        
         [Obsolete]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         void SaveCategories();
 
         [Obsolete]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         TransactionCategory GetCategory(Guid uid);
 
         [Obsolete]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         MoneyAccount GetAccount(string id);
 
         [Obsolete]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         void AddCategory(TransactionCategory cat);
 
         [Obsolete]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         void AddMoneyAccount(MoneyAccount act);
 
         [Obsolete]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         void RemoveCategory(TransactionCategory cat);
 
         [Obsolete]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         void RemoveMoneyAccount(MoneyAccount act);
 
         void Copy(ITrackerConfig config);
@@ -90,32 +101,6 @@ namespace DLPMoneyTracker.Data
         private List<IJournalAccount> _listLedgerAccounts = new List<IJournalAccount>();
 
         public ReadOnlyCollection<IJournalAccount> LedgerAccountsList { get { return _listLedgerAccounts.AsReadOnly(); } }
-        public ReadOnlyCollection<IJournalAccount> PaymentAccounts
-        {
-            get
-            {
-                return _listLedgerAccounts
-                    .Where(x => x.JournalType == JournalAccountType.Bank || x.JournalType == JournalAccountType.LiabilityCard)
-                    .ToList()
-                    .AsReadOnly();
-            }
-        }
-
-        public ReadOnlyCollection<IJournalAccount> AccountsReceivable
-        {
-            get
-            {
-                return _listLedgerAccounts.Where(x => x.JournalType == JournalAccountType.Receivable).ToList().AsReadOnly();
-            }
-        }
-
-        public ReadOnlyCollection<IJournalAccount> AccountsPayable
-        {
-            get
-            {
-                return _listLedgerAccounts.Where(x => x.JournalType == JournalAccountType.Payable || x.JournalType == JournalAccountType.LiabilityLoan || x.JournalType == JournalAccountType.LiabilityCard).ToList().AsReadOnly();
-            }
-        }
 
 
 

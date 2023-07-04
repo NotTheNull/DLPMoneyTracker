@@ -59,8 +59,4 @@
       <ProjectReference Include="..\DLPMoneyTracker.Data\DLPMoneyTracker.Data.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Pages\Config\Budget\" />
-    </ItemGroup>
-
 </Project>
