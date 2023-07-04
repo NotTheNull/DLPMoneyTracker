@@ -66,8 +66,8 @@ namespace DLPMoneyTracker2.LedgerEntry
                 TransactionAmount = this.Amount,
                 TransactionDate = this.TransactionDate,
                 Description = this.Description,
-                CreditAccount = (action == SpecialAccount.DebtInterest) ? liability : action,
-                DebitAccount = (action == SpecialAccount.DebtInterest) ? action : liability
+                CreditAccount = (action.Id == SpecialAccount.DebtInterest.Id) ? liability : action,
+                DebitAccount = (action.Id == SpecialAccount.DebtInterest.Id) ? action : liability
             };
             _journal.AddTransaction(record);
 
