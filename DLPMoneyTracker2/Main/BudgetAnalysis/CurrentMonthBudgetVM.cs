@@ -45,7 +45,8 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
 
         public decimal MonthlyBalance { get { return this.TotalBudgetIncome - this.TotalExpenseBudget; } }
 
-
+        // TODO: Add separate totals for Fixed and Variable Expenses
+        // TOOD: Update UI to display separate expense totals under their repsective columns
 
         #region Commands
         private RelayCommand _cmdShowDetail;
