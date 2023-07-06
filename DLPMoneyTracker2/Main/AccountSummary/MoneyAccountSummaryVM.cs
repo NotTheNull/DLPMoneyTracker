@@ -57,7 +57,6 @@ namespace DLPMoneyTracker2.Main.AccountSummary
         private ObservableCollection<JournalPlanVM> _listPlans = new ObservableCollection<JournalPlanVM>();
         public ObservableCollection<JournalPlanVM> PlanList { get { return _listPlans; } }
 
-
         public bool ShowBudgetData { get { return PlanList.Count > 0; } }
 
         public decimal BudgetBalance
@@ -94,6 +93,9 @@ namespace DLPMoneyTracker2.Main.AccountSummary
                 return this.AccountType == JournalAccountType.Bank ? bal : bal * -1;
             }
         }
+
+
+        // TODO: There's an issue where a Plan's Next Occurence date does not match expectations
 
 
         #region Commands

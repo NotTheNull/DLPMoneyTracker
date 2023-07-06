@@ -48,6 +48,8 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
         // TODO: Add separate totals for Fixed and Variable Expenses
         // TOOD: Update UI to display separate expense totals under their repsective columns
 
+        // TODO: Think of a way to showcase a list of Non-Required Budget Plans
+
         #region Commands
         private RelayCommand _cmdShowDetail;
         public RelayCommand CommandShowDetail

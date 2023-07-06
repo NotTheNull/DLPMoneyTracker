@@ -137,6 +137,8 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
             }
         }
 
+        // TODO: Add "Required" option as a way of indicating that a particular Budget Plan cannot be cancelled
+        
 
 
 
