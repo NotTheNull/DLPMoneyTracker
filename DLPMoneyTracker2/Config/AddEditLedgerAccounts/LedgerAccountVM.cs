@@ -82,7 +82,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             }
         }
 
-
+        // TODO: Add checkbox / bool for whether a particular Ledger Account should be displayed on Budget reports
 
 
 
