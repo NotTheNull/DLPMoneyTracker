@@ -87,6 +87,16 @@ namespace DLPMoneyTracker2.Main.AccountSummary
                                     bal -= p.Amount;
                                 }
                                 break;
+                            case JournalPlanType.DebtPayment:
+                                if(this.AccountType == JournalAccountType.Bank)
+                                {
+                                    bal -= p.Amount;
+                                }
+                                else
+                                {
+                                    bal += p.Amount;
+                                }
+                                break;
                         }
                     }
                 }
