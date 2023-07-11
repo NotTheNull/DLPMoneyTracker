@@ -95,8 +95,6 @@ namespace DLPMoneyTracker2.Main.AccountSummary
         }
 
 
-        // TODO: There's an issue where a Plan's Next Occurence date does not match expectations
-
 
         #region Commands
         private RelayCommand _cmdDetail;

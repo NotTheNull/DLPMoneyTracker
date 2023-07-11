@@ -34,7 +34,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
 
         public decimal Amount { get { return _plan.ExpectedAmount; } }
 
-        public DateTime NextDueDate { get { return _plan.NotificationDate; } }
+        public DateTime NextDueDate { get { return _plan.NextOccurrence; } }
 
 
 
