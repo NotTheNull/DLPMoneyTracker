@@ -29,6 +29,7 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
 
         public decimal TotalBudgetIncome { get { return _listIncome?.Sum(s => s.MonthlyBudget) ?? decimal.Zero; } }
 
+        // TODO: Liability accounts are displaying payments as negative which is affecting the Fixed Expense Budget Total [Add Exclude from Budget option first]
         // List of Payable IJournalAccounts WITH a Journal Plan
         private ObservableCollection<JournalAccountBudgetVM> _listFixed = new ObservableCollection<JournalAccountBudgetVM>();
         public ObservableCollection<JournalAccountBudgetVM> FixedExpenses { get { return _listFixed; } }
