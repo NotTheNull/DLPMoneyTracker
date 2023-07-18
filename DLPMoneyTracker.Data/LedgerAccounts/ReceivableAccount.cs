@@ -48,6 +48,7 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
             this.OrderBy = cpy.OrderBy;
             this.DateClosedUTC = cpy.DateClosedUTC;
             this.CategoryId = cpy.CategoryId;
+            this.MonthlyBudgetAmount = cpy.MonthlyBudgetAmount;
         }
 
 

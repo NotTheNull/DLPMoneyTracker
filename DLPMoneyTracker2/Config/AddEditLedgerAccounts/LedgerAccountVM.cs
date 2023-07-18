@@ -116,7 +116,6 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             MonthlyBudget = account.MonthlyBudgetAmount;
         }
 
-        // TODO: Monthly Budget is not saving
         public void SaveAccount()
         {
             if (string.IsNullOrWhiteSpace(_desc)) return;

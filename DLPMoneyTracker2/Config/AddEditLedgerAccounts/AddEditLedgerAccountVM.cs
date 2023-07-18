@@ -33,12 +33,42 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
         private ObservableCollection<LedgerAccountVM> _listAccounts = new ObservableCollection<LedgerAccountVM>();
         public ObservableCollection<LedgerAccountVM> AccountList { get { return _listAccounts; } }
 
-        private LedgerAccountVM _editAccount;
-        public LedgerAccountVM EditAccount { get { return _editAccount; } }
-
         public bool CanEdit { get { return _editAccount?.DateClosedUTC == null; } }
 
         public List<SpecialDropListItem<JournalAccountType>> JournalTypeList { get; set; }
+
+
+        private LedgerAccountVM _editAccount;
+        public LedgerAccountVM EditAccount { get { return _editAccount; } }
+        public string Description
+        {
+            get { return _editAccount?.Description ?? string.Empty; }
+            set
+            {
+                _editAccount.Description = value;
+                NotifyPropertyChanged(nameof(Description));
+            }
+        }
+
+        public JournalAccountType AccountType
+        {
+            get { return _editAccount?.JournalType ?? JournalAccountType.NotSet; }
+            set
+            {
+                _editAccount.JournalType = value;
+                NotifyPropertyChanged(nameof(AccountType));
+            }
+        }
+
+        public decimal MonthlyBudget
+        {
+            get { return _editAccount?.MonthlyBudget ?? decimal.Zero; }
+            set
+            {
+                _editAccount.MonthlyBudget = value;
+                NotifyPropertyChanged(nameof(MonthlyBudget));
+            }
+        }
 
 
         #region Commands
@@ -64,6 +94,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                 return _cmdClear ?? (_cmdClear = new RelayCommand((o) =>
                 {
                     _editAccount.Clear();
+                    this.NotifyAll();
                 }));
             }
         }
@@ -78,7 +109,8 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                     if (act is LedgerAccountVM vm)
                     {
                         _editAccount.Copy(vm);
-                        NotifyPropertyChanged(nameof(EditAccount));
+
+                        this.NotifyAll();
                     }
 
                 }));
@@ -114,6 +146,14 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                 this.AccountList.Add(new LedgerAccountVM(_config, act));
             }
 
+        }
+
+        private void NotifyAll()
+        {
+            NotifyPropertyChanged(nameof(EditAccount));
+            NotifyPropertyChanged(nameof(Description));
+            NotifyPropertyChanged(nameof(AccountType));
+            NotifyPropertyChanged(nameof(MonthlyBudget));
         }
     }
 }
