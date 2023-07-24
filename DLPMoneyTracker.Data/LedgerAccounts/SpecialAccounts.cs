@@ -33,6 +33,9 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         public decimal MonthlyBudgetAmount { get { return decimal.Zero; } }
 
+        public bool ExcludeFromBudget { get { return true; } }
+
+
         public void Copy(IJournalAccount cpy)
         {
             return;

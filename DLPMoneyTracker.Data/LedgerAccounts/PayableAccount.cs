@@ -19,8 +19,6 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         public DateTime? DateClosedUTC { get; set; }
 
-        public bool ShouldAffectBudget { get; set; }
-
         public string MoneyAccountId { get { return string.Empty; } }
         public MoneyAccountType AccountType { get { return MoneyAccountType.NotSet; } }
         public Guid CategoryId { get; set; }
@@ -28,6 +26,7 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
         // Exclusive Properties
         public decimal MonthlyBudgetAmount { get; set; }
 
+        public bool ExcludeFromBudget { get; set; }
 
 
 
@@ -64,7 +63,7 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
             CategoryId = cat.ID;
             Description = cat.Name;
             DateClosedUTC = cat.DateDeletedUTC;
-            ShouldAffectBudget = !cat.ExcludeFromBudget;
+            this.ExcludeFromBudget = cat.ExcludeFromBudget;
             MonthlyBudgetAmount = cat.DefaultMonthlyBudget;
         }
 #pragma warning restore CS0612 // Type or member is obsolete

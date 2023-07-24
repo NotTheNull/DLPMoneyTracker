@@ -28,6 +28,9 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         public decimal MonthlyBudgetAmount { get { return decimal.Zero; } }
 
+        public bool ExcludeFromBudget { get { return false; } }
+
+
         public LoanAccount()
         {
             this.Id = Guid.NewGuid();
