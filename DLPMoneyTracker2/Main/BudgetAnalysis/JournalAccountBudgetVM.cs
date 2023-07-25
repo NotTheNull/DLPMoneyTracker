@@ -99,7 +99,7 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
         public void Load(IJournalAccount account)
         {
             _account = account;
-            this.CurrentMonthTotal = _journal.GetAccountBalance_CurrentMonth(this.AccountId);
+            this.CurrentMonthTotal = _journal.GetAccountBalance_CurrentMonth(this.AccountId, true);
             
             if(_planner.JournalPlanList.Any(x => x.DebitAccountId == account.Id || x.CreditAccountId == account.Id))
             {

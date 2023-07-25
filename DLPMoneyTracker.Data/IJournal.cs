@@ -43,10 +43,10 @@ namespace DLPMoneyTracker.Data
         void AddTransaction(IJournalEntry trans);
         IEnumerable<IJournalEntry> Search(JournalSearchFilter filter);
 
-        decimal GetAccountBalance(Guid ledgerAccountId);
-        decimal GetAccountBalance_CurrentMonth(Guid ledgerAccountId);
-        decimal GetAccountBalance_Month(Guid ledgerAccountId, int year, int month);
-        decimal GetAccountBalance_Range(Guid ledgerAccountId, DateTime beg, DateTime end);
+        decimal GetAccountBalance(Guid ledgerAccountId, bool isBudgetBalance);
+        decimal GetAccountBalance_CurrentMonth(Guid ledgerAccountId, bool isBudgetBalance);
+        decimal GetAccountBalance_Month(Guid ledgerAccountId, bool isBudgetBalance, int year, int month);
+        decimal GetAccountBalance_Range(Guid ledgerAccountId, bool isBudgetBalance, DateTime beg, DateTime end);
 
         void BuildInitialBalances(IJournal oldJournal);
 
@@ -115,17 +115,17 @@ namespace DLPMoneyTracker.Data
         }
 
 
-        public decimal GetAccountBalance(Guid ledgerAccountId)
+        public decimal GetAccountBalance(Guid ledgerAccountId, bool isBudgetBalance)
         {
-            return GetAccountBalance_Range(ledgerAccountId, DateTime.MinValue, DateTime.MaxValue);
+            return GetAccountBalance_Range(ledgerAccountId, isBudgetBalance, DateTime.MinValue, DateTime.MaxValue);
         }
 
-        public decimal GetAccountBalance_CurrentMonth(Guid ledgerAccountId)
+        public decimal GetAccountBalance_CurrentMonth(Guid ledgerAccountId, bool isBudgetBalance)
         {
-            return GetAccountBalance_Month(ledgerAccountId, DateTime.Today.Year, DateTime.Today.Month);
+            return GetAccountBalance_Month(ledgerAccountId, isBudgetBalance, DateTime.Today.Year, DateTime.Today.Month);
         }
 
-        public decimal GetAccountBalance_Month(Guid ledgerAccountId, int year, int month)
+        public decimal GetAccountBalance_Month(Guid ledgerAccountId, bool isBudgetBalance, int year, int month)
         {
             if (month < 1 || month > 12) throw new InvalidOperationException(String.Format("Month #{0} is not valid", month));
 
@@ -133,10 +133,10 @@ namespace DLPMoneyTracker.Data
             int dayCount = DateTime.DaysInMonth(year, month);
             DateTime end = new DateTime(year, month, dayCount).AddDays(1);
 
-            return GetAccountBalance_Range(ledgerAccountId, beg, end);
+            return GetAccountBalance_Range(ledgerAccountId, isBudgetBalance, beg, end);
         }
 
-        public decimal GetAccountBalance_Range(Guid ledgerAccountId, DateTime beg, DateTime end)
+        public decimal GetAccountBalance_Range(Guid ledgerAccountId, bool isBudgetBalance, DateTime beg, DateTime end)
         {
             bool doesFilterApply(IJournalEntry entry)
             {
@@ -154,6 +154,15 @@ namespace DLPMoneyTracker.Data
             {
                 foreach(var t in _listTransactions.Where(doesFilterApply))
                 {
+                    if(isBudgetBalance)
+                    {
+                        var accountCredit = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == t.CreditAccountId);
+                        if (accountCredit.ExcludeFromBudget) continue;
+
+                        var accountDebit = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == t.DebitAccountId);
+                        if (accountDebit.ExcludeFromBudget) continue;
+                    }
+
                     if(t.DebitAccountId == ledgerAccountId)
                     {
                         balance += t.TransactionAmount;
@@ -218,7 +227,7 @@ namespace DLPMoneyTracker.Data
                 {
                     TransactionDate = DateTime.MinValue,
                     Description = SpecialAccount.InitialBalance.Description,
-                    TransactionAmount = oldJournal.GetAccountBalance(account.Id)
+                    TransactionAmount = oldJournal.GetAccountBalance(account.Id, false)
                 };
 
 

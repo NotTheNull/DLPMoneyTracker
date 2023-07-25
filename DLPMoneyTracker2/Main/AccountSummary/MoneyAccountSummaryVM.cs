@@ -163,7 +163,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
 
         public void Refresh()
         {
-            this.Balance = _journal.GetAccountBalance(this.AccountId);
+            this.Balance = _journal.GetAccountBalance(this.AccountId, false);
             this.LoadBudgetPlans();
             this.NotifyAll();
         }

@@ -27,7 +27,7 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         public decimal MonthlyBudgetAmount { get { return decimal.Zero; } }
 
-        public bool ExcludeFromBuget { get { return false; } }
+        public bool ExcludeFromBudget { get { return false; } }
 
         public BankAccount()
         {
