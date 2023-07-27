@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Transactions;
 using DLPMoneyTracker.Data.TransactionModels;
 
-namespace DLPMoneyTrackerWeb.Data
+namespace DLPMoneyTrackerWeb.Pages.MoneyAccountView
 {
     internal class MoneyAccountDetailVM
     {
@@ -35,15 +35,15 @@ namespace DLPMoneyTrackerWeb.Data
         public void LoadAccount(string actId)
         {
             _act = _config.GetAccount(actId);
-            this.Refresh();
+            Refresh();
         }
 
         public void Refresh()
         {
             _listTrans.Clear();
-            var records = _ledger.TransactionList.Where(x => x.AccountID == this.AccountID).ToList();
+            var records = _ledger.TransactionList.Where(x => x.AccountID == AccountID).ToList();
 
-            if(records?.Any() == true)
+            if (records?.Any() == true)
             {
                 _listTrans.AddRange(records);
             }

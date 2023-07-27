@@ -12,22 +12,48 @@ namespace DLPMoneyTracker.Data
 
     public static class StringExtensions
     {
+        private const string JACCOUNT_NOTSET = "*N/A*";
+        private const string JACCOUNT_PAYABLE = "Accounts Payable";
+        private const string JACCOUNT_RECEIVE = "Receivable";
+        private const string JACCOUNT_BANK = "Bank";
+        private const string JACCOUNT_LOAN = "Loan";
+        private const string JACCOUNT_CREDITCARD = "Credit Card";
+
         public static string ToDisplayText(this JournalAccountType journalType)
         {
             switch(journalType)
             {
                 case JournalAccountType.Payable:
-                    return "Accounts Payable";
+                    return JACCOUNT_PAYABLE;
                 case JournalAccountType.LiabilityLoan:
-                    return "Loan";
+                    return JACCOUNT_LOAN;
                 case JournalAccountType.LiabilityCard:
-                    return "Credit Card";
+                    return JACCOUNT_CREDITCARD;
                 case JournalAccountType.Receivable:
-                    return "Accounts Receivable";
+                    return JACCOUNT_RECEIVE;
                 case JournalAccountType.Bank:
-                    return "Bank";
+                    return JACCOUNT_BANK;
                 default:
-                    return "*N/A*";
+                    return JACCOUNT_NOTSET;
+            }
+        }
+
+        public static JournalAccountType ToAccountType(this string actType)
+        {
+            switch(actType)
+            {
+                case JACCOUNT_BANK:
+                    return JournalAccountType.Bank;
+                case JACCOUNT_CREDITCARD:
+                    return JournalAccountType.LiabilityCard;
+                case JACCOUNT_LOAN:
+                    return JournalAccountType.LiabilityLoan;
+                case JACCOUNT_PAYABLE:
+                    return JournalAccountType.Payable;
+                case JACCOUNT_RECEIVE:
+                    return JournalAccountType.Receivable;
+                default:
+                    return JournalAccountType.NotSet;
             }
         }
 

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DLPMoneyTracker.Data.TransactionModels.BillPlan;
 
-namespace DLPMoneyTrackerWeb.Data
+namespace DLPMoneyTrackerWeb.Pages.MoneyAccountView
 {
     internal class MoneyAccountSummaryVM
     {
@@ -43,24 +43,24 @@ namespace DLPMoneyTrackerWeb.Data
         public void LoadAccount(string actId)
         {
             _act = _config.GetAccount(actId);
-            this.Refresh();
+            Refresh();
         }
 
         public void Refresh()
         {
-            this.CurrentBalance = _ledger.GetAccountBalance(_act);
-            this.LoadMoneyEvents();
-            this.UpdateFutureBalance();
+            CurrentBalance = _ledger.GetAccountBalance(_act);
+            LoadMoneyEvents();
+            UpdateFutureBalance();
         }
 
         private void LoadMoneyEvents()
         {
             _listBudgets.Clear();
 
-            var listMoney = _budget.GetUpcomingMoneyPlansForAccount(this.AccountID);
+            var listMoney = _budget.GetUpcomingMoneyPlansForAccount(AccountID);
             if (listMoney?.Any() != true) return;
 
-            foreach(var budget in listMoney.OrderBy(o => o.NotificationDate).ThenBy(o => o.PriorityOrder))
+            foreach (var budget in listMoney.OrderBy(o => o.NotificationDate).ThenBy(o => o.PriorityOrder))
             {
                 // Check to see if there's a ledger record that matches; if so, skip the money plan so we're not misled
                 if (budget.CategoryName.Contains("Transfer"))
@@ -99,9 +99,9 @@ namespace DLPMoneyTrackerWeb.Data
 
         private void UpdateFutureBalance()
         {
-            decimal bal = this.CurrentBalance;
+            decimal bal = CurrentBalance;
             decimal budgetTotal = _listBudgets.Sum(s => s.ExpectedAmount);
-            this.FutureBalance = bal + budgetTotal;
+            FutureBalance = bal + budgetTotal;
 
         }
     }

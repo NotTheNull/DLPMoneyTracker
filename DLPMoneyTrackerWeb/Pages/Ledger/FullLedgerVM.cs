@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DLPMoneyTrackerWeb.Data
+namespace DLPMoneyTrackerWeb.Pages.Ledger
 {
     internal class LedgerFilter
     {

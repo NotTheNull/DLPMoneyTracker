@@ -1,5 +1,7 @@
 ﻿using DLPMoneyTracker.Data;
 using DLPMoneyTrackerWeb.Data;
+using DLPMoneyTrackerWeb.Pages.Ledger;
+using DLPMoneyTrackerWeb.Pages.MoneyAccountView;
 using Microsoft.AspNetCore.Components.WebView.Maui;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -27,15 +29,15 @@ namespace DLPMoneyTrackerWeb
 #endif
             builder.Services.AddLogging(logging => logging.AddSerilog(dispose: true));
             builder.Services.AddSingleton<ITrackerConfig, TrackerConfig>();
-            builder.Services.AddSingleton<ILedger, Ledger>();
-            builder.Services.AddSingleton<IMoneyPlanner, MoneyPlanner>();
-            builder.Services.AddSingleton<IBudgetTracker, BudgetTracker>();
+            builder.Services.AddSingleton<IJournal, DLPJournal>();
+            builder.Services.AddSingleton<IEditJournalAccountService, EditJournalAccountService>();
+
+
 
             builder.Services.AddTransient<MoneyAccountSummaryVM>();
             builder.Services.AddTransient<MoneyAccountDetailVM>();
             builder.Services.AddTransient<FullLedgerVM>();
-            builder.Services.AddTransient<EditCategoryService>();
-            builder.Services.AddTransient<EditMoneyAccountService>();
+            
 
             return builder.Build();
         }

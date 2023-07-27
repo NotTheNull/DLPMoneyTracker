@@ -1,31 +1,176 @@
 ﻿@using DLPMoneyTracker.Data.ConfigModels;
+@using DLPMoneyTracker.Data.LedgerAccounts;
 
-@inject EditMoneyAccountService service;
+@inject EditJournalAccountService service;
+
+<section id="uiEditJournalAccount">
+    <div class="modal @(ShowDialog ? "Show" : "")" tabindex="-1" role="dialog" style="display: @(ShowDialog ? "block;" : "none;")">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header" id="divHeader">
+                    <h3 class="modal-title">Edit Category</h3>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" @onclick="Close"></button>
+                </div>
+
+                <div class="modal-body" id="divEditAccount">
+                    <EditForm EditContext="@_editContext" OnValidSubmit="@SaveChanges" OnInvalidSubmit="@CancelChanges">
+
+                        <!-- Account Description -->
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="formLabelHead">Description</label>
+                            </div>
+                            <div class="col-6">
+                                <input id="txtAccountName" type="text" @bind-value=_editAccount.Description />
+                            </div>
+                        </div>
+
+                        <!-- Account Type -->
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="formLabelHead">Account Type</label>
+                            </div>
+                            <div class="col-6">
+                                <select class="" @onchange="AccountTypeChanged">
+                                    @if (AccountType is null || AccountType == JournalAccountType.NotSet)
+                                    {
+                                        <option value="@JournalAccountType.NotSet" selected disabled="disabled">*Choose Account Type*</option>
+                                    }
+
+                                    @if (AccountType == JournalAccountType.Bank)
+                                    {
+                                        <option value="@JournalAccountType.Bank" selected>Bank</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@JournalAccountType.Bank">Bank</option>
+                                    }
+
+                                    @if (AccountType == JournalAccountType.LiabilityCard)
+                                    {
+                                        <option value="@JournalAccountType.LiabilityCard" selected>Credit Card</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@JournalAccountType.LiabilityCard">Credit Card</option>
+                                    }
+
+                                    @if (AccountType == JournalAccountType.LiabilityLoan)
+                                    {
+                                        <option value="@JournalAccountType.LiabilityLoan" selected>Loan</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@JournalAccountType.LiabilityLoan">Loan</option>
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Initial Balance -->
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="formLabelHead">Initial Balance</label>
+                            </div>
+                            <div class="row">
+                                <input id="txtInitialBalanace" type="text" @bind-value=_editAccount.InitialBalance />
+                            </div>
+                        </div>
 
 
+                        <!-- Display Order -->
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="formLabelHead">Display Order</label>
+                            </div>
+                            <div class="col-6">
+                                <input id="txtDisplayOrder" type="number" @bind-value=_editAccount.OrderBy />
+                            </div>
+                        </div>
+
+                    </EditForm>
+                </div>
+
+
+                <div class="modal-footer" id="divFooter">
+                    <button class="btn btn-primary" type="button" @onclick="SaveChanges"> SAVE </button>
+                    <button class="btn btn-secondary" type="button" @onclick="CancelChanges" data-dismiss="modal">CANCEL</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (ShowDialog)
+{
+    <div class="modal-backdrop fade show"></div>
+}
 
 
 @code {
     EditContext _editContext;
-    EditMoneyAccountRecord _editAccount;
+    EditJournalAccountVM _editAccount;
 
     [Parameter]
-    public EditMoneyAccountRecord EditAccount
+    public EditJournalAccountVM EditAccount
     {
         get { return _editAccount; }
         set { _editAccount = value; }
     }
 
-    // NOTE: Change bool to Money Account if you want the data returned through the event
+    private JournalAccountType AccountType { get { return _editAccount.JournalType; } }
+
+    
     [Parameter]
     public EventCallback<bool> CloseEventCallback { get; set; }
 
     public bool ShowDialog { get; set; }
 
+
+
     protected override void OnInitialized()
     {
-        if (_editAccount is null) _editAccount = new EditMoneyAccountRecord();
+        if (_editAccount is null) _editAccount = new EditJournalAccountVM();
         _editContext = new EditContext(_editAccount);
     }
+
+    private void AccountTypeChanged(ChangeEventArgs e)
+    {
+        var acctType = e.Value.ToString().ToAccountType();
+        if (acctType == JournalAccountType.NotSet) return;
+
+        _editAccount.JournalType = acctType;
+    }
+
+
+    public void Show(Guid idAccount)
+    {
+        _editAccount = service.GetEditAccount(idAccount);
+        ShowDialog = true;
+        StateHasChanged();
+    }
+
+    public async Task Close()
+    {
+        await CloseEventCallback.InvokeAsync(true);
+        ShowDialog = false;
+        StateHasChanged();
+    }
+
+    private async Task SaveChanges()
+    {
+        service.SaveAccount(_editAccount);
+        await Close();
+    }
+
+    private async Task CancelChanges()
+    {
+        await Close();
+    }
+
+
 
 }
