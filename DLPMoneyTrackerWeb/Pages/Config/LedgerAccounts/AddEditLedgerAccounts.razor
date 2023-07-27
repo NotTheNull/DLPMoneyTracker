@@ -3,13 +3,12 @@
 
 @inject EditJournalAccountService service;
 
-<section id="uiEditJournalAccount">
+<section id="uiEditLedgerAccount">
     <div class="modal @(ShowDialog ? "Show" : "")" tabindex="-1" role="dialog" style="display: @(ShowDialog ? "block;" : "none;")">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-
                 <div class="modal-header" id="divHeader">
-                    <h3 class="modal-title">Edit Money Account</h3>
+                    <h3 class="modal-title">Edit Ledger Account</h3>
                     <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" @onclick="Close"></button>
                 </div>
 
@@ -38,57 +37,38 @@
                                         <option value="@JournalAccountType.NotSet" selected disabled="disabled">*Choose Account Type*</option>
                                     }
 
-                                    @if (AccountType == JournalAccountType.Bank)
+                                    @if (AccountType == JournalAccountType.Payable)
                                     {
-                                        <option value="@JournalAccountType.Bank" selected>Bank</option>
+                                        <option value="@JournalAccountType.Payable" selected>Payable</option>
                                     }
                                     else
                                     {
-                                        <option value="@JournalAccountType.Bank">Bank</option>
+                                        <option value="@JournalAccountType.Payable">Payable</option>
                                     }
 
-                                    @if (AccountType == JournalAccountType.LiabilityCard)
+                                    @if (AccountType == JournalAccountType.Receivable)
                                     {
-                                        <option value="@JournalAccountType.LiabilityCard" selected>Credit Card</option>
+                                        <option value="@JournalAccountType.Receivable" selected>Receivable</option>
                                     }
                                     else
                                     {
-                                        <option value="@JournalAccountType.LiabilityCard">Credit Card</option>
-                                    }
-
-                                    @if (AccountType == JournalAccountType.LiabilityLoan)
-                                    {
-                                        <option value="@JournalAccountType.LiabilityLoan" selected>Loan</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@JournalAccountType.LiabilityLoan">Loan</option>
+                                        <option value="@JournalAccountType.Receivable">Receivable</option>
                                     }
 
                                 </select>
                             </div>
                         </div>
 
-                        <!-- Initial Balance -->
+                        <!-- Monthly Budget -->
                         <div class="row">
                             <div class="col-6">
-                                <label class="formLabelHead">Initial Balance</label>
+                                <label class="formLabelHead">Monthly Budget</label>
                             </div>
                             <div class="row">
-                                <input id="txtInitialBalanace" type="text" @bind-value=_editAccount.InitialBalance />
+                                <input id="txtInitialBalanace" type="text" @bind-value=_editAccount.MonthlyBudgetAmount />
                             </div>
                         </div>
 
-
-                        <!-- Display Order -->
-                        <div class="row">
-                            <div class="col-6">
-                                <label class="formLabelHead">Display Order</label>
-                            </div>
-                            <div class="col-6">
-                                <input id="txtDisplayOrder" type="number" @bind-value=_editAccount.OrderBy />
-                            </div>
-                        </div>
 
                     </EditForm>
                 </div>
@@ -99,15 +79,12 @@
                     <button class="btn btn-secondary" type="button" @onclick="CancelChanges" data-dismiss="modal">CANCEL</button>
                 </div>
 
+
+
             </div>
         </div>
     </div>
 </section>
-
-@if (ShowDialog)
-{
-    <div class="modal-backdrop fade show"></div>
-}
 
 
 @code {
@@ -123,7 +100,7 @@
 
     private JournalAccountType AccountType { get { return _editAccount.JournalType; } }
 
-    
+
     [Parameter]
     public EventCallback<bool> CloseEventCallback { get; set; }
 
@@ -170,7 +147,4 @@
     {
         await Close();
     }
-
-
-
 }

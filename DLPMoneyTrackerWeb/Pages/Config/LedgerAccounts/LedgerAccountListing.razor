@@ -1,48 +1,47 @@
-﻿@page "/Config/MoneyAccounts"
+﻿@page "/Config/LedgerAccounts"
+@using DLPMoneyTracker.Data.ConfigModels;
 @using DLPMoneyTracker.Data.LedgerAccounts;
 
-@inject EditJournalAccountService service;
+@inject EditJournalAccountService service
+
 
 <div class="top-row px-4">
-    <button type="button" @onclick="@((e) => AddNewMoneyAccount())"><img class="action-btn" src="icons\Add-New-256.png" alt="Add New" /></button>
+    <button type="button" @onclick="@((e) => AddNewLedgerAccount())"><img class="action-btn" src="icons\Add-New-256.png" alt="Add New" /></button>
 </div>
 
-<AddEditMoneyAccounts @ref="popupEdit" CloseEventCallback="PopupClosed" />
+<AddEditLedgerAccounts @ref="popupEdit" CloseEventCallback="PopupClosed" />
 
+<section id="gridLedgerAccounts">
 
-<section id="gridMoneyAccounts">
     <div class="row">
         <table>
             <thead>
                 <tr>
                     <th>Description</th>
                     <th>Account Type</th>
-                    <th>Date Closed</th>
+                    <th>Monthly Budget</th>
                     <th><!-- Action Buttons --></th>
                 </tr>
             </thead>
 
             <tbody>
                 @{
-                    var listAccounts = service.GetMoneyAccounts();
+                    var listAccounts = service.GetLedgerAccounts();
 
                     if (listAccounts?.Any() == true)
                     {
                         int rowCount = 0;
-                        foreach (var acct in listAccounts)
+                        foreach(var acct in listAccounts)
                         {
                             rowCount++;
+
                             <tr class="@((rowCount % 2 == 0) ? "altRowColor" : "stdRowColor")">
                                 <td>@acct.Description</td>
                                 <td>@acct.JournalType.ToDisplayText()</td>
-                                <td>@acct.DateClosedUTC?.ToLocalTime().ToString() ?? "" </td>
+                                <td>@string.Format("{0:c}", acct.MonthlyBudgetAmount)</td>
                                 <td>
-                                    @if (!acct.DateClosedUTC.HasValue)
-                                    {
-                                        <button type="button" @onclick="@((e) => LoadAccount(acct.Id))"><img class="action-btn" src="icons\Edit-Pencil-256.png" alt="Edit Category" /></button>
-                                        <button type="button" @onclick="@((e) => DeleteAccount(acct.Id))"><img class="action-btn" src="icons\Garbage-Closed-256.png" alt="Delete Category" /></button>
-                                    }
-
+                                    <button type="button" @onclick="@((e) => LoadAccount(acct.Id))"><img class="action-btn" src="icons\Edit-Pencil-256.png" alt="Edit Category" /></button>
+                                    <button type="button" @onclick="@((e) => DeleteAccount(acct.Id))"><img class="action-btn" src="icons\Garbage-Closed-256.png" alt="Delete Category" /></button>
                                 </td>
                             </tr>
                         }
@@ -52,7 +51,6 @@
                         <tr></tr>
                     }
                 }
-
             </tbody>
         </table>
     </div>
@@ -60,15 +58,14 @@
 
 
 @code {
-    private AddEditMoneyAccounts popupEdit;
-
+    private AddEditLedgerAccounts popupEdit;
 
     private void PopupClosed()
     {
         StateHasChanged();
     }
 
-    private void AddNewMoneyAccount()
+    private void AddNewLedgerAccount()
     {
         popupEdit.Show(Guid.Empty);
     }

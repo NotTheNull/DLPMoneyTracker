@@ -51,11 +51,23 @@
 
     <ItemGroup>
       <AndroidResource Remove="Pages\Config\Categories\**" />
+      <AndroidResource Remove="Pages\Ledger\**" />
+      <AndroidResource Remove="Pages\MoneyAccountView\**" />
       <Compile Remove="Pages\Config\Categories\**" />
+      <Compile Remove="Pages\Ledger\**" />
+      <Compile Remove="Pages\MoneyAccountView\**" />
       <Content Remove="Pages\Config\Categories\**" />
+      <Content Remove="Pages\Ledger\**" />
+      <Content Remove="Pages\MoneyAccountView\**" />
       <EmbeddedResource Remove="Pages\Config\Categories\**" />
+      <EmbeddedResource Remove="Pages\Ledger\**" />
+      <EmbeddedResource Remove="Pages\MoneyAccountView\**" />
       <MauiXaml Remove="Pages\Config\Categories\**" />
+      <MauiXaml Remove="Pages\Ledger\**" />
+      <MauiXaml Remove="Pages\MoneyAccountView\**" />
       <None Remove="Pages\Config\Categories\**" />
+      <None Remove="Pages\Ledger\**" />
+      <None Remove="Pages\MoneyAccountView\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -70,10 +82,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DLPMoneyTracker.Data\DLPMoneyTracker.Data.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Pages\Config\LedgerAccounts\" />
     </ItemGroup>
 
 </Project>

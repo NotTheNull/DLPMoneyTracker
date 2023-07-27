@@ -1,7 +1,5 @@
 ﻿using DLPMoneyTracker.Data;
 using DLPMoneyTrackerWeb.Data;
-using DLPMoneyTrackerWeb.Pages.Ledger;
-using DLPMoneyTrackerWeb.Pages.MoneyAccountView;
 using Microsoft.AspNetCore.Components.WebView.Maui;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -34,10 +32,6 @@ namespace DLPMoneyTrackerWeb
 
 
 
-            builder.Services.AddTransient<MoneyAccountSummaryVM>();
-            builder.Services.AddTransient<MoneyAccountDetailVM>();
-            builder.Services.AddTransient<FullLedgerVM>();
-            
 
             return builder.Build();
         }
