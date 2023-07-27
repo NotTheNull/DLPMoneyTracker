@@ -96,6 +96,11 @@ a, .btn-link {
     background-color: transparent;
 }
 
+table .dataGrid {
+    width: 100%;
+    margin-top: 10px;
+}
+
 
 th {
     background-color: lightblue;
