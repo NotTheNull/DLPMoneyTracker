@@ -1,0 +1,212 @@
+﻿@using DLPMoneyTracker.Data.ScheduleRecurrence;
+
+<section id="uiEditRecurrence">
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-6">
+                    <label class="formLabelHead">Recurrence Type</label>
+                </div>
+                <div class="col-6">
+                    <select @onchange="RecurrenceTypeChanged">
+                        @if(RecurrenceType == RecurrenceFrequency.NotSet)
+                        {
+                            <option value="@RecurrenceFrequency.NotSet" selected disabled="disabled">*Choose Frequencey*</option>
+                        }
+
+                        @if(RecurrenceType == RecurrenceFrequency.Monthly)
+                        {
+                            <option value="@RecurrenceFrequency.Monthly" selected>@RecurrenceFrequency.Monthly.ToDisplayText()</option>
+                        }
+                        else
+                        {
+                            <option value="@RecurrenceFrequency.Monthly">@RecurrenceFrequency.Monthly.ToDisplayText()</option>
+                        }
+
+                        @if(RecurrenceType == RecurrenceFrequency.SemiAnnual)
+                        {
+                            <option value="@RecurrenceFrequency.SemiAnnual" selected>@RecurrenceFrequency.SemiAnnual.ToDisplayText()</option>
+                        }
+                        else
+                        {
+                            <option value="@RecurrenceFrequency.SemiAnnual">@RecurrenceFrequency.SemiAnnual.ToDisplayText()</option>
+                        }
+
+                        @if(RecurrenceType == RecurrenceFrequency.Annual)
+                        {
+                            <option value="@RecurrenceFrequency.Annual" selected>@RecurrenceFrequency.Annual.ToDisplayText()</option>
+                        }
+                        else
+                        {
+                            <option value="@RecurrenceFrequency.Annual">@RecurrenceFrequency.Annual.ToDisplayText()</option>
+                        }
+
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                @if(RecurrenceType == RecurrenceFrequency.Monthly)
+                {
+                    <div class="col-6">
+                        <label class="formLabelHead">Day of Month</label>
+                    </div>
+                    <div class="col-6">
+                        <input id="txtDayOfMonth" type="number" @bind-value=_recurr.DayOfMonth />
+                    </div>
+                }
+                else
+                {
+                    <div class="col-6">
+                        <label class="formLabelHead">Start Date</label>
+                    </div>
+                    <div class="col-6">
+                        <input id="txtStartDate" type="Date" @bind-value=_recurr.StartDate />
+                    </div>
+                }
+
+            </div>
+
+
+
+        </div>
+    </div>
+
+
+
+
+</section>
+
+
+@code {
+
+    private EditBudgetPlanVM _vm;
+
+    [Parameter]
+    public EditBudgetPlanVM ViewModel
+    {
+        get { return _vm; }
+        set 
+        {
+            _vm = value;
+            _recurr = new ScheduleRecurrenceVM(_vm.Recurrence);
+        }
+    }
+
+    private ScheduleRecurrenceVM _recurr;
+
+    private ScheduleRecurrenceVM Recurrence
+    {
+        get { return _recurr; }
+    }
+
+    private RecurrenceFrequency RecurrenceType
+    {
+        get { return _recurr?.Frequency ?? RecurrenceFrequency.NotSet; }
+    }
+
+
+    public string RecurrenceJSON
+    {
+        get { return this.Recurrence.GetFileData(); }
+    }
+
+
+    private void RecurrenceTypeChanged(ChangeEventArgs e)
+    {
+        _recurr.Frequency = e.Value.ToString().ToRecurrenceFrequency();
+    }
+
+
+
+
+    internal class ScheduleRecurrenceVM : IScheduleRecurrence
+    {
+        private IScheduleRecurrence _detail;
+        public ScheduleRecurrenceVM() { }
+        public ScheduleRecurrenceVM(IScheduleRecurrence cpy)
+        {
+            this.Load(cpy);
+        }
+
+
+        public DateTime NextOccurence { get { return _detail.NextOccurence; } }
+
+        public DateTime NotificationDate { get { return _detail.NotificationDate; } }
+
+        public RecurrenceFrequency Frequency
+        {
+            get { return _detail?.Frequency ?? RecurrenceFrequency.NotSet; }    
+            set
+            {
+                switch(value)
+                {
+                    case RecurrenceFrequency.Annual:
+                        _detail = new AnnualRecurrence();
+                        break;
+                    case RecurrenceFrequency.SemiAnnual:
+                        _detail = new SemiAnnualRecurrence();
+                        break;
+                    case RecurrenceFrequency.Monthly:
+                        _detail = new MonthlyRecurrence();
+                        break;
+                    default:
+                        _detail = null;
+                        break;
+                }
+            }
+        }
+
+
+        public DateTime StartDate { get; set; }
+        public int DayOfMonth { get; set; }
+
+        public void Load(IScheduleRecurrence cpy)
+        {
+            this.Frequency = cpy.Frequency;
+            _detail.LoadFileData(cpy.GetFileData());
+
+            if (cpy is AnnualRecurrence annual)
+            {
+                this.StartDate = annual.StartDate;
+            }
+            else if (cpy is SemiAnnualRecurrence semi)
+            {
+                this.StartDate = semi.StartDate;
+            }
+            else if (cpy is MonthlyRecurrence month)
+            {
+                this.DayOfMonth = month.DayOfMonth;
+            }
+
+        }
+
+
+        public string GetFileData()
+        {
+            if (_detail is null) return string.Empty;
+
+            if(_detail is AnnualRecurrence annual)
+            {
+                annual.StartDate = this.StartDate;
+            }
+            else if(_detail is SemiAnnualRecurrence semi)
+            {
+                semi.StartDate = this.StartDate;
+            }
+            else if(_detail is MonthlyRecurrence month)
+            {
+                month.DayOfMonth = this.DayOfMonth;
+            }
+
+
+            return _detail.GetFileData();
+        }
+
+        public void LoadFileData(string data)
+        {
+            _detail = ScheduleRecurrenceFactory.Build(data);
+        }
+    }
+}

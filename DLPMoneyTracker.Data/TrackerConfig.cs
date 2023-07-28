@@ -14,11 +14,11 @@ namespace DLPMoneyTracker.Data
     public interface ITrackerConfig : IDisposable
     {
 
-        [Obsolete]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        ReadOnlyCollection<MoneyAccount> AccountsList { get; }
-        [Obsolete]
-        ReadOnlyCollection<TransactionCategory> CategoryList { get; }
+        //[Obsolete]
+        //[EditorBrowsable(EditorBrowsableState.Never)]
+        //ReadOnlyCollection<MoneyAccount> AccountsList { get; }
+        //[Obsolete]
+        //ReadOnlyCollection<TransactionCategory> CategoryList { get; }
 
         ReadOnlyCollection<IJournalAccount> LedgerAccountsList { get; }
 
@@ -29,45 +29,45 @@ namespace DLPMoneyTracker.Data
         void SaveJournalAccounts();
         void LoadJournalAccounts();
 
-        [Obsolete]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        void LoadMoneyAccounts();
+        //[Obsolete]
+        //[EditorBrowsable(EditorBrowsableState.Never)]
+        //void LoadMoneyAccounts();
         
-        [Obsolete]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        void SaveMoneyAccounts();
+        //[Obsolete]
+        //[EditorBrowsable(EditorBrowsableState.Never)]
+        //void SaveMoneyAccounts();
         
-        [Obsolete]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        void LoadCategories();
+        //[Obsolete]
+        //[EditorBrowsable(EditorBrowsableState.Never)]
+        //void LoadCategories();
         
-        [Obsolete]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        void SaveCategories();
+        //[Obsolete]
+        //[EditorBrowsable(EditorBrowsableState.Never)]
+        //void SaveCategories();
 
-        [Obsolete]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        TransactionCategory GetCategory(Guid uid);
+        //[Obsolete]
+        //[EditorBrowsable(EditorBrowsableState.Never)]
+        //TransactionCategory GetCategory(Guid uid);
 
-        [Obsolete]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        MoneyAccount GetAccount(string id);
+        //[Obsolete]
+        //[EditorBrowsable(EditorBrowsableState.Never)]
+        //MoneyAccount GetAccount(string id);
 
-        [Obsolete]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        void AddCategory(TransactionCategory cat);
+        //[Obsolete]
+        //[EditorBrowsable(EditorBrowsableState.Never)]
+        //void AddCategory(TransactionCategory cat);
 
-        [Obsolete]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        void AddMoneyAccount(MoneyAccount act);
+        //[Obsolete]
+        //[EditorBrowsable(EditorBrowsableState.Never)]
+        //void AddMoneyAccount(MoneyAccount act);
 
-        [Obsolete]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        void RemoveCategory(TransactionCategory cat);
+        //[Obsolete]
+        //[EditorBrowsable(EditorBrowsableState.Never)]
+        //void RemoveCategory(TransactionCategory cat);
 
-        [Obsolete]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        void RemoveMoneyAccount(MoneyAccount act);
+        //[Obsolete]
+        //[EditorBrowsable(EditorBrowsableState.Never)]
+        //void RemoveMoneyAccount(MoneyAccount act);
 
         void Copy(ITrackerConfig config);
 

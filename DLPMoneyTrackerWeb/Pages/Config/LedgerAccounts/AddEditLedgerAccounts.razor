@@ -1,7 +1,7 @@
 ﻿@using DLPMoneyTracker.Data.ConfigModels;
 @using DLPMoneyTracker.Data.LedgerAccounts;
 
-@inject EditJournalAccountService service;
+@inject IEditJournalAccountService service;
 
 <section id="uiEditLedgerAccount">
     <div class="modal @(ShowDialog ? "Show" : "")" tabindex="-1" role="dialog" style="display: @(ShowDialog ? "block;" : "none;")">
@@ -13,7 +13,7 @@
                 </div>
 
                 <div class="modal-body" id="divEditAccount">
-                    <EditForm EditContext="@_editContext" OnValidSubmit="@SaveChanges" OnInvalidSubmit="@CancelChanges">
+                    <EditForm EditContext="@_editContext" OnValidSubmit="@SaveChanges" OnInvalidSubmit="@CancelChanges" >
 
                         <!-- Account Description -->
                         <div class="row">
@@ -32,27 +32,27 @@
                             </div>
                             <div class="col-6">
                                 <select class="" @onchange="AccountTypeChanged">
-                                    @if (AccountType is null || AccountType == JournalAccountType.NotSet)
+                                    @if (AccountType == JournalAccountType.NotSet)
                                     {
                                         <option value="@JournalAccountType.NotSet" selected disabled="disabled">*Choose Account Type*</option>
                                     }
 
                                     @if (AccountType == JournalAccountType.Payable)
                                     {
-                                        <option value="@JournalAccountType.Payable" selected>Payable</option>
+                                        <option value="@JournalAccountType.Payable" selected>@JournalAccountType.Payable.ToDisplayText()</option>
                                     }
                                     else
                                     {
-                                        <option value="@JournalAccountType.Payable">Payable</option>
+                                        <option value="@JournalAccountType.Payable">@JournalAccountType.Payable.ToDisplayText()</option>
                                     }
 
                                     @if (AccountType == JournalAccountType.Receivable)
                                     {
-                                        <option value="@JournalAccountType.Receivable" selected>Receivable</option>
+                                        <option value="@JournalAccountType.Receivable" selected>@JournalAccountType.Receivable.ToDisplayText()</option>
                                     }
                                     else
                                     {
-                                        <option value="@JournalAccountType.Receivable">Receivable</option>
+                                        <option value="@JournalAccountType.Receivable">@JournalAccountType.Receivable.ToDisplayText()</option>
                                     }
 
                                 </select>

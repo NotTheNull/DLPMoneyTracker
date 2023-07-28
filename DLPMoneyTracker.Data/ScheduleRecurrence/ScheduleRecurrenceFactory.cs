@@ -45,6 +45,8 @@ namespace DLPMoneyTracker.Data.ScheduleRecurrence
                 case RecurrenceFrequency.SemiAnnual:
                     return new SemiAnnualRecurrence() { StartDate = dateStart };
 
+                case RecurrenceFrequency.Monthly:
+                    return new MonthlyRecurrence() { DayOfMonth = dateStart.Day };
                 default:
                     throw new InvalidOperationException("Arguments provided do not match Recurrence Type");
             }

@@ -1,7 +1,7 @@
 ﻿@using DLPMoneyTracker.Data.ConfigModels;
 @using DLPMoneyTracker.Data.LedgerAccounts;
 
-@inject EditJournalAccountService service;
+@inject IEditJournalAccountService service;
 
 <section id="uiEditJournalAccount">
     <div class="modal @(ShowDialog ? "Show" : "")" tabindex="-1" role="dialog" style="display: @(ShowDialog ? "block;" : "none;")">
@@ -33,7 +33,7 @@
                             </div>
                             <div class="col-6">
                                 <select class="" @onchange="AccountTypeChanged">
-                                    @if (AccountType is null || AccountType == JournalAccountType.NotSet)
+                                    @if (AccountType == JournalAccountType.NotSet)
                                     {
                                         <option value="@JournalAccountType.NotSet" selected disabled="disabled">*Choose Account Type*</option>
                                     }

@@ -29,7 +29,7 @@ namespace DLPMoneyTrackerWeb
             builder.Services.AddSingleton<ITrackerConfig, TrackerConfig>();
             builder.Services.AddSingleton<IJournal, DLPJournal>();
             builder.Services.AddSingleton<IEditJournalAccountService, EditJournalAccountService>();
-
+            builder.Services.AddSingleton<IEditBudgetPlanService, EditBudgetPlanService>();
 
 
 

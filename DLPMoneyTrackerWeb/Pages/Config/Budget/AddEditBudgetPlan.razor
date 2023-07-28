@@ -1,0 +1,244 @@
+﻿@using DLPMoneyTracker.Data.ConfigModels;
+@using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
+
+@inject IEditBudgetPlanService service
+
+<section id="uiEditBudgetPlan">
+    <div class="modal @(ShowDialog ? "Show" : "")" tabindex="-1" role="dialog" style="display: @(ShowDialog ? "block;" : "none;")">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header" id="divHeader">
+                    <h3 class="modal-title">Edit Budget Plan</h3>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" @onclick="Close"></button>
+                </div>
+
+                <div class="modal-body" id="divEditPlan">
+                    <EditForm EditContext="@_editContext" OnValidSubmit="@SaveChanges" OnInvalidSubmit="@CancelChanges">
+
+                        <!-- Plan Type -->
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="formLabelHead">Plan Type</label>
+                            </div>
+                            <div class="col-6">
+                                <select class="" @onchange="PlanTypeChanged">
+                                    @if(PlanType == JournalPlanType.NotSet)
+                                    {
+                                        <option value="@JournalPlanType.NotSet" selected disabled="disabled">*Choose Plan Type*</option>
+                                    }
+
+                                    @if(PlanType == JournalPlanType.Payable)
+                                    {
+                                        <option value="@JournalPlanType.Payable" selected>@JournalPlanType.Payable.ToDiplayText()</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@JournalPlanType.Payable">@JournalPlanType.Payable.ToDiplayText()</option>
+                                    }
+
+                                    @if(PlanType == JournalPlanType.Receivable)
+                                    {
+                                        <option value="@JournalPlanType.Receivable" selected>@JournalPlanType.Receivable.ToDiplayText()</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@JournalPlanType.Receivable">@JournalPlanType.Receivable.ToDiplayText()</option>
+                                    }
+
+                                    @if(PlanType == JournalPlanType.DebtPayment)
+                                    {
+                                        <option value="@JournalPlanType.DebtPayment" selected>@JournalPlanType.DebtPayment.ToDiplayText()</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@JournalPlanType.DebtPayment">@JournalPlanType.DebtPayment.ToDiplayText()</option>
+                                    }
+
+                                    @if(PlanType == JournalPlanType.Transfer)
+                                    {
+                                        <option value="@JournalPlanType.Transfer" selected>@JournalPlanType.Transfer.ToDiplayText()</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@JournalPlanType.Transfer">@JournalPlanType.Transfer.ToDiplayText()</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="formLabelHead">Description</label>
+                            </div>
+                            <div class="col-6">
+                                <input id="txtAccountName" type="text" @bind-value=_edit.Description />
+                            </div>
+                        </div>
+
+                        <!-- Debit Account -->
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="formLabelHead">Debit Account</label>
+                            </div>
+                            <div class="col-6">
+                                <select @onchange=DebitAccountChanged>
+
+                                    @{
+                                        var listDebitAccounts = service.GetJournalAccounts(_edit.ValidDebitAccountTypes);
+
+                                        if(_edit.DebitAccountId == Guid.Empty)
+                                        {
+                                            <option value="@Guid.Empty" selected disabled="disabled">*SELECT AN ACCOUNT*</option>
+                                        }
+
+                                        foreach (var acct in listDebitAccounts.OrderBy(o => o.Description))
+                                        {
+                                            if(_edit.DebitAccountId == acct.Id)
+                                            {
+                                                <option value="@acct.Id" selected>@acct.Description</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@acct.Id">@acct.Description</option>
+                                            }
+                                        }
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Credit Account -->
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="formLabelHead">Credit Account</label>
+                            </div>
+                            <div class="col-6">
+                                <select @onchange=CreditAccountChanged>
+
+                                    @{
+                                        var listCreditAccounts = service.GetJournalAccounts(_edit.ValidCreditAccountTypes);
+
+                                        if (_edit.CreditAccountId == Guid.Empty)
+                                        {
+                                            <option value="@Guid.Empty" selected disabled="disabled">*SELECT AN ACCOUNT*</option>
+                                        }
+
+                                        foreach (var acct in listCreditAccounts.OrderBy(o => o.Description))
+                                        {
+                                            if (_edit.CreditAccountId == acct.Id)
+                                            {
+                                                <option value="@acct.Id" selected>@acct.Description</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@acct.Id">@acct.Description</option>
+                                            }
+                                        }
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Amount -->
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="formLabelHead">Amount</label>
+                            </div>
+                            <div class="col-6">
+                                <input id="txtExpectedamount" type="text" @bind-value=_edit.ExpectedAmount />
+                            </div>
+                        </div>
+
+
+                        <!-- Recurrence -->
+                        <EditRecurrence @ref="uiEditRecurrence" ViewModel="_edit" />
+
+
+
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@code {
+    private EditContext _editContext;
+    private EditBudgetPlanVM _edit;
+
+    private JournalPlanType PlanType {get { return _edit.PlanType; }}
+    private EditRecurrence uiEditRecurrence;
+
+
+    [Parameter]
+    public EventCallback<bool> CloseEventCallback { get; set; }
+
+
+    public bool ShowDialog { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        _edit = service.GetViewModel();
+        _editContext = new EditContext(_edit);
+        uiEditRecurrence = new EditRecurrence();
+
+    }
+
+    private void PlanTypeChanged(ChangeEventArgs e)
+    {
+        var planType = e.Value.ToString().ToPlanType();
+        if (planType == DLPMoneyTracker.Data.TransactionModels.JournalPlan.JournalPlanType.NotSet) return;
+        _edit.PlanType = planType;
+        StateHasChanged();
+    }
+
+    private void DebitAccountChanged(ChangeEventArgs e)
+    {
+        _edit.DebitAccountId = Guid.Parse(e.Value.ToString());
+    }
+
+    private void CreditAccountChanged(ChangeEventArgs e)
+    {
+        _edit.CreditAccountId = Guid.Parse(e.Value.ToString());
+    }
+
+    public void Show(EditBudgetPlanVM vm)
+    {
+        _edit = vm;
+        ShowDialog = true;
+        StateHasChanged();
+    }
+
+    public async Task Close()
+    {
+        ShowDialog = false;
+        await CloseEventCallback.InvokeAsync(true);
+        StateHasChanged();
+    }
+
+    protected async Task SaveChanges()
+    {
+        _edit.Recurrence.LoadFileData(uiEditRecurrence.RecurrenceJSON);
+
+        service.SaveBudgetPlan(_edit);
+        await Close();
+    }
+
+    protected async Task CancelChanges()
+    {
+        await Close();
+    }
+
+
+
+}

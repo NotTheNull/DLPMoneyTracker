@@ -18,6 +18,7 @@ namespace DLPMoneyTracker.Data
 
         void AddPlan(IJournalPlan journalPlan);
         void RemovePlan(IJournalPlan journalPlan);
+        void RemovePlan(Guid id);
         void ClearRecordList();
         void LoadFromFile();
         void SaveToFile();
@@ -69,6 +70,14 @@ namespace DLPMoneyTracker.Data
         {
             if (!_planList.Any(x => x.UID == journalPlan.UID)) return;
             _planList.Remove(journalPlan);
+        }
+
+        public void RemovePlan(Guid id)
+        {
+            var plan = _planList.FirstOrDefault(x => x.UID == id);
+            if (plan is null) return;
+            _planList.Remove(plan);
+            this.SaveToFile();
         }
 
 

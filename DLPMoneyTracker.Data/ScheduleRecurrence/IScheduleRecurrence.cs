@@ -7,7 +7,8 @@ namespace DLPMoneyTracker.Data.ScheduleRecurrence
     {
         Monthly,
         SemiAnnual,
-        Annual
+        Annual,
+        NotSet
     }
 
     public interface IScheduleRecurrence
