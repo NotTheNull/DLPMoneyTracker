@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.Main.BudgetAnalysis
 {
+    // TODO: Modify feature on the Fixed Expense budget detail to have a split window with two grids, top showing expected future payments, bottom showing existing payments
     public class CurrentMonthBudgetVM : BaseViewModel
     {
         private readonly ITrackerConfig _config;
