@@ -82,6 +82,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                 {
                     _editAccount.SaveAccount();
                     _editAccount.Clear();
+                    this.NotifyAll();
                     this.ReloadAccounts();
                 }));
             }
@@ -128,9 +129,13 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                 return _cmdDel ?? (_cmdDel = new RelayCommand((act) =>
                 {
                     if (act is null) throw new ArgumentNullException("Account");
-                    if (act.GetType() != typeof(IJournalAccount)) throw new InvalidCastException(string.Format("Cannot Load type [{0}", act.GetType().FullName));
-                    _config.RemoveJournalAccount(((IJournalAccount)act).Id);
+                    //if (act.GetType() != typeof(IJournalAccount)) throw new InvalidCastException(string.Format("Cannot Load type [{0}", act.GetType().FullName));
+                    if(act is LedgerAccountVM vm)
+                    {
+                    _config.RemoveJournalAccount(vm.Id);
+                    }
                     _editAccount.Clear();
+                    this.NotifyAll();
                     this.ReloadAccounts();
                 }));
             }

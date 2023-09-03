@@ -113,7 +113,8 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             if (string.IsNullOrWhiteSpace(_desc)) return;
             if (JournalType == JournalAccountType.NotSet) return;
 
-            var acct = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == Id);
+            IJournalAccount? acct = null;
+            if(this.Id != Guid.Empty) _config.LedgerAccountsList.FirstOrDefault(x => x.Id == Id);
             if (acct is null)
             {
                 acct = JournalAccountFactory.Build(this.Description, this.JournalType, this.MonthlyBudget);
