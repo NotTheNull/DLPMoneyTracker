@@ -83,6 +83,18 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             }
         }
 
+        public bool IsClosed { get { return _closeDateUTC.HasValue; } }
+
+        public string DisplayClosedMessage
+        {
+            get
+            {
+                if(this.IsClosed) return string.Format("CLOSED: {0}", _closeDateUTC.Value.ToLocalTime());
+
+                return string.Empty;
+            }
+        }
+
         private int _order;
 
         public int DisplayOrder

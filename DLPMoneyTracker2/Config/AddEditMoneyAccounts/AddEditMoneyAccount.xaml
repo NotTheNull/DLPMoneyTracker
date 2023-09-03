@@ -77,21 +77,26 @@
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Button x:Name="btnEdit"
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal" Visibility="{Binding Path=IsClosed, Converter={StaticResource convertBoolToVisibility}, ConverterParameter=R}">
+                                    <Button x:Name="btnEdit"
                                         ToolTip="Edit Account"
                                         Style="{StaticResource MenuButton}"
                                         Command="{Binding Path=Data.CommandLoad, Source={StaticResource proxy}}"
                                         CommandParameter="{Binding}">
-                                    <Image Source="/Icons/Edit-Pencil-256.png" />
-                                </Button>
-                                <Button x:Name="btnDelete"
+                                        <Image Source="/Icons/Edit-Pencil-256.png" />
+                                    </Button>
+                                    <Button x:Name="btnDelete"
                                         ToolTip="Delete Account"
                                         Style="{StaticResource MenuButton}"
                                         Command="{Binding Path=Data.CommandRemove, Source={StaticResource proxy}}"
                                         CommandParameter="{Binding}">
-                                    <Image Source="/Icons/Garbage-Closed-256.png" />
-                                </Button>
+                                        <Image Source="/Icons/Garbage-Closed-256.png" />
+                                    </Button>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Visibility="{Binding Path=IsClosed, Converter={StaticResource convertBoolToVisibility}}">
+                                    <TextBlock Text="{Binding Path=DisplayClosedMessage}" />
+                                </StackPanel>
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
