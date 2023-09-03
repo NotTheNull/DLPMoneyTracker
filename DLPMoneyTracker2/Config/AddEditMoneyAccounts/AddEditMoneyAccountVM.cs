@@ -53,6 +53,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
                 return _cmdSave ?? (_cmdSave = new RelayCommand((o) =>
                 {
                     _editAccount.SaveAccount();
+                    this.ReloadAccounts();
                 }));
             }
         }
