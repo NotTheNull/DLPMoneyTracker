@@ -78,9 +78,14 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
                 return _cmdLoad ?? (_cmdLoad = new RelayCommand((act) =>
                 {
                     if (act is null) throw new ArgumentNullException("Account");
-                    if (act.GetType() != typeof(IJournalAccount)) throw new InvalidCastException(string.Format("Cannot Load type [{0}", act.GetType().FullName));
+                    //if (act.GetType() != typeof(IJournalAccount)) throw new InvalidCastException(string.Format("Cannot Load type [{0}", act.GetType().FullName));
 
-                    _editAccount.LoadAccount((IJournalAccount)act);
+                    //_editAccount.LoadAccount((IJournalAccount)act);
+                    if(act is MoneyAccountVM vm)
+                    {
+                        _editAccount = vm;
+                    }
+
                     NotifyPropertyChanged(nameof(EditAccount));
                 }));
             }
