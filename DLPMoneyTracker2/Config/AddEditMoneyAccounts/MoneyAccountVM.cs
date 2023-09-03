@@ -148,7 +148,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
 
             var initBalRecord = (JournalEntry?)_journal.TransactionList
                 .FirstOrDefault(x =>
-                    (x.CreditAccountId == Id || x.DebitAccountId == Id) &&
+                    (x.CreditAccountId == acct.Id || x.DebitAccountId == acct.Id) &&
                     (x.DebitAccountId == SpecialAccount.InitialBalance.Id || x.CreditAccountId == SpecialAccount.InitialBalance.Id)
                     );
             if (initBalRecord is null)
