@@ -94,8 +94,11 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
                 return _cmdDel ?? (_cmdDel = new RelayCommand((act) =>
                 {
                     if (act is null) throw new ArgumentNullException("Account");
-                    if (act.GetType() != typeof(IJournalAccount)) throw new InvalidCastException(string.Format("Cannot Load type [{0}", act.GetType().FullName));
-                    _config.RemoveJournalAccount(((IJournalAccount)act).Id);
+                    //if (act.GetType() != typeof(IJournalAccount)) throw new InvalidCastException(string.Format("Cannot Load type [{0}", act.GetType().FullName));
+                    if (act is MoneyAccountVM vm)
+                    {
+                        _config.RemoveJournalAccount(vm.Id);
+                    }
                     this.ReloadAccounts();
                     _editAccount.Clear();
                 }));
@@ -111,7 +114,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
         public void ReloadAccounts()
         {
             this.AccountList.Clear();
-            foreach(var act in _config.LedgerAccountsList.Where(x => MoneyAccountVM.ValidTypes.Contains(x.JournalType)))
+            foreach (var act in _config.LedgerAccountsList.Where(x => MoneyAccountVM.ValidTypes.Contains(x.JournalType)))
             {
                 this.AccountList.Add(new MoneyAccountVM(_config, _journal, act));
             }
