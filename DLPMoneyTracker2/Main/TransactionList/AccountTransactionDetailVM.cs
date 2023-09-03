@@ -6,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.Main.TransactionList
 {
@@ -30,11 +28,10 @@ namespace DLPMoneyTracker2.Main.TransactionList
         }
 
         private ObservableCollection<SingleAccountDetailVM> _listRecords = new ObservableCollection<SingleAccountDetailVM>();
-        public ObservableCollection<SingleAccountDetailVM> DisplayRecordsList { get { return _listRecords; } }
-
+        public ObservableCollection<SingleAccountDetailVM> DisplayRecordsList
+        { get { return _listRecords; } }
 
         #region Filter Related
-
 
         private TransDetailFilter _filter = new TransDetailFilter();
 
@@ -72,7 +69,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
                 NotifyPropertyChanged(nameof(FilterText));
             }
         }
-        
+
         public bool AreFiltersVisible
         {
             get
@@ -80,11 +77,8 @@ namespace DLPMoneyTracker2.Main.TransactionList
                 return _filter.AreFilterControlsVisible;
             }
         }
-        
 
-
-        #endregion
-
+        #endregion Filter Related
 
         #region Commands
 
@@ -96,12 +90,14 @@ namespace DLPMoneyTracker2.Main.TransactionList
         }
 
         private RelayCommand _cmdFilter;
+
         public RelayCommand CommandSearch
         {
             get { return _cmdFilter ?? (_cmdFilter = new RelayCommand((o) => this.Reload())); }
         }
 
         private RelayCommand _cmdResetFilter;
+
         public RelayCommand CommandResetFilter
         {
             get
@@ -117,9 +113,8 @@ namespace DLPMoneyTracker2.Main.TransactionList
                     ));
             }
         }
-        #endregion
 
-
+        #endregion Commands
 
         /// <summary>
         /// Copies the filter options into the model's filter.
@@ -139,7 +134,6 @@ namespace DLPMoneyTracker2.Main.TransactionList
             //this.FilterText = filter.SearchText?.Trim() ?? string.Empty;
             this.Reload();
         }
-
 
         private void _journal_JournalModified()
         {
@@ -190,7 +184,6 @@ namespace DLPMoneyTracker2.Main.TransactionList
         }
     }
 
-
     public class SingleAccountDetailVM : BaseViewModel
     {
         private readonly IJournalEntry _je;
@@ -202,10 +195,15 @@ namespace DLPMoneyTracker2.Main.TransactionList
             _parent = parent;
         }
 
-        public Guid ParentId { get { return _parent.Id; } }
-        public bool IsCredit { get { return _je.CreditAccountId == ParentId; } }
-        public string AccountName { get { return IsCredit ? _je.DebitAccountName : _je.CreditAccountName; } }
-        public string TransactionDescription { get { return _je.Description; } }
+        public Guid ParentId
+        { get { return _parent.Id; } }
+        public bool IsCredit
+        { get { return _je.CreditAccountId == ParentId; } }
+        public string AccountName
+        { get { return IsCredit ? _je.DebitAccountName : _je.CreditAccountName; } }
+        public string TransactionDescription
+        { get { return _je.Description; } }
+
         public decimal TransactionAmount
         {
             get
@@ -220,7 +218,8 @@ namespace DLPMoneyTracker2.Main.TransactionList
                 }
             }
         }
-        public DateTime TransactionDate { get { return _je.TransactionDate; } }
 
+        public DateTime TransactionDate
+        { get { return _je.TransactionDate; } }
     }
 }

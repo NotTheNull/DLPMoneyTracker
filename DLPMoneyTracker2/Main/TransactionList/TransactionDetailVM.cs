@@ -7,8 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.Main.TransactionList
 {
@@ -18,6 +16,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
         private readonly IJournal _journal;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
         public TransactionDetailVM(ITrackerConfig config, IJournal journal) : base()
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
@@ -28,13 +27,11 @@ namespace DLPMoneyTracker2.Main.TransactionList
             this.Reload();
         }
 
-
-
         private ObservableCollection<IJournalEntry> _listRecords = new ObservableCollection<IJournalEntry>();
-        public ObservableCollection<IJournalEntry> DisplayRecordsList { get { return _listRecords; } }
+        public ObservableCollection<IJournalEntry> DisplayRecordsList
+        { get { return _listRecords; } }
 
         #region Filter Related
-
 
         private TransDetailFilter _filter = new TransDetailFilter();
 
@@ -42,7 +39,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
         {
             get { return _filter.Account; }
         }
-        
+
         public DateTime FilterBeginDate
         {
             get { return _filter.FilterDates.Begin; }
@@ -97,9 +94,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
             }
         }
 
-
-        #endregion
-
+        #endregion Filter Related
 
         #region Commands
 
@@ -111,12 +106,14 @@ namespace DLPMoneyTracker2.Main.TransactionList
         }
 
         private RelayCommand _cmdFilter;
+
         public RelayCommand CommandSearch
         {
             get { return _cmdFilter ?? (_cmdFilter = new RelayCommand((o) => this.Reload())); }
         }
 
         private RelayCommand _cmdResetFilter;
+
         public RelayCommand CommandResetFilter
         {
             get
@@ -132,8 +129,8 @@ namespace DLPMoneyTracker2.Main.TransactionList
                     ));
             }
         }
-        #endregion
 
+        #endregion Commands
 
         /// <summary>
         /// Copies the filter options into the model's filter.
@@ -149,7 +146,6 @@ namespace DLPMoneyTracker2.Main.TransactionList
             this.FilterText = filter.SearchText?.Trim() ?? string.Empty;
         }
 
-
         private void _journal_JournalModified()
         {
             this.Reload();
@@ -164,7 +160,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
             var records = _journal.TransactionList.Where(x => x != null);
             if (_filter?.IsFilterEnabled == true)
             {
-                if(this.FilterAccount != null)
+                if (this.FilterAccount != null)
                 {
                     records = records.Where(x => x.DebitAccountId == this.FilterAccount.Id || x.CreditAccountId == this.FilterAccount.Id);
                 }
@@ -201,7 +197,6 @@ namespace DLPMoneyTracker2.Main.TransactionList
         }
     }
 
-
     public class TransDetailFilter
     {
         public IJournalAccount? Account;
@@ -221,12 +216,13 @@ namespace DLPMoneyTracker2.Main.TransactionList
             }
         }
 
-        public TransDetailFilter() 
+        public TransDetailFilter()
         {
             this.FilterDates = new DateRange(DateTime.MinValue, DateTime.MaxValue);
             this.SearchText = string.Empty;
             AreFilterControlsVisible = true;
         }
+
         public TransDetailFilter(IJournalAccount account, DateRange dates, string search)
         {
             this.Account = account;
@@ -240,6 +236,5 @@ namespace DLPMoneyTracker2.Main.TransactionList
             this.FilterDates = new DateRange(DateTime.MinValue, DateTime.MaxValue);
             this.SearchText = string.Empty;
         }
-
     }
 }

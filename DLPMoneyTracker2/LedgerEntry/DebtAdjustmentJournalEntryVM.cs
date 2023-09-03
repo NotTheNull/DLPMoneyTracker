@@ -1,12 +1,7 @@
 ﻿using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.LedgerAccounts;
 using DLPMoneyTracker.Data.TransactionModels;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace DLPMoneyTracker2.LedgerEntry
 {
@@ -14,10 +9,9 @@ namespace DLPMoneyTracker2.LedgerEntry
     {
         public DebtAdjustmentJournalEntryVM(ITrackerConfig config, IJournal journal) : base(journal, config)
         {
-            
         }
 
-        public override bool IsValidTransaction 
+        public override bool IsValidTransaction
         {
             get
             {
@@ -28,10 +22,11 @@ namespace DLPMoneyTracker2.LedgerEntry
             }
         }
 
+        public override string DebitHeader
+        { get { return "Debt Account"; } }
 
-        public override string DebitHeader { get { return "Debt Account"; } }
-
-        public override string CreditHeader { get { return "Action"; } }
+        public override string CreditHeader
+        { get { return "Action"; } }
 
         public override void LoadAccounts()
         {
@@ -48,7 +43,6 @@ namespace DLPMoneyTracker2.LedgerEntry
                     this.ValidDebitAccounts.Add(new Core.SpecialDropListItem<IJournalAccount>(l.Description, l));
                 }
             }
-
         }
 
         /// <summary>
@@ -70,8 +64,6 @@ namespace DLPMoneyTracker2.LedgerEntry
                 DebitAccount = (action.Id == SpecialAccount.DebtInterest.Id) ? action : liability
             };
             _journal.AddTransaction(record);
-
         }
-
     }
 }

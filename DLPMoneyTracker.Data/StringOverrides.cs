@@ -1,31 +1,29 @@
-﻿using DLPMoneyTracker.Data.ConfigModels;
-using DLPMoneyTracker.Data.LedgerAccounts;
+﻿using DLPMoneyTracker.Data.LedgerAccounts;
 using DLPMoneyTracker.Data.ScheduleRecurrence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Data
 {
-
     public static class StringExtensions
     {
         public static string ToDisplayText(this JournalAccountType journalType)
         {
-            switch(journalType)
+            switch (journalType)
             {
                 case JournalAccountType.Payable:
                     return "Accounts Payable";
+
                 case JournalAccountType.LiabilityLoan:
                     return "Loan";
+
                 case JournalAccountType.LiabilityCard:
                     return "Credit Card";
+
                 case JournalAccountType.Receivable:
                     return "Accounts Receivable";
+
                 case JournalAccountType.Bank:
                     return "Bank";
+
                 default:
                     return "*N/A*";
             }

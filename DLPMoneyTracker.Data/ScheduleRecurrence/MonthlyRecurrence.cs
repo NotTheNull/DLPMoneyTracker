@@ -43,7 +43,8 @@ namespace DLPMoneyTracker.Data.ScheduleRecurrence
             }
         }
 
-        public RecurrenceFrequency Frequency { get { return RecurrenceFrequency.Monthly; } }
+        public RecurrenceFrequency Frequency
+        { get { return RecurrenceFrequency.Monthly; } }
 
         private int _dayOfMonth;
 

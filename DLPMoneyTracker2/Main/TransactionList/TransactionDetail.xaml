@@ -1,22 +1,22 @@
 ﻿<UserControl x:Class="DLPMoneyTracker2.Main.TransactionList.TransactionDetail"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:DLPMoneyTracker2.Main.TransactionList"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              Height="650"
              Width="1000">
 
     <UserControl.Resources>
         <Style x:Key="LocalLabel" TargetType="TextBlock">
-            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Margin" Value="5, 0" />
         </Style>
 
         <Style x:Key="LocalDatePicker" TargetType="DatePicker">
-            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
     </UserControl.Resources>
 
@@ -37,35 +37,28 @@
             </Button.Content>
         </Button>
 
-
         <!-- Filter Controls -->
         <StackPanel Orientation="Horizontal"
                     Height="30"
                     Grid.Row="0">
             <TextBlock Text="Date Range"
-                       Style="{StaticResource LocalLabel}"
-                       />
-            <DatePicker Style="{StaticResource LocalDatePicker}" 
-                        SelectedDate="{Binding Path=FilterBeginDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        />
+                       Style="{StaticResource LocalLabel}" />
+            <DatePicker Style="{StaticResource LocalDatePicker}"
+                        SelectedDate="{Binding Path=FilterBeginDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock Text="To"
-                       Style="{StaticResource LocalLabel}"
-                       />
-            <DatePicker Style="{StaticResource LocalDatePicker}" 
-                        SelectedDate="{Binding Path=FilterEndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        />
+                       Style="{StaticResource LocalLabel}" />
+            <DatePicker Style="{StaticResource LocalDatePicker}"
+                        SelectedDate="{Binding Path=FilterEndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
             <TextBlock Text="Search Text"
                        Margin="20, 0, 5, 0"
-                       Style="{StaticResource LocalLabel}"/>
+                       Style="{StaticResource LocalLabel}" />
             <TextBox Margin="5"
                      Width="200"
                      FontSize="12"
-                     Text="{Binding Path=FilterText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                     />
+                     Text="{Binding Path=FilterText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
             <Button Style="{StaticResource MenuButton}"
-                    Command="{Binding Path=CommandSearch}"
-                    >
+                    Command="{Binding Path=CommandSearch}">
                 <Button.Content>
                     <Image Source="/Icons/Light-Bulb-256.png" />
                 </Button.Content>
@@ -80,19 +73,16 @@
                                     Header="Transaction Date"
                                     Binding="{Binding TransactionDate}" />
 
-
                 <DataGridTextColumn Header="Debit Account"
                                     MinWidth="120"
                                     Binding="{Binding DebitAccountName}" />
-
 
                 <DataGridTextColumn Header="Credit Account"
                                     MinWidth="120"
                                     Binding="{Binding CreditAccountName}" />
 
-
-                <DataGridTextColumn 
-                    Header="Description" 
+                <DataGridTextColumn
+                    Header="Description"
                     MinWidth="240"
                     Binding="{Binding Description}" />
 
@@ -108,7 +98,5 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-
-        
     </Grid>
 </UserControl>

@@ -4,15 +4,11 @@ using DLPMoneyTracker.Data.TransactionModels;
 using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
 using DLPMoneyTracker2.Core;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.LedgerEntry
 {
-    
     public interface IJournalEntryVM
     {
         bool IsValidTransaction { get; }
@@ -31,10 +27,12 @@ namespace DLPMoneyTracker2.LedgerEntry
         decimal Amount { get; }
 
         void Clear();
-        void LoadAccounts();
-        void SaveTransaction();
-        void FillFromPlan(IJournalPlan plan);
 
+        void LoadAccounts();
+
+        void SaveTransaction();
+
+        void FillFromPlan(IJournalPlan plan);
     }
 
     public abstract class BaseRecordJournalEntryVM : BaseViewModel, IJournalEntryVM
@@ -56,7 +54,7 @@ namespace DLPMoneyTracker2.LedgerEntry
         public DateTime TransactionDate
         {
             get { return _date; }
-            set 
+            set
             {
                 _date = value;
                 NotifyPropertyChanged(nameof(TransactionDate));
@@ -66,7 +64,8 @@ namespace DLPMoneyTracker2.LedgerEntry
         public abstract bool IsValidTransaction { get; }
 
         protected ObservableCollection<SpecialDropListItem<IJournalAccount>> _listValidDebits = new ObservableCollection<SpecialDropListItem<IJournalAccount>>();
-        public ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidDebitAccounts { get { return _listValidDebits; } }
+        public ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidDebitAccounts
+        { get { return _listValidDebits; } }
 
         public abstract string DebitHeader { get; }
 
@@ -75,17 +74,19 @@ namespace DLPMoneyTracker2.LedgerEntry
         public IJournalAccount? SelectedDebitAccount
         {
             get { return _debit; }
-            set 
+            set
             {
                 _debit = value;
                 NotifyPropertyChanged(nameof(SelectedDebitAccount));
             }
         }
 
-        public virtual bool IsCreditEnabled { get { return true; } }
+        public virtual bool IsCreditEnabled
+        { get { return true; } }
 
         protected ObservableCollection<SpecialDropListItem<IJournalAccount>> _listValidCredits = new ObservableCollection<SpecialDropListItem<IJournalAccount>>();
-        public ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidCreditAccounts { get { return _listValidCredits; } }
+        public ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidCreditAccounts
+        { get { return _listValidCredits; } }
 
         public abstract string CreditHeader { get; }
 
@@ -94,7 +95,7 @@ namespace DLPMoneyTracker2.LedgerEntry
         public IJournalAccount? SelectedCreditAccount
         {
             get { return _credit; }
-            set 
+            set
             {
                 _credit = value;
                 NotifyPropertyChanged(nameof(SelectedCreditAccount));
@@ -106,27 +107,24 @@ namespace DLPMoneyTracker2.LedgerEntry
         public string Description
         {
             get { return _desc; }
-            set 
+            set
             {
                 _desc = value;
                 NotifyPropertyChanged(nameof(Description));
             }
         }
 
-
         protected decimal _amt;
 
         public decimal Amount
         {
             get { return _amt; }
-            set 
-            { 
+            set
+            {
                 _amt = value;
                 NotifyPropertyChanged(nameof(Amount));
             }
         }
-
-
 
         public void Clear()
         {
@@ -153,7 +151,7 @@ namespace DLPMoneyTracker2.LedgerEntry
             };
             _journal.AddTransaction(record);
         }
-        
+
         public void FillFromPlan(IJournalPlan plan)
         {
             this.TransactionDate = DateTime.Today;

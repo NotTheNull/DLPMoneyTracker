@@ -1,10 +1,7 @@
 ﻿using DLPMoneyTracker.Data.LedgerAccounts;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Data.TransactionModels
 {
@@ -12,7 +9,7 @@ namespace DLPMoneyTracker.Data.TransactionModels
     {
         Guid Id { get; }
         DateTime TransactionDate { get; }
-        Guid DebitAccountId { get; } 
+        Guid DebitAccountId { get; }
         string DebitAccountName { get; }
         Guid CreditAccountId { get; }
         string CreditAccountName { get; }
@@ -24,13 +21,12 @@ namespace DLPMoneyTracker.Data.TransactionModels
 
     public class JournalEntryJSON : IJournalEntry
     {
-
         public Guid Id { get; set; }
 
         public DateTime TransactionDate { get; set; }
 
         public Guid DebitAccountId { get; set; }
-        
+
         [JsonIgnore]
         public string DebitAccountName { get; set; }
 
@@ -38,6 +34,7 @@ namespace DLPMoneyTracker.Data.TransactionModels
 
         [JsonIgnore]
         public string CreditAccountName { get; set; }
+
         public string Description { get; set; }
 
         public decimal TransactionAmount { get; set; }
@@ -49,7 +46,7 @@ namespace DLPMoneyTracker.Data.TransactionModels
             DebitAccountId = cpy.CreditAccountId;
             CreditAccountId = cpy.CreditAccountId;
             Description = cpy.Description;
-            TransactionAmount = cpy.TransactionAmount;  
+            TransactionAmount = cpy.TransactionAmount;
         }
     }
 
@@ -65,6 +62,7 @@ namespace DLPMoneyTracker.Data.TransactionModels
             this.TransactionAmount = decimal.Zero;
             _config = config;
         }
+
         public JournalEntry(ITrackerConfig config, IJournalEntry cpy)
         {
             _config = config;
@@ -75,18 +73,22 @@ namespace DLPMoneyTracker.Data.TransactionModels
         public DateTime TransactionDate { get; set; }
 
         public IJournalAccount DebitAccount { get; set; }
-        public Guid DebitAccountId { get { return DebitAccount?.Id ?? Guid.Empty; } }
-        public string DebitAccountName { get { return DebitAccount?.Description ?? string.Empty; } }
+        public Guid DebitAccountId
+        { get { return DebitAccount?.Id ?? Guid.Empty; } }
+        public string DebitAccountName
+        { get { return DebitAccount?.Description ?? string.Empty; } }
         public IJournalAccount CreditAccount { get; set; }
-        public Guid CreditAccountId { get { return CreditAccount?.Id ?? Guid.Empty; } }
-        public string CreditAccountName { get { return CreditAccount?.Description ?? string.Empty; } }
+        public Guid CreditAccountId
+        { get { return CreditAccount?.Id ?? Guid.Empty; } }
+        public string CreditAccountName
+        { get { return CreditAccount?.Description ?? string.Empty; } }
 
         public string Description { get; set; }
         public decimal TransactionAmount { get; set; }
 
         public void Copy(IJournalEntry cpy)
         {
-            if(cpy is JournalEntryJSON json)
+            if (cpy is JournalEntryJSON json)
             {
                 this.Id = json.Id;
                 this.TransactionDate = json.TransactionDate;
@@ -96,10 +98,10 @@ namespace DLPMoneyTracker.Data.TransactionModels
                 this.DebitAccount = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == json.DebitAccountId);
                 this.CreditAccount = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == json.CreditAccountId);
             }
-            else if(cpy is JournalEntry je)
+            else if (cpy is JournalEntry je)
             {
                 this.Id = je.Id;
-                this.TransactionDate= je.TransactionDate;
+                this.TransactionDate = je.TransactionDate;
                 this.Description = je.Description;
                 this.TransactionAmount = je.TransactionAmount;
                 this.DebitAccount = je.DebitAccount;

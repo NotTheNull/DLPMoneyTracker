@@ -14,7 +14,6 @@
         Height="530"
         Width="550">
 
-
     <Window.Resources>
         <Style TargetType="TextBox">
             <Setter Property="Margin" Value="10,5,5,5" />
@@ -37,7 +36,6 @@
             <RowDefinition Height="25" />
         </Grid.RowDefinitions>
 
-
         <StackPanel Orientation="Horizontal"
                     Background="LightGray"
                     Grid.Row="0">
@@ -47,7 +45,6 @@
                     Style="{StaticResource MenuButton}">
                 <Image Source="/Icons/Leave-256.png" />
             </Button>
-
 
             <Button x:Name="btnAddNew"
                     Style="{StaticResource MenuButton}"
@@ -62,7 +59,6 @@
                     Command="{Binding Path=CommandSave}">
                 <Image Source="/Icons/Save-256.png" />
             </Button>
-
         </StackPanel>
 
         <DataGrid x:Name="gridAccounts"
@@ -78,7 +74,6 @@
                 <DataGridTextColumn Header="Description" Binding="{Binding Path=Description, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Account Type" Binding="{Binding Path=JournalType, Converter={StaticResource converterMoneyAccountToString}, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Monthly Budget" Binding="{Binding Path=MonthlyBudget, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, UpdateSourceTrigger=PropertyChanged}" />
-
 
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
@@ -103,11 +98,9 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
-
         </DataGrid>
 
-
-        <Grid x:Name="LayoutEdit"    
+        <Grid x:Name="LayoutEdit"
               Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="15" />
@@ -122,8 +115,6 @@
                 <RowDefinition Height="30" />
                 <RowDefinition Height="15" />
             </Grid.RowDefinitions>
-
-
 
             <TextBlock Text="Description"
                        Grid.Column="1"
@@ -142,8 +133,6 @@
                     <behave:TextBoxFocusBehavior />
                 </i:Interaction.Behaviors>
             </TextBox>
-
-
 
             <TextBlock Text="Account Type"
                        Grid.Column="1"
@@ -164,7 +153,6 @@
                       SelectedValuePath="Value"
                       SelectedValue="{Binding Path=AccountType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-
             <TextBlock Text="Monthly Budget"
                        Grid.Column="1"
                        Grid.Row="3"
@@ -177,14 +165,6 @@
                      Background="{Binding Path=CanEdit, Converter={StaticResource convertEnabledToBgColor}, UpdateSourceTrigger=PropertyChanged}"
                      IsEnabled="{Binding Path=CanEdit, UpdateSourceTrigger=PropertyChanged}"
                      Text="{Binding Path=MonthlyBudget, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=0.00,  Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
-
-
-
         </Grid>
-
-
-
-
-
     </Grid>
 </Window>

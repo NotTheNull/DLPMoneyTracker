@@ -1,12 +1,9 @@
-﻿using DLPMoneyTracker.Data.ConfigModels;
-using DLPMoneyTracker.Data.TransactionModels;
-using System;
+﻿using System;
 
 namespace DLPMoneyTracker.Data
 {
     public class NewYearBuilder
     {
-        
         /// <summary>
         /// Copies config and Ledger accounts to the new year.  Creates new journal entries with the current balances.
         /// This feature can be run at any time and will simply rebuild next year's data.
@@ -28,7 +25,6 @@ namespace DLPMoneyTracker.Data
             buildIt.BuildNewPlanner();
             buildIt.BuildNewLedger();
         }
-
 
         private ITrackerConfig _oldConfig, _newConfig;
         private int _newYear;
@@ -61,8 +57,7 @@ namespace DLPMoneyTracker.Data
             DLPJournal newJournal = new DLPJournal(_newConfig, _newYear);
 
             newJournal.BuildInitialBalances(oldJournal);
-            newJournal.SaveToFile();            
+            newJournal.SaveToFile();
         }
-
     }
 }

@@ -4,8 +4,6 @@ using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 {
@@ -13,22 +11,20 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
     {
         private readonly ITrackerConfig _config;
 
-
         private static readonly List<JournalAccountType> _listValidTypes = new List<JournalAccountType>() { JournalAccountType.Payable, JournalAccountType.Receivable };
-        public static List<JournalAccountType> ValidTypes { get { return _listValidTypes; } }
-
+        public static List<JournalAccountType> ValidTypes
+        { get { return _listValidTypes; } }
 
         public LedgerAccountVM(ITrackerConfig config) : base()
         {
-            _config = config;            
+            _config = config;
         }
+
         public LedgerAccountVM(ITrackerConfig config, IJournalAccount act) : base()
         {
             _config = config;
             this.LoadAccount(act);
         }
-
-
 
         public Guid Id { get; private set; }
 
@@ -56,19 +52,17 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             }
         }
 
-
         private decimal _budget;
 
         public decimal MonthlyBudget
         {
             get { return _budget; }
-            set 
+            set
             {
-                _budget = value; 
+                _budget = value;
                 NotifyPropertyChanged(nameof(MonthlyBudget));
             }
         }
-
 
         private DateTime? _closeDateUTC;
 
@@ -83,8 +77,6 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
         }
 
         // TODO: Add checkbox / bool for whether a particular Ledger Account should be displayed on Budget reports
-
-
 
         public void Clear()
         {
@@ -121,7 +113,6 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             if (string.IsNullOrWhiteSpace(_desc)) return;
             if (JournalType == JournalAccountType.NotSet) return;
 
-
             var acct = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == Id);
             if (acct is null)
             {
@@ -134,6 +125,5 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             }
             _config.SaveJournalAccounts();
         }
-
     }
 }

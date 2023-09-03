@@ -24,12 +24,15 @@ namespace DLPMoneyTracker.Data.ScheduleRecurrence
             }
         }
 
-        public RecurrenceFrequency Frequency { get { return RecurrenceFrequency.SemiAnnual; } }
+        public RecurrenceFrequency Frequency
+        { get { return RecurrenceFrequency.SemiAnnual; } }
 
         public DateTime StartDate { get; set; }
 
-        public DateTime AnniversaryDate { get { return new DateTime(DateTime.Now.Year, this.StartDate.Month, this.StartDate.Day); } }
-        public DateTime AlternateDate { get { return this.AnniversaryDate.AddMonths(6); } }
+        public DateTime AnniversaryDate
+        { get { return new DateTime(DateTime.Now.Year, this.StartDate.Month, this.StartDate.Day); } }
+        public DateTime AlternateDate
+        { get { return this.AnniversaryDate.AddMonths(6); } }
 
         public SemiAnnualRecurrence()
         {

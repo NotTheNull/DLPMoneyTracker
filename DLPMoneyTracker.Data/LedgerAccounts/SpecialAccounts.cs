@@ -1,5 +1,4 @@
-﻿using DLPMoneyTracker.Data.ConfigModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,11 +24,11 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         public int OrderBy { get { return 0; } }
 
-        public string MoneyAccountId { get { return string.Empty; } }
+        //public string MoneyAccountId { get { return string.Empty; } }
 
-        public MoneyAccountType AccountType { get { return MoneyAccountType.NotSet; } }
+        //public MoneyAccountType AccountType { get { return MoneyAccountType.NotSet; } }
 
-        public Guid CategoryId { get { return Guid.Empty; } }
+        //public Guid CategoryId { get { return Guid.Empty; } }
 
         public decimal MonthlyBudgetAmount { get { return decimal.Zero; } }
 

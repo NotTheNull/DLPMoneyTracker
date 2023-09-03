@@ -11,6 +11,7 @@ using DLPMoneyTracker2.Main.TransactionList;
 using DLPMoneyTracker2.Main.BudgetAnalysis;
 using DLPMoneyTracker2.LedgerEntry;
 using DLPMoneyTracker2.Config.AddEditBudgetPlans;
+using DLPMoneyTracker2.Main.History;
 
 namespace DLPMoneyTracker2
 {
@@ -34,13 +35,13 @@ namespace DLPMoneyTracker2
             services.AddSingleton<IJournal, DLPJournal>();
             services.AddSingleton<IJournalPlanner, JournalPlanner>();
 
-#pragma warning disable CS0612 // Type or member is obsolete
-#pragma warning disable CS0618 // Type or member is obsolete
-            // Keep until conversion is done
-            services.AddSingleton<ILedger, Ledger>();
-            services.AddSingleton<IMoneyPlanner, MoneyPlanner>();
-#pragma warning restore CS0618 // Type or member is obsolete
-#pragma warning restore CS0612 // Type or member is obsolete
+//#pragma warning disable CS0612 // Type or member is obsolete
+//#pragma warning disable CS0618 // Type or member is obsolete
+//            // Keep until conversion is done
+//            services.AddSingleton<ILedger, Ledger>();
+//            services.AddSingleton<IMoneyPlanner, MoneyPlanner>();
+//#pragma warning restore CS0618 // Type or member is obsolete
+//#pragma warning restore CS0612 // Type or member is obsolete
 
             // Main UI
             services.AddSingleton<MainWindow>();
@@ -58,6 +59,7 @@ namespace DLPMoneyTracker2
             services.AddSingleton<TransactionDetailVM>();
 
             services.AddTransient<AccountTransactionDetailVM>();
+            services.AddTransient<HistoryBudgetVM>();
 
             // Ledger
             services.AddTransient<IncomeJournalEntryVM>();
@@ -76,6 +78,7 @@ namespace DLPMoneyTracker2
             services.AddTransient<AddEditBudgetPlanVM>();
             services.AddTransient<RecurrenceEditor>();
             services.AddTransient<RecurrenceEditorVM>();
+
         }
 
     }

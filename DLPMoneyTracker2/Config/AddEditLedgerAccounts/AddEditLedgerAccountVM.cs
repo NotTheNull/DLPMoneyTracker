@@ -1,13 +1,10 @@
 ﻿using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.LedgerAccounts;
-using DLPMoneyTracker2.Config.AddEditMoneyAccounts;
 using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 {
@@ -16,6 +13,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
         private readonly ITrackerConfig _config;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
         public AddEditLedgerAccountVM(ITrackerConfig config) : base()
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
@@ -29,17 +27,19 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             this.ReloadAccounts();
         }
 
-
         private ObservableCollection<LedgerAccountVM> _listAccounts = new ObservableCollection<LedgerAccountVM>();
-        public ObservableCollection<LedgerAccountVM> AccountList { get { return _listAccounts; } }
+        public ObservableCollection<LedgerAccountVM> AccountList
+        { get { return _listAccounts; } }
 
-        public bool CanEdit { get { return _editAccount?.DateClosedUTC == null; } }
+        public bool CanEdit
+        { get { return _editAccount?.DateClosedUTC == null; } }
 
         public List<SpecialDropListItem<JournalAccountType>> JournalTypeList { get; set; }
 
-
         private LedgerAccountVM _editAccount;
-        public LedgerAccountVM EditAccount { get { return _editAccount; } }
+        public LedgerAccountVM EditAccount
+        { get { return _editAccount; } }
+
         public string Description
         {
             get { return _editAccount?.Description ?? string.Empty; }
@@ -70,9 +70,10 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             }
         }
 
-
         #region Commands
+
         private RelayCommand _cmdSave;
+
         public RelayCommand CommandSave
         {
             get
@@ -87,6 +88,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
         }
 
         private RelayCommand _cmdClear;
+
         public RelayCommand CommandClear
         {
             get
@@ -100,6 +102,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
         }
 
         private RelayCommand _cmdLoad;
+
         public RelayCommand CommandLoad
         {
             get
@@ -112,12 +115,12 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 
                         this.NotifyAll();
                     }
-
                 }));
             }
         }
 
         public RelayCommand _cmdDel;
+
         public RelayCommand CommandRemove
         {
             get
@@ -132,8 +135,8 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                 }));
             }
         }
-        #endregion
 
+        #endregion Commands
 
         /// <summary>
         /// Reloads the listing of accounts
@@ -145,7 +148,6 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             {
                 this.AccountList.Add(new LedgerAccountVM(_config, act));
             }
-
         }
 
         private void NotifyAll()

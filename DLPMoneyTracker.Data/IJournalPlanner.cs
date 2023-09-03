@@ -1,5 +1,4 @@
-﻿using DLPMoneyTracker.Data.TransactionModels.BillPlan;
-using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
+﻿using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,9 +24,9 @@ namespace DLPMoneyTracker.Data
         IEnumerable<IJournalPlan> GetUpcomingPlansForAccount(Guid accountId);
         void Copy(IJournalPlanner journalPlanner);
 
-#pragma warning disable CS0618 // Type or member is obsolete
-        void Convert(IMoneyPlanner moneyPlanner);
-#pragma warning restore CS0618 // Type or member is obsolete
+//#pragma warning disable CS0618 // Type or member is obsolete
+//        void Convert(IMoneyPlanner moneyPlanner);
+//#pragma warning restore CS0618 // Type or member is obsolete
     }
 
     public class JournalPlanner : IJournalPlanner
@@ -132,27 +131,27 @@ namespace DLPMoneyTracker.Data
             }
         }
 
-#pragma warning disable CS0618 // Type or member is obsolete
-        public void Convert(IMoneyPlanner moneyPlanner)
-        {
-            return;
-            //if (moneyPlanner?.MoneyPlanList?.Any() != true) return;
+//#pragma warning disable CS0618 // Type or member is obsolete
+//        public void Convert(IMoneyPlanner moneyPlanner)
+//        {
+//            return;
+//            //if (moneyPlanner?.MoneyPlanList?.Any() != true) return;
 
-            //_planList.Clear();
-            //foreach(var m in moneyPlanner.MoneyPlanList)
-            //{
-            //    var plan = JournalPlanFactory.Build(_config, m);
-            //    if (plan is null) continue;
-            //    _planList.Add(plan);
-            //}
-            //this.SaveToFile();
+//            //_planList.Clear();
+//            //foreach(var m in moneyPlanner.MoneyPlanList)
+//            //{
+//            //    var plan = JournalPlanFactory.Build(_config, m);
+//            //    if (plan is null) continue;
+//            //    _planList.Add(plan);
+//            //}
+//            //this.SaveToFile();
 
-            // Hold off on deleting
-            //moneyPlanner.ClearRecordList();
-            //moneyPlanner.SaveToFile();
+//            // Hold off on deleting
+//            //moneyPlanner.ClearRecordList();
+//            //moneyPlanner.SaveToFile();
 
-        }
-#pragma warning restore CS0618 // Type or member is obsolete
+//        }
+//#pragma warning restore CS0618 // Type or member is obsolete
 
     }
 }

@@ -1,18 +1,5 @@
 ﻿using DLPMoneyTracker.Data.ScheduleRecurrence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Markup;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
 {
@@ -22,7 +9,8 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
     public partial class RecurrenceEditor : Window
     {
         private RecurrenceEditorVM _viewModel;
-        public RecurrenceEditorVM ViewModel { get { return _viewModel; } }
+        public RecurrenceEditorVM ViewModel
+        { get { return _viewModel; } }
 
         public RecurrenceEditor(RecurrenceEditorVM viewModel)
         {

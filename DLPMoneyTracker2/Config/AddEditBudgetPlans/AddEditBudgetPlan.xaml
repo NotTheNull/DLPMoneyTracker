@@ -14,20 +14,16 @@
         Height="450"
         Width="850">
 
-
     <Grid Style="{StaticResource MainGridStyle}">
 
         <Grid.Resources>
             <core:BindingProxy x:Key="proxy" Data="{Binding}" />
         </Grid.Resources>
 
-
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
-
 
         <StackPanel Orientation="Horizontal"
                     Background="LightGray"
@@ -52,7 +48,6 @@
                     Command="{Binding Path=CommandSaveChanges}">
                 <Image Source="/Icons/Save-256.png" />
             </Button>
-
         </StackPanel>
 
         <Grid Grid.Row="1">
@@ -76,8 +71,7 @@
 
                     <DataGridTextColumn Header="Amount"
                                         Width="120"
-                                        Binding="{Binding Path=ExpectedAmount, Converter={StaticResource convertDecimalToDisplay}}"/>
-
+                                        Binding="{Binding Path=ExpectedAmount, Converter={StaticResource convertDecimalToDisplay}}" />
 
                     <DataGridTemplateColumn Width="80">
                         <DataGridTemplateColumn.CellTemplate>
@@ -104,9 +98,7 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-
                 </DataGrid.Columns>
-
             </DataGrid>
 
             <Grid x:Name="panelEditor"
@@ -131,8 +123,8 @@
                 <TextBlock Text="Plan Type"
                            Grid.Row="1"
                            Grid.Column="0"
-                           Style="{StaticResource StandardHeaderLabel}"/>
-                
+                           Style="{StaticResource StandardHeaderLabel}" />
+
                 <ComboBox x:Name="cboPlanType"
                           Grid.Row="1"
                           Grid.Column="1"
@@ -141,7 +133,6 @@
                           SelectedValuePath="Value"
                           ItemsSource="{Binding Path=PlanTypes}"
                           SelectedValue="{Binding Path=SelectedPlanType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
 
                 <!--<StackPanel Orientation="Horizontal"
                         Margin="0, 0, 0, 10"
@@ -229,8 +220,7 @@
                             Height="30"
                             HorizontalAlignment="Left"
                             Content="Modify"
-                            Click="btnEditRecurrence_Click"
-                             />
+                            Click="btnEditRecurrence_Click" />
 
                     <TextBlock x:Name="lblRecurrenceType"
                            Text="{Binding Path=RecurrenceType, UpdateSourceTrigger=PropertyChanged, FallbackValue=Description}"
@@ -238,16 +228,7 @@
                            Margin="10, 0, 0, 0"
                            Foreground="DarkGoldenrod" />
                 </StackPanel>
-
             </Grid>
-
-
-
-
         </Grid>
-
-
-
-
     </Grid>
 </Window>

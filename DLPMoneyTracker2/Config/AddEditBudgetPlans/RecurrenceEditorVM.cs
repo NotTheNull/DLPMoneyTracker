@@ -2,9 +2,6 @@
 using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
 {
@@ -59,7 +56,8 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
         }
 
         private List<SpecialDropListItem<RecurrenceFrequency>> _listFreq;
-        public List<SpecialDropListItem<RecurrenceFrequency>> RecurrenceFrequencyList { get { return _listFreq; } }
+        public List<SpecialDropListItem<RecurrenceFrequency>> RecurrenceFrequencyList
+        { get { return _listFreq; } }
 
         #region Commands
 

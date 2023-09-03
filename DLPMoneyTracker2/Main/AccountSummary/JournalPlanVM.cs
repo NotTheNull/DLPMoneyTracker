@@ -2,10 +2,6 @@
 using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
 using DLPMoneyTracker2.Core;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.Main.AccountSummary
 {
@@ -20,23 +16,29 @@ namespace DLPMoneyTracker2.Main.AccountSummary
             _actParent = act;
         }
 
-        private Guid ParentAccountId { get { return _actParent.Id; } }
+        private Guid ParentAccountId
+        { get { return _actParent.Id; } }
 
-        public IJournalPlan ThePlan { get { return _plan; } }
-        public Guid PlanUID { get { return _plan.UID; } }
+        public IJournalPlan ThePlan
+        { get { return _plan; } }
+        public Guid PlanUID
+        { get { return _plan.UID; } }
 
-        public bool IsParentDebit { get { return _plan.DebitAccountId == this.ParentAccountId; } }
-        
-        public string Description { get { return _plan.Description; } }
+        public bool IsParentDebit
+        { get { return _plan.DebitAccountId == this.ParentAccountId; } }
 
-        public JournalPlanType PlanType { get { return _plan.PlanType; } }
-        public string PlanTypeDescription { get { return _plan.PlanType.ToString(); } }
+        public string Description
+        { get { return _plan.Description; } }
 
-        public decimal Amount { get { return _plan.ExpectedAmount; } }
+        public JournalPlanType PlanType
+        { get { return _plan.PlanType; } }
+        public string PlanTypeDescription
+        { get { return _plan.PlanType.ToString(); } }
 
-        public DateTime NextDueDate { get { return _plan.NextOccurrence; } }
+        public decimal Amount
+        { get { return _plan.ExpectedAmount; } }
 
-
-
+        public DateTime NextDueDate
+        { get { return _plan.NextOccurrence; } }
     }
 }

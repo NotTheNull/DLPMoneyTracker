@@ -1,5 +1,4 @@
-﻿using DLPMoneyTracker.Data.ConfigModels;
-using DLPMoneyTracker.Data.LedgerAccounts;
+﻿using DLPMoneyTracker.Data.LedgerAccounts;
 using DLPMoneyTracker.Data.TransactionModels;
 using System;
 using System.Collections.Generic;

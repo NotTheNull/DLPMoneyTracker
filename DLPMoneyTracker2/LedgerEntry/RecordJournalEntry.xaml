@@ -33,7 +33,6 @@
             <RowDefinition Height="15" />
         </Grid.RowDefinitions>
 
-
         <TextBlock Text="Trans Date"
                    Grid.Row="1"
                    Grid.Column="1"
@@ -46,8 +45,6 @@
                     Grid.Column="2"
                     Margin="0, 5, 0, 5"
                     SelectedDate="{Binding Path=TransactionDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-
 
         <TextBlock Text="{Binding Path=DebitHeader, FallbackValue=DEBIT}"
                    Grid.Row="2"
@@ -63,7 +60,6 @@
                   SelectedValue="{Binding Path=SelectedDebitAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   DisplayMemberPath="Display"
                   SelectedValuePath="Value" />
-
 
         <TextBlock Text="{Binding Path=CreditHeader, FallbackValue=CREDIT}"
                    Grid.Row="2"
@@ -81,7 +77,6 @@
                   SelectedValuePath="Value"
                   SelectedValue="{Binding Path=SelectedCreditAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-
         <TextBlock Text="Description"
                    Grid.Row="4"
                    Grid.Column="1"
@@ -97,7 +92,6 @@
                 <behave:TextBoxFocusBehavior />
             </i:Interaction.Behaviors>
         </TextBox>
-
 
         <TextBlock Text="Amount"
                    Grid.Row="5"
@@ -115,8 +109,6 @@
                 <behave:TextBoxFocusBehavior />
             </i:Interaction.Behaviors>
         </TextBox>
-
-
 
         <StackPanel Grid.Row="6"
                     Grid.Column="3"

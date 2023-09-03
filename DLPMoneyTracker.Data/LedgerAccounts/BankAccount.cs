@@ -1,5 +1,4 @@
-﻿using DLPMoneyTracker.Data.ConfigModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,11 +18,11 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         // For backwards compatibility
         
-        public string MoneyAccountId { get; set; }
+        //public string MoneyAccountId { get; set; }
         
-        public MoneyAccountType AccountType { get; set; }
+        //public MoneyAccountType AccountType { get; set; }
 
-        public Guid CategoryId { get { return Guid.Empty; } }
+        //public Guid CategoryId { get { return Guid.Empty; } }
 
         public decimal MonthlyBudgetAmount { get { return decimal.Zero; } }
 
@@ -46,25 +45,25 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
             this.Description = cpy.Description;
             this.OrderBy = cpy.OrderBy;
             this.DateClosedUTC = cpy.DateClosedUTC;
-            this.MoneyAccountId = cpy.MoneyAccountId;
-            this.AccountType = cpy.AccountType;
+            //this.MoneyAccountId = cpy.MoneyAccountId;
+            //this.AccountType = cpy.AccountType;
         }
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        public BankAccount(MoneyAccount old) : this()
-        {
-            this.Convert(old);
-        }
+//#pragma warning disable CS0612 // Type or member is obsolete
+//        public BankAccount(MoneyAccount old) : this()
+//        {
+//            this.Convert(old);
+//        }
 
 
-        public void Convert(MoneyAccount act)
-        {
-            MoneyAccountId = act.ID;
-            Description = act.Description;
-            OrderBy = act.OrderBy;
-            DateClosedUTC = act.DateClosedUTC;
-            AccountType = act.AccountType;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
+//        public void Convert(MoneyAccount act)
+//        {
+//            MoneyAccountId = act.ID;
+//            Description = act.Description;
+//            OrderBy = act.OrderBy;
+//            DateClosedUTC = act.DateClosedUTC;
+//            AccountType = act.AccountType;
+//        }
+//#pragma warning restore CS0612 // Type or member is obsolete
     }
 }

@@ -1,10 +1,6 @@
-﻿using DLPMoneyTracker.Data.LedgerAccounts;
-using DLPMoneyTracker.Data;
-using System;
-using System.Collections.Generic;
+﻿using DLPMoneyTracker.Data;
+using DLPMoneyTracker.Data.LedgerAccounts;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.LedgerEntry
 {
@@ -12,10 +8,9 @@ namespace DLPMoneyTracker2.LedgerEntry
     {
         public DebtPaymentJournalEntryVM(ITrackerConfig config, IJournal journal) : base(journal, config)
         {
-            
         }
 
-        public override bool IsValidTransaction 
+        public override bool IsValidTransaction
         {
             get
             {
@@ -25,18 +20,19 @@ namespace DLPMoneyTracker2.LedgerEntry
                     && this.Amount > decimal.Zero;
             }
         }
-        
-        public override string CreditHeader { get { return "Bank"; } }
-        public override string DebitHeader { get { return "Liability"; } }
 
+        public override string CreditHeader
+        { get { return "Bank"; } }
+        public override string DebitHeader
+        { get { return "Liability"; } }
 
         public override void LoadAccounts()
         {
             this.ValidCreditAccounts.Clear();
             var listBanks = _config.LedgerAccountsList.Where(x => x.JournalType == JournalAccountType.Bank);
-            if(listBanks?.Any() == true)
+            if (listBanks?.Any() == true)
             {
-                foreach(var b in listBanks.OrderBy(o => o.Description))
+                foreach (var b in listBanks.OrderBy(o => o.Description))
                 {
                     this.ValidCreditAccounts.Add(new Core.SpecialDropListItem<IJournalAccount>(b.Description, b));
                 }
@@ -44,16 +40,13 @@ namespace DLPMoneyTracker2.LedgerEntry
 
             this.ValidDebitAccounts.Clear();
             var listLiability = _config.LedgerAccountsList.Where(x => x.JournalType == JournalAccountType.LiabilityCard || x.JournalType == JournalAccountType.LiabilityLoan);
-            if(listLiability?.Any() == true)
+            if (listLiability?.Any() == true)
             {
-                foreach(var l in listLiability.OrderBy(o => o.Description))
+                foreach (var l in listLiability.OrderBy(o => o.Description))
                 {
                     this.ValidDebitAccounts.Add(new Core.SpecialDropListItem<IJournalAccount>(l.Description, l));
                 }
             }
-
-
         }
-
     }
 }

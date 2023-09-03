@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DLPMoneyTracker.Data.Common
 {
@@ -30,7 +28,6 @@ namespace DLPMoneyTracker.Data.Common
             this.Begin = new DateTime(year, month, 1);
             this.End = new DateTime(year, month, DateTime.DaysInMonth(year, month)).AddDays(1).AddMilliseconds(-1);
         }
-
 
         public bool IsWithinRange(DateTime date)
         {

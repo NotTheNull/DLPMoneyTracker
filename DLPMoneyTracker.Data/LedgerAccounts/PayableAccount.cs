@@ -1,5 +1,4 @@
-﻿using DLPMoneyTracker.Data.ConfigModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +18,9 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         public DateTime? DateClosedUTC { get; set; }
 
-        public string MoneyAccountId { get { return string.Empty; } }
-        public MoneyAccountType AccountType { get { return MoneyAccountType.NotSet; } }
-        public Guid CategoryId { get; set; }
+        //public string MoneyAccountId { get { return string.Empty; } }
+        //public MoneyAccountType AccountType { get { return MoneyAccountType.NotSet; } }
+        //public Guid CategoryId { get; set; }
 
         // Exclusive Properties
         public decimal MonthlyBudgetAmount { get; set; }
@@ -47,25 +46,25 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
             this.Description = cpy.Description;
             this.OrderBy = cpy.OrderBy;
             this.DateClosedUTC = cpy.DateClosedUTC;
-            this.CategoryId = cpy.CategoryId;
+            //this.CategoryId = cpy.CategoryId;
             this.MonthlyBudgetAmount = cpy.MonthlyBudgetAmount;
         }
 
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        public PayableAccount(TransactionCategory old) : this()
-        {
-            this.Convert(old);
-        }
+//#pragma warning disable CS0612 // Type or member is obsolete
+//        public PayableAccount(TransactionCategory old) : this()
+//        {
+//            this.Convert(old);
+//        }
 
-        public void Convert(TransactionCategory cat)
-        {
-            CategoryId = cat.ID;
-            Description = cat.Name;
-            DateClosedUTC = cat.DateDeletedUTC;
-            this.ExcludeFromBudget = cat.ExcludeFromBudget;
-            MonthlyBudgetAmount = cat.DefaultMonthlyBudget;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
+//        public void Convert(TransactionCategory cat)
+//        {
+//            CategoryId = cat.ID;
+//            Description = cat.Name;
+//            DateClosedUTC = cat.DateDeletedUTC;
+//            this.ExcludeFromBudget = cat.ExcludeFromBudget;
+//            MonthlyBudgetAmount = cat.DefaultMonthlyBudget;
+//        }
+//#pragma warning restore CS0612 // Type or member is obsolete
     }
 }

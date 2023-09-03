@@ -1,5 +1,4 @@
-﻿using DLPMoneyTracker.Data.ConfigModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,10 +20,10 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
 
         // For backwards compatibility
-        public string MoneyAccountId { get; set; }
-        public MoneyAccountType AccountType { get { return MoneyAccountType.CreditCard; } }
+        //public string MoneyAccountId { get; set; }
+        //public MoneyAccountType AccountType { get { return MoneyAccountType.CreditCard; } }
 
-        public Guid CategoryId { get { return Guid.Empty; } }
+        //public Guid CategoryId { get { return Guid.Empty; } }
 
         public decimal MonthlyBudgetAmount { get { return decimal.Zero; } }
 
@@ -47,25 +46,25 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
             this.Description = cpy.Description;
             this.OrderBy = cpy.OrderBy;
             this.DateClosedUTC = cpy.DateClosedUTC;
-            this.MoneyAccountId = cpy.MoneyAccountId;
+            //this.MoneyAccountId = cpy.MoneyAccountId;
             
         }
 
 
-#pragma warning disable CS0612 // Type or member is obsolete
-        public CreditCardAccount(MoneyAccount old) : this()
+//#pragma warning disable CS0612 // Type or member is obsolete
+//        public CreditCardAccount(MoneyAccount old) : this()
 
-        {
-            this.Convert(old);
-        }
+//        {
+//            this.Convert(old);
+//        }
 
-        public void Convert(MoneyAccount act)
-        {
-            MoneyAccountId = act.ID;
-            Description = act.Description;
-            OrderBy = act.OrderBy;
-            DateClosedUTC = act.DateClosedUTC;
-        }
-#pragma warning restore CS0612 // Type or member is obsolete
+//        public void Convert(MoneyAccount act)
+//        {
+//            MoneyAccountId = act.ID;
+//            Description = act.Description;
+//            OrderBy = act.OrderBy;
+//            DateClosedUTC = act.DateClosedUTC;
+//        }
+//#pragma warning restore CS0612 // Type or member is obsolete
     }
 }

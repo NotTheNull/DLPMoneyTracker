@@ -2,10 +2,7 @@
 using DLPMoneyTracker.Data.ScheduleRecurrence;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
 {
@@ -16,39 +13,45 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
             UID = Guid.NewGuid();
         }
 
-
-
         private List<JournalAccountType> _validDebits = new List<JournalAccountType>()
         {
             JournalAccountType.Bank
         };
-        public List<JournalAccountType> ValidDebitAccountTypes { get { return _validDebits; } }
+
+        public List<JournalAccountType> ValidDebitAccountTypes
+        { get { return _validDebits; } }
 
         private List<JournalAccountType> _validCredits = new List<JournalAccountType>()
         {
             JournalAccountType.Receivable
         };
-        public List<JournalAccountType> ValidCreditAccountTypes { get { return _validCredits; } }
 
+        public List<JournalAccountType> ValidCreditAccountTypes
+        { get { return _validCredits; } }
 
         public Guid UID { get; set; }
 
         public IJournalAccount DebitAccount { get; set; }
-        public Guid DebitAccountId { get { return DebitAccount?.Id ?? Guid.Empty; } }
+        public Guid DebitAccountId
+        { get { return DebitAccount?.Id ?? Guid.Empty; } }
 
-        public string DebitAccountName { get { return DebitAccount?.Description ?? string.Empty; } }
+        public string DebitAccountName
+        { get { return DebitAccount?.Description ?? string.Empty; } }
 
         public IJournalAccount CreditAccount { get; set; }
-        public Guid CreditAccountId { get { return CreditAccount?.Id ?? Guid.Empty; } }
+        public Guid CreditAccountId
+        { get { return CreditAccount?.Id ?? Guid.Empty; } }
 
-        public string CreditAccountName { get { return CreditAccount?.Description ?? string.Empty; } }
+        public string CreditAccountName
+        { get { return CreditAccount?.Description ?? string.Empty; } }
 
-        public JournalPlanType PlanType { get { return JournalPlanType.Receivable; } }
+        public JournalPlanType PlanType
+        { get { return JournalPlanType.Receivable; } }
 
-        public int PriorityOrder { get { return 1; } }
+        public int PriorityOrder
+        { get { return 1; } }
 
         public string Description { get; set; }
-
 
         [JsonIgnore]
         public IScheduleRecurrence Recurrence { get; set; }
@@ -63,13 +66,16 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
         }
 
         [JsonIgnore]
-        public RecurrenceFrequency Frequency { get { return this.Recurrence.Frequency; } }
+        public RecurrenceFrequency Frequency
+        { get { return this.Recurrence.Frequency; } }
 
         [JsonIgnore]
-        public DateTime NotificationDate { get { return this.Recurrence?.NotificationDate.AddDays(1).AddMilliseconds(-1) ?? DateTime.MinValue; } }
+        public DateTime NotificationDate
+        { get { return this.Recurrence?.NotificationDate.AddDays(1).AddMilliseconds(-1) ?? DateTime.MinValue; } }
 
         [JsonIgnore]
-        public DateTime NextOccurrence { get { return this.Recurrence?.NextOccurence ?? DateTime.MaxValue; } }
+        public DateTime NextOccurrence
+        { get { return this.Recurrence?.NextOccurence ?? DateTime.MaxValue; } }
 
         public decimal ExpectedAmount { get; set; }
 
@@ -87,6 +93,5 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
 
             return true;
         }
-
     }
 }
