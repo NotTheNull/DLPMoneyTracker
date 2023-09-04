@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.Main.History
 {
+    // TODO: Finish History UI
     public class HistoryBudgetVM : BaseViewModel
     {
         private readonly ITrackerConfig _config;
