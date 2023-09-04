@@ -238,6 +238,18 @@
                     <TabItem>
                         <TabItem.Header>
                             <StackPanel Orientation="Horizontal">
+                                <TextBlock
+                                    Foreground="Blue"
+                                    Style="{StaticResource TabHeaderLabel}"
+                                    Text="~ Bill Reminders ~" />
+                            </StackPanel>
+                        </TabItem.Header>
+                        <StackPanel x:Name="panelBillReminers" Orientation="Vertical" />
+                    </TabItem>
+                    
+                    <TabItem>
+                        <TabItem.Header>
+                            <StackPanel Orientation="Horizontal">
                                 <TextBlock Style="{StaticResource TabHeaderLabel}" Text="~ Transactions ~" />
                             </StackPanel>
                         </TabItem.Header>

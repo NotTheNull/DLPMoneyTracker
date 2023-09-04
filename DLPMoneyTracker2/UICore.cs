@@ -12,6 +12,7 @@ using DLPMoneyTracker2.Main.BudgetAnalysis;
 using DLPMoneyTracker2.LedgerEntry;
 using DLPMoneyTracker2.Config.AddEditBudgetPlans;
 using DLPMoneyTracker2.Main.History;
+using DLPMoneyTracker2.Main.UpcomingReminders;
 
 namespace DLPMoneyTracker2
 {
@@ -61,6 +62,9 @@ namespace DLPMoneyTracker2
             services.AddTransient<AccountTransactionDetailVM>();
             services.AddTransient<HistoryBudgetVM>();
 
+            services.AddTransient<RemindersUI>();
+            services.AddTransient<RemindersVM>();
+
             // Ledger
             services.AddTransient<IncomeJournalEntryVM>();
             services.AddTransient<ExpenseJournalEntryVM>();
@@ -78,6 +82,7 @@ namespace DLPMoneyTracker2
             services.AddTransient<AddEditBudgetPlanVM>();
             services.AddTransient<RecurrenceEditor>();
             services.AddTransient<RecurrenceEditorVM>();
+
 
         }
 

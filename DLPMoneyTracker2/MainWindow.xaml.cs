@@ -6,6 +6,7 @@ using DLPMoneyTracker2.LedgerEntry;
 using DLPMoneyTracker2.Main.AccountSummary;
 using DLPMoneyTracker2.Main.BudgetAnalysis;
 using DLPMoneyTracker2.Main.TransactionList;
+using DLPMoneyTracker2.Main.UpcomingReminders;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -33,8 +34,9 @@ namespace DLPMoneyTracker2
         private readonly MoneyAccountOverview _viewMoneyAccounts;
         private readonly TransactionDetail _viewTransactions;
         private readonly CurrentMonthBudget _viewBudgetAnalysis;
+        private readonly RemindersUI _viewBillReminders;
 
-        public MainWindow(MoneyAccountOverview viewMain, CurrentMonthBudget viewBudget, TransactionDetail viewDetail)
+        public MainWindow(MoneyAccountOverview viewMain, CurrentMonthBudget viewBudget, TransactionDetail viewDetail, RemindersUI viewBills)
         {
             InitializeComponent();
 
@@ -44,10 +46,12 @@ namespace DLPMoneyTracker2
             panelBudget.Children.Add(viewBudget);
             _viewBudgetAnalysis = viewBudget;
 
+            panelBillReminers.Children.Add(viewBills);
+            _viewBillReminders = viewBills;
+
             panelTransactions.Children.Add(viewDetail);
             _viewTransactions = viewDetail;
 
-            
         }
 
         private void Exit()

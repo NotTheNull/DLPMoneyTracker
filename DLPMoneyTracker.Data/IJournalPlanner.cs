@@ -1,4 +1,5 @@
-﻿using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
+﻿using DLPMoneyTracker.Data.Common;
+using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,6 +23,7 @@ namespace DLPMoneyTracker.Data
         void SaveToFile();
 
         IEnumerable<IJournalPlan> GetUpcomingPlansForAccount(Guid accountId);
+        IEnumerable<IJournalPlan> GetPlansForDateRange(DateRange range);
         void Copy(IJournalPlanner journalPlanner);
 
 //#pragma warning disable CS0618 // Type or member is obsolete
@@ -120,6 +122,15 @@ namespace DLPMoneyTracker.Data
             }
 
             return listPlans;
+        }
+
+        public IEnumerable<IJournalPlan> GetPlansForDateRange(DateRange range)
+        {
+            if (range is null) throw new ArgumentNullException("Date Range");
+            if (range.Begin < new DateTime(DateTime.Today.Year, 1, 1)) return null;
+            if (range.End > new DateTime(DateTime.Today.Year, 12, 31)) return null;
+
+            return this.JournalPlanList.Where(x => range.IsWithinRange(x.NextOccurrence)).ToList();
         }
 
         public void Copy(IJournalPlanner journalPlanner)
