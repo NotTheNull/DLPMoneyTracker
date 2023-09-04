@@ -3,6 +3,7 @@ using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,18 +22,23 @@ namespace DLPMoneyTracker2.Main.UpcomingReminders
         {
             get
             {
-                return _plan.NextOccurrence;
+                return _plan?.NextOccurrence ?? DateTime.MinValue;
             }
+        }
+
+        public string DisplayDate
+        {
+            get { return string.Format("{0:yyyy/MM/dd}", this.DateDue); }
         }
 
         public string Description
         {
-            get { return _plan.Description; }
+            get { return _plan?.Description ?? string.Empty; }
         }
 
         public decimal Amount
         {
-            get { return _plan.ExpectedAmount; }
+            get { return _plan?.ExpectedAmount ?? decimal.Zero; }
         }
     }
 }

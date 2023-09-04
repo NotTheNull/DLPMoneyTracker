@@ -19,9 +19,8 @@
         <DataGrid Grid.Row="1" ItemsSource="{Binding Path=RemindersList}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Date Due"
-                                    Binding="{Binding Path=DateDue}"
-                                    MinWidth="120"
-                                    SortDirection="Ascending" />
+                                    Binding="{Binding Path=DisplayDate}"
+                                    MinWidth="120" />
 
                 <DataGridTextColumn Header="Description"
                                     MinWidth="240"

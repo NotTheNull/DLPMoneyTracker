@@ -22,11 +22,18 @@ namespace DLPMoneyTracker2.Main.UpcomingReminders
             _journal = journal;
             _planner = planner;
 
-            RemindersList = new ObservableCollection<BillDetailVM>();
+            _listBills = new ObservableCollection<BillDetailVM>();
         }
 
 
-        public ObservableCollection<BillDetailVM> RemindersList { get; set; }
+        //public ObservableCollection<BillDetailVM> RemindersList { get; set; }
+        private ObservableCollection<BillDetailVM> _listBills;
+
+        public ObservableCollection<BillDetailVM> RemindersList
+        {
+            get { return _listBills; }
+        }
+
 
 
         public void Load()
@@ -37,7 +44,7 @@ namespace DLPMoneyTracker2.Main.UpcomingReminders
             var listPlans = _planner.GetPlansForDateRange(range);
             if (listPlans?.Any() != true) return;
 
-            foreach(var plan in listPlans)
+            foreach(var plan in listPlans.OrderBy(o => o.NextOccurrence))
             {
                 // See if we already have a transaction for this plan
                 var account = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == plan.CreditAccountId);
