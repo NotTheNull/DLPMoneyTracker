@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.Main.BudgetAnalysis
 {
-    // TODO: Modify feature on the Fixed Expense budget detail to have a split window with two grids, top showing expected future payments, bottom showing existing payments
+    
     public class CurrentMonthBudgetVM : BaseViewModel
     {
         private readonly ITrackerConfig _config;
@@ -47,11 +47,7 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
 
         public decimal MonthlyBalance { get { return this.TotalBudgetIncome - this.TotalExpenseBudget; } }
 
-        // TODO: Add separate totals for Fixed and Variable Expenses
-        // TOOD: Update UI to display separate expense totals under their repsective columns
-
-        // TODO: Think of a way to showcase a list of Non-Required Budget Plans
-
+        
         #region Commands
         private RelayCommand _cmdShowDetail;
         public RelayCommand CommandShowDetail
