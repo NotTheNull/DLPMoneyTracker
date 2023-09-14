@@ -80,6 +80,8 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             {
                 _closeDateUTC = value; 
                 NotifyPropertyChanged(nameof(DateClosedUTC));
+                NotifyPropertyChanged(nameof(IsClosed));
+                NotifyPropertyChanged(nameof(DisplayClosedMessage));
             }
         }
 

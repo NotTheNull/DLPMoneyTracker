@@ -68,13 +68,29 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 
         public DateTime? DateClosedUTC
         {
-            get { return _closeDateUTC; }
+            get { return _closeDateUTC?.ToLocalTime(); }
             set
             {
                 _closeDateUTC = value;
                 NotifyPropertyChanged(nameof(DateClosedUTC));
+                NotifyPropertyChanged(nameof(IsClosed));
+                NotifyPropertyChanged(nameof(DisplayClosedMessage));
             }
         }
+
+        public bool IsClosed { get { return _closeDateUTC.HasValue; } }
+
+
+        public string DisplayClosedMessage
+        {
+            get
+            {
+                if (this.IsClosed) return string.Format("CLOSED: {0}", _closeDateUTC.Value.ToLocalTime());
+
+                return string.Empty;
+            }
+        }
+
 
         // TODO: Add checkbox / bool for whether a particular Ledger Account should be displayed on Budget reports
 
@@ -114,7 +130,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             if (JournalType == JournalAccountType.NotSet) return;
 
             IJournalAccount? acct = null;
-            if(this.Id != Guid.Empty) _config.LedgerAccountsList.FirstOrDefault(x => x.Id == Id);
+            if(this.Id != Guid.Empty) acct = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == Id);
             if (acct is null)
             {
                 acct = JournalAccountFactory.Build(this.Description, this.JournalType, this.MonthlyBudget);
