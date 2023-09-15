@@ -10,6 +10,29 @@ using System.Text.Json;
 
 namespace DLPMoneyTracker.Data
 {
+    public struct JournalAccountSearch
+    {
+        public List<JournalAccountType> JournalTypes;
+        public string NameFilterText;
+        public bool IncludeDeleted;
+
+        public JournalAccountSearch()
+        {
+            JournalTypes = new List<JournalAccountType>();
+            IncludeDeleted = false;
+            NameFilterText = string.Empty;
+        }
+        public JournalAccountSearch(IEnumerable<JournalAccountType> listAccountTypes)
+        {
+            if (listAccountTypes is null) throw new ArgumentNullException(nameof(listAccountTypes));
+
+            JournalTypes = new List<JournalAccountType>();
+            JournalTypes.AddRange(listAccountTypes);
+            IncludeDeleted = false;
+            NameFilterText = string.Empty;
+        }
+    }
+
     public interface ITrackerConfig : IDisposable
     {
 
@@ -19,7 +42,7 @@ namespace DLPMoneyTracker.Data
         //[Obsolete]
         //ReadOnlyCollection<TransactionCategory> CategoryList { get; }
 
-        ReadOnlyCollection<IJournalAccount> LedgerAccountsList { get; }
+        //ReadOnlyCollection<IJournalAccount> LedgerAccountsList { get; }
 
 
         void LoadFromFile(int year);
@@ -27,6 +50,10 @@ namespace DLPMoneyTracker.Data
         void RemoveJournalAccount(Guid accountId);
         void SaveJournalAccounts();
         void LoadJournalAccounts();
+
+        IJournalAccount GetJournalAccount(Guid accountId);
+        IEnumerable<IJournalAccount> GetJournalAccountList(JournalAccountSearch search);
+
 
         //[Obsolete]
         //[EditorBrowsable(EditorBrowsableState.Never)]
@@ -99,7 +126,8 @@ namespace DLPMoneyTracker.Data
 
         private List<IJournalAccount> _listLedgerAccounts = new List<IJournalAccount>();
 
-        public ReadOnlyCollection<IJournalAccount> LedgerAccountsList { get { return _listLedgerAccounts.AsReadOnly(); } }
+        
+        //public ReadOnlyCollection<IJournalAccount> LedgerAccountsList { get { return _listLedgerAccounts.AsReadOnly(); } }
 
 
 
@@ -177,111 +205,28 @@ namespace DLPMoneyTracker.Data
 
         }
 
-        //#region Obsolete Methods
-        //[Obsolete]
-        //public void LoadMoneyAccounts()
-        //{
-        //    if (_listAccts?.Any() == true) _listAccts.Clear();
+        public IJournalAccount GetJournalAccount(Guid accountId)
+        {
+            return _listLedgerAccounts.FirstOrDefault(x => x.Id == accountId);
+        }
+        public IEnumerable<IJournalAccount> GetJournalAccountList(JournalAccountSearch search) 
+        {
+            if (search.JournalTypes.Any() != true) return null;
 
-        //    if (File.Exists(AccountListConfig))
-        //    {
-        //        string json = File.ReadAllText(AccountListConfig);
-        //        _listAccts = (List<MoneyAccount>)JsonSerializer.Deserialize(json, typeof(List<MoneyAccount>));
-        //    }
-        //    else
-        //    {
-        //        _listAccts = new List<MoneyAccount>();
-        //    }
-        //}
-        //[Obsolete]
-        //public void SaveMoneyAccounts()
-        //{
-        //    string json = JsonSerializer.Serialize(_listAccts, typeof(List<MoneyAccount>));
-        //    File.WriteAllText(AccountListConfig, json);
-        //}
-        //[Obsolete]
-        //public void LoadCategories()
-        //{
-        //    if (!(_listCategories is null) && _listCategories.Any()) _listCategories.Clear();
+            var listJournalAccounts = _listLedgerAccounts.Where(x => search.JournalTypes.Contains(x.JournalType));
 
-        //    if (!File.Exists(CategoryListConfig)) return;
+            if(!string.IsNullOrWhiteSpace(search.NameFilterText))
+            {
+                listJournalAccounts = listJournalAccounts.Where(x => x.Description.Contains(search.NameFilterText));
+            }
 
-        //    string json = File.ReadAllText(CategoryListConfig);
-        //    _listCategories = (List<TransactionCategory>)JsonSerializer.Deserialize(json, typeof(List<TransactionCategory>));
-        //    if (_listCategories is null || !_listCategories.Any())
-        //    {
-        //        _listCategories = new List<TransactionCategory>();
-        //        // Could be older version, try Transfer Version
-        //        var dataList = (List<TransactionCategoryJSONTransferVersion>)JsonSerializer.Deserialize(json, typeof(List<TransactionCategoryJSONTransferVersion>));
-        //        if (dataList is null || !dataList.Any()) return;
+            if(!search.IncludeDeleted)
+            {
+                listJournalAccounts = listJournalAccounts.Where(x => !x.DateClosedUTC.HasValue);
+            }
 
-        //        foreach (var cat in dataList)
-        //        {
-        //            _listCategories.Add(new TransactionCategory()
-        //            {
-        //                ID = cat.ID,
-        //                CategoryType = cat.CategoryType,
-        //                Name = cat.Name,
-        //                ExcludeFromBudget = false
-        //            });
-        //        }
-
-        //        this.SaveCategories();
-        //    }
-        //}
-        //[Obsolete]
-        //public void SaveCategories()
-        //{
-        //    string json = JsonSerializer.Serialize(_listCategories.Where(x => x.ID != Guid.Empty).ToList(), typeof(List<TransactionCategory>));
-        //    File.WriteAllText(CategoryListConfig, json);
-        //}
-        //[Obsolete]
-        //public TransactionCategory GetCategory(Guid uid)
-        //{
-        //    if (uid == TransactionCategory.InitialBalance.ID) return TransactionCategory.InitialBalance;
-        //    else if (uid == TransactionCategory.DebtPayment.ID) return TransactionCategory.DebtPayment;
-        //    else if (uid == TransactionCategory.TransferFrom.ID) return TransactionCategory.TransferFrom;
-        //    else if (uid == TransactionCategory.TransferTo.ID) return TransactionCategory.TransferTo;
-        //    else return _listCategories.FirstOrDefault(x => x.ID == uid);
-        //}
-        //[Obsolete]
-        //public MoneyAccount GetAccount(string id)
-        //{
-        //    return _listAccts.FirstOrDefault(x => x.ID == id);
-        //}
-        //[Obsolete]
-        //public void AddCategory(TransactionCategory cat)
-        //{
-        //    if (cat is null) return;
-        //    if (cat.ID == Guid.Empty) return;
-        //    if (_listCategories.Any(x => x.ID == cat.ID)) return;
-        //    _listCategories.Add(cat);
-        //}
-        //[Obsolete]
-        //public void AddMoneyAccount(MoneyAccount act)
-        //{
-        //    if (act is null) return;
-        //    if (string.IsNullOrWhiteSpace(act.ID)) return;
-        //    if (_listAccts.Any(x => x.ID == act.ID)) return;
-        //    _listAccts.Add(act);
-        //}
-        //[Obsolete]
-        //public void RemoveCategory(TransactionCategory cat)
-        //{
-        //    if (cat is null) return;
-        //    if (cat.ID == Guid.Empty) return;
-        //    if (!_listCategories.Any(x => x.ID == cat.ID)) return;
-        //    _listCategories.Remove(cat);
-        //}
-        //[Obsolete]
-        //public void RemoveMoneyAccount(MoneyAccount act)
-        //{
-        //    if (act is null) return;
-        //    if (string.IsNullOrWhiteSpace(act.ID)) return;
-        //    if (!_listAccts.Any(x => x.ID == act.ID)) return;
-        //    _listAccts.Remove(act);
-        //}
-        //#endregion
+            return listJournalAccounts.ToList();
+        }
 
         public void AddLedgerAccount(IJournalAccount act) 
         {
@@ -397,7 +342,11 @@ namespace DLPMoneyTracker.Data
 //#pragma warning restore CS0618 // Type or member is obsolete
 
             _listLedgerAccounts.Clear();
-            foreach(var gl in config.LedgerAccountsList)
+            JournalAccountSearch search = new JournalAccountSearch();
+            search.JournalTypes.AddRange(new List<JournalAccountType>() { JournalAccountType.Bank, JournalAccountType.LiabilityCard, JournalAccountType.LiabilityLoan, JournalAccountType.Payable, JournalAccountType.Receivable });
+            var listPreviousAccounts = config.GetJournalAccountList(search);
+
+            foreach(var gl in listPreviousAccounts)
             {
                 this.AddLedgerAccount(gl);
             }

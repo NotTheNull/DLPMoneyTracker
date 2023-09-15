@@ -269,12 +269,14 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
                     return;
             }
 
-            foreach (var act in _config.LedgerAccountsList.Where(x => plan.ValidCreditAccountTypes.Contains(x.JournalType)).OrderBy(o => o.Description))
+            var listCreditAccounts = _config.GetJournalAccountList(new JournalAccountSearch(plan.ValidCreditAccountTypes));
+            foreach (var act in listCreditAccounts.OrderBy(o => o.Description))
             {
                 this.ValidCreditAccounts.Add(new SpecialDropListItem<IJournalAccount>(act.Description, act));
             }
 
-            foreach (var act in _config.LedgerAccountsList.Where(x => plan.ValidDebitAccountTypes.Contains(x.JournalType)).OrderBy(o => o.Description))
+            var listDebitAccounts = _config.GetJournalAccountList(new JournalAccountSearch(plan.ValidDebitAccountTypes));
+            foreach (var act in listDebitAccounts.OrderBy(o => o.Description))
             {
                 this.ValidDebitAccounts.Add(new SpecialDropListItem<IJournalAccount>(act.Description, act));
             }
@@ -284,8 +286,8 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
         {
             this.BudgetPlanId = plan.UID;
             this.SelectedPlanType = plan.PlanType;
-            this.SelectedCreditAccount = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == plan.CreditAccountId);
-            this.SelectedDebitAccount = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == plan.DebitAccountId);
+            this.SelectedCreditAccount = _config.GetJournalAccount(plan.CreditAccountId);
+            this.SelectedDebitAccount = _config.GetJournalAccount(plan.DebitAccountId);
             this.Description = plan.Description;
             this.Amount = plan.ExpectedAmount;
 

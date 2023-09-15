@@ -1,5 +1,6 @@
 ﻿using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.LedgerAccounts;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DLPMoneyTracker2.LedgerEntry
@@ -9,6 +10,10 @@ namespace DLPMoneyTracker2.LedgerEntry
         public CorrectionJournalEntryVM(ITrackerConfig config, IJournal journal) : base(journal, config)
         {
             this.SelectedCreditAccount = SpecialAccount.UnlistedAdjusment;
+
+            _validDebitTypes.Add(JournalAccountType.Bank);
+            _validDebitTypes.Add(JournalAccountType.LiabilityCard);
+            _validDebitTypes.Add(JournalAccountType.LiabilityLoan);
         }
 
         // One side will always be the Special Account "Unlisted Adjustment"
@@ -30,17 +35,6 @@ namespace DLPMoneyTracker2.LedgerEntry
         public override string DebitHeader
         { get { return "Account"; } }
 
-        public override void LoadAccounts()
-        {
-            this.ValidDebitAccounts.Clear();
-            var listAccounts = _config.LedgerAccountsList.Where(x => x.JournalType != JournalAccountType.NotSet);
-            if (listAccounts?.Any() == true)
-            {
-                foreach (var a in listAccounts.OrderBy(o => o.Description))
-                {
-                    this.ValidDebitAccounts.Add(new Core.SpecialDropListItem<IJournalAccount>(a.Description, a));
-                }
-            }
-        }
+        
     }
 }

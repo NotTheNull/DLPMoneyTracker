@@ -8,6 +8,8 @@ namespace DLPMoneyTracker2.LedgerEntry
     {
         public TransferJournalEntryVM(ITrackerConfig config, IJournal journal) : base(journal, config)
         {
+            _validDebitTypes.Add(JournalAccountType.Bank);
+            _validCreditTypes.Add(JournalAccountType.Bank);
         }
 
         public override bool IsValidTransaction
@@ -26,19 +28,6 @@ namespace DLPMoneyTracker2.LedgerEntry
         public override string DebitHeader
         { get { return "Xfer To"; } }
 
-        public override void LoadAccounts()
-        {
-            this.ValidCreditAccounts.Clear();
-            this.ValidDebitAccounts.Clear();
-            var listBanks = _config.LedgerAccountsList.Where(x => x.JournalType == JournalAccountType.Bank);
-            if (listBanks?.Any() == true)
-            {
-                foreach (var b in listBanks.OrderBy(o => o.Description))
-                {
-                    this.ValidCreditAccounts.Add(new Core.SpecialDropListItem<IJournalAccount>(b.Description, b));
-                    this.ValidDebitAccounts.Add(new Core.SpecialDropListItem<IJournalAccount>(b.Description, b));
-                }
-            }
-        }
+        
     }
 }

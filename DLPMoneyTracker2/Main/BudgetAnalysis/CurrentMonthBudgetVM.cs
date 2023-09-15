@@ -87,9 +87,10 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
             _listFixed.Clear();
             _listVariable.Clear();
 
-            if (_config.LedgerAccountsList?.Any() != true) return;
+            var listAccounts = _config.GetJournalAccountList(new JournalAccountSearch(ValidBudgetTypes));
+            if (listAccounts?.Any() != true) return;
 
-            foreach (var act in _config.LedgerAccountsList.Where(x => ValidBudgetTypes.Contains(x.JournalType)))
+            foreach (var act in listAccounts)
             {
                 JournalAccountBudgetVM budget = UICore.DependencyHost.GetRequiredService<JournalAccountBudgetVM>();
                 budget.Load(act);

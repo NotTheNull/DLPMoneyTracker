@@ -147,7 +147,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
 
 
             IJournalAccount? acct = null;
-            if(this.Id != Guid.Empty) acct = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == this.Id);
+            if (this.Id != Guid.Empty) acct = _config.GetJournalAccount(this.Id);
 
             if (acct is null)
             {

@@ -32,7 +32,8 @@ namespace DLPMoneyTracker2.Main.AccountSummary
         public void Load()
         {
             _listAcctSummary.Clear();
-            foreach (var act in _config.LedgerAccountsList.Where(x => _listValidTypes.Contains(x.JournalType) && x.DateClosedUTC is null).OrderBy(o => o.OrderBy).ThenBy(o => o.Description))
+            var listAccounts = _config.GetJournalAccountList(new JournalAccountSearch(_listValidTypes));
+            foreach (var act in listAccounts.OrderBy(o => o.OrderBy).ThenBy(o => o.Description))
             {
                 MoneyAccountSummaryVM summary = UICore.DependencyHost.GetRequiredService<MoneyAccountSummaryVM>();
                 summary.LoadAccount(act);
@@ -51,13 +52,13 @@ namespace DLPMoneyTracker2.Main.AccountSummary
 
             bool hasNEWAccounts(IJournalAccount act)
             {
-                return _listValidTypes.Contains(act.JournalType)
-                    && !this.AccountSummaryList.Any(x => x.AccountId == act.Id);
+                return !this.AccountSummaryList.Any(x => x.AccountId == act.Id);
             }
 
-            if (_config.LedgerAccountsList.Any(hasNEWAccounts))
+            var listAccounts = _config.GetJournalAccountList(new JournalAccountSearch(_listValidTypes));
+            if (listAccounts.Any(hasNEWAccounts))
             {
-                foreach (var act in _config.LedgerAccountsList.Where(hasNEWAccounts))
+                foreach (var act in listAccounts.Where(hasNEWAccounts))
                 {
                     MoneyAccountSummaryVM summary = UICore.DependencyHost.GetRequiredService<MoneyAccountSummaryVM>();
                     summary.LoadAccount(act);

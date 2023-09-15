@@ -4,6 +4,8 @@ using DLPMoneyTracker.Data.TransactionModels;
 using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
 using DLPMoneyTracker2.Core;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -13,9 +15,11 @@ namespace DLPMoneyTracker2.LedgerEntry
     {
         bool IsValidTransaction { get; }
         DateTime TransactionDate { get; }
+
         string DebitHeader { get; }
         ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidDebitAccounts { get; }
         IJournalAccount SelectedDebitAccount { get; }
+
 
         string CreditHeader { get; }
         ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidCreditAccounts { get; }
@@ -40,6 +44,9 @@ namespace DLPMoneyTracker2.LedgerEntry
         protected readonly IJournal _journal;
         protected readonly ITrackerConfig _config;
 
+        protected readonly List<JournalAccountType> _validDebitTypes = new List<JournalAccountType>();
+        protected readonly List<JournalAccountType> _validCreditTypes = new List<JournalAccountType>();
+
         public BaseRecordJournalEntryVM(IJournal journal, ITrackerConfig config)
         {
             _config = config;
@@ -63,6 +70,7 @@ namespace DLPMoneyTracker2.LedgerEntry
 
         public abstract bool IsValidTransaction { get; }
 
+
         protected ObservableCollection<SpecialDropListItem<IJournalAccount>> _listValidDebits = new ObservableCollection<SpecialDropListItem<IJournalAccount>>();
         public ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidDebitAccounts
         { get { return _listValidDebits; } }
@@ -83,6 +91,7 @@ namespace DLPMoneyTracker2.LedgerEntry
 
         public virtual bool IsCreditEnabled
         { get { return true; } }
+
 
         protected ObservableCollection<SpecialDropListItem<IJournalAccount>> _listValidCredits = new ObservableCollection<SpecialDropListItem<IJournalAccount>>();
         public ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidCreditAccounts
@@ -135,7 +144,28 @@ namespace DLPMoneyTracker2.LedgerEntry
             this.SelectedDebitAccount = null;
         }
 
-        public abstract void LoadAccounts();
+        public virtual void LoadAccounts()
+        {
+            this.ValidCreditAccounts.Clear();
+            var listCredits = _config.GetJournalAccountList(new JournalAccountSearch(_validCreditTypes));
+            if (listCredits?.Any() == true)
+            {
+                foreach (var c in listCredits.OrderBy(o => o.Description))
+                {
+                    this.ValidCreditAccounts.Add(new Core.SpecialDropListItem<IJournalAccount>(c.Description, c));
+                }
+            }
+
+            this.ValidDebitAccounts.Clear();
+            var listDebits = _config.GetJournalAccountList(new JournalAccountSearch(_validDebitTypes));
+            if (listDebits?.Any() == true)
+            {
+                foreach (var d in listDebits.OrderBy(o => o.Description))
+                {
+                    this.ValidDebitAccounts.Add(new Core.SpecialDropListItem<IJournalAccount>(d.Description, d));
+                }
+            }
+        }
 
         public virtual void SaveTransaction()
         {
@@ -155,8 +185,8 @@ namespace DLPMoneyTracker2.LedgerEntry
         public void FillFromPlan(IJournalPlan plan)
         {
             this.TransactionDate = DateTime.Today;
-            this.SelectedCreditAccount = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == plan.CreditAccountId);
-            this.SelectedDebitAccount = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == plan.DebitAccountId);
+            this.SelectedCreditAccount = _config.GetJournalAccount(plan.CreditAccountId); 
+            this.SelectedDebitAccount = _config.GetJournalAccount(plan.DebitAccountId);
             this.Description = plan.Description;
             this.Amount = plan.ExpectedAmount;
         }

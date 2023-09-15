@@ -47,7 +47,7 @@ namespace DLPMoneyTracker2.Main.UpcomingReminders
             foreach(var plan in listPlans.OrderBy(o => o.NextOccurrence))
             {
                 // See if we already have a transaction for this plan
-                var account = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == plan.CreditAccountId);
+                var account = _config.GetJournalAccount(plan.CreditAccountId);
                 var transactions = _journal.Search(new JournalSearchFilter(plan, account));
                 if (transactions?.Any() == true) continue;
 

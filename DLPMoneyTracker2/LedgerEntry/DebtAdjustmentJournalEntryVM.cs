@@ -1,6 +1,7 @@
 ﻿using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.LedgerAccounts;
 using DLPMoneyTracker.Data.TransactionModels;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DLPMoneyTracker2.LedgerEntry
@@ -9,6 +10,8 @@ namespace DLPMoneyTracker2.LedgerEntry
     {
         public DebtAdjustmentJournalEntryVM(ITrackerConfig config, IJournal journal) : base(journal, config)
         {
+            _validCreditTypes.Add(JournalAccountType.LiabilityLoan);
+            _validCreditTypes.Add(JournalAccountType.LiabilityCard);
         }
 
         public override bool IsValidTransaction
@@ -28,21 +31,16 @@ namespace DLPMoneyTracker2.LedgerEntry
         public override string CreditHeader
         { get { return "Action"; } }
 
+
+        
         public override void LoadAccounts()
         {
+            base.LoadAccounts();
+
             this.ValidCreditAccounts.Clear();
             this.ValidCreditAccounts.Add(new Core.SpecialDropListItem<IJournalAccount>(SpecialAccount.DebtInterest.Description, SpecialAccount.DebtInterest));
             this.ValidCreditAccounts.Add(new Core.SpecialDropListItem<IJournalAccount>(SpecialAccount.DebtReduction.Description, SpecialAccount.DebtReduction));
 
-            this.ValidDebitAccounts.Clear();
-            var listLiability = _config.LedgerAccountsList.Where(x => x.JournalType == JournalAccountType.LiabilityCard || x.JournalType == JournalAccountType.LiabilityLoan);
-            if (listLiability?.Any() == true)
-            {
-                foreach (var l in listLiability.OrderBy(o => o.Description))
-                {
-                    this.ValidDebitAccounts.Add(new Core.SpecialDropListItem<IJournalAccount>(l.Description, l));
-                }
-            }
         }
 
         /// <summary>

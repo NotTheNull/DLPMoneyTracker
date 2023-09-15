@@ -95,8 +95,8 @@ namespace DLPMoneyTracker.Data.TransactionModels
                 this.Description = json.Description;
                 this.TransactionAmount = json.TransactionAmount;
 
-                this.DebitAccount = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == json.DebitAccountId);
-                this.CreditAccount = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == json.CreditAccountId);
+                this.DebitAccount = _config.GetJournalAccount(json.DebitAccountId);
+                this.CreditAccount = _config.GetJournalAccount(json.CreditAccountId);
             }
             else if (cpy is JournalEntry je)
             {

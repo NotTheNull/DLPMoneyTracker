@@ -156,10 +156,10 @@ namespace DLPMoneyTracker.Data
                 {
                     if(isBudgetBalance)
                     {
-                        var accountCredit = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == t.CreditAccountId);
+                        var accountCredit = _config.GetJournalAccount(t.CreditAccountId);
                         if (accountCredit.ExcludeFromBudget) continue;
 
-                        var accountDebit = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == t.DebitAccountId);
+                        var accountDebit = _config.GetJournalAccount(t.DebitAccountId);
                         if (accountDebit.ExcludeFromBudget) continue;
                     }
 
@@ -218,10 +218,11 @@ namespace DLPMoneyTracker.Data
         {
             if (oldJournal is null) throw new ArgumentNullException("Journal");
 
-            List<JournalAccountType> listMoneyAccounts = new List<JournalAccountType>() { JournalAccountType.Bank, JournalAccountType.LiabilityCard, JournalAccountType.LiabilityLoan };
+            JournalAccountSearch search = new JournalAccountSearch(new List<JournalAccountType>() { JournalAccountType.Bank, JournalAccountType.LiabilityCard, JournalAccountType.LiabilityLoan });
 
             _listTransactions.RemoveAll(x => x.DebitAccountId == SpecialAccount.InitialBalance.Id || x.CreditAccountId == SpecialAccount.InitialBalance.Id);
-            foreach(var account in _config.LedgerAccountsList.Where(x => listMoneyAccounts.Contains(x.JournalType)))
+            var listAccounts = _config.GetJournalAccountList(search);
+            foreach(var account in listAccounts)
             {
                 JournalEntry record = new JournalEntry(_config)
                 {

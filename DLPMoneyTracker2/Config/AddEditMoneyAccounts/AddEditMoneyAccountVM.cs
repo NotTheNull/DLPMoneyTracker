@@ -119,7 +119,8 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
         public void ReloadAccounts()
         {
             this.AccountList.Clear();
-            foreach (var act in _config.LedgerAccountsList.Where(x => MoneyAccountVM.ValidTypes.Contains(x.JournalType)))
+            var listValidAccounts = _config.GetJournalAccountList(new JournalAccountSearch(MoneyAccountVM.ValidTypes));
+            foreach (var act in listValidAccounts)
             {
                 this.AccountList.Add(new MoneyAccountVM(_config, _journal, act));
             }

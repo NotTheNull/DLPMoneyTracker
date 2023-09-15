@@ -8,8 +8,8 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
     {
         public static IJournalPlan Build(ITrackerConfig config, JournalPlanJSON json)
         {
-            var credit = config.LedgerAccountsList.FirstOrDefault(x => x.Id == json.CreditAccountId);
-            var debit = config.LedgerAccountsList.FirstOrDefault(x => x.Id == json.DebitAccountId);
+            var credit = config.GetJournalAccount(json.CreditAccountId);
+            var debit = config.GetJournalAccount(json.DebitAccountId);
             var recurrence = ScheduleRecurrenceFactory.Build(json.RecurrenceJSON);
 
             switch (json.PlanType)
