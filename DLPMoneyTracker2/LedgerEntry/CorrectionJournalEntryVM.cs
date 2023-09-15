@@ -7,18 +7,13 @@ namespace DLPMoneyTracker2.LedgerEntry
 {
     public class CorrectionJournalEntryVM : BaseRecordJournalEntryVM
     {
-        public CorrectionJournalEntryVM(ITrackerConfig config, IJournal journal) : base(journal, config)
+        public CorrectionJournalEntryVM(ITrackerConfig config, IJournal journal) : base(journal, config, new List<JournalAccountType>() { JournalAccountType.Bank, JournalAccountType.LiabilityCard, JournalAccountType.LiabilityLoan }, new List<JournalAccountType>())
         {
             this.SelectedCreditAccount = SpecialAccount.UnlistedAdjusment;
-
-            _validDebitTypes.Add(JournalAccountType.Bank);
-            _validDebitTypes.Add(JournalAccountType.LiabilityCard);
-            _validDebitTypes.Add(JournalAccountType.LiabilityLoan);
         }
 
         // One side will always be the Special Account "Unlisted Adjustment"
-        public override bool IsCreditEnabled
-        { get { return false; } }
+        public override bool IsCreditEnabled { get { return false; } }
 
         public override bool IsValidTransaction
         {
@@ -35,6 +30,6 @@ namespace DLPMoneyTracker2.LedgerEntry
         public override string DebitHeader
         { get { return "Account"; } }
 
-        
+
     }
 }

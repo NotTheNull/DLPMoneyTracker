@@ -7,11 +7,10 @@ namespace DLPMoneyTracker2.LedgerEntry
 {
     public class DebtPaymentJournalEntryVM : BaseRecordJournalEntryVM
     {
-        public DebtPaymentJournalEntryVM(ITrackerConfig config, IJournal journal) : base(journal, config)
+        public DebtPaymentJournalEntryVM(ITrackerConfig config, IJournal journal) : 
+            base(journal, config, new List<JournalAccountType>() { JournalAccountType.LiabilityCard, JournalAccountType.LiabilityLoan}, new List<JournalAccountType>() { JournalAccountType.Bank})
         {
-            _validCreditTypes.Add(JournalAccountType.Bank);
-            _validDebitTypes.Add(JournalAccountType.LiabilityCard);
-            _validDebitTypes.Add(JournalAccountType.LiabilityLoan);
+            
         }
 
         public override bool IsValidTransaction

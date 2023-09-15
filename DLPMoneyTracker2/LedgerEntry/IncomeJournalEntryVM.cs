@@ -1,15 +1,16 @@
 ﻿using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.LedgerAccounts;
+using System.Collections.Generic;
 using System.Linq;
+
 
 namespace DLPMoneyTracker2.LedgerEntry
 {
     public class IncomeJournalEntryVM : BaseRecordJournalEntryVM
     {
-        public IncomeJournalEntryVM(ITrackerConfig config, IJournal journal) : base(journal, config)
+        public IncomeJournalEntryVM(ITrackerConfig config, IJournal journal) : base(journal, config, new List<JournalAccountType>() { JournalAccountType.Bank}, new List<JournalAccountType>() { JournalAccountType.Receivable})
         {
-            _validDebitTypes.Add(JournalAccountType.Bank);
-            _validCreditTypes.Add(JournalAccountType.Receivable);
+            
         }
 
         public override string DebitHeader

@@ -64,6 +64,7 @@
         <TextBlock Text="{Binding Path=CreditHeader, FallbackValue=CREDIT}"
                    Grid.Row="2"
                    Grid.Column="3"
+                   Visibility="{Binding Path=IsCreditEnabled, Converter={StaticResource convertBoolToVisibility}}"
                    Style="{StaticResource StandardHeaderLabel}" />
 
         <ComboBox x:Name="cboCategory"
@@ -72,6 +73,7 @@
                   Width="120"
                   HorizontalAlignment="Left"
                   Margin="0, 5, 0, 5"
+                  Visibility="{Binding Path=IsCreditEnabled, Converter={StaticResource convertBoolToVisibility}}"
                   ItemsSource="{Binding Path=ValidCreditAccounts}"
                   DisplayMemberPath="Display"
                   SelectedValuePath="Value"

@@ -44,14 +44,16 @@ namespace DLPMoneyTracker2.LedgerEntry
         protected readonly IJournal _journal;
         protected readonly ITrackerConfig _config;
 
-        protected readonly List<JournalAccountType> _validDebitTypes = new List<JournalAccountType>();
-        protected readonly List<JournalAccountType> _validCreditTypes = new List<JournalAccountType>();
+        private readonly List<JournalAccountType> _validDebitTypes = new List<JournalAccountType>();
+        private readonly List<JournalAccountType> _validCreditTypes = new List<JournalAccountType>();
 
-        public BaseRecordJournalEntryVM(IJournal journal, ITrackerConfig config)
+        public BaseRecordJournalEntryVM(IJournal journal, ITrackerConfig config, IEnumerable<JournalAccountType> validDebitTypes, IEnumerable<JournalAccountType> validCreditTypes)
         {
             _config = config;
             _journal = journal;
             _date = DateTime.Today;
+            _validDebitTypes.AddRange(validDebitTypes);
+            _validCreditTypes.AddRange(validCreditTypes);
             this.LoadAccounts();
             this.NotifyAll();
         }
@@ -89,8 +91,7 @@ namespace DLPMoneyTracker2.LedgerEntry
             }
         }
 
-        public virtual bool IsCreditEnabled
-        { get { return true; } }
+        public virtual bool IsCreditEnabled { get { return true; } }
 
 
         protected ObservableCollection<SpecialDropListItem<IJournalAccount>> _listValidCredits = new ObservableCollection<SpecialDropListItem<IJournalAccount>>();
@@ -110,6 +111,8 @@ namespace DLPMoneyTracker2.LedgerEntry
                 NotifyPropertyChanged(nameof(SelectedCreditAccount));
             }
         }
+
+
 
         protected string _desc;
 
