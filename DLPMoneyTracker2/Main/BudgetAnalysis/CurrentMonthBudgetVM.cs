@@ -17,11 +17,20 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
     public class CurrentMonthBudgetVM : BaseViewModel
     {
         private readonly ITrackerConfig _config;
+        private readonly IJournal _journal;
 
-        public CurrentMonthBudgetVM(ITrackerConfig config)
+        public CurrentMonthBudgetVM(ITrackerConfig config, IJournal journal)
         {
             _config = config;
+            _journal = journal;
+
+            _journal.JournalModified += _journal_JournalModified;
             this.Load();
+        }
+
+        private void _journal_JournalModified()
+        {
+            this.NotifyAll();
         }
 
 

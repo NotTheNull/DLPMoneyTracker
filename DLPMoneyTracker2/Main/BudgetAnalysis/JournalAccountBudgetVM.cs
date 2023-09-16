@@ -6,6 +6,7 @@ using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -26,10 +27,16 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
             _journal = journal;
             _planner = planner;
             _config = config;
+
             _currMon = decimal.Zero;
+            _journal.JournalModified += _journal_JournalModified;
         }
 
-        
+        private void _journal_JournalModified()
+        {
+            this.Refresh();
+        }
+
         private List<IJournalPlan> _listPlans = new List<IJournalPlan>();
 
         private IJournalAccount _account;
@@ -99,13 +106,17 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
         public void Load(IJournalAccount account)
         {
             _account = account;
-            this.CurrentMonthTotal = _journal.GetAccountBalance_CurrentMonth(this.AccountId, true);
-            
-            if(_planner.JournalPlanList.Any(x => x.DebitAccountId == account.Id || x.CreditAccountId == account.Id))
-            {
-                _listPlans.AddRange(_planner.JournalPlanList.Where(x => x.DebitAccountId == account.Id || x.CreditAccountId == account.Id));
-            }
+            this.Refresh();
+        }
 
+        public void Refresh()
+        {
+            this.CurrentMonthTotal = _journal.GetAccountBalance_CurrentMonth(this.AccountId, true);
+
+            if (_planner.JournalPlanList.Any(x => x.DebitAccountId == _account.Id || x.CreditAccountId == _account.Id))
+            {
+                _listPlans.AddRange(_planner.JournalPlanList.Where(x => x.DebitAccountId == _account.Id || x.CreditAccountId == _account.Id));
+            }
             this.NotifyAll();
         }
 

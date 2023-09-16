@@ -22,7 +22,13 @@ namespace DLPMoneyTracker2.Main.UpcomingReminders
             _journal = journal;
             _planner = planner;
 
+            _journal.JournalModified += _journal_JournalModified;
             _listBills = new ObservableCollection<BillDetailVM>();
+        }
+
+        private void _journal_JournalModified()
+        {
+            this.Load();
         }
 
 
