@@ -16,7 +16,7 @@ using DLPMoneyTracker2.Main.UpcomingReminders;
 
 namespace DLPMoneyTracker2
 {
-    // TODO: Add Year-To-Date UI on the Main Tabs
+    // TODO: Add Year-To-Date UI on the Main Tabs; Will only show Receivables & Payables
     internal static class UICore
     {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
