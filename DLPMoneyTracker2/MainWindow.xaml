@@ -254,10 +254,28 @@
                             </StackPanel>
                         </TabItem.Header>
                         <StackPanel
-                        x:Name="panelTransactions"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch"
-                        Orientation="Vertical" />
+                            x:Name="panelTransactions"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Orientation="Vertical" />
+                    </TabItem>
+
+                    <TabItem>
+                        <TabItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock 
+                                    Foreground="Purple"
+                                    Style="{StaticResource TabHeaderLabel}" 
+                                    Text="~ Year To Date ~" />
+                            </StackPanel>
+                        </TabItem.Header>
+
+                        <StackPanel
+                            x:Name="panelYTD"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Orientation="Vertical" />
+
                     </TabItem>
                 </TabControl>
             </Grid>
