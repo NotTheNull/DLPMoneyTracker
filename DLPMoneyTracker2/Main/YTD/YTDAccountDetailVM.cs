@@ -1,6 +1,7 @@
 ﻿using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.LedgerAccounts;
 using DLPMoneyTracker2.Core;
+using DLPMoneyTracker2.Main.TransactionList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,14 +44,23 @@ namespace DLPMoneyTracker2.Main.YTD
 
         #region Commands
         private RelayCommand _cmdTransactions;
-        public RelayCommand CommandTransactionDetail
+        public RelayCommand CommandShowDetail
         {
             get
             {
-                return _cmdTransactions ?? (_cmdTransactions = new RelayCommand((monthObj) =>
+                return _cmdTransactions ?? (_cmdTransactions = new RelayCommand((o) =>
                 {
-                    // TODO: Finish transaction detail for YTD buckets
 
+                    DateTime start = new DateTime(DateTime.Today.Year, 1, 1);
+                    DateTime end = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month));
+                    TransDetailFilter filter = new TransDetailFilter()
+                    {
+                        Account = _account,
+                        FilterDates = new DLPMoneyTracker.Data.Common.DateRange(start, end),
+                        AreFilterControlsVisible = false
+                    };
+                    AccountTransactionDetail window = new AccountTransactionDetail(filter);
+                    window.Show();
 
                 }));
             }

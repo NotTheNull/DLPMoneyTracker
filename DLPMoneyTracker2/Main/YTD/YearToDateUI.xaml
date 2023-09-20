@@ -38,6 +38,22 @@
                                     MinWidth="200"
                                     Binding="{Binding Path=AccountName}"
                                     />
+
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding Path=CommandShowDetail}"
+                                    CommandParameter="{Binding Path=Account}"
+                                    Style="{StaticResource MenuButton}"
+                                    Margin="0"> 
+                                <Button.Content>
+                                    <Image Source="/Icons/Stock-Exchange-256.png" />
+                                </Button.Content>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
                 <DataGridTextColumn Header="YTD"
                                     MinWidth="100"
                                     Binding="{Binding Path=YearTotal, Converter={StaticResource convertDecimalToDisplay}}"
@@ -106,6 +122,20 @@
                             MinWidth="200"
                             Binding="{Binding Path=AccountName}"
                             />
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding Path=CommandShowDetail}"
+                                    CommandParameter="{Binding Path=Account}"
+                                    Style="{StaticResource MenuButton}"
+                                    Margin="0">
+                                <Button.Content>
+                                    <Image Source="/Icons/Stock-Exchange-256.png" />
+                                </Button.Content>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Header="YTD"
                                     MinWidth="100"
                                     Binding="{Binding Path=YearTotal, Converter={StaticResource convertDecimalToDisplay}}"
