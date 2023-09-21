@@ -28,6 +28,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
         }
 
         private ObservableCollection<SingleAccountDetailVM> _listRecords = new ObservableCollection<SingleAccountDetailVM>();
+
         public ObservableCollection<SingleAccountDetailVM> DisplayRecordsList
         { get { return _listRecords; } }
 
@@ -197,10 +198,13 @@ namespace DLPMoneyTracker2.Main.TransactionList
 
         public Guid ParentId
         { get { return _parent.Id; } }
+
         public bool IsCredit
         { get { return _je.CreditAccountId == ParentId; } }
+
         public string AccountName
         { get { return IsCredit ? _je.DebitAccountName : _je.CreditAccountName; } }
+
         public string TransactionDescription
         { get { return _je.Description; } }
 

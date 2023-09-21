@@ -54,6 +54,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
         }
 
         private ObservableCollection<JournalPlanVM> _listPlans = new ObservableCollection<JournalPlanVM>();
+
         public ObservableCollection<JournalPlanVM> PlanList
         { get { return _listPlans; } }
 

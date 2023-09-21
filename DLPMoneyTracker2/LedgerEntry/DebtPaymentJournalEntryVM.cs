@@ -1,16 +1,14 @@
 ﻿using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.LedgerAccounts;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DLPMoneyTracker2.LedgerEntry
 {
     public class DebtPaymentJournalEntryVM : BaseRecordJournalEntryVM
     {
-        public DebtPaymentJournalEntryVM(ITrackerConfig config, IJournal journal) : 
-            base(journal, config, new List<JournalAccountType>() { JournalAccountType.LiabilityCard, JournalAccountType.LiabilityLoan}, new List<JournalAccountType>() { JournalAccountType.Bank})
+        public DebtPaymentJournalEntryVM(ITrackerConfig config, IJournal journal) :
+            base(journal, config, new List<JournalAccountType>() { JournalAccountType.LiabilityCard, JournalAccountType.LiabilityLoan }, new List<JournalAccountType>() { JournalAccountType.Bank })
         {
-            
         }
 
         public override bool IsValidTransaction
@@ -26,9 +24,8 @@ namespace DLPMoneyTracker2.LedgerEntry
 
         public override string CreditHeader
         { get { return "Bank"; } }
+
         public override string DebitHeader
         { get { return "Liability"; } }
-
-        
     }
 }

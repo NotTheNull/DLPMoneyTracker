@@ -78,7 +78,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Vertical">
-                                
+
                                 <StackPanel Orientation="Horizontal" Visibility="{Binding Path=IsClosed, Converter={StaticResource convertBoolToVisibility}, ConverterParameter=R}">
                                     <Button x:Name="btnEdit"
                                         ToolTip="Edit Account"
@@ -95,7 +95,7 @@
                                         <Image Source="/Icons/Garbage-Closed-256.png" />
                                     </Button>
                                 </StackPanel>
-                                
+
                                 <StackPanel Orientation="Horizontal" Visibility="{Binding Path=IsClosed, Converter={StaticResource convertBoolToVisibility}}">
                                     <TextBlock Text="{Binding Path=DisplayClosedMessage}" />
                                 </StackPanel>

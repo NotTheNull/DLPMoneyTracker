@@ -1,11 +1,8 @@
 ﻿using DLPMoneyTracker.Data;
 using DLPMoneyTracker2.Core;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.Main.YTD
 {
@@ -39,7 +36,6 @@ namespace DLPMoneyTracker2.Main.YTD
         public ObservableCollection<YTDAccountDetailVM> IncomeAccountDetailList { get; set; }
         public ObservableCollection<YTDAccountDetailVM> ExpenseAccountDetailList { get; set; }
 
-
         private void Load()
         {
             IncomeAccountDetailList.Clear();
@@ -49,13 +45,13 @@ namespace DLPMoneyTracker2.Main.YTD
             search.IncludeDeleted = true;
             search.JournalTypes.Add(DLPMoneyTracker.Data.LedgerAccounts.JournalAccountType.Receivable);
             search.JournalTypes.Add(DLPMoneyTracker.Data.LedgerAccounts.JournalAccountType.Payable);
-            
+
             var listAccounts = _config.GetJournalAccountList(search);
             if (listAccounts?.Any() != true) return;
 
-            foreach(var act in listAccounts)
+            foreach (var act in listAccounts)
             {
-                if(act.JournalType == DLPMoneyTracker.Data.LedgerAccounts.JournalAccountType.Receivable)
+                if (act.JournalType == DLPMoneyTracker.Data.LedgerAccounts.JournalAccountType.Receivable)
                 {
                     IncomeAccountDetailList.Add(new YTDAccountDetailVM(_year, act, _config, _journal));
                 }
@@ -64,8 +60,6 @@ namespace DLPMoneyTracker2.Main.YTD
                     ExpenseAccountDetailList.Add(new YTDAccountDetailVM(_year, act, _config, _journal));
                 }
             }
-
         }
-
     }
 }

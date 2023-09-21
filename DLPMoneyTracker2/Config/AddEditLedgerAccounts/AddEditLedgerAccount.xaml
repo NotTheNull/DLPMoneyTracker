@@ -81,8 +81,7 @@
                             <StackPanel Orientation="Vertical">
 
                                 <StackPanel Orientation="Horizontal"
-                                            Visibility="{Binding Path=IsClosed, Converter={StaticResource convertBoolToVisibility}, ConverterParameter=R}"
-                                            >
+                                            Visibility="{Binding Path=IsClosed, Converter={StaticResource convertBoolToVisibility}, ConverterParameter=R}">
                                     <Button x:Name="btnEdit"
                                         ToolTip="Edit Account"
                                         Style="{StaticResource MenuButton}"
@@ -102,7 +101,6 @@
                                 <StackPanel Orientation="Horizontal" Visibility="{Binding Path=IsClosed, Converter={StaticResource convertBoolToVisibility}}">
                                     <TextBlock Text="{Binding Path=DisplayClosedMessage}" />
                                 </StackPanel>
-
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

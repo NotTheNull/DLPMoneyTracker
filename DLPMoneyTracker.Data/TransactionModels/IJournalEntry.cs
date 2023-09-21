@@ -1,6 +1,5 @@
 ﻿using DLPMoneyTracker.Data.LedgerAccounts;
 using System;
-using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace DLPMoneyTracker.Data.TransactionModels
@@ -73,13 +72,18 @@ namespace DLPMoneyTracker.Data.TransactionModels
         public DateTime TransactionDate { get; set; }
 
         public IJournalAccount DebitAccount { get; set; }
+
         public Guid DebitAccountId
         { get { return DebitAccount?.Id ?? Guid.Empty; } }
+
         public string DebitAccountName
         { get { return DebitAccount?.Description ?? string.Empty; } }
+
         public IJournalAccount CreditAccount { get; set; }
+
         public Guid CreditAccountId
         { get { return CreditAccount?.Id ?? Guid.Empty; } }
+
         public string CreditAccountName
         { get { return CreditAccount?.Description ?? string.Empty; } }
 

@@ -1,14 +1,10 @@
 ﻿using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.LedgerAccounts;
-using DLPMoneyTracker.Data.TransactionModels;
 using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
 using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace DLPMoneyTracker2.Main.BudgetAnalysis
@@ -19,8 +15,8 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
         private readonly IJournalPlanner _planner;
         private readonly ITrackerConfig _config;
 
-
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
         public JournalAccountBudgetVM(ITrackerConfig config, IJournalPlanner planner, IJournal journal)
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
@@ -40,10 +36,15 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
         private List<IJournalPlan> _listPlans = new List<IJournalPlan>();
 
         private IJournalAccount _account;
-        public IJournalAccount Account { get { return _account; } }
-        public Guid AccountId { get { return _account.Id; } }
-        public string AccountDesc { get { return _account.Description; } }
 
+        public IJournalAccount Account
+        { get { return _account; } }
+
+        public Guid AccountId
+        { get { return _account.Id; } }
+
+        public string AccountDesc
+        { get { return _account.Description; } }
 
         public decimal MonthlyBudget
         {
@@ -63,8 +64,6 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
             }
         }
 
-
-
         // NOTE: even if the account is closed, if there are transactions then it should be visible
         public bool IsVisible
         {
@@ -79,14 +78,12 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
         public decimal CurrentMonthTotal
         {
             get { return _currMon; }
-            set 
-            { 
+            set
+            {
                 _currMon = value;
                 NotifyPropertyChanged(nameof(CurrentMonthTotal));
             }
         }
-
-
 
         public SolidColorBrush CurrentValueFontColor
         {
@@ -100,8 +97,6 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
                 return new SolidColorBrush(Colors.Black);
             }
         }
-
-
 
         public void Load(IJournalAccount account)
         {

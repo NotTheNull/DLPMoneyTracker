@@ -2,11 +2,8 @@
 using DLPMoneyTracker.Data.Common;
 using DLPMoneyTracker2.Core;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.Main.UpcomingReminders
 {
@@ -31,7 +28,6 @@ namespace DLPMoneyTracker2.Main.UpcomingReminders
             this.Load();
         }
 
-
         //public ObservableCollection<BillDetailVM> RemindersList { get; set; }
         private ObservableCollection<BillDetailVM> _listBills;
 
@@ -40,17 +36,15 @@ namespace DLPMoneyTracker2.Main.UpcomingReminders
             get { return _listBills; }
         }
 
-
-
         public void Load()
         {
-            this.RemindersList.Clear();   
-            
+            this.RemindersList.Clear();
+
             DateRange range = new DateRange(DateTime.Today.Year, DateTime.Today.Month);
             var listPlans = _planner.GetPlansForDateRange(range);
             if (listPlans?.Any() != true) return;
 
-            foreach(var plan in listPlans.OrderBy(o => o.NextOccurrence))
+            foreach (var plan in listPlans.OrderBy(o => o.NextOccurrence))
             {
                 // See if we already have a transaction for this plan
                 var account = _config.GetJournalAccount(plan.CreditAccountId);
@@ -59,7 +53,6 @@ namespace DLPMoneyTracker2.Main.UpcomingReminders
 
                 this.RemindersList.Add(new BillDetailVM(plan));
             }
-
         }
     }
 }

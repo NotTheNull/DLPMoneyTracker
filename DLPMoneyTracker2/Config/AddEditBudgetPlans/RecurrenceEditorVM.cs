@@ -56,6 +56,7 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
         }
 
         private List<SpecialDropListItem<RecurrenceFrequency>> _listFreq;
+
         public List<SpecialDropListItem<RecurrenceFrequency>> RecurrenceFrequencyList
         { get { return _listFreq; } }
 

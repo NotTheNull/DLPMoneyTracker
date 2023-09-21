@@ -3,7 +3,6 @@ using DLPMoneyTracker.Data.LedgerAccounts;
 using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 {
@@ -12,6 +11,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
         private readonly ITrackerConfig _config;
 
         private static readonly List<JournalAccountType> _listValidTypes = new List<JournalAccountType>() { JournalAccountType.Payable, JournalAccountType.Receivable };
+
         public static List<JournalAccountType> ValidTypes
         { get { return _listValidTypes; } }
 
@@ -78,8 +78,8 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             }
         }
 
-        public bool IsClosed { get { return _closeDateUTC.HasValue; } }
-
+        public bool IsClosed
+        { get { return _closeDateUTC.HasValue; } }
 
         public string DisplayClosedMessage
         {
@@ -90,7 +90,6 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                 return string.Empty;
             }
         }
-
 
         // TODO: Add checkbox / bool for whether a particular Ledger Account should be displayed on Budget reports
 

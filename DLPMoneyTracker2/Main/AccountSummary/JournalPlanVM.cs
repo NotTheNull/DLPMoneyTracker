@@ -21,6 +21,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
 
         public IJournalPlan ThePlan
         { get { return _plan; } }
+
         public Guid PlanUID
         { get { return _plan.UID; } }
 
@@ -32,6 +33,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
 
         public JournalPlanType PlanType
         { get { return _plan.PlanType; } }
+
         public string PlanTypeDescription
         { get { return _plan.PlanType.ToString(); } }
 

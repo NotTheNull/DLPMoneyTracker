@@ -28,6 +28,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
         }
 
         private ObservableCollection<IJournalEntry> _listRecords = new ObservableCollection<IJournalEntry>();
+
         public ObservableCollection<IJournalEntry> DisplayRecordsList
         { get { return _listRecords; } }
 

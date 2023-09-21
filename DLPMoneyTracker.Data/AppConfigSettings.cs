@@ -1,6 +1,5 @@
 ﻿#define TEST_NEW
 
-
 namespace DLPMoneyTracker.Data
 {
     /// <summary>

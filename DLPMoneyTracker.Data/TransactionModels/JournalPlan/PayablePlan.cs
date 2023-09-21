@@ -33,6 +33,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
         { get { return _validCredits; } }
 
         public IJournalAccount DebitAccount { get; set; }
+
         public Guid DebitAccountId
         { get { return DebitAccount?.Id ?? Guid.Empty; } }
 
@@ -40,6 +41,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
         { get { return DebitAccount?.Description ?? string.Empty; } }
 
         public IJournalAccount CreditAccount { get; set; }
+
         public Guid CreditAccountId
         { get { return CreditAccount?.Id ?? Guid.Empty; } }
 

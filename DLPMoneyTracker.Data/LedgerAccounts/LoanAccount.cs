@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Data.LedgerAccounts
 {
@@ -12,12 +8,12 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         public string Description { get; set; }
 
-        public JournalAccountType JournalType { get { return JournalAccountType.LiabilityLoan; } }
+        public JournalAccountType JournalType
+        { get { return JournalAccountType.LiabilityLoan; } }
 
         public int OrderBy { get; set; }
 
         public DateTime? DateClosedUTC { get; set; }
-
 
         //public string MoneyAccountId { get; set; }
 
@@ -25,15 +21,17 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         //public Guid CategoryId { get { return Guid.Empty; } }
 
-        public decimal MonthlyBudgetAmount { get { return decimal.Zero; } }
+        public decimal MonthlyBudgetAmount
+        { get { return decimal.Zero; } }
 
-        public bool ExcludeFromBudget { get { return false; } }
-
+        public bool ExcludeFromBudget
+        { get { return false; } }
 
         public LoanAccount()
         {
             this.Id = Guid.NewGuid();
         }
+
         public LoanAccount(IJournalAccount cpy)
         {
             this.Copy(cpy);
@@ -48,23 +46,22 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
             this.OrderBy = cpy.OrderBy;
             this.DateClosedUTC = cpy.DateClosedUTC;
             //this.MoneyAccountId = cpy.MoneyAccountId;
-            
         }
 
-//#pragma warning disable CS0612 // Type or member is obsolete
-//        public LoanAccount(MoneyAccount old) : this()
+        //#pragma warning disable CS0612 // Type or member is obsolete
+        //        public LoanAccount(MoneyAccount old) : this()
 
-//        {
-//            this.Convert(old);
-//        }
+        //        {
+        //            this.Convert(old);
+        //        }
 
-//        public void Convert(MoneyAccount act)
-//        {
-//            MoneyAccountId = act.ID;
-//            Description = act.Description;
-//            OrderBy = act.OrderBy;
-//            DateClosedUTC = act.DateClosedUTC;
-//        }
-//#pragma warning restore CS0612 // Type or member is obsolete
+        //        public void Convert(MoneyAccount act)
+        //        {
+        //            MoneyAccountId = act.ID;
+        //            Description = act.Description;
+        //            OrderBy = act.OrderBy;
+        //            DateClosedUTC = act.DateClosedUTC;
+        //        }
+        //#pragma warning restore CS0612 // Type or member is obsolete
     }
 }

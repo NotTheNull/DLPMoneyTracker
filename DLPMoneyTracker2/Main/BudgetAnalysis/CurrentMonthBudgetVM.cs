@@ -7,13 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.Main.BudgetAnalysis
 {
-    
     public class CurrentMonthBudgetVM : BaseViewModel
     {
         private readonly ITrackerConfig _config;
@@ -33,32 +29,41 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
             this.NotifyAll();
         }
 
-
         // List of Receivable IJournalAccounts; NOT TO BE DISPLAYED
         private List<JournalAccountBudgetVM> _listIncome = new List<JournalAccountBudgetVM>();
 
-        public decimal TotalBudgetIncome { get { return _listIncome?.Sum(s => s.MonthlyBudget) ?? decimal.Zero; } }
+        public decimal TotalBudgetIncome
+        { get { return _listIncome?.Sum(s => s.MonthlyBudget) ?? decimal.Zero; } }
 
         // TODO: Liability accounts are displaying payments as negative which is affecting the Fixed Expense Budget Total [Add Exclude from Budget option first]
         // List of Payable IJournalAccounts WITH a Journal Plan
         private ObservableCollection<JournalAccountBudgetVM> _listFixed = new ObservableCollection<JournalAccountBudgetVM>();
-        public ObservableCollection<JournalAccountBudgetVM> FixedExpenses { get { return _listFixed; } }
-        public decimal FixedExpenseBudgetTotal { get { return this.FixedExpenses?.Sum(s => s.MonthlyBudget > s.CurrentMonthTotal ? s.MonthlyBudget : s.CurrentMonthTotal) ?? decimal.Zero; } }
 
+        public ObservableCollection<JournalAccountBudgetVM> FixedExpenses
+        { get { return _listFixed; } }
+
+        public decimal FixedExpenseBudgetTotal
+        { get { return this.FixedExpenses?.Sum(s => s.MonthlyBudget > s.CurrentMonthTotal ? s.MonthlyBudget : s.CurrentMonthTotal) ?? decimal.Zero; } }
 
         // The remaining Payable accounts
         private ObservableCollection<JournalAccountBudgetVM> _listVariable = new ObservableCollection<JournalAccountBudgetVM>();
-        public ObservableCollection<JournalAccountBudgetVM> VariableExpenses { get { return _listVariable; } }
-        public decimal VariableExpenseBudgetTotal { get { return this.VariableExpenses?.Sum(s => s.MonthlyBudget > s.CurrentMonthTotal ? s.MonthlyBudget : s.CurrentMonthTotal) ?? decimal.Zero; } }
 
+        public ObservableCollection<JournalAccountBudgetVM> VariableExpenses
+        { get { return _listVariable; } }
 
-        public decimal TotalExpenseBudget { get { return this.FixedExpenseBudgetTotal + this.VariableExpenseBudgetTotal; } }
+        public decimal VariableExpenseBudgetTotal
+        { get { return this.VariableExpenses?.Sum(s => s.MonthlyBudget > s.CurrentMonthTotal ? s.MonthlyBudget : s.CurrentMonthTotal) ?? decimal.Zero; } }
 
-        public decimal MonthlyBalance { get { return this.TotalBudgetIncome - this.TotalExpenseBudget; } }
+        public decimal TotalExpenseBudget
+        { get { return this.FixedExpenseBudgetTotal + this.VariableExpenseBudgetTotal; } }
 
-        
+        public decimal MonthlyBalance
+        { get { return this.TotalBudgetIncome - this.TotalExpenseBudget; } }
+
         #region Commands
+
         private RelayCommand _cmdShowDetail;
+
         public RelayCommand CommandShowDetail
         {
             get
@@ -81,9 +86,10 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
                 }));
             }
         }
-        #endregion
 
-        List<JournalAccountType> ValidBudgetTypes = new List<JournalAccountType>()
+        #endregion Commands
+
+        private List<JournalAccountType> ValidBudgetTypes = new List<JournalAccountType>()
         {
             JournalAccountType.Receivable,
             JournalAccountType.Payable,
@@ -111,10 +117,11 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
                             _listIncome.Add(budget);
                         }
                         break;
+
                     case JournalAccountType.Payable:
-                        if(budget.IsVisible)
+                        if (budget.IsVisible)
                         {
-                            if(budget.IsFixedExpense)
+                            if (budget.IsFixedExpense)
                             {
                                 this.FixedExpenses.Add(budget);
                             }
@@ -124,8 +131,9 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
                             }
                         }
                         break;
+
                     case JournalAccountType.LiabilityLoan:
-                        if(budget.IsVisible)
+                        if (budget.IsVisible)
                         {
                             this.FixedExpenses.Add(budget);
                         }
@@ -145,6 +153,5 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
             NotifyPropertyChanged(nameof(FixedExpenseBudgetTotal));
             NotifyPropertyChanged(nameof(TotalBudgetIncome));
         }
-
     }
 }

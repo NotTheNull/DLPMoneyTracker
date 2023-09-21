@@ -1,10 +1,10 @@
 ﻿<UserControl x:Class="DLPMoneyTracker2.Main.YTD.YearToDateUI"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:DLPMoneyTracker2.Main.YTD"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              Height="650"
              Width="1000">
 
@@ -15,8 +15,7 @@
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    
-    
+
     <Grid  Style="{StaticResource MainGridStyle}">
         <Grid.RowDefinitions>
             <!-- no plan to have controls for first row but need the buffer for consistency -->
@@ -27,17 +26,15 @@
             <RowDefinition Height="15" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" 
+        <TextBlock Grid.Row="0"
                    Style="{StaticResource localHeaderLabel}">Income</TextBlock>
-        
-        <DataGrid Grid.Row="1" 
-                  ItemsSource="{Binding Path=IncomeAccountDetailList}"
-                  >
+
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding Path=IncomeAccountDetailList}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Account Name"
                                     MinWidth="200"
-                                    Binding="{Binding Path=AccountName}"
-                                    />
+                                    Binding="{Binding Path=AccountName}" />
 
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
@@ -45,7 +42,7 @@
                             <Button Command="{Binding Path=CommandShowDetail}"
                                     CommandParameter="{Binding Path=Account}"
                                     Style="{StaticResource MenuButton}"
-                                    Margin="0"> 
+                                    Margin="0">
                                 <Button.Content>
                                     <Image Source="/Icons/Stock-Exchange-256.png" />
                                 </Button.Content>
@@ -56,72 +53,56 @@
 
                 <DataGridTextColumn Header="YTD"
                                     MinWidth="100"
-                                    Binding="{Binding Path=YearTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                                    />
-                
+                                    Binding="{Binding Path=YearTotal, Converter={StaticResource convertDecimalToDisplay}}" />
+
                 <DataGridTextColumn Header="January"
                                     MinWidth="100"
-                                    Binding="{Binding Path=JanuaryTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                                    />
+                                    Binding="{Binding Path=JanuaryTotal, Converter={StaticResource convertDecimalToDisplay}}" />
                 <DataGridTextColumn Header="February"
                                     MinWidth="100"
-                                    Binding="{Binding Path=FebruaryTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                                    />
-                <DataGridTextColumn Header="March"               
+                                    Binding="{Binding Path=FebruaryTotal, Converter={StaticResource convertDecimalToDisplay}}" />
+                <DataGridTextColumn Header="March"
                                     MinWidth="100"
-                                    Binding="{Binding Path=MarchTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                                    />
+                                    Binding="{Binding Path=MarchTotal, Converter={StaticResource convertDecimalToDisplay}}" />
                 <DataGridTextColumn Header="April"
                                     MinWidth="100"
-                                    Binding="{Binding Path=AprilTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                                    />
+                                    Binding="{Binding Path=AprilTotal, Converter={StaticResource convertDecimalToDisplay}}" />
                 <DataGridTextColumn Header="May"
                                     MinWidth="100"
-                                    Binding="{Binding Path=MayTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                                    />
+                                    Binding="{Binding Path=MayTotal, Converter={StaticResource convertDecimalToDisplay}}" />
                 <DataGridTextColumn Header="June"
                                     MinWidth="100"
-                                    Binding="{Binding Path=JuneTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                                    />
+                                    Binding="{Binding Path=JuneTotal, Converter={StaticResource convertDecimalToDisplay}}" />
                 <DataGridTextColumn Header="July"
                                     MinWidth="100"
-                                    Binding="{Binding Path=JulyTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                                    />
+                                    Binding="{Binding Path=JulyTotal, Converter={StaticResource convertDecimalToDisplay}}" />
                 <DataGridTextColumn Header="August"
                                     MinWidth="100"
-                                    Binding="{Binding Path=AugustTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                                    />
+                                    Binding="{Binding Path=AugustTotal, Converter={StaticResource convertDecimalToDisplay}}" />
                 <DataGridTextColumn Header="September"
                                     MinWidth="100"
-                                    Binding="{Binding Path=SeptemberTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                                    />
+                                    Binding="{Binding Path=SeptemberTotal, Converter={StaticResource convertDecimalToDisplay}}" />
                 <DataGridTextColumn Header="October"
                                     MinWidth="100"
-                                    Binding="{Binding Path=OctoberTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                                    />
+                                    Binding="{Binding Path=OctoberTotal, Converter={StaticResource convertDecimalToDisplay}}" />
                 <DataGridTextColumn Header="November"
                                     MinWidth="100"
-                                    Binding="{Binding Path=NovemberTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                                    />
+                                    Binding="{Binding Path=NovemberTotal, Converter={StaticResource convertDecimalToDisplay}}" />
                 <DataGridTextColumn Header="December"
                                     MinWidth="100"
-                                    Binding="{Binding Path=DecemberTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                                    />
-                
+                                    Binding="{Binding Path=DecemberTotal, Converter={StaticResource convertDecimalToDisplay}}" />
             </DataGrid.Columns>
         </DataGrid>
 
         <TextBlock Grid.Row="2"
                    Style="{StaticResource localHeaderLabel}">Expenses</TextBlock>
 
-        <DataGrid Grid.Row="3" 
-                  ItemsSource="{Binding Path=ExpenseAccountDetailList}"
-                  > 
+        <DataGrid Grid.Row="3"
+                  ItemsSource="{Binding Path=ExpenseAccountDetailList}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Account Name"
                             MinWidth="200"
-                            Binding="{Binding Path=AccountName}"
-                            />
+                            Binding="{Binding Path=AccountName}" />
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -138,59 +119,44 @@
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="YTD"
                                     MinWidth="100"
-                                    Binding="{Binding Path=YearTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                                    />
+                                    Binding="{Binding Path=YearTotal, Converter={StaticResource convertDecimalToDisplay}}" />
                 <DataGridTextColumn Header="January"
                             MinWidth="100"
-                            Binding="{Binding Path=JanuaryTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                            />
+                            Binding="{Binding Path=JanuaryTotal, Converter={StaticResource convertDecimalToDisplay}}" />
                 <DataGridTextColumn Header="February"
                             MinWidth="100"
-                            Binding="{Binding Path=FebruaryTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                            />
-                <DataGridTextColumn Header="March"               
+                            Binding="{Binding Path=FebruaryTotal, Converter={StaticResource convertDecimalToDisplay}}" />
+                <DataGridTextColumn Header="March"
                             MinWidth="100"
-                            Binding="{Binding Path=MarchTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                            />
+                            Binding="{Binding Path=MarchTotal, Converter={StaticResource convertDecimalToDisplay}}" />
                 <DataGridTextColumn Header="April"
                             MinWidth="100"
-                            Binding="{Binding Path=AprilTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                            />
+                            Binding="{Binding Path=AprilTotal, Converter={StaticResource convertDecimalToDisplay}}" />
                 <DataGridTextColumn Header="May"
                             MinWidth="100"
-                            Binding="{Binding Path=MayTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                            />
+                            Binding="{Binding Path=MayTotal, Converter={StaticResource convertDecimalToDisplay}}" />
                 <DataGridTextColumn Header="June"
                             MinWidth="100"
-                            Binding="{Binding Path=JuneTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                            />
+                            Binding="{Binding Path=JuneTotal, Converter={StaticResource convertDecimalToDisplay}}" />
                 <DataGridTextColumn Header="July"
                             MinWidth="100"
-                            Binding="{Binding Path=JulyTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                            />
+                            Binding="{Binding Path=JulyTotal, Converter={StaticResource convertDecimalToDisplay}}" />
                 <DataGridTextColumn Header="August"
                             MinWidth="100"
-                            Binding="{Binding Path=AugustTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                            />
+                            Binding="{Binding Path=AugustTotal, Converter={StaticResource convertDecimalToDisplay}}" />
                 <DataGridTextColumn Header="September"
                             MinWidth="100"
-                            Binding="{Binding Path=SeptemberTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                            />
+                            Binding="{Binding Path=SeptemberTotal, Converter={StaticResource convertDecimalToDisplay}}" />
                 <DataGridTextColumn Header="October"
                             MinWidth="100"
-                            Binding="{Binding Path=OctoberTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                            />
+                            Binding="{Binding Path=OctoberTotal, Converter={StaticResource convertDecimalToDisplay}}" />
                 <DataGridTextColumn Header="November"
                             MinWidth="100"
-                            Binding="{Binding Path=NovemberTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                            />
+                            Binding="{Binding Path=NovemberTotal, Converter={StaticResource convertDecimalToDisplay}}" />
                 <DataGridTextColumn Header="December"
                             MinWidth="100"
-                            Binding="{Binding Path=DecemberTotal, Converter={StaticResource convertDecimalToDisplay}}"
-                            />
-
+                            Binding="{Binding Path=DecemberTotal, Converter={StaticResource convertDecimalToDisplay}}" />
             </DataGrid.Columns>
         </DataGrid>
-
     </Grid>
 </UserControl>

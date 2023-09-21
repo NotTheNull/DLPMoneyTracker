@@ -24,6 +24,7 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
         }
 
         private ObservableCollection<IJournalPlan> _listPlans = new ObservableCollection<IJournalPlan>();
+
         public ObservableCollection<IJournalPlan> PlanList
         { get { return _listPlans; } }
 
@@ -66,6 +67,7 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
         }
 
         private ObservableCollection<SpecialDropListItem<IJournalAccount>> _listValidDebits = new ObservableCollection<SpecialDropListItem<IJournalAccount>>();
+
         public ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidDebitAccounts
         { get { return _listValidDebits; } }
 
@@ -82,6 +84,7 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
         }
 
         private ObservableCollection<SpecialDropListItem<IJournalAccount>> _listValidCredits = new ObservableCollection<SpecialDropListItem<IJournalAccount>>();
+
         public ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidCreditAccounts
         { get { return _listValidCredits; } }
 
@@ -120,7 +123,6 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
                 NotifyPropertyChanged(nameof(Recurrence));
             }
         }
-
 
         private bool IsReadyForSave
         {

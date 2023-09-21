@@ -26,6 +26,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
         }
 
         private ObservableCollection<MoneyAccountSummaryVM> _listAcctSummary = new ObservableCollection<MoneyAccountSummaryVM>();
+
         public ObservableCollection<MoneyAccountSummaryVM> AccountSummaryList
         { get { return _listAcctSummary; } }
 

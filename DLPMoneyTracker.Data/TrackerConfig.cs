@@ -1,9 +1,6 @@
 ﻿using DLPMoneyTracker.Data.LedgerAccounts;
-using DLPMoneyTracker.Data.TransactionModels;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -22,6 +19,7 @@ namespace DLPMoneyTracker.Data
             IncludeDeleted = false;
             NameFilterText = string.Empty;
         }
+
         public JournalAccountSearch(IEnumerable<JournalAccountType> listAccountTypes)
         {
             if (listAccountTypes is null) throw new ArgumentNullException(nameof(listAccountTypes));
@@ -35,7 +33,6 @@ namespace DLPMoneyTracker.Data
 
     public interface ITrackerConfig : IDisposable
     {
-
         //[Obsolete]
         //[EditorBrowsable(EditorBrowsableState.Never)]
         //ReadOnlyCollection<MoneyAccount> AccountsList { get; }
@@ -44,29 +41,32 @@ namespace DLPMoneyTracker.Data
 
         //ReadOnlyCollection<IJournalAccount> LedgerAccountsList { get; }
 
-
         void LoadFromFile(int year);
+
         void AddJournalAccount(IJournalAccount act);
+
         void RemoveJournalAccount(Guid accountId);
+
         void SaveJournalAccounts();
+
         void LoadJournalAccounts();
 
         IJournalAccount GetJournalAccount(Guid accountId);
-        IEnumerable<IJournalAccount> GetJournalAccountList(JournalAccountSearch search);
 
+        IEnumerable<IJournalAccount> GetJournalAccountList(JournalAccountSearch search);
 
         //[Obsolete]
         //[EditorBrowsable(EditorBrowsableState.Never)]
         //void LoadMoneyAccounts();
-        
+
         //[Obsolete]
         //[EditorBrowsable(EditorBrowsableState.Never)]
         //void SaveMoneyAccounts();
-        
+
         //[Obsolete]
         //[EditorBrowsable(EditorBrowsableState.Never)]
         //void LoadCategories();
-        
+
         //[Obsolete]
         //[EditorBrowsable(EditorBrowsableState.Never)]
         //void SaveCategories();
@@ -103,9 +103,11 @@ namespace DLPMoneyTracker.Data
     public class TrackerConfig : ITrackerConfig
     {
         private int _year;
-        private string FolderPath { get { return AppConfigSettings.CONFIG_FOLDER_PATH.Replace(AppConfigSettings.YEAR_FOLDER_PLACEHOLDER, _year.ToString()); } }
+        private string FolderPath
+        { get { return AppConfigSettings.CONFIG_FOLDER_PATH.Replace(AppConfigSettings.YEAR_FOLDER_PLACEHOLDER, _year.ToString()); } }
 
-        private string LedgerAccountsConfig { get { return string.Concat(this.FolderPath, "LedgerAccounts.json"); } }
+        private string LedgerAccountsConfig
+        { get { return string.Concat(this.FolderPath, "LedgerAccounts.json"); } }
 
         //#region Obsolete Objects
 
@@ -126,12 +128,11 @@ namespace DLPMoneyTracker.Data
 
         private List<IJournalAccount> _listLedgerAccounts = new List<IJournalAccount>();
 
-        
         //public ReadOnlyCollection<IJournalAccount> LedgerAccountsList { get { return _listLedgerAccounts.AsReadOnly(); } }
 
-
-
-        public TrackerConfig() : this(DateTime.Today.Year) { }
+        public TrackerConfig() : this(DateTime.Today.Year)
+        {
+        }
 
         public TrackerConfig(int year)
         {
@@ -152,11 +153,11 @@ namespace DLPMoneyTracker.Data
                 Directory.CreateDirectory(this.FolderPath);
             }
 
-//#pragma warning disable CS0612 // Type or member is obsolete
-//            // Will have to keep these until the conversion is done
-//            this.LoadMoneyAccounts();
-//            this.LoadCategories();
-//#pragma warning restore CS0612 // Type or member is obsolete
+            //#pragma warning disable CS0612 // Type or member is obsolete
+            //            // Will have to keep these until the conversion is done
+            //            this.LoadMoneyAccounts();
+            //            this.LoadCategories();
+            //#pragma warning restore CS0612 // Type or member is obsolete
             this.LoadJournalAccounts();
         }
 
@@ -179,7 +180,6 @@ namespace DLPMoneyTracker.Data
             SaveJournalAccounts();
         }
 
-
         public void SaveJournalAccounts()
         {
             string json = JsonSerializer.Serialize(_listLedgerAccounts.Where(x => x.JournalType != JournalAccountType.NotSet).ToList(), typeof(List<IJournalAccount>));
@@ -193,34 +193,34 @@ namespace DLPMoneyTracker.Data
             _listLedgerAccounts.Add(SpecialAccount.InitialBalance);
             _listLedgerAccounts.Add(SpecialAccount.UnlistedAdjusment);
 
-            if(File.Exists(LedgerAccountsConfig))
+            if (File.Exists(LedgerAccountsConfig))
             {
                 string json = File.ReadAllText(LedgerAccountsConfig);
                 var dataList = (List<JournalAccountJSON>)JsonSerializer.Deserialize(json, typeof(List<JournalAccountJSON>));
-                foreach(var data in dataList)
+                foreach (var data in dataList)
                 {
                     _listLedgerAccounts.Add(JournalAccountFactory.Build(data));
                 }
             }
-
         }
 
         public IJournalAccount GetJournalAccount(Guid accountId)
         {
             return _listLedgerAccounts.FirstOrDefault(x => x.Id == accountId);
         }
-        public IEnumerable<IJournalAccount> GetJournalAccountList(JournalAccountSearch search) 
+
+        public IEnumerable<IJournalAccount> GetJournalAccountList(JournalAccountSearch search)
         {
             if (search.JournalTypes.Any() != true) return null;
 
             var listJournalAccounts = _listLedgerAccounts.Where(x => search.JournalTypes.Contains(x.JournalType));
 
-            if(!string.IsNullOrWhiteSpace(search.NameFilterText))
+            if (!string.IsNullOrWhiteSpace(search.NameFilterText))
             {
                 listJournalAccounts = listJournalAccounts.Where(x => x.Description.Contains(search.NameFilterText));
             }
 
-            if(!search.IncludeDeleted)
+            if (!search.IncludeDeleted)
             {
                 listJournalAccounts = listJournalAccounts.Where(x => !x.DateClosedUTC.HasValue);
             }
@@ -228,16 +228,17 @@ namespace DLPMoneyTracker.Data
             return listJournalAccounts.ToList();
         }
 
-        public void AddLedgerAccount(IJournalAccount act) 
+        public void AddLedgerAccount(IJournalAccount act)
         {
-            if(act is null) return;
-            if(act.Id == Guid.Empty) return;
-            if(_listLedgerAccounts.Any(x => x.Id == act.Id)) return;
+            if (act is null) return;
+            if (act.Id == Guid.Empty) return;
+            if (_listLedgerAccounts.Any(x => x.Id == act.Id)) return;
             _listLedgerAccounts.Add(act);
         }
 
 #pragma warning disable CS0612 // Type or member is obsolete
 #pragma warning disable CS0618 // Type or member is obsolete
+
         /// <summary>
         /// Converts Money Accounts and Transaction Categories into Ledger Accounts
         /// </summary>
@@ -277,7 +278,6 @@ namespace DLPMoneyTracker.Data
             //    SaveMoneyAccounts();
             //}
 
-
             //if (_listCategories?.Any() == true)
             //{
             //    var loopCategories = _listCategories.ToList();
@@ -306,7 +306,7 @@ namespace DLPMoneyTracker.Data
             //                    _listLedgerAccounts.Add(rec);
             //                    break;
             //            }
-                        
+
             //        }
             //        // Do Not remove accounts until the Ledger can be converted
             //        //_listCategories.Remove(cat);
@@ -314,65 +314,61 @@ namespace DLPMoneyTracker.Data
             //    SaveCategories();
             //}
             //SaveJournalAccounts();
-
         }
+
 #pragma warning restore CS0618 // Type or member is obsolete
 #pragma warning restore CS0612 // Type or member is obsolete
 
-
-
-
         public void Copy(ITrackerConfig config)
         {
-//#pragma warning disable CS0618 // Type or member is obsolete
-//#pragma warning disable CS0612 // Type or member is obsolete
-//            // Until the conversion is done, this will need to stayu
-//            _listAccts.Clear();
-//            foreach (var act in config.AccountsList)
-//            {
-//                this.AddMoneyAccount(act);
-//            }
+            //#pragma warning disable CS0618 // Type or member is obsolete
+            //#pragma warning disable CS0612 // Type or member is obsolete
+            //            // Until the conversion is done, this will need to stayu
+            //            _listAccts.Clear();
+            //            foreach (var act in config.AccountsList)
+            //            {
+            //                this.AddMoneyAccount(act);
+            //            }
 
-//            _listCategories.Clear();
-//            foreach (var cat in config.CategoryList)
-//            {
-//                this.AddCategory(cat);
-//            }
-//#pragma warning restore CS0612 // Type or member is obsolete
-//#pragma warning restore CS0618 // Type or member is obsolete
+            //            _listCategories.Clear();
+            //            foreach (var cat in config.CategoryList)
+            //            {
+            //                this.AddCategory(cat);
+            //            }
+            //#pragma warning restore CS0612 // Type or member is obsolete
+            //#pragma warning restore CS0618 // Type or member is obsolete
 
             _listLedgerAccounts.Clear();
             JournalAccountSearch search = new JournalAccountSearch();
             search.JournalTypes.AddRange(new List<JournalAccountType>() { JournalAccountType.Bank, JournalAccountType.LiabilityCard, JournalAccountType.LiabilityLoan, JournalAccountType.Payable, JournalAccountType.Receivable });
             var listPreviousAccounts = config.GetJournalAccountList(search);
 
-            foreach(var gl in listPreviousAccounts)
+            foreach (var gl in listPreviousAccounts)
             {
                 this.AddLedgerAccount(gl);
             }
-            
         }
 
         public void Dispose()
         {
             GC.SuppressFinalize(this);
 
-//#pragma warning disable CS0618 // Type or member is obsolete
-//            // Will need to keep until conversion is done
-//            if (_listAccts is not null)
-//            {
-//                _listAccts.Clear();
-//                _listAccts = null;
-//            }
+            //#pragma warning disable CS0618 // Type or member is obsolete
+            //            // Will need to keep until conversion is done
+            //            if (_listAccts is not null)
+            //            {
+            //                _listAccts.Clear();
+            //                _listAccts = null;
+            //            }
 
-//            if (_listCategories is not null)
-//            {
-//                _listCategories.Clear();
-//                _listCategories = null;
-//            }
-//#pragma warning restore CS0618 // Type or member is obsolete
+            //            if (_listCategories is not null)
+            //            {
+            //                _listCategories.Clear();
+            //                _listCategories = null;
+            //            }
+            //#pragma warning restore CS0618 // Type or member is obsolete
 
-            if(_listLedgerAccounts is not null)
+            if (_listLedgerAccounts is not null)
             {
                 _listLedgerAccounts.Clear();
                 _listLedgerAccounts = null;

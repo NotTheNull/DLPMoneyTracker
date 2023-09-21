@@ -1,6 +1,5 @@
 ﻿using DLPMoneyTracker.Data.LedgerAccounts;
 using DLPMoneyTracker.Data.ScheduleRecurrence;
-using System.Linq;
 
 namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
 {
@@ -120,49 +119,49 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
             }
         }
 
-//#pragma warning disable CS0612 // Type or member is obsolete
+        //#pragma warning disable CS0612 // Type or member is obsolete
 
-//        public static IJournalPlan Build(ITrackerConfig config, IMoneyPlan plan)
-//        {
-//            if (plan is null) return null;
+        //        public static IJournalPlan Build(ITrackerConfig config, IMoneyPlan plan)
+        //        {
+        //            if (plan is null) return null;
 
-//            IJournalAccount moneyAccount = config.LedgerAccountsList.FirstOrDefault(x => x.MoneyAccountId == plan.AccountID);
-//            IJournalAccount categoryAccount = config.LedgerAccountsList.FirstOrDefault(x => x.CategoryId == plan.CategoryID);
+        //            IJournalAccount moneyAccount = config.LedgerAccountsList.FirstOrDefault(x => x.MoneyAccountId == plan.AccountID);
+        //            IJournalAccount categoryAccount = config.LedgerAccountsList.FirstOrDefault(x => x.CategoryId == plan.CategoryID);
 
-//            // If the plans are not Valid it is most likely either a Debt Payment or a Transfer
-//            // which I'll have to redo by hand
-//            switch (plan.PlanType)
-//            {
-//                case MoneyPlanType.Income:
-//                    ReceivablePlan receivable = new ReceivablePlan()
-//                    {
-//                        DebitAccount = moneyAccount,
-//                        CreditAccount = categoryAccount,
-//                        Description = plan.Description,
-//                        RecurrenceJSON = plan.RecurrenceJSON,
-//                        ExpectedAmount = plan.ExpectedAmount
-//                    };
-//                    if (receivable.IsValid()) return receivable;
+        //            // If the plans are not Valid it is most likely either a Debt Payment or a Transfer
+        //            // which I'll have to redo by hand
+        //            switch (plan.PlanType)
+        //            {
+        //                case MoneyPlanType.Income:
+        //                    ReceivablePlan receivable = new ReceivablePlan()
+        //                    {
+        //                        DebitAccount = moneyAccount,
+        //                        CreditAccount = categoryAccount,
+        //                        Description = plan.Description,
+        //                        RecurrenceJSON = plan.RecurrenceJSON,
+        //                        ExpectedAmount = plan.ExpectedAmount
+        //                    };
+        //                    if (receivable.IsValid()) return receivable;
 
-//                    return null;
+        //                    return null;
 
-//                case MoneyPlanType.Expense:
-//                    PayablePlan payable = new PayablePlan()
-//                    {
-//                        DebitAccount = categoryAccount,
-//                        CreditAccount = moneyAccount,
-//                        Description = plan.Description,
-//                        RecurrenceJSON = plan.RecurrenceJSON,
-//                        ExpectedAmount = plan.ExpectedAmount
-//                    };
-//                    if (payable.IsValid()) return payable;
-//                    return null;
+        //                case MoneyPlanType.Expense:
+        //                    PayablePlan payable = new PayablePlan()
+        //                    {
+        //                        DebitAccount = categoryAccount,
+        //                        CreditAccount = moneyAccount,
+        //                        Description = plan.Description,
+        //                        RecurrenceJSON = plan.RecurrenceJSON,
+        //                        ExpectedAmount = plan.ExpectedAmount
+        //                    };
+        //                    if (payable.IsValid()) return payable;
+        //                    return null;
 
-//                default:
-//                    return null;
-//            }
-//        }
+        //                default:
+        //                    return null;
+        //            }
+        //        }
 
-//#pragma warning restore CS0612 // Type or member is obsolete
+        //#pragma warning restore CS0612 // Type or member is obsolete
     }
 }

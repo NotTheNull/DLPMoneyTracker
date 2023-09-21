@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Data.LedgerAccounts
 {
@@ -28,8 +24,8 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
         //MoneyAccountType AccountType { get; }
         //Guid CategoryId { get; } // Reference to legacy TransactionCategory
         decimal MonthlyBudgetAmount { get; } // Exclusive for Variable Expense accounts
-        bool ExcludeFromBudget { get; }
 
+        bool ExcludeFromBudget { get; }
 
         void Copy(IJournalAccount cpy);
     }
@@ -54,8 +50,6 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         public decimal MonthlyBudgetAmount { get; set; }
         public bool ExcludeFromBudget { get; set; }
-
-
 
         public void Copy(IJournalAccount cpy)
         {

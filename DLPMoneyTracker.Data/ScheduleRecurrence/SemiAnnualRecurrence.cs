@@ -31,6 +31,7 @@ namespace DLPMoneyTracker.Data.ScheduleRecurrence
 
         public DateTime AnniversaryDate
         { get { return new DateTime(DateTime.Now.Year, this.StartDate.Month, this.StartDate.Day); } }
+
         public DateTime AlternateDate
         { get { return this.AnniversaryDate.AddMonths(6); } }
 

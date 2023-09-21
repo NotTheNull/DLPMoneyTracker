@@ -4,9 +4,6 @@ using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
 {
@@ -16,6 +13,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
         private readonly IJournal _journal;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
         public AddEditMoneyAccountVM(ITrackerConfig config, IJournal journal) : base()
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
@@ -32,20 +30,25 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             this.ReloadAccounts();
         }
 
-
         private ObservableCollection<MoneyAccountVM> _listAccounts = new ObservableCollection<MoneyAccountVM>();
-        public ObservableCollection<MoneyAccountVM> AccountList { get { return _listAccounts; } }
 
+        public ObservableCollection<MoneyAccountVM> AccountList
+        { get { return _listAccounts; } }
 
         private MoneyAccountVM _editAccount;
-        public MoneyAccountVM EditAccount { get { return _editAccount; } }
 
-        public bool CanEdit { get { return _editAccount?.DateClosedUTC == null; } }
+        public MoneyAccountVM EditAccount
+        { get { return _editAccount; } }
+
+        public bool CanEdit
+        { get { return _editAccount?.DateClosedUTC == null; } }
 
         public List<SpecialDropListItem<JournalAccountType>> JournalTypeList { get; set; }
 
         #region Commands
+
         private RelayCommand _cmdSave;
+
         public RelayCommand CommandSave
         {
             get
@@ -59,6 +62,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
         }
 
         private RelayCommand _cmdClear;
+
         public RelayCommand CommandClear
         {
             get
@@ -71,6 +75,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
         }
 
         private RelayCommand _cmdLoad;
+
         public RelayCommand CommandLoad
         {
             get
@@ -81,7 +86,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
                     //if (act.GetType() != typeof(IJournalAccount)) throw new InvalidCastException(string.Format("Cannot Load type [{0}", act.GetType().FullName));
 
                     //_editAccount.LoadAccount((IJournalAccount)act);
-                    if(act is MoneyAccountVM vm)
+                    if (act is MoneyAccountVM vm)
                     {
                         _editAccount = vm;
                     }
@@ -92,6 +97,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
         }
 
         public RelayCommand _cmdDel;
+
         public RelayCommand CommandRemove
         {
             get
@@ -109,9 +115,8 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
                 }));
             }
         }
-        #endregion
 
-
+        #endregion Commands
 
         /// <summary>
         /// Reloads the listing of accounts
@@ -124,8 +129,6 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             {
                 this.AccountList.Add(new MoneyAccountVM(_config, _journal, act));
             }
-
         }
-
     }
 }

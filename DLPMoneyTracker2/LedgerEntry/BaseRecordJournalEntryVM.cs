@@ -4,7 +4,6 @@ using DLPMoneyTracker.Data.TransactionModels;
 using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
 using DLPMoneyTracker2.Core;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -19,7 +18,6 @@ namespace DLPMoneyTracker2.LedgerEntry
         string DebitHeader { get; }
         ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidDebitAccounts { get; }
         IJournalAccount SelectedDebitAccount { get; }
-
 
         string CreditHeader { get; }
         ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidCreditAccounts { get; }
@@ -72,8 +70,8 @@ namespace DLPMoneyTracker2.LedgerEntry
 
         public abstract bool IsValidTransaction { get; }
 
-
         protected ObservableCollection<SpecialDropListItem<IJournalAccount>> _listValidDebits = new ObservableCollection<SpecialDropListItem<IJournalAccount>>();
+
         public ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidDebitAccounts
         { get { return _listValidDebits; } }
 
@@ -91,10 +89,11 @@ namespace DLPMoneyTracker2.LedgerEntry
             }
         }
 
-        public virtual bool IsCreditEnabled { get { return true; } }
-
+        public virtual bool IsCreditEnabled
+        { get { return true; } }
 
         protected ObservableCollection<SpecialDropListItem<IJournalAccount>> _listValidCredits = new ObservableCollection<SpecialDropListItem<IJournalAccount>>();
+
         public ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidCreditAccounts
         { get { return _listValidCredits; } }
 
@@ -111,8 +110,6 @@ namespace DLPMoneyTracker2.LedgerEntry
                 NotifyPropertyChanged(nameof(SelectedCreditAccount));
             }
         }
-
-
 
         protected string _desc;
 
@@ -188,7 +185,7 @@ namespace DLPMoneyTracker2.LedgerEntry
         public void FillFromPlan(IJournalPlan plan)
         {
             this.TransactionDate = DateTime.Today;
-            this.SelectedCreditAccount = _config.GetJournalAccount(plan.CreditAccountId); 
+            this.SelectedCreditAccount = _config.GetJournalAccount(plan.CreditAccountId);
             this.SelectedDebitAccount = _config.GetJournalAccount(plan.DebitAccountId);
             this.Description = plan.Description;
             this.Amount = plan.ExpectedAmount;

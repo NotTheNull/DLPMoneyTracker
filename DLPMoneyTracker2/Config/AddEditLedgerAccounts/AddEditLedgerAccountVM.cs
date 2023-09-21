@@ -4,11 +4,9 @@ using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 {
-    
     public class AddEditLedgerAccountVM : BaseViewModel
     {
         private readonly ITrackerConfig _config;
@@ -29,6 +27,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
         }
 
         private ObservableCollection<LedgerAccountVM> _listAccounts = new ObservableCollection<LedgerAccountVM>();
+
         public ObservableCollection<LedgerAccountVM> AccountList
         { get { return _listAccounts; } }
 
@@ -38,6 +37,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
         public List<SpecialDropListItem<JournalAccountType>> JournalTypeList { get; set; }
 
         private LedgerAccountVM _editAccount;
+
         public LedgerAccountVM EditAccount
         { get { return _editAccount; } }
 
@@ -131,9 +131,9 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                 {
                     if (act is null) throw new ArgumentNullException("Account");
                     //if (act.GetType() != typeof(IJournalAccount)) throw new InvalidCastException(string.Format("Cannot Load type [{0}", act.GetType().FullName));
-                    if(act is LedgerAccountVM vm)
+                    if (act is LedgerAccountVM vm)
                     {
-                    _config.RemoveJournalAccount(vm.Id);
+                        _config.RemoveJournalAccount(vm.Id);
                     }
                     _editAccount.Clear();
                     this.NotifyAll();

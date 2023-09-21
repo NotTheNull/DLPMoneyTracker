@@ -10,20 +10,7 @@ using DLPMoneyTracker2.Main.UpcomingReminders;
 using DLPMoneyTracker2.Main.YTD;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DLPMoneyTracker2
 {
@@ -75,7 +62,7 @@ namespace DLPMoneyTracker2
         private void MenuEditMoneyAccounts_Click(object sender, RoutedEventArgs e)
         {
             AddEditMoneyAccount window = UICore.DependencyHost.GetRequiredService<AddEditMoneyAccount>();
-            window.Show();            
+            window.Show();
         }
 
         private void MenuEditLedgerAccounts_Click(object sender, RoutedEventArgs e)
@@ -134,7 +121,6 @@ namespace DLPMoneyTracker2
         {
             if (DateTime.Today.Month == 12) NewYearBuilder.SetupNewYear();
             else if (DateTime.Today.Month == 1) NewYearBuilder.RebuildCurrentYear();
-
         }
 
         private void MenuRecordDebtAdjustment_Click(object sender, RoutedEventArgs e)

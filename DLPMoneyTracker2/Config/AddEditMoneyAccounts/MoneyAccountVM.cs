@@ -1,12 +1,10 @@
-﻿using DLPMoneyTracker.Data.LedgerAccounts;
-using DLPMoneyTracker.Data;
+﻿using DLPMoneyTracker.Data;
+using DLPMoneyTracker.Data.LedgerAccounts;
+using DLPMoneyTracker.Data.TransactionModels;
+using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DLPMoneyTracker2.Core;
-using DLPMoneyTracker.Data.TransactionModels;
 
 namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
 {
@@ -14,10 +12,11 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
     {
         private readonly ITrackerConfig _config;
         private readonly IJournal _journal;
-        
-        private static readonly List<JournalAccountType> _listValidTypes = new List<JournalAccountType>() { JournalAccountType.Bank, JournalAccountType.LiabilityCard, JournalAccountType.LiabilityLoan };
-        public static List<JournalAccountType> ValidTypes { get { return _listValidTypes; } }
 
+        private static readonly List<JournalAccountType> _listValidTypes = new List<JournalAccountType>() { JournalAccountType.Bank, JournalAccountType.LiabilityCard, JournalAccountType.LiabilityLoan };
+
+        public static List<JournalAccountType> ValidTypes
+        { get { return _listValidTypes; } }
 
         public MoneyAccountVM(ITrackerConfig config, IJournal journal) : base()
         {
@@ -25,13 +24,13 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             _journal = journal;
             this.Clear();
         }
+
         public MoneyAccountVM(ITrackerConfig config, IJournal journal, IJournalAccount act) : base()
         {
             _config = config;
             _journal = journal;
             this.LoadAccount(act);
         }
-
 
         public Guid Id { get; private set; }
 
@@ -76,22 +75,23 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
         public DateTime? DateClosedUTC
         {
             get { return _closeDateUTC; }
-            set 
+            set
             {
-                _closeDateUTC = value; 
+                _closeDateUTC = value;
                 NotifyPropertyChanged(nameof(DateClosedUTC));
                 NotifyPropertyChanged(nameof(IsClosed));
                 NotifyPropertyChanged(nameof(DisplayClosedMessage));
             }
         }
 
-        public bool IsClosed { get { return _closeDateUTC.HasValue; } }
+        public bool IsClosed
+        { get { return _closeDateUTC.HasValue; } }
 
         public string DisplayClosedMessage
         {
             get
             {
-                if(this.IsClosed) return string.Format("CLOSED: {0}", _closeDateUTC.Value.ToLocalTime());
+                if (this.IsClosed) return string.Format("CLOSED: {0}", _closeDateUTC.Value.ToLocalTime());
 
                 return string.Empty;
             }
@@ -102,14 +102,12 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
         public int DisplayOrder
         {
             get { return _order; }
-            set 
-            { 
-                _order = value; 
+            set
+            {
+                _order = value;
                 NotifyPropertyChanged(nameof(DisplayOrder));
             }
         }
-
-
 
         public void Clear()
         {
@@ -119,7 +117,6 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             JournalType = JournalAccountType.NotSet;
             this.DateClosedUTC = null;
         }
-
 
         public void LoadAccount(IJournalAccount account)
         {
@@ -145,7 +142,6 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             if (string.IsNullOrWhiteSpace(_desc)) return;
             if (JournalType == JournalAccountType.NotSet) return;
 
-
             IJournalAccount? acct = null;
             if (this.Id != Guid.Empty) acct = _config.GetJournalAccount(this.Id);
 
@@ -154,7 +150,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
                 acct = JournalAccountFactory.Build(this.Description, this.JournalType, orderBy: this.DisplayOrder);
                 _config.AddJournalAccount(acct);
             }
-            else 
+            else
             {
                 JournalAccountFactory.Update(ref acct, this.Description, orderBy: this.DisplayOrder);
             }
@@ -186,7 +182,6 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             }
             initBalRecord.TransactionAmount = this.InitialBalance;
             _journal.AddTransaction(initBalRecord);
-
         }
     }
 }

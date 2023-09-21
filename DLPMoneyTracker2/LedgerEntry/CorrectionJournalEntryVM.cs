@@ -1,7 +1,6 @@
 ﻿using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.LedgerAccounts;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DLPMoneyTracker2.LedgerEntry
 {
@@ -13,7 +12,8 @@ namespace DLPMoneyTracker2.LedgerEntry
         }
 
         // One side will always be the Special Account "Unlisted Adjustment"
-        public override bool IsCreditEnabled { get { return false; } }
+        public override bool IsCreditEnabled
+        { get { return false; } }
 
         public override bool IsValidTransaction
         {
@@ -27,9 +27,8 @@ namespace DLPMoneyTracker2.LedgerEntry
 
         public override string CreditHeader
         { get { return string.Empty; } }
+
         public override string DebitHeader
         { get { return "Account"; } }
-
-
     }
 }

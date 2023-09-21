@@ -9,6 +9,7 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
     public partial class RecurrenceEditor : Window
     {
         private RecurrenceEditorVM _viewModel;
+
         public RecurrenceEditorVM ViewModel
         { get { return _viewModel; } }
 
