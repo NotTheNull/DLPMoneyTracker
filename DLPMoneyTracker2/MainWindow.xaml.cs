@@ -19,8 +19,7 @@ namespace DLPMoneyTracker2
     /// </summary>
     public partial class MainWindow : Window
     {
-        // TODO: Refresh the tabs' UI when they are focused/clicked on
-
+        
         private readonly MoneyAccountOverview _viewMoneyAccounts;
         private readonly TransactionDetail _viewTransactions;
         private readonly CurrentMonthBudget _viewBudgetAnalysis;
