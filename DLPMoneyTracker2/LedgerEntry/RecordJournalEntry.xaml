@@ -33,7 +33,6 @@
             <RowDefinition Height="15" />
         </Grid.RowDefinitions>
 
-
         <TextBlock Text="Trans Date"
                    Grid.Row="1"
                    Grid.Column="1"
@@ -46,8 +45,6 @@
                     Grid.Column="2"
                     Margin="0, 5, 0, 5"
                     SelectedDate="{Binding Path=TransactionDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-
 
         <TextBlock Text="{Binding Path=DebitHeader, FallbackValue=DEBIT}"
                    Grid.Row="2"
@@ -64,10 +61,10 @@
                   DisplayMemberPath="Display"
                   SelectedValuePath="Value" />
 
-
         <TextBlock Text="{Binding Path=CreditHeader, FallbackValue=CREDIT}"
                    Grid.Row="2"
                    Grid.Column="3"
+                   Visibility="{Binding Path=IsCreditEnabled, Converter={StaticResource convertBoolToVisibility}}"
                    Style="{StaticResource StandardHeaderLabel}" />
 
         <ComboBox x:Name="cboCategory"
@@ -76,11 +73,11 @@
                   Width="120"
                   HorizontalAlignment="Left"
                   Margin="0, 5, 0, 5"
+                  Visibility="{Binding Path=IsCreditEnabled, Converter={StaticResource convertBoolToVisibility}}"
                   ItemsSource="{Binding Path=ValidCreditAccounts}"
                   DisplayMemberPath="Display"
                   SelectedValuePath="Value"
                   SelectedValue="{Binding Path=SelectedCreditAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
 
         <TextBlock Text="Description"
                    Grid.Row="4"
@@ -98,7 +95,6 @@
             </i:Interaction.Behaviors>
         </TextBox>
 
-
         <TextBlock Text="Amount"
                    Grid.Row="5"
                    Grid.Column="1"
@@ -115,8 +111,6 @@
                 <behave:TextBoxFocusBehavior />
             </i:Interaction.Behaviors>
         </TextBox>
-
-
 
         <StackPanel Grid.Row="6"
                     Grid.Column="3"

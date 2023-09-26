@@ -6,11 +6,8 @@ using DLPMoneyTracker2.LedgerEntry;
 using DLPMoneyTracker2.Main.TransactionList;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.Main.AccountSummary
 {
@@ -34,17 +31,20 @@ namespace DLPMoneyTracker2.Main.AccountSummary
             this.Refresh();
         }
 
-        public Guid AccountId { get { return _account.Id; } }
+        public Guid AccountId
+        { get { return _account.Id; } }
 
-        public JournalAccountType AccountType { get { return _account.JournalType; } }
+        public JournalAccountType AccountType
+        { get { return _account.JournalType; } }
 
-        public string AccountDesc { get { return _account.Description; } }
+        public string AccountDesc
+        { get { return _account.Description; } }
 
         private decimal _bal;
 
         public decimal Balance
         {
-            // Make sure the Liability accounts display as a Positive # 
+            // Make sure the Liability accounts display as a Positive #
             get { return this.AccountType == JournalAccountType.Bank ? _bal : _bal * -1; }
             set
             {
@@ -53,12 +53,13 @@ namespace DLPMoneyTracker2.Main.AccountSummary
             }
         }
 
-
         private ObservableCollection<JournalPlanVM> _listPlans = new ObservableCollection<JournalPlanVM>();
-        public ObservableCollection<JournalPlanVM> PlanList { get { return _listPlans; } }
 
+        public ObservableCollection<JournalPlanVM> PlanList
+        { get { return _listPlans; } }
 
-        public bool ShowBudgetData { get { return PlanList.Count > 0; } }
+        public bool ShowBudgetData
+        { get { return PlanList.Count > 0; } }
 
         public decimal BudgetBalance
         {
@@ -67,7 +68,6 @@ namespace DLPMoneyTracker2.Main.AccountSummary
                 decimal bal = _bal;
                 if (this.PlanList.Count > 0)
                 {
-
                     foreach (var p in this.PlanList)
                     {
                         switch (p.PlanType)
@@ -75,9 +75,11 @@ namespace DLPMoneyTracker2.Main.AccountSummary
                             case JournalPlanType.Receivable:
                                 bal += p.Amount;
                                 break;
+
                             case JournalPlanType.Payable:
                                 bal -= p.Amount;
                                 break;
+
                             case JournalPlanType.Transfer:
                                 if (p.IsParentDebit)
                                 {
@@ -88,6 +90,17 @@ namespace DLPMoneyTracker2.Main.AccountSummary
                                     bal -= p.Amount;
                                 }
                                 break;
+
+                            case JournalPlanType.DebtPayment:
+                                if (this.AccountType == JournalAccountType.Bank)
+                                {
+                                    bal -= p.Amount;
+                                }
+                                else
+                                {
+                                    bal += p.Amount;
+                                }
+                                break;
                         }
                     }
                 }
@@ -95,9 +108,10 @@ namespace DLPMoneyTracker2.Main.AccountSummary
             }
         }
 
-
         #region Commands
+
         private RelayCommand _cmdDetail;
+
         public RelayCommand CommandDetails
         {
             get
@@ -112,6 +126,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
         }
 
         private RelayCommand _cmdCreateTrans;
+
         public RelayCommand CommandCreateTransaction
         {
             get
@@ -121,39 +136,42 @@ namespace DLPMoneyTracker2.Main.AccountSummary
                     if (plan is JournalPlanVM jPlan)
                     {
                         IJournalEntryVM transVM;
-                        switch(jPlan.PlanType)
+                        switch (jPlan.PlanType)
                         {
                             case JournalPlanType.Payable:
                                 transVM = UICore.DependencyHost.GetRequiredService<ExpenseJournalEntryVM>();
                                 break;
+
                             case JournalPlanType.Receivable:
                                 transVM = UICore.DependencyHost.GetRequiredService<IncomeJournalEntryVM>();
                                 break;
+
                             case JournalPlanType.Transfer:
                                 transVM = UICore.DependencyHost.GetRequiredService<TransferJournalEntryVM>();
                                 break;
+
                             case JournalPlanType.DebtPayment:
                                 transVM = UICore.DependencyHost.GetRequiredService<DebtPaymentJournalEntryVM>();
                                 break;
+
                             default:
                                 return;
                         }
                         transVM.FillFromPlan(jPlan.ThePlan);
                         RecordJournalEntry window = new RecordJournalEntry(transVM);
                         window.Show();
-                        
+
                         this.RemoveBudgetPlan(jPlan);
                     }
-
                 }));
             }
         }
-        #endregion
 
+        #endregion Commands
 
         public void Refresh()
         {
-            this.Balance = _journal.GetAccountBalance(this.AccountId);
+            this.Balance = _journal.GetAccountBalance(this.AccountId, false);
             this.LoadBudgetPlans();
             this.NotifyAll();
         }
@@ -166,7 +184,6 @@ namespace DLPMoneyTracker2.Main.AccountSummary
 
         private void LoadBudgetPlans()
         {
-
             _listPlans.Clear();
             var list = _planner.GetUpcomingPlansForAccount(this.AccountId);
             if (list?.Any() != true) return;

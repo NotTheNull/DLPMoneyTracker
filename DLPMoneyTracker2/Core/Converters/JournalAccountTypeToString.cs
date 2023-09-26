@@ -1,9 +1,8 @@
-﻿using DLPMoneyTracker.Data.ConfigModels;
-using DLPMoneyTracker.Data;
+﻿using DLPMoneyTracker.Data;
+using DLPMoneyTracker.Data.LedgerAccounts;
 using System;
 using System.Globalization;
 using System.Windows.Data;
-using DLPMoneyTracker.Data.LedgerAccounts;
 
 namespace DLPMoneyTracker2.Core.Converters
 {

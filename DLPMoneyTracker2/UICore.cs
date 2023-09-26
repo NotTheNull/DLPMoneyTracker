@@ -1,19 +1,19 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using DLPMoneyTracker.Data;
-using DLPMoneyTracker2.Config.AddEditMoneyAccounts;
-using DLPMoneyTracker2.Config.AddEditLedgerAccounts;
-using DLPMoneyTracker2.Main.AccountSummary;
-using DLPMoneyTracker2.Main.TransactionList;
-using DLPMoneyTracker2.Main.BudgetAnalysis;
-using DLPMoneyTracker2.LedgerEntry;
+﻿using DLPMoneyTracker.Data;
 using DLPMoneyTracker2.Config.AddEditBudgetPlans;
+using DLPMoneyTracker2.Config.AddEditLedgerAccounts;
+using DLPMoneyTracker2.Config.AddEditMoneyAccounts;
+using DLPMoneyTracker2.LedgerEntry;
+using DLPMoneyTracker2.Main.AccountSummary;
+using DLPMoneyTracker2.Main.BudgetAnalysis;
+using DLPMoneyTracker2.Main.TransactionList;
+using DLPMoneyTracker2.Main.UpcomingReminders;
+using DLPMoneyTracker2.Main.YTD;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace DLPMoneyTracker2
 {
+    
     internal static class UICore
     {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -27,20 +27,19 @@ namespace DLPMoneyTracker2
             DependencyHost = services.BuildServiceProvider();
         }
 
-
         private static void ConfigureServices(ServiceCollection services)
         {
             services.AddSingleton<ITrackerConfig, TrackerConfig>();
             services.AddSingleton<IJournal, DLPJournal>();
             services.AddSingleton<IJournalPlanner, JournalPlanner>();
 
-#pragma warning disable CS0612 // Type or member is obsolete
-#pragma warning disable CS0618 // Type or member is obsolete
-            // Keep until conversion is done
-            services.AddSingleton<ILedger, Ledger>();
-            services.AddSingleton<IMoneyPlanner, MoneyPlanner>();
-#pragma warning restore CS0618 // Type or member is obsolete
-#pragma warning restore CS0612 // Type or member is obsolete
+            //#pragma warning disable CS0612 // Type or member is obsolete
+            //#pragma warning disable CS0618 // Type or member is obsolete
+            //            // Keep until conversion is done
+            //            services.AddSingleton<ILedger, Ledger>();
+            //            services.AddSingleton<IMoneyPlanner, MoneyPlanner>();
+            //#pragma warning restore CS0618 // Type or member is obsolete
+            //#pragma warning restore CS0612 // Type or member is obsolete
 
             // Main UI
             services.AddSingleton<MainWindow>();
@@ -58,6 +57,12 @@ namespace DLPMoneyTracker2
             services.AddSingleton<TransactionDetailVM>();
 
             services.AddTransient<AccountTransactionDetailVM>();
+
+            services.AddTransient<RemindersUI>();
+            services.AddTransient<RemindersVM>();
+
+            services.AddTransient<YearToDateUI>();
+            services.AddTransient<YearToDateVM>();
 
             // Ledger
             services.AddTransient<IncomeJournalEntryVM>();
@@ -77,6 +82,5 @@ namespace DLPMoneyTracker2
             services.AddTransient<RecurrenceEditor>();
             services.AddTransient<RecurrenceEditorVM>();
         }
-
     }
 }

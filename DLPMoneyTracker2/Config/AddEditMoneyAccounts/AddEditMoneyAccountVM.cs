@@ -4,9 +4,6 @@ using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
 {
@@ -16,6 +13,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
         private readonly IJournal _journal;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
         public AddEditMoneyAccountVM(ITrackerConfig config, IJournal journal) : base()
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
@@ -32,20 +30,25 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             this.ReloadAccounts();
         }
 
-
         private ObservableCollection<MoneyAccountVM> _listAccounts = new ObservableCollection<MoneyAccountVM>();
-        public ObservableCollection<MoneyAccountVM> AccountList { get { return _listAccounts; } }
 
+        public ObservableCollection<MoneyAccountVM> AccountList
+        { get { return _listAccounts; } }
 
         private MoneyAccountVM _editAccount;
-        public MoneyAccountVM EditAccount { get { return _editAccount; } }
 
-        public bool CanEdit { get { return _editAccount?.DateClosedUTC == null; } }
+        public MoneyAccountVM EditAccount
+        { get { return _editAccount; } }
+
+        public bool CanEdit
+        { get { return _editAccount?.DateClosedUTC == null; } }
 
         public List<SpecialDropListItem<JournalAccountType>> JournalTypeList { get; set; }
 
         #region Commands
+
         private RelayCommand _cmdSave;
+
         public RelayCommand CommandSave
         {
             get
@@ -53,11 +56,13 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
                 return _cmdSave ?? (_cmdSave = new RelayCommand((o) =>
                 {
                     _editAccount.SaveAccount();
+                    this.ReloadAccounts();
                 }));
             }
         }
 
         private RelayCommand _cmdClear;
+
         public RelayCommand CommandClear
         {
             get
@@ -70,6 +75,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
         }
 
         private RelayCommand _cmdLoad;
+
         public RelayCommand CommandLoad
         {
             get
@@ -77,15 +83,21 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
                 return _cmdLoad ?? (_cmdLoad = new RelayCommand((act) =>
                 {
                     if (act is null) throw new ArgumentNullException("Account");
-                    if (act.GetType() != typeof(IJournalAccount)) throw new InvalidCastException(string.Format("Cannot Load type [{0}", act.GetType().FullName));
+                    //if (act.GetType() != typeof(IJournalAccount)) throw new InvalidCastException(string.Format("Cannot Load type [{0}", act.GetType().FullName));
 
-                    _editAccount.LoadAccount((IJournalAccount)act);
+                    //_editAccount.LoadAccount((IJournalAccount)act);
+                    if (act is MoneyAccountVM vm)
+                    {
+                        _editAccount = vm;
+                    }
+
                     NotifyPropertyChanged(nameof(EditAccount));
                 }));
             }
         }
 
         public RelayCommand _cmdDel;
+
         public RelayCommand CommandRemove
         {
             get
@@ -93,16 +105,18 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
                 return _cmdDel ?? (_cmdDel = new RelayCommand((act) =>
                 {
                     if (act is null) throw new ArgumentNullException("Account");
-                    if (act.GetType() != typeof(IJournalAccount)) throw new InvalidCastException(string.Format("Cannot Load type [{0}", act.GetType().FullName));
-                    _config.RemoveJournalAccount(((IJournalAccount)act).Id);
+                    //if (act.GetType() != typeof(IJournalAccount)) throw new InvalidCastException(string.Format("Cannot Load type [{0}", act.GetType().FullName));
+                    if (act is MoneyAccountVM vm)
+                    {
+                        _config.RemoveJournalAccount(vm.Id);
+                    }
                     this.ReloadAccounts();
                     _editAccount.Clear();
                 }));
             }
         }
-        #endregion
 
-
+        #endregion Commands
 
         /// <summary>
         /// Reloads the listing of accounts
@@ -110,12 +124,11 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
         public void ReloadAccounts()
         {
             this.AccountList.Clear();
-            foreach(var act in _config.LedgerAccountsList.Where(x => MoneyAccountVM.ValidTypes.Contains(x.JournalType)))
+            var listValidAccounts = _config.GetJournalAccountList(new JournalAccountSearch(MoneyAccountVM.ValidTypes));
+            foreach (var act in listValidAccounts)
             {
                 this.AccountList.Add(new MoneyAccountVM(_config, _journal, act));
             }
-
         }
-
     }
 }

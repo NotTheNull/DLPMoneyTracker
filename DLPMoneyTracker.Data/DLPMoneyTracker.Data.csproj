@@ -5,9 +5,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ConfigModels\**" />
+    <Compile Remove="TransactionModels\BillPlan\**" />
+    <Compile Remove="TransactionModels\Budget\**" />
+    <Compile Remove="TransactionModels\MoneyRecord\**" />
+    <EmbeddedResource Remove="ConfigModels\**" />
+    <EmbeddedResource Remove="TransactionModels\BillPlan\**" />
+    <EmbeddedResource Remove="TransactionModels\Budget\**" />
+    <EmbeddedResource Remove="TransactionModels\MoneyRecord\**" />
+    <None Remove="ConfigModels\**" />
+    <None Remove="TransactionModels\BillPlan\**" />
+    <None Remove="TransactionModels\Budget\**" />
+    <None Remove="TransactionModels\MoneyRecord\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="BudgetTracker.cs" />
     <Compile Remove="IJSONFileMaker.cs" />
+    <Compile Remove="Ledger.cs" />
     <Compile Remove="LedgerAccounts\IMoneyAccountReference.cs" />
     <Compile Remove="LedgerAccounts\ITransactionCategoryReference.cs" />
+    <Compile Remove="MoneyPlanner.cs" />
   </ItemGroup>
 
   <ItemGroup>

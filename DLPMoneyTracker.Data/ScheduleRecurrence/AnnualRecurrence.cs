@@ -22,7 +22,8 @@ namespace DLPMoneyTracker.Data.ScheduleRecurrence
             }
         }
 
-        public RecurrenceFrequency Frequency { get { return RecurrenceFrequency.Annual; } }
+        public RecurrenceFrequency Frequency
+        { get { return RecurrenceFrequency.Annual; } }
 
         public DateTime StartDate { get; set; }
 

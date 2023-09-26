@@ -2,10 +2,7 @@
 using DLPMoneyTracker.Data.ScheduleRecurrence;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
 {
@@ -18,13 +15,13 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
         NotSet
     }
 
-
     public interface IJournalPlan
     {
         Guid UID { get; }
 
         [JsonIgnore]
         List<JournalAccountType> ValidDebitAccountTypes { get; }
+
         Guid DebitAccountId { get; }
 
         [JsonIgnore]
@@ -45,7 +42,6 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
 
         string Description { get; }
 
-
         string RecurrenceJSON { get; }
 
         [JsonIgnore]
@@ -59,16 +55,12 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
         [JsonIgnore]
         DateTime NextOccurrence { get; }
 
-        
         bool IsValid();
-        
     }
 
     public sealed class JournalPlanJSON : IJournalPlan
     {
         public Guid UID { get; set; }
-
-        
 
         public Guid DebitAccountId { get; set; }
 
@@ -80,23 +72,24 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
         [JsonIgnore]
         public string CreditAccountName { get; set; }
 
-        
         public JournalPlanType PlanType { get; set; }
 
-        public int PriorityOrder { get { return 9999999; } }
+        public int PriorityOrder
+        { get { return 9999999; } }
 
         public string Description { get; set; }
 
         public string RecurrenceJSON { get; set; }
-        
+
         public decimal ExpectedAmount { get; set; }
 
         [JsonIgnore]
-        public RecurrenceFrequency Frequency { get { return RecurrenceFrequency.Annual; } }
-
+        public RecurrenceFrequency Frequency
+        { get { return RecurrenceFrequency.Annual; } }
 
         [JsonIgnore]
-        public DateTime NotificationDate { get { return DateTime.MinValue; } }
+        public DateTime NotificationDate
+        { get { return DateTime.MinValue; } }
 
         [JsonIgnore]
         public DateTime NextOccurrence { get; set; }
@@ -107,7 +100,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
         [JsonIgnore]
         public List<JournalAccountType> ValidCreditAccountTypes => throw new NotImplementedException();
 
-        public bool IsValid() { return true; }
-
+        public bool IsValid()
+        { return true; }
     }
 }

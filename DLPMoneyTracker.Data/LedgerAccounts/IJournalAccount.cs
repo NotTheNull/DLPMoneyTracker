@@ -1,9 +1,4 @@
-﻿using DLPMoneyTracker.Data.ConfigModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace DLPMoneyTracker.Data.LedgerAccounts
 {
@@ -25,11 +20,12 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
         int OrderBy { get; }
         DateTime? DateClosedUTC { get; set; }
 
-        string MoneyAccountId { get; }
-        MoneyAccountType AccountType { get; }
-        Guid CategoryId { get; } // Reference to legacy TransactionCategory
-        public decimal MonthlyBudgetAmount { get; } // Exclusive for Variable Expense accounts
+        //string MoneyAccountId { get; }
+        //MoneyAccountType AccountType { get; }
+        //Guid CategoryId { get; } // Reference to legacy TransactionCategory
+        decimal MonthlyBudgetAmount { get; } // Exclusive for Variable Expense accounts
 
+        bool ExcludeFromBudget { get; }
 
         void Copy(IJournalAccount cpy);
     }
@@ -46,13 +42,14 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         public DateTime? DateClosedUTC { get; set; }
 
-        public string MoneyAccountId { get; set; }
+        //public string MoneyAccountId { get; set; }
 
-        public MoneyAccountType AccountType { get; set; }
+        //public MoneyAccountType AccountType { get; set; }
 
-        public Guid CategoryId { get; set; }
+        //public Guid CategoryId { get; set; }
 
         public decimal MonthlyBudgetAmount { get; set; }
+        public bool ExcludeFromBudget { get; set; }
 
         public void Copy(IJournalAccount cpy)
         {
@@ -61,9 +58,9 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
             JournalType = cpy.JournalType;
             OrderBy = cpy.OrderBy;
             DateClosedUTC = cpy.DateClosedUTC;
-            MoneyAccountId = cpy.MoneyAccountId;
-            AccountType = cpy.AccountType;
-            CategoryId = cpy.CategoryId;
+            //MoneyAccountId = cpy.MoneyAccountId;
+            //AccountType = cpy.AccountType;
+            //CategoryId = cpy.CategoryId;
             MonthlyBudgetAmount = cpy.MonthlyBudgetAmount;
         }
     }

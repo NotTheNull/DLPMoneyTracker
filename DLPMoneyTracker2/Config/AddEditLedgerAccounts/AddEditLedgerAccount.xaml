@@ -14,7 +14,6 @@
         Height="530"
         Width="550">
 
-
     <Window.Resources>
         <Style TargetType="TextBox">
             <Setter Property="Margin" Value="10,5,5,5" />
@@ -37,7 +36,6 @@
             <RowDefinition Height="25" />
         </Grid.RowDefinitions>
 
-
         <StackPanel Orientation="Horizontal"
                     Background="LightGray"
                     Grid.Row="0">
@@ -47,7 +45,6 @@
                     Style="{StaticResource MenuButton}">
                 <Image Source="/Icons/Leave-256.png" />
             </Button>
-
 
             <Button x:Name="btnAddNew"
                     Style="{StaticResource MenuButton}"
@@ -62,7 +59,6 @@
                     Command="{Binding Path=CommandSave}">
                 <Image Source="/Icons/Save-256.png" />
             </Button>
-
         </StackPanel>
 
         <DataGrid x:Name="gridAccounts"
@@ -79,35 +75,40 @@
                 <DataGridTextColumn Header="Account Type" Binding="{Binding Path=JournalType, Converter={StaticResource converterMoneyAccountToString}, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Monthly Budget" Binding="{Binding Path=MonthlyBudget, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, UpdateSourceTrigger=PropertyChanged}" />
 
-
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Button x:Name="btnEdit"
+                            <StackPanel Orientation="Vertical">
+
+                                <StackPanel Orientation="Horizontal"
+                                            Visibility="{Binding Path=IsClosed, Converter={StaticResource convertBoolToVisibility}, ConverterParameter=R}">
+                                    <Button x:Name="btnEdit"
                                         ToolTip="Edit Account"
                                         Style="{StaticResource MenuButton}"
                                         Command="{Binding Path=Data.CommandLoad, Source={StaticResource proxy}}"
                                         CommandParameter="{Binding}">
-                                    <Image Source="/Icons/Edit-Pencil-256.png" />
-                                </Button>
-                                <Button x:Name="btnDelete"
+                                        <Image Source="/Icons/Edit-Pencil-256.png" />
+                                    </Button>
+                                    <Button x:Name="btnDelete"
                                         ToolTip="Delete Account"
                                         Style="{StaticResource MenuButton}"
                                         Command="{Binding Path=Data.CommandRemove, Source={StaticResource proxy}}"
                                         CommandParameter="{Binding}">
-                                    <Image Source="/Icons/Garbage-Closed-256.png" />
-                                </Button>
+                                        <Image Source="/Icons/Garbage-Closed-256.png" />
+                                    </Button>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Visibility="{Binding Path=IsClosed, Converter={StaticResource convertBoolToVisibility}}">
+                                    <TextBlock Text="{Binding Path=DisplayClosedMessage}" />
+                                </StackPanel>
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
-
         </DataGrid>
 
-
-        <Grid x:Name="LayoutEdit"    
+        <Grid x:Name="LayoutEdit"
               Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="15" />
@@ -123,8 +124,6 @@
                 <RowDefinition Height="15" />
             </Grid.RowDefinitions>
 
-
-
             <TextBlock Text="Description"
                        Grid.Column="1"
                        Grid.Row="1"
@@ -137,13 +136,11 @@
                      Width="260"
                      Background="{Binding Path=CanEdit, Converter={StaticResource convertEnabledToBgColor}, UpdateSourceTrigger=PropertyChanged}"
                      IsEnabled="{Binding Path=CanEdit, UpdateSourceTrigger=PropertyChanged}"
-                     Text="{Binding Path=EditAccount.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                     Text="{Binding Path=Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <i:Interaction.Behaviors>
                     <behave:TextBoxFocusBehavior />
                 </i:Interaction.Behaviors>
             </TextBox>
-
-
 
             <TextBlock Text="Account Type"
                        Grid.Column="1"
@@ -162,8 +159,7 @@
                       ItemsSource="{Binding Path=JournalTypeList}"
                       DisplayMemberPath="Display"
                       SelectedValuePath="Value"
-                      SelectedValue="{Binding Path=EditAccount.JournalType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
+                      SelectedValue="{Binding Path=AccountType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
             <TextBlock Text="Monthly Budget"
                        Grid.Column="1"
@@ -176,15 +172,7 @@
                      Width="120"
                      Background="{Binding Path=CanEdit, Converter={StaticResource convertEnabledToBgColor}, UpdateSourceTrigger=PropertyChanged}"
                      IsEnabled="{Binding Path=CanEdit, UpdateSourceTrigger=PropertyChanged}"
-                     Text="{Binding Path=EditAccount.MonthlyBudget, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=0.00,  Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
-
-
-
+                     Text="{Binding Path=MonthlyBudget, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=0.00,  Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
         </Grid>
-
-
-
-
-
     </Grid>
 </Window>

@@ -6,22 +6,11 @@ using DLPMoneyTracker2.LedgerEntry;
 using DLPMoneyTracker2.Main.AccountSummary;
 using DLPMoneyTracker2.Main.BudgetAnalysis;
 using DLPMoneyTracker2.Main.TransactionList;
+using DLPMoneyTracker2.Main.UpcomingReminders;
+using DLPMoneyTracker2.Main.YTD;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DLPMoneyTracker2
 {
@@ -30,11 +19,14 @@ namespace DLPMoneyTracker2
     /// </summary>
     public partial class MainWindow : Window
     {
+        
         private readonly MoneyAccountOverview _viewMoneyAccounts;
         private readonly TransactionDetail _viewTransactions;
         private readonly CurrentMonthBudget _viewBudgetAnalysis;
+        private readonly RemindersUI _viewBillReminders;
+        private readonly YearToDateUI _viewYTD;
 
-        public MainWindow(MoneyAccountOverview viewMain, CurrentMonthBudget viewBudget, TransactionDetail viewDetail)
+        public MainWindow(MoneyAccountOverview viewMain, CurrentMonthBudget viewBudget, TransactionDetail viewDetail, RemindersUI viewBills, YearToDateUI viewYTD)
         {
             InitializeComponent();
 
@@ -44,10 +36,14 @@ namespace DLPMoneyTracker2
             panelBudget.Children.Add(viewBudget);
             _viewBudgetAnalysis = viewBudget;
 
+            panelBillReminers.Children.Add(viewBills);
+            _viewBillReminders = viewBills;
+
             panelTransactions.Children.Add(viewDetail);
             _viewTransactions = viewDetail;
 
-            
+            panelYTD.Children.Add(viewYTD);
+            _viewYTD = viewYTD;
         }
 
         private void Exit()
@@ -65,7 +61,7 @@ namespace DLPMoneyTracker2
         private void MenuEditMoneyAccounts_Click(object sender, RoutedEventArgs e)
         {
             AddEditMoneyAccount window = UICore.DependencyHost.GetRequiredService<AddEditMoneyAccount>();
-            window.Show();            
+            window.Show();
         }
 
         private void MenuEditLedgerAccounts_Click(object sender, RoutedEventArgs e)
@@ -124,7 +120,6 @@ namespace DLPMoneyTracker2
         {
             if (DateTime.Today.Month == 12) NewYearBuilder.SetupNewYear();
             else if (DateTime.Today.Month == 1) NewYearBuilder.RebuildCurrentYear();
-
         }
 
         private void MenuRecordDebtAdjustment_Click(object sender, RoutedEventArgs e)
