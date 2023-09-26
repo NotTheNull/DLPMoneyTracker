@@ -61,8 +61,7 @@ namespace DLPMoneyTracker.Data
         { get { return string.Concat(this.FolderPath, "JournalPlan.json"); } }
 
         private List<IJournalPlan> _planList = new List<IJournalPlan>();
-        public ReadOnlyCollection<IJournalPlan> JournalPlanList
-        { get { return _planList.AsReadOnly(); } }
+        public ReadOnlyCollection<IJournalPlan> JournalPlanList        { get { return _planList.AsReadOnly(); } }
 
         public void AddPlan(IJournalPlan journalPlan)
         {

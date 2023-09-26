@@ -1,5 +1,4 @@
 ﻿using DLPMoneyTracker.Data;
-using DLPMoneyTracker.Data.ConfigModels;
 using DLPMoneyTracker.Data.LedgerAccounts;
 using DLPMoneyTracker.Data.TransactionModels;
 using System;
@@ -34,13 +33,13 @@ namespace DLPMoneyTrackerWeb.Data
         readonly List<JournalAccountType> typesMoneyAccount = new List<JournalAccountType>() { JournalAccountType.Bank, JournalAccountType.LiabilityCard, JournalAccountType.LiabilityLoan };
         public IEnumerable<IJournalAccount> GetMoneyAccounts()
         {
-            return _config.LedgerAccountsList.Where(x => typesMoneyAccount.Contains(x.JournalType)).ToList();
+            return _config.GetJournalAccountList(new JournalAccountSearch(typesMoneyAccount));
         }
 
         readonly List<JournalAccountType> typesLedgerAccount = new List<JournalAccountType>() { JournalAccountType.Payable, JournalAccountType.Receivable };
         public IEnumerable<IJournalAccount> GetLedgerAccounts()
         {
-            return _config.LedgerAccountsList.Where(x => typesLedgerAccount.Contains(x.JournalType)).ToList();
+            return _config.GetJournalAccountList(new JournalAccountSearch(typesLedgerAccount));
         }
 
 
@@ -48,7 +47,7 @@ namespace DLPMoneyTrackerWeb.Data
         {
             if (idAccount == Guid.Empty) return new EditJournalAccountVM();
 
-            var acct = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == idAccount);
+            var acct = _config.GetJournalAccount(idAccount);
             if (acct is null) throw new InvalidOperationException(string.Format("Journal Account #{0} not found", idAccount));
 
             EditJournalAccountVM editThis = new EditJournalAccountVM(acct);
@@ -65,7 +64,7 @@ namespace DLPMoneyTrackerWeb.Data
 
         public void SaveAccount(EditJournalAccountVM vm)
         {
-            var acct = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == vm.Id);
+            var acct = _config.GetJournalAccount(vm.Id);
             if(acct is null)
             {
                 acct = JournalAccountFactory.Build(vm.Description, vm.JournalType, vm.MonthlyBudgetAmount, vm.OrderBy);
@@ -127,7 +126,6 @@ namespace DLPMoneyTrackerWeb.Data
             this.OrderBy = 0;
             this.DateClosedUTC = null;
             this.MoneyAccountId = string.Empty;
-            this.AccountType = MoneyAccountType.NotSet;
             this.CategoryId = Guid.Empty;
             this.MonthlyBudgetAmount = decimal.Zero;
             this.InitialBalance = decimal.Zero;
@@ -149,15 +147,14 @@ namespace DLPMoneyTrackerWeb.Data
 
         public string MoneyAccountId { get; set; }
 
-        public MoneyAccountType AccountType { get; set; }
-
         public Guid CategoryId { get; set; }
 
         public decimal MonthlyBudgetAmount { get; set; }
 
         public decimal InitialBalance { get; set; }
 
-        
+        public bool ExcludeFromBudget { get; set; }
+
         public void Copy(IJournalAccount cpy)
         {
             this.Id = cpy.Id;
@@ -165,8 +162,6 @@ namespace DLPMoneyTrackerWeb.Data
             this.JournalType = cpy.JournalType;
             this.OrderBy = cpy.OrderBy;
             this.DateClosedUTC = cpy.DateClosedUTC;
-            this.MoneyAccountId = cpy.MoneyAccountId;
-            this.CategoryId = cpy.CategoryId;
             this.MonthlyBudgetAmount = cpy.MonthlyBudgetAmount;
         }
     }

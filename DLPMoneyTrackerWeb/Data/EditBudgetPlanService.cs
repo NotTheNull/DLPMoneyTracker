@@ -43,7 +43,7 @@ namespace DLPMoneyTrackerWeb.Data
 
         public IEnumerable<IJournalAccount> GetJournalAccounts(IList<JournalAccountType> validAccountTypes)
         {
-            return _config.LedgerAccountsList.Where(x => validAccountTypes.Contains(x.JournalType) && !x.DateClosedUTC.HasValue).ToList();
+            return _config.GetJournalAccountList(new JournalAccountSearch(validAccountTypes));
         }
 
         public EditBudgetPlanVM GetViewModel()
@@ -54,13 +54,14 @@ namespace DLPMoneyTrackerWeb.Data
 
         public void SaveBudgetPlan(EditBudgetPlanVM vm)
         {
-            
-            var newPlan = JournalPlanFactory.Build(_config, vm.PlanType, vm.Description, vm.CreditAccount, vm.DebitAccount, vm.ExpectedAmount, )
+
+            var newPlan = JournalPlanFactory.Build(_config, vm.PlanType, vm.Description, vm.CreditAccount, vm.DebitAccount, vm.ExpectedAmount, vm.Recurrence);
         }
 
         public void DeleteBudgetPlan(Guid idPlan)
         {
-            _planner.RemovePlan(idPlan);
+            var plan = _planner.JournalPlanList.FirstOrDefault(x => x.UID == idPlan);
+            _planner.RemovePlan(plan);
         }
     }
 
@@ -124,7 +125,7 @@ namespace DLPMoneyTrackerWeb.Data
                 }
                 else
                 {
-                    this.DebitAccount = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == value);
+                    this.DebitAccount = _config.GetJournalAccount(value); 
                 }
             }
         }
@@ -144,7 +145,7 @@ namespace DLPMoneyTrackerWeb.Data
                 }
                 else
                 {
-                    this.CreditAccount = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == value);
+                    this.CreditAccount = _config.GetJournalAccount(value);
                 }
 
             }
@@ -180,9 +181,9 @@ namespace DLPMoneyTrackerWeb.Data
             this.ExpectedAmount = plan.ExpectedAmount;
 
             this.Recurrence = ScheduleRecurrenceFactory.Build(plan.RecurrenceJSON);
-            
-            this.CreditAccount = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == plan.CreditAccountId);
-            this.DebitAccount = _config.LedgerAccountsList.FirstOrDefault(x => x.Id == plan.DebitAccountId);
+
+            this.CreditAccount = _config.GetJournalAccount(plan.CreditAccountId);
+            this.DebitAccount = _config.GetJournalAccount(plan.DebitAccountId);
 
         }
 
