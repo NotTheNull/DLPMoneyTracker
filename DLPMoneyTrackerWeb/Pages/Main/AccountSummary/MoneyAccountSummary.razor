@@ -1,0 +1,160 @@
+﻿
+@using DLPMoneyTracker.Data.LedgerAccounts;
+@using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
+
+@inject IJournal journal
+@inject IJournalPlanner planner
+
+<section id="summary_@Account.Id">
+    <div class="card @AccountTypeColor">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-12">@Account.JournalType.ToDisplayText()</div>
+            </div>
+
+            <div class="row">
+                <div class="col-1"><!-- Buffer --></div>
+                <div class="col-6">@Account.Description</div>
+                <div class="col-1">Balance:</div>
+                <div class="col-4">@balanceCurrent</div>
+            </div>
+        </div>
+
+        @{
+            var listBudgets = planner.GetUpcomingPlansForAccount(Account.Id);
+            int rowCount = 0;
+            decimal balanceNew = balanceCurrent;
+            if (listBudgets?.Any() == true)
+            {
+                <div class="card-body">
+                    <div class="row">
+
+                        <div class="col-12">
+
+                            <table class="dataGrid">
+                                <thead>
+                                    <tr>
+                                        <th>Budget Description</th>
+                                        <th>Category</th>
+                                        <th>Next Date</th>
+                                        <th>Amount</th>
+                                        <th><!-- Aciton Buttons --></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (var budget in listBudgets)
+                                    {
+                                        rowCount++;
+                                        switch(budget.PlanType)
+                                        {
+                                            case JournalPlanType.Receivable:
+                                                balanceNew += budget.ExpectedAmount;
+                                                break;
+                                            case JournalPlanType.Payable:
+                                                balanceNew -= budget.ExpectedAmount;
+                                                break;
+                                            case JournalPlanType.Transfer:
+                                                if(budget.DebitAccountId == this.Account.Id)
+                                                {
+                                                    balanceNew += budget.ExpectedAmount;
+                                                }
+                                                else
+                                                {
+                                                    balanceNew -= budget.ExpectedAmount;
+                                                }
+                                                break;
+                                            case JournalPlanType.DebtPayment:
+                                                if(this.Account.JournalType == JournalAccountType.Bank)
+                                                {
+                                                    balanceNew -= budget.ExpectedAmount;
+                                                }
+                                                else
+                                                {
+                                                    balanceNew += budget.ExpectedAmount;
+                                                }
+                                                break;
+                                        }
+                                        if(this.Account.JournalType != JournalAccountType.Bank)
+                                        {
+                                            // Account is a Liability so the amount will be negative but needs to be displayed as positive
+                                            balanceNew *= -1;
+                                        }
+
+                                        <tr class="@((rowCount % 2) == 0 ? "altRowColor" : "stdRowColor" )">
+                                            <td>@budget.Description</td>
+                                            <td>@budget.PlanType.ToString()</td>
+                                            <td>@string.Format("{0:yyyy/MM/dd}", budget.NextOccurrence)</td>
+                                            <td>@string.Format("{0:c}", budget.ExpectedAmount)</td>
+                                            <td>
+                                                <button class="action-btn">
+                                                    <img src="~/icons/payment-256.png" />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-7"><!-- Buffer --></div>
+                        <div class="col-1">New Balance:</div>
+                        <div class="col-4">@balanceNew</div>
+                    </div>
+                </div>
+            }
+        }
+
+    </div>
+
+</section>
+
+
+
+
+
+
+
+@code {
+    private decimal balanceCurrent;
+    private IJournalAccount _acct;
+
+    [Parameter]
+    public IJournalAccount Account
+    {
+        get { return _acct; }
+        set
+        {
+            _acct = value;
+            balanceCurrent = journal.GetAccountBalance(_acct.Id, false);
+        }
+    }
+
+
+    public string AccountTypeColor
+    {
+        get
+        {
+            switch (Account.JournalType)
+            {
+                case JournalAccountType.Bank:
+                    return "Bank";
+                case JournalAccountType.LiabilityCard:
+                    return "Card";
+                case JournalAccountType.LiabilityLoan:
+                    return "Loan";
+                default:
+                    return "";
+            }
+        }
+    }
+
+}

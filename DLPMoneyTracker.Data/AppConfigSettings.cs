@@ -1,4 +1,4 @@
-﻿#define TEST_NEW
+﻿#undef TEST_NEW
 
 namespace DLPMoneyTracker.Data
 {

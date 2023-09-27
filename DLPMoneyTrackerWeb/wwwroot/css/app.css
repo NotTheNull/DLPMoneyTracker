@@ -96,7 +96,7 @@ a, .btn-link {
     background-color: transparent;
 }
 
-table .dataGrid {
+.dataGrid {
     width: 100%;
     margin-top: 10px;
 }

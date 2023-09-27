@@ -79,7 +79,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Pages\" />
+      <Folder Include="Pages\Config\" />
+      <Folder Include="Pages\LedgerEntry\" />
     </ItemGroup>
 
 </Project>

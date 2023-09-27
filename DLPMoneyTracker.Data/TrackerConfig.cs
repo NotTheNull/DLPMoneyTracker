@@ -29,6 +29,11 @@ namespace DLPMoneyTracker.Data
             IncludeDeleted = false;
             NameFilterText = string.Empty;
         }
+
+        public static JournalAccountSearch GetAllMoneyAccounts()
+        {
+            return new JournalAccountSearch(new List<JournalAccountType>() { JournalAccountType.Bank, JournalAccountType.LiabilityCard, JournalAccountType.LiabilityLoan });
+        }
     }
 
     public interface ITrackerConfig : IDisposable

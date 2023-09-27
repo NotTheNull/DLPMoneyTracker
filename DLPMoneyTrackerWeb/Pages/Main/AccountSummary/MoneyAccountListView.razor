@@ -1,0 +1,29 @@
+﻿@page "/"
+
+@inject ITrackerConfig config
+
+<section id="MoneyAccountOverview">
+
+    @{
+        var listAccounts = config.GetJournalAccountList(JournalAccountSearch.GetAllMoneyAccounts());
+        if (listAccounts?.Any() == true)
+        {
+            foreach (var account in listAccounts.OrderBy(o => o.OrderBy))
+            {
+                <div class="row">
+                    <div class="col-12">
+                        <MoneyAccountSummary Account="@account" />
+                    </div>
+                </div>
+            }
+        }
+
+    }
+
+</section>
+
+
+
+@code {
+
+}
