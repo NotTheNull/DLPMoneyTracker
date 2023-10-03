@@ -1,5 +1,4 @@
-﻿
-@using DLPMoneyTracker.Data.LedgerAccounts;
+﻿@using DLPMoneyTracker.Data.LedgerAccounts;
 @using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
 
 @inject IJournal journal
@@ -9,14 +8,14 @@
     <div class="card @AccountTypeColor">
         <div class="card-header">
             <div class="row">
-                <div class="col-12">@Account.JournalType.ToDisplayText()</div>
+                <div class="col-12"><b>@AccountType.ToDisplayText()</b></div>
             </div>
 
-            <div class="row">
+            <div class="row SummaryInfo">
                 <div class="col-1"><!-- Buffer --></div>
                 <div class="col-6">@Account.Description</div>
-                <div class="col-1">Balance:</div>
-                <div class="col-4">@balanceCurrent</div>
+                <div class="col-2">Balance:</div>
+                <div class="col-3">@string.Format("{0:c}", CurrentBalance)</div>
             </div>
         </div>
 
@@ -28,7 +27,6 @@
             {
                 <div class="card-body">
                     <div class="row">
-
                         <div class="col-12">
 
                             <table class="dataGrid">
@@ -46,7 +44,7 @@
                                     @foreach (var budget in listBudgets)
                                     {
                                         rowCount++;
-                                        switch(budget.PlanType)
+                                        switch (budget.PlanType)
                                         {
                                             case JournalPlanType.Receivable:
                                                 balanceNew += budget.ExpectedAmount;
@@ -55,7 +53,7 @@
                                                 balanceNew -= budget.ExpectedAmount;
                                                 break;
                                             case JournalPlanType.Transfer:
-                                                if(budget.DebitAccountId == this.Account.Id)
+                                                if (budget.DebitAccountId == this.Account.Id)
                                                 {
                                                     balanceNew += budget.ExpectedAmount;
                                                 }
@@ -65,7 +63,7 @@
                                                 }
                                                 break;
                                             case JournalPlanType.DebtPayment:
-                                                if(this.Account.JournalType == JournalAccountType.Bank)
+                                                if (this.Account.JournalType == JournalAccountType.Bank)
                                                 {
                                                     balanceNew -= budget.ExpectedAmount;
                                                 }
@@ -75,11 +73,6 @@
                                                 }
                                                 break;
                                         }
-                                        if(this.Account.JournalType != JournalAccountType.Bank)
-                                        {
-                                            // Account is a Liability so the amount will be negative but needs to be displayed as positive
-                                            balanceNew *= -1;
-                                        }
 
                                         <tr class="@((rowCount % 2) == 0 ? "altRowColor" : "stdRowColor" )">
                                             <td>@budget.Description</td>
@@ -87,8 +80,8 @@
                                             <td>@string.Format("{0:yyyy/MM/dd}", budget.NextOccurrence)</td>
                                             <td>@string.Format("{0:c}", budget.ExpectedAmount)</td>
                                             <td>
-                                                <button class="action-btn">
-                                                    <img src="~/icons/payment-256.png" />
+                                                <button @onclick="@(e => AddPayableTransaction(budget.UID))">
+                                                    <img src="/icons/payment-256.png" class="action-icon" />
                                                 </button>
                                             </td>
                                         </tr>
@@ -97,17 +90,20 @@
                             </table>
 
                         </div>
-
-
-
                     </div>
                 </div>
 
+                @if (this.Account.JournalType != JournalAccountType.Bank)
+                {
+                    // Account is a Liability so the amount will be negative but needs to be displayed as positive
+                    balanceNew *= -1;
+                }
+
                 <div class="card-footer">
-                    <div class="row">
+                    <div class="row SummaryInfo">
                         <div class="col-7"><!-- Buffer --></div>
-                        <div class="col-1">New Balance:</div>
-                        <div class="col-4">@balanceNew</div>
+                        <div class="col-2">New Balance:</div>
+                        <div class="col-3">@string.Format("{0:c}", balanceNew)</div>
                     </div>
                 </div>
             }
@@ -135,15 +131,30 @@
         {
             _acct = value;
             balanceCurrent = journal.GetAccountBalance(_acct.Id, false);
+
         }
     }
 
+    public JournalAccountType AccountType { get { return _acct?.JournalType ?? JournalAccountType.NotSet; } }
+    public decimal CurrentBalance
+    {
+        get
+        {
+            if (this.AccountType != JournalAccountType.Bank)
+            {
+                // Make sure the Liability accounts display as a Positive #
+                return balanceCurrent * -1;
+            }
+
+            return balanceCurrent;
+        }
+    }
 
     public string AccountTypeColor
     {
         get
         {
-            switch (Account.JournalType)
+            switch (this.AccountType)
             {
                 case JournalAccountType.Bank:
                     return "Bank";
@@ -157,4 +168,9 @@
         }
     }
 
+
+    public void AddPayableTransaction(Guid planUID)
+    {
+        // TODO: show the Journal Entry UI
+    }
 }

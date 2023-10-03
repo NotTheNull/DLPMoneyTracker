@@ -91,9 +91,7 @@ a, .btn-link {
 }
 
 .action-btn {
-    width: 20px;
-    height: 20px;
-    background-color: transparent;
+    border-block: none;
 }
 
 .dataGrid {
