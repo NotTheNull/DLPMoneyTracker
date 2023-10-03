@@ -19,11 +19,22 @@ namespace DLPMoneyTracker.Data
         public String? SearchText;
         public IJournalAccount? Account;
 
+        public JournalSearchFilter()
+        {
+            this.Clear();
+        }
         public JournalSearchFilter(IJournalPlan plan, IJournalAccount acct)
         {
             DateRange = new DateRange(plan.NotificationDate, plan.NextOccurrence);
             SearchText = plan.Description;
             Account = acct;
+        }
+
+        public void Clear()
+        {
+            DateRange = new DLPMoneyTracker.Data.Common.DateRange(new DateTime(DateTime.Today.Year, 1, 1), DateTime.Today.AddDays(1));
+            SearchText = string.Empty;
+            Account = null;
         }
     }
 
@@ -101,7 +112,7 @@ namespace DLPMoneyTracker.Data
         {
             if (filter is null) return null;
 
-            var listSearch = TransactionList.Where(x => x.Id != Guid.Empty);
+            var listSearch = TransactionList.Where(x => x != null);
             if (filter.DateRange != null)
             {
                 listSearch = listSearch.Where(x => filter.DateRange.IsWithinRange(x.TransactionDate));

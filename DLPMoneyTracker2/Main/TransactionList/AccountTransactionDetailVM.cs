@@ -34,7 +34,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
 
         #region Filter Related
 
-        private TransDetailFilter _filter = new TransDetailFilter();
+        private JournalSearchFilter _filter = new JournalSearchFilter();
 
         public IJournalAccount? FilterAccount
         {
@@ -43,20 +43,20 @@ namespace DLPMoneyTracker2.Main.TransactionList
 
         public DateTime FilterBeginDate
         {
-            get { return _filter.FilterDates.Begin; }
+            get { return _filter.DateRange.Begin; }
             set
             {
-                _filter.FilterDates.Begin = value;
+                _filter.DateRange.Begin = value;
                 NotifyPropertyChanged(nameof(FilterBeginDate));
             }
         }
 
         public DateTime FilterEndDate
         {
-            get { return _filter.FilterDates.End; }
+            get { return _filter.DateRange.End; }
             set
             {
-                _filter.FilterDates.End = value;
+                _filter.DateRange.End = value;
                 NotifyPropertyChanged(nameof(FilterEndDate));
             }
         }
@@ -68,14 +68,6 @@ namespace DLPMoneyTracker2.Main.TransactionList
             {
                 _filter.SearchText = value;
                 NotifyPropertyChanged(nameof(FilterText));
-            }
-        }
-
-        public bool AreFiltersVisible
-        {
-            get
-            {
-                return _filter.AreFilterControlsVisible;
             }
         }
 
@@ -107,8 +99,12 @@ namespace DLPMoneyTracker2.Main.TransactionList
                     (
                     _cmdResetFilter = new RelayCommand((o) =>
                     {
-                        _filter ??= new TransDetailFilter();
+                        _filter ??= new JournalSearchFilter();
                         _filter.Clear();
+                        NotifyPropertyChanged(nameof(FilterBeginDate));
+                        NotifyPropertyChanged(nameof(FilterEndDate));
+                        NotifyPropertyChanged(nameof(FilterText));
+                        NotifyPropertyChanged(nameof(FilterAccount));
                     }
 
                     ));
@@ -123,7 +119,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
         /// with classes being passed by reference.
         /// </summary>
         /// <param name="filter"></param>
-        public void ApplyFilters(TransDetailFilter filter)
+        public void ApplyFilters(JournalSearchFilter filter)
         {
             _filter = filter;
             NotifyPropertyChanged(nameof(this.FilterAccount));
@@ -148,23 +144,22 @@ namespace DLPMoneyTracker2.Main.TransactionList
 
             // Testing against NULL to force the VAR class type
             var records = _journal.TransactionList.Where(x => x != null);
-            if (_filter?.IsFilterEnabled == true)
+
+            if (this.FilterAccount != null)
             {
-                if (this.FilterAccount != null)
-                {
-                    records = records.Where(x => x.DebitAccountId == this.FilterAccount.Id || x.CreditAccountId == this.FilterAccount.Id);
-                }
-
-                if (_filter.FilterDates != null)
-                {
-                    records = records.Where(x => x.TransactionDate >= FilterBeginDate && x.TransactionDate <= FilterEndDate);
-                }
-
-                if (!string.IsNullOrWhiteSpace(FilterText))
-                {
-                    records = records.Where(x => x.Description.Contains(FilterText.Trim()));
-                }
+                records = records.Where(x => x.DebitAccountId == this.FilterAccount.Id || x.CreditAccountId == this.FilterAccount.Id);
             }
+
+            if (_filter.DateRange != null)
+            {
+                records = records.Where(x => x.TransactionDate >= FilterBeginDate && x.TransactionDate <= FilterEndDate);
+            }
+
+            if (!string.IsNullOrWhiteSpace(FilterText))
+            {
+                records = records.Where(x => x.Description.Contains(FilterText.Trim()));
+            }
+
             this.LoadRecords(records);
         }
 

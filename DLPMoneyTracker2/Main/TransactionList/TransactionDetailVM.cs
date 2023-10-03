@@ -34,7 +34,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
 
         #region Filter Related
 
-        private TransDetailFilter _filter = new TransDetailFilter();
+        private JournalSearchFilter _filter = new JournalSearchFilter();
 
         public IJournalAccount? FilterAccount
         {
@@ -43,20 +43,20 @@ namespace DLPMoneyTracker2.Main.TransactionList
 
         public DateTime FilterBeginDate
         {
-            get { return _filter.FilterDates.Begin; }
+            get { return _filter.DateRange.Begin; }
             set
             {
-                _filter.FilterDates.Begin = value;
+                _filter.DateRange.Begin = value;
                 NotifyPropertyChanged(nameof(FilterBeginDate));
             }
         }
 
         public DateTime FilterEndDate
         {
-            get { return _filter.FilterDates.End; }
+            get { return _filter.DateRange.End; }
             set
             {
-                _filter.FilterDates.End = value;
+                _filter.DateRange.End = value;
                 NotifyPropertyChanged(nameof(FilterEndDate));
             }
         }
@@ -123,8 +123,12 @@ namespace DLPMoneyTracker2.Main.TransactionList
                     (
                     _cmdResetFilter = new RelayCommand((o) =>
                     {
-                        _filter ??= new TransDetailFilter();
+                        _filter ??= new JournalSearchFilter();
                         _filter.Clear();
+                        NotifyPropertyChanged(nameof(FilterBeginDate));
+                        NotifyPropertyChanged(nameof(FilterEndDate));
+                        NotifyPropertyChanged(nameof(FilterText));
+                        NotifyPropertyChanged(nameof(FilterAccount));
                     }
 
                     ));
@@ -139,11 +143,11 @@ namespace DLPMoneyTracker2.Main.TransactionList
         /// with classes being passed by reference.
         /// </summary>
         /// <param name="filter"></param>
-        public void ApplyFilters(TransDetailFilter filter)
+        public void ApplyFilters(JournalSearchFilter filter)
         {
             _filter.Account = filter.Account;
-            this.FilterBeginDate = filter.FilterDates?.Begin ?? DateTime.MinValue;
-            this.FilterEndDate = filter.FilterDates?.End ?? DateTime.MaxValue;
+            this.FilterBeginDate = filter.DateRange?.Begin ?? DateTime.MinValue;
+            this.FilterEndDate = filter.DateRange?.End ?? DateTime.MaxValue;
             this.FilterText = filter.SearchText?.Trim() ?? string.Empty;
         }
 
@@ -159,14 +163,14 @@ namespace DLPMoneyTracker2.Main.TransactionList
 
             // Testing against NULL to force the VAR class type
             var records = _journal.TransactionList.Where(x => x != null);
-            if (_filter?.IsFilterEnabled == true)
+            if (this.IsFiltersVisible)
             {
                 if (this.FilterAccount != null)
                 {
                     records = records.Where(x => x.DebitAccountId == this.FilterAccount.Id || x.CreditAccountId == this.FilterAccount.Id);
                 }
 
-                if (_filter.FilterDates != null)
+                if (_filter.DateRange != null)
                 {
                     records = records.Where(x => x.TransactionDate >= FilterBeginDate && x.TransactionDate <= FilterEndDate);
                 }
@@ -198,44 +202,5 @@ namespace DLPMoneyTracker2.Main.TransactionList
         }
     }
 
-    public class TransDetailFilter
-    {
-        public IJournalAccount? Account;
-        public DateRange FilterDates;
-        public string SearchText;
-        public bool AreFilterControlsVisible;
-
-        public bool IsFilterEnabled
-        {
-            get
-            {
-                if (this.FilterDates != null) return true;
-                if (this.FilterDates?.Begin > DateTime.MinValue || this.FilterDates?.End < DateTime.MaxValue) return true;
-                if (!string.IsNullOrWhiteSpace(this.SearchText)) return true;
-
-                return false;
-            }
-        }
-
-        public TransDetailFilter()
-        {
-            this.FilterDates = new DateRange(DateTime.MinValue, DateTime.MaxValue);
-            this.SearchText = string.Empty;
-            AreFilterControlsVisible = true;
-        }
-
-        public TransDetailFilter(IJournalAccount account, DateRange dates, string search)
-        {
-            this.Account = account;
-            this.FilterDates = dates ?? new DateRange(DateTime.MinValue, DateTime.MaxValue);
-            this.SearchText = search;
-            AreFilterControlsVisible = true;
-        }
-
-        public void Clear()
-        {
-            this.FilterDates = new DateRange(DateTime.MinValue, DateTime.MaxValue);
-            this.SearchText = string.Empty;
-        }
-    }
+    
 }

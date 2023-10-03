@@ -1,0 +1,107 @@
+﻿@page "/TransactionDetail"
+@using DLPMoneyTracker.Data.TransactionModels;
+
+
+@inject ITrackerConfig config
+@inject IJournal journal
+
+<section id="sectionTransactionDetail">
+
+    <!-- Filter Options -->
+    <div class="row">
+        <EditForm Model="@_filter" OnSubmit="@Refresh">
+            <div class="col-4">
+                <label for="DateRange">Date Range</label>
+                <InputDate id="pickDateFrom" @bind-Value="@_filter.DateRange.Begin"></InputDate>
+                <label for="DateRange"> To </label>
+                <InputDate id="pickDateTo" @bind-Value="@_filter.DateRange.End"></InputDate>
+            </div>
+
+            <div class="col-4">
+                <label for="SearchText">Search Text</label>
+                <InputText id="txtSearch" @bind-Value="@_filter.SearchText"></InputText>
+            </div>
+
+            <div class="col-3">
+                <button @onclick="Refresh">
+                    <img src="/icons/light-bulb-256.png" class="action-icon" />
+                </button>
+            </div>
+
+            <div class="col-1">
+                <button @onclick="FullRefresh">
+                    <img src="/icons/refresh-256.png" class="action-icon" />
+                </button>
+            </div>
+        </EditForm>
+    </div>
+
+
+
+    <!-- Main Table -->
+    <div class="row">
+        <div class="col-12">
+            <table class="dataGrid">
+                <thead>
+                    <tr>
+                        <th>Transaction Date</th>
+                        <th>Debit Account</th>
+                        <th>Credit Account</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                   
+                <tbody>
+                    @foreach(var entry in listTransactions)
+                    {
+                        // TODO: Add rowcount for alternating row colors
+                        <tr>
+                            <td>@entry.TransactionDate</td>
+                            <td>@entry.DebitAccountName</td>
+                            <td>@entry.CreditAccountName</td>
+                            <td>@entry.Description</td>
+                            <td>@string.Format("{0:c}", entry.TransactionAmount)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</section>
+
+@code {
+
+    private JournalSearchFilter _filter = new JournalSearchFilter();
+    private List<IJournalEntry> listTransactions = new List<IJournalEntry>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _filter.Clear();
+        await Refresh();
+    }
+
+    private async Task FullRefresh()
+    {
+        _filter.Clear();
+        await Refresh();
+    }
+
+    private Task Refresh()
+    {
+        return Task.Run(async () =>
+        {
+            listTransactions.Clear();
+            var listData = journal.Search(_filter);
+            if (listData.Any() == true)
+            {
+                listTransactions.AddRange(listData);
+            }
+
+            StateHasChanged();
+        });
+    }
+
+}
