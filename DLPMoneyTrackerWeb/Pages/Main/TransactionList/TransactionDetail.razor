@@ -8,33 +8,32 @@
 <section id="sectionTransactionDetail">
 
     <!-- Filter Options -->
-    <div class="row">
-        <EditForm Model="@_filter" OnSubmit="@Refresh">
-            <div class="col-4">
-                <label for="DateRange">Date Range</label>
-                <InputDate id="pickDateFrom" @bind-Value="@_filter.DateRange.Begin"></InputDate>
-                <label for="DateRange"> To </label>
-                <InputDate id="pickDateTo" @bind-Value="@_filter.DateRange.End"></InputDate>
-            </div>
+    <EditForm Model="@_filter" OnSubmit="@Refresh">
+        <div class="form-floating">
+            <div class="row">
+                <div class="col-4">
+                    <label for="DateRange">Date Range</label>
+                    <InputDate id="pickDateFrom" @bind-Value="@_filter.DateRange.Begin"></InputDate>
+                    <label for="DateRange"> To </label>
+                    <InputDate id="pickDateTo" @bind-Value="@_filter.DateRange.End"></InputDate>
+                </div>
 
-            <div class="col-4">
-                <label for="SearchText">Search Text</label>
-                <InputText id="txtSearch" @bind-Value="@_filter.SearchText"></InputText>
-            </div>
+                <div class="col-5">
+                    <label for="SearchText">Search Text</label>
+                    <InputText id="txtSearch" @bind-Value="@_filter.SearchText"></InputText>
+                    <button @onclick="Refresh">
+                        <img src="/icons/light-bulb-256.png" class="action-icon" />
+                    </button>
+                </div>
 
-            <div class="col-3">
-                <button @onclick="Refresh">
-                    <img src="/icons/light-bulb-256.png" class="action-icon" />
-                </button>
+                <div class="col-3">
+                    <button @onclick="FullRefresh">
+                        <img src="/icons/refresh-256.png" class="action-icon" />
+                    </button>
+                </div>
             </div>
-
-            <div class="col-1">
-                <button @onclick="FullRefresh">
-                    <img src="/icons/refresh-256.png" class="action-icon" />
-                </button>
-            </div>
-        </EditForm>
-    </div>
+        </div>
+    </EditForm>
 
 
 
@@ -51,18 +50,21 @@
                         <th>Amount</th>
                     </tr>
                 </thead>
-                   
+
                 <tbody>
-                    @foreach(var entry in listTransactions)
-                    {
-                        // TODO: Add rowcount for alternating row colors
-                        <tr>
-                            <td>@entry.TransactionDate</td>
-                            <td>@entry.DebitAccountName</td>
-                            <td>@entry.CreditAccountName</td>
-                            <td>@entry.Description</td>
-                            <td>@string.Format("{0:c}", entry.TransactionAmount)</td>
-                        </tr>
+                    @{
+                        int rowCount = 0;
+                        foreach (var entry in listTransactions)
+                        {
+                            rowCount++;
+                            <tr class="@((rowCount % 2) == 0 ? "altRowColor" : "stdRowColor" )">
+                                <td>@entry.TransactionDate</td>
+                                <td>@entry.DebitAccountName</td>
+                                <td>@entry.CreditAccountName</td>
+                                <td>@entry.Description</td>
+                                <td>@string.Format("{0:c}", entry.TransactionAmount)</td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>
@@ -80,28 +82,25 @@
     protected override async Task OnInitializedAsync()
     {
         _filter.Clear();
-        await Refresh();
+        Refresh();
     }
 
     private async Task FullRefresh()
     {
         _filter.Clear();
-        await Refresh();
+        Refresh();
     }
 
-    private Task Refresh()
+    private void Refresh()
     {
-        return Task.Run(async () =>
+        listTransactions.Clear();
+        var listData = journal.Search(_filter);
+        if (listData.Any() == true)
         {
-            listTransactions.Clear();
-            var listData = journal.Search(_filter);
-            if (listData.Any() == true)
-            {
-                listTransactions.AddRange(listData);
-            }
+            listTransactions.AddRange(listData);
+        }
 
-            StateHasChanged();
-        });
+        StateHasChanged();
     }
 
 }
