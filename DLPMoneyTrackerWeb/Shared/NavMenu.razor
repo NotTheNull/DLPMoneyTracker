@@ -1,48 +1,73 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
-	<div class="container-fluid">
-		<a class="navbar-brand" href="">DLP Money Tracker</a>
-		<button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-	</div>
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">DLP Money Tracker</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
 </div>
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-	<nav class="flex-column">
-		<div class="nav-item px-3">
-			<NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-				<span class="oi oi-home" aria-hidden="true"></span> Overview
-			</NavLink>
-		</div>
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Overview
+            </NavLink>
+        </li>
 
-		<div class="nav-item px-3">
-			<NavLink class="nav-link" href="TransactionDetail" Match="NavLinkMatch.All">
-				<img src="icons\Stock-Exchange-256.png" /> Transaction Detail
-			</NavLink>
-		</div>
-@* 
-		<div class="nav-item px-3">
-			<NavLink class="nav-link" href="Budget" Match="NavLinkMatch.All">
-				<img src="icons\Library-Books-256.png" /> Budget Planner
-			</NavLink>
-		</div>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="TransactionDetail">
+                <img src="icons\Stock-Exchange-256.png" /> Transaction Detail
+            </NavLink>
+        </li>
 
-		<div class="nav-item px-3">
-			<NavLink class="nav-link" href="Config" Match="NavLinkMatch.All">
-				<img src="icons\Settings-01-256.png" /> Configure
-			</NavLink>
-		</div>
- *@
-	</nav>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" @onclick="() => isExpandConfig = !isExpandConfig">
+                <img src="icons\Settings-01-256.png" /> Configure
+            </NavLink>
+
+
+            @if (isExpandConfig)
+            {
+                <ul class="oi-expand-down">
+                    <li class="nav-item px-3">
+                        <NavLink class="navbar-expand" href="">
+                            <img src="/icons/dollar-256.png" /> Edit Money Accounts
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="navbar-expand" href="">
+                            <img src="/icons/library-books-256.png" /> Edit Ledger Accounts
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="navbar-expand" href="">
+                            <img src="/icons/edit-pencil-256.png" /> Edit Budget Plans
+                        </NavLink>
+                    </li>
+                </ul>
+            }
+        </li>
+
+        @*
+        <div class="nav-item px-3">
+        <NavLink class="nav-link" href="Budget" Match="NavLinkMatch.All">
+        <img src="icons\Library-Books-256.png" /> Budget Planner
+        </NavLink>
+        </div>
+
+        *@
+    </ul>
 </div>
 
 @code {
-	private bool collapseNavMenu = true;
+    private bool collapseNavMenu = true;
+    private bool isExpandConfig = false;
 
-	private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-	private void ToggleNavMenu()
-	{
-		collapseNavMenu = !collapseNavMenu;
-	}
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
 }
