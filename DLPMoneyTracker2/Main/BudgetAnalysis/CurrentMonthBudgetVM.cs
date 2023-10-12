@@ -74,11 +74,10 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
                     {
                         DateTime start = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
                         DateTime end = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month));
-                        TransDetailFilter filter = new TransDetailFilter()
+                        JournalSearchFilter filter = new JournalSearchFilter()
                         {
                             Account = ja,
-                            FilterDates = new DLPMoneyTracker.Data.Common.DateRange(start, end),
-                            AreFilterControlsVisible = false
+                            DateRange = new DLPMoneyTracker.Data.Common.DateRange(start, end)
                         };
                         AccountTransactionDetail window = new AccountTransactionDetail(filter);
                         window.Show();

@@ -118,7 +118,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
             {
                 return _cmdDetail ?? (_cmdDetail = new RelayCommand((o) =>
                 {
-                    TransDetailFilter filter = new TransDetailFilter() { Account = _account };
+                    JournalSearchFilter filter = new JournalSearchFilter() { Account = _account };
                     AccountTransactionDetail window = new AccountTransactionDetail(filter);
                     window.Show();
                 }));

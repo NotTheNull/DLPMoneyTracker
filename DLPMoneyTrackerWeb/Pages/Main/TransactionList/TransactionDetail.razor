@@ -75,11 +75,10 @@
 </section>
 
 @code {
-
     private JournalSearchFilter _filter = new JournalSearchFilter();
     private List<IJournalEntry> listTransactions = new List<IJournalEntry>();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         _filter.Clear();
         Refresh();

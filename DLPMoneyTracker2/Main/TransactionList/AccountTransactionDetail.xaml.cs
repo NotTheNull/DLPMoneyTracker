@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using DLPMoneyTracker.Data;
+using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 
 namespace DLPMoneyTracker2.Main.TransactionList
@@ -8,7 +9,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
     /// </summary>
     public partial class AccountTransactionDetail : Window
     {
-        public AccountTransactionDetail(TransDetailFilter filter)
+        public AccountTransactionDetail(JournalSearchFilter filter)
         {
             InitializeComponent();
             AccountTransactionDetailVM viewModel = UICore.DependencyHost.GetRequiredService<AccountTransactionDetailVM>();

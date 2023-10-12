@@ -79,7 +79,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Pages\Config\" />
+      <Folder Include="Data\" />
       <Folder Include="Pages\LedgerEntry\" />
     </ItemGroup>
 

@@ -62,11 +62,10 @@ namespace DLPMoneyTracker2.Main.YTD
                 {
                     DateTime start = new DateTime(DateTime.Today.Year, 1, 1);
                     DateTime end = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month));
-                    TransDetailFilter filter = new TransDetailFilter()
+                    JournalSearchFilter filter = new JournalSearchFilter()
                     {
                         Account = _account,
-                        FilterDates = new DLPMoneyTracker.Data.Common.DateRange(start, end),
-                        AreFilterControlsVisible = false
+                        DateRange = new DLPMoneyTracker.Data.Common.DateRange(start, end)
                     };
                     AccountTransactionDetail window = new AccountTransactionDetail(filter);
                     window.Show();
