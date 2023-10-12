@@ -6,7 +6,7 @@ namespace DLPMoneyTracker2.LedgerEntry
 {
     public class CorrectionJournalEntryVM : BaseRecordJournalEntryVM
     {
-        public CorrectionJournalEntryVM(ITrackerConfig config, IJournal journal) : base(journal, config, new List<JournalAccountType>() { JournalAccountType.Bank, JournalAccountType.LiabilityCard, JournalAccountType.LiabilityLoan }, new List<JournalAccountType>())
+        public CorrectionJournalEntryVM(ITrackerConfig config, IJournal journal) : base(journal, config, new List<JournalAccountType>() { JournalAccountType.Bank, JournalAccountType.LiabilityCard, JournalAccountType.LiabilityLoan, JournalAccountType.Payable, JournalAccountType.Receivable }, new List<JournalAccountType>())
         {
             this.SelectedCreditAccount = SpecialAccount.UnlistedAdjusment;
         }
