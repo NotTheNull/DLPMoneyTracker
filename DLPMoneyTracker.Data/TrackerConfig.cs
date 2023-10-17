@@ -34,6 +34,11 @@ namespace DLPMoneyTracker.Data
         {
             return new JournalAccountSearch(new List<JournalAccountType>() { JournalAccountType.Bank, JournalAccountType.LiabilityCard, JournalAccountType.LiabilityLoan });
         }
+
+        public static JournalAccountSearch GetAllLedgerAccounts()
+        {
+            return new JournalAccountSearch(new List<JournalAccountType>() { JournalAccountType.Payable, JournalAccountType.Receivable });
+        }
     }
 
     public interface ITrackerConfig : IDisposable

@@ -71,6 +71,7 @@ namespace DLPMoneyTrackerWeb.Pages.Config.EditMoneyAccounts
 
         public void Save()
         {
+            if (!this.IsValid) return;
 
             IJournalAccount account = null;
             if (this.UId != Guid.Empty)

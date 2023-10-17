@@ -1,0 +1,91 @@
+﻿@inject LedgerAccountVM viewModel
+
+
+<section id="sectionLedgerAccountEditor">
+    <EditForm Model="@viewModel">
+
+        <!-- Description -->
+        <div class="input-group row">
+            <label class="col-form-label col-2" for="Description">Description</label>
+            <div class="col">
+                <InputText id="txtDescription" class="DescriptionWidth" @bind-Value="@viewModel.Description"></InputText>
+                <ValidationMessage For="@(() => viewModel.Description)"></ValidationMessage>
+            </div>
+        </div>
+
+
+        <!-- Account Type -->
+        <div class="input-group row">
+            <label class="col-form-label col-2" for="AccountType">Account Type</label>
+            <div class="col">
+                <InputSelect id="cboAccountType" class="form-select AccountTypeWidth" @bind-Value="@viewModel.AccountType">
+                    @{
+                        if (viewModel.AccountType == JournalAccountType.NotSet)
+                        {
+                            <option selected disabled value="@JournalAccountType.NotSet"></option>
+                        }
+
+                        foreach (var t in JournalAccountSearch.GetAllLedgerAccounts().JournalTypes)
+                        {
+                            if (t == viewModel.AccountType)
+                            {
+                                <option selected value="@t">@t.ToDisplayText()</option>
+                            }
+                            else
+                            {
+                                <option value="@t">@t.ToDisplayText()</option>
+                            }
+                        }
+
+                    }
+                </InputSelect>
+            </div>
+        </div>
+
+        <!-- Monthly Budget -->
+        <div class="input-group row">
+            <label class="col-form-label col-2" for="MonthlyBudget">Monthly Budget</label>
+            <div class="col">
+                <InputCurrency @bind-Value="@viewModel.MonthlyBudget" CSSClass="MonthlyBudgetWidth" IsEditEnabled="@isEditBudgetEnabled"></InputCurrency>
+                <button type="button" onclick="@(() => this.ToggleMonthlyBudgetEdit())">@(isEditBudgetEnabled ? "LOCK" : "EDIT")</button>
+                <ValidationMessage For="@(() => viewModel.MonthlyBudget)"></ValidationMessage>
+            </div>
+        </div>
+
+    </EditForm>
+
+</section>
+
+
+@code {
+    private bool isEditBudgetEnabled = false;
+    private IJournalAccount _account;
+
+
+    public void LoadAccount(IJournalAccount account)
+    {
+        _account = account;
+        viewModel.LoadData(account);
+        StateHasChanged();
+    }
+
+
+    public void SaveChanges()
+    {
+        if (!viewModel.IsValid) return;
+        viewModel.Save();
+        this.Clear();
+    }
+
+    public void Clear()
+    {
+        viewModel.Clear();
+        StateHasChanged();
+    }
+
+    private void ToggleMonthlyBudgetEdit()
+    {
+        isEditBudgetEnabled = !isEditBudgetEnabled;
+    }
+
+}

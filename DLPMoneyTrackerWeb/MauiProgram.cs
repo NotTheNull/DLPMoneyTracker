@@ -1,4 +1,5 @@
 ﻿using DLPMoneyTracker.Data;
+using DLPMoneyTrackerWeb.Pages.Config.EditLedgerAccounts;
 using DLPMoneyTrackerWeb.Pages.Config.EditMoneyAccounts;
 using Microsoft.AspNetCore.Components.WebView.Maui;
 using Microsoft.Extensions.Logging;
@@ -31,6 +32,7 @@ namespace DLPMoneyTrackerWeb
             builder.Services.AddSingleton<IJournalPlanner, JournalPlanner>();
                         
             builder.Services.AddTransient<MoneyAccountVM>();
+            builder.Services.AddTransient<LedgerAccountVM>();
 
 
             return builder.Build();

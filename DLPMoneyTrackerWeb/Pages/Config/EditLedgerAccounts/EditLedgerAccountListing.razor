@@ -1,0 +1,148 @@
+﻿@page "/EditLedgerAccount"
+
+@inject ITrackerConfig config
+
+<section id="sectionEditLedgerAccounts">
+    <!-- Top row for action buttons -->
+    <div class="row">
+        <div class="col-12">
+            <button onclick="@(() => this.AddNew())">
+                <img src="/icons/add-new-256.png" class="action-icon" /> Add New
+            </button>
+
+            @if (isEditorVisible)
+            {
+                <button onclick="@(() => this.Save())">
+                    <img src="/icons/save-256.png" class="action-icon" /> Save Changes
+                </button>
+                <Tooltip Text="Clears the form.">
+                    <button onclick="@(() => this.Discard())">
+                        <img src="/icons/garbage-closed-256.png" class="action-icon" /> Discard
+                    </button>
+                </Tooltip>
+            }
+
+        </div>
+    </div>
+
+    <!-- Editing controls will be a separate UI that should slide out -->
+    <div class="card border @( isEditorVisible ? "" : "collapse" )">
+        <div class="card-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <LedgerAccountEditor @ref="editor"></LedgerAccountEditor>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid to list accounts -->
+    <div class="row">
+        <div class="col-12">
+            <table class="dataGrid">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Account Type</th>
+                        <th>Monthly Budget</th>
+                        <th><!-- Action Buttons --></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int rowCount = 0;
+                        foreach (var acct in listLedgerAccounts.OrderBy(o => o.Description))
+                        {
+                            rowCount++;
+                            <tr class="@((rowCount % 2) == 0 ? "altRowColor" : "stdRowColor" )">
+                                <td>@acct.Description</td>
+                                <td>@acct.JournalType.ToDisplayText()</td>
+                                <td>@string.Format("{0:c}", acct.MonthlyBudgetAmount)</td>
+                                <td>
+                                    @if (acct.DateClosedUTC.HasValue)
+                                    {
+                                        string.Format("CLOSED: {0:yyyy/MM/dd}", acct.DateClosedUTC.Value.ToLocalTime());
+                                    }
+                                    else
+                                    {
+                                        <Tooltip Text="Edit Account">
+                                            <button @onclick="(() => ShowEditUI(acct.Id))">
+                                                <img src="/icons/edit-pencil-256.png" class="action-icon" />
+                                            </button>
+                                        </Tooltip>
+
+                                        <Tooltip Text="Delete Account">
+                                            <button @onclick="(() => DeleteAccount(acct.Id))">
+                                                <img src="/icons/garbage-closed-256.png" class="action-icon" />
+                                            </button>
+                                        </Tooltip>
+                                    }
+                                </td>
+                            </tr>
+
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</section>
+
+
+@code {
+    private bool isEditorVisible = false;
+    private LedgerAccountEditor editor;
+    private List<IJournalAccount> listLedgerAccounts = new List<IJournalAccount>();
+
+
+    protected override Task OnInitializedAsync()
+    {
+        return Task.Run(() => this.Refresh());
+    }
+
+    private void Refresh()
+    {
+        listLedgerAccounts.Clear();
+
+        var listData = config.GetJournalAccountList(JournalAccountSearch.GetAllLedgerAccounts());
+        if (listData.Any() == true) listLedgerAccounts.AddRange(listData);
+
+        StateHasChanged();
+    }
+
+
+    private void ShowEditUI(Guid idAccount)
+    {
+        var account = listLedgerAccounts.FirstOrDefault(x => x.Id == idAccount);
+        if (account is null) return;
+        editor.LoadAccount(account);
+        isEditorVisible = true;
+    }
+
+    private void DeleteAccount(Guid idAccount)
+    {
+        config.RemoveJournalAccount(idAccount);
+        this.Refresh();
+    }
+
+    private void Save()
+    {
+        editor.SaveChanges();
+        isEditorVisible = false;
+        this.Refresh();
+    }
+
+    private void AddNew()
+    {
+        editor.Clear();
+        isEditorVisible = true;
+    }
+
+    private void Discard()
+    {
+        editor.Clear();
+        isEditorVisible = false;
+    }
+}

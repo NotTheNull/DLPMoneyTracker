@@ -1,5 +1,4 @@
-﻿@using DLPMoneyTracker.Data.LedgerAccounts;
-
+﻿
 @inject MoneyAccountVM viewModel
 
 <section id="sectionMoneyAccountEditor">
@@ -24,7 +23,7 @@
                         <option selected disabled value="@JournalAccountType.NotSet"></option>
                     }
 
-                    foreach(var t in listValidAccountTypes)
+                    foreach(var t in JournalAccountSearch.GetAllMoneyAccounts().JournalTypes)
                     {
                         if(t == viewModel.AccountType)
                         {
@@ -70,13 +69,7 @@
     private bool isEditBalanceEnabled = false;
     private IJournalAccount _account;
 
-    private List<JournalAccountType> listValidAccountTypes = new List<JournalAccountType>()
-    {
-        JournalAccountType.Bank,
-        JournalAccountType.LiabilityCard,
-        JournalAccountType.LiabilityLoan
-    };
-
+    
     public void LoadAccount(IJournalAccount account)
     {
         _account = account;

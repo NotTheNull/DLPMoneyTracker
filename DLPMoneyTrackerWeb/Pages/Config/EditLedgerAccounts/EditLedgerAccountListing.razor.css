@@ -1,0 +1,27 @@
+﻿
+.card-body {
+    background-color: silver;
+}
+
+section {
+    padding-top: 10px;
+    padding-bottom: 15px;
+}
+
+
+
+::deep .DescriptionWidth {
+    width: 50%;
+    vertical-align: central;
+}
+
+::deep .AccountTypeWidth {
+    width: 25%;
+    margin-bottom: 10px;
+    vertical-align: central;
+}
+
+::deep .MonthlyBudgetWidth {
+    width: 25%;
+    vertical-align: central;
+}
