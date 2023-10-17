@@ -5,25 +5,27 @@
 @inject IJournal journal
 
 <section id="sectionEditMoneyAccounts">
-<!-- top row will have buttons to create new and/or close -->
+    <!-- top row will have buttons to create new and/or close -->
     <div class="row">
         <div class="col-12">
             <button onclick="@(() => this.AddNew())">
-                <img src="/icons/add-new-256.png" class="action-icon"/> Add New
+                <img src="/icons/add-new-256.png" class="action-icon" /> Add New
             </button>
             @if (isEditorVisible)
             {
                 <button onclick="@(() => this.Save())">
                     <img src="/icons/save-256.png" class="action-icon" /> Save Changes
                 </button>
-                <button onclick="@(() => this.Discard())">
-                    <img src="/icons/garbage-closed-256.png" class="action-icon" /> Discard 
-                </button>
+                <Tooltip Text="Clears the form">
+                    <button onclick="@(() => this.Discard())">
+                        <img src="/icons/garbage-closed-256.png" class="action-icon" /> Discard
+                    </button>
+                </Tooltip>
             }
         </div>
     </div>
 
-<!-- Editing controls will be a separate UI that should slide out from somewhere -->
+    <!-- Editing controls will be a separate UI that should slide out from somewhere -->
     <div class="card border @( isEditorVisible ? "" : "collapse" )">
         <div class="card-body">
             <div class="container-fluid">
@@ -35,7 +37,7 @@
     </div>
 
 
-<!-- have data grid listing all accounts -->
+    <!-- have data grid listing all accounts -->
     <div class="row">
         <div class="col-12">
             <table class="dataGrid">
@@ -50,13 +52,13 @@
                 <tbody>
                     @{
                         int rowCount = 0;
-                        foreach(var acct in listMoneyAccounts.OrderBy(o => o.Description))
+                        foreach (var acct in listMoneyAccounts.OrderBy(o => o.Description))
                         {
                             rowCount++;
 
                             var recordInitialBalance = journal.TransactionList.FirstOrDefault(x =>
-                                (x.CreditAccountId == acct.Id && x.DebitAccountId == SpecialAccount.InitialBalance.Id) ||
-                                (x.CreditAccountId == SpecialAccount.InitialBalance.Id && x.DebitAccountId == acct.Id));
+                            (x.CreditAccountId == acct.Id && x.DebitAccountId == SpecialAccount.InitialBalance.Id) ||
+                            (x.CreditAccountId == SpecialAccount.InitialBalance.Id && x.DebitAccountId == acct.Id));
                             decimal balanceInitial = recordInitialBalance?.TransactionAmount ?? decimal.Zero;
 
 
@@ -65,19 +67,23 @@
                                 <td>@acct.JournalType.ToDisplayText()</td>
                                 <td>@string.Format("{0:c}", balanceInitial)</td>
                                 <td>
-                                    @if(acct.DateClosedUTC.HasValue)
+                                    @if (acct.DateClosedUTC.HasValue)
                                     {
                                         string.Format("CLOSED: {0:yyyy/MM/dd}", acct.DateClosedUTC.Value.ToLocalTime());
                                     }
                                     else
                                     {
-                                        <button @onclick="(() => ShowEditUI(acct.Id))">
-                                            <img src="/icons/edit-pencil-256.png" class="action-icon" />
-                                        </button>
+                                        <Tooltip Text="Edit Account">
+                                            <button @onclick="(() => ShowEditUI(acct.Id))">
+                                                <img src="/icons/edit-pencil-256.png" class="action-icon" />
+                                            </button>
+                                        </Tooltip>
 
-                                        <button @onclick="(() => DeleteAccount(acct.Id))">
-                                            <img src="/icons/garbage-closed-256.png" class="action-icon" />
-                                        </button>
+                                        <Tooltip Text="Delete Account">
+                                            <button @onclick="(() => DeleteAccount(acct.Id))">
+                                                <img src="/icons/garbage-closed-256.png" class="action-icon" />
+                                            </button>
+                                        </Tooltip>
                                     }
                                 </td>
                             </tr>
