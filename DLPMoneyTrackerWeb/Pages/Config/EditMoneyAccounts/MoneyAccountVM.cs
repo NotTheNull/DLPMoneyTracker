@@ -3,6 +3,7 @@ using DLPMoneyTracker.Data.LedgerAccounts;
 using DLPMoneyTracker.Data.TransactionModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,9 +23,11 @@ namespace DLPMoneyTrackerWeb.Pages.Config.EditMoneyAccounts
 
 
         public Guid UId { get; private set; }
+        
+        [MaxLength(100)]
         public string Description { get; set; }
         public JournalAccountType AccountType { get; set; }
-        public decimal InitialBalance { get; set; }
+        public decimal? InitialBalance { get; set; }
         public int DisplayOrder { get; set; }
 
         public bool IsValid
@@ -68,7 +71,12 @@ namespace DLPMoneyTrackerWeb.Pages.Config.EditMoneyAccounts
 
         public void Save()
         {
-            var account = _config.GetJournalAccount(this.UId);
+
+            IJournalAccount account = null;
+            if (this.UId != Guid.Empty)
+            {
+                account = _config.GetJournalAccount(this.UId);
+            }
             
             if(account is null)
             {
@@ -106,7 +114,7 @@ namespace DLPMoneyTrackerWeb.Pages.Config.EditMoneyAccounts
                     initBalRecord.CreditAccount = account;
                 }
             }
-            initBalRecord.TransactionAmount = this.InitialBalance;
+            initBalRecord.TransactionAmount = this.InitialBalance.HasValue ? this.InitialBalance.Value : decimal.Zero;
             _journal.AddTransaction(initBalRecord);
         }
     }

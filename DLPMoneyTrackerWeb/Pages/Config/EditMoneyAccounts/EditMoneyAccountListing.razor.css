@@ -1,0 +1,33 @@
+﻿
+.card-body {
+    background-color: silver;
+}
+
+section {
+    padding-top: 10px;
+    padding-bottom: 15px;
+}
+
+
+
+::deep .DescriptionWidth {
+    width: 50%;
+    vertical-align: central;
+}
+
+::deep .AccountTypeWidth {
+    width: 25%;
+    margin-bottom: 10px;
+    vertical-align: central;
+}
+
+::deep .InitialBalanceWidth {
+    width: 25%;
+    vertical-align: central;
+}
+
+::deep .DisplayOrderWidth {
+    width: 40px;
+    vertical-align: central;
+}
+

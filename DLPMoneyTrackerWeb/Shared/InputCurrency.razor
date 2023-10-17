@@ -1,0 +1,72 @@
+﻿
+
+@if(this.IsEditEnabled)
+{
+    <InputText @bind-Value="DisplayValue" class="@CSSClass" style="@Style" />
+} else
+{
+    <label class="@CSSClass" style="@Style">@DisplayValue</label>
+}
+
+
+
+@code {
+    private decimal? _value;
+    private string _displayValue = string.Empty;
+    private bool _isEditing = false;
+
+    [Parameter]
+    public decimal? Value
+    {
+        get { return _value; }
+        set
+        {
+            _value = value;
+        }
+    }
+    [Parameter] public EventCallback<decimal?> ValueChanged { get; set; }
+    [Parameter] public string CSSClass { get; set; }
+    [Parameter] public string Style { get; set; }
+    [Parameter] public bool IsEditEnabled
+    {
+        get { return _isEditing; }
+        set
+        {
+            _isEditing = value;
+            StateHasChanged();
+        }
+    }
+
+    private string DisplayValue
+    {
+        get
+        {
+            if(_value.HasValue)
+            {
+                if (IsEditEnabled) return string.Format("{0:###0.00}", _value.Value);
+
+                return string.Format("{0:c}", _value.Value);
+            }
+
+            return string.Empty;
+        }
+        set
+        {
+            // Remove any currency formatting that Decimal class doesn't like
+            string currValue = value.Replace("$", "").Replace(",", "");
+
+            if(decimal.TryParse(currValue, out decimal newVal))
+            {
+                _value = newVal;
+            }
+            else
+            {
+                _value = null;
+            }
+            ValueChanged.InvokeAsync(Value);
+        }
+    }
+
+
+
+}

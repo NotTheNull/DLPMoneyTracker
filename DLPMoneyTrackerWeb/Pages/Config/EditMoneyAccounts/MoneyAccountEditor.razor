@@ -3,69 +3,63 @@
 @inject MoneyAccountVM viewModel
 
 <section id="sectionMoneyAccountEditor">
-    <EditForm Model="@viewModel" OnValidSubmit="SaveChanges">
+    <EditForm Model="@viewModel">
         <!-- Description -->
-        <div class="row">
-            <div class="col-3">
-                <label for="Description">Description</label>
-            </div>
-            <div class="col=6">
-                <InputText @bind-Value="@viewModel.Description"></InputText>
+        <div class="input-group row">
+            <label class="col-form-label col-2" for="Description">Description</label>
+            <div class="col">
+                <InputText id="txtDescription" class="DescriptionWidth" @bind-Value="@viewModel.Description"></InputText>
+                <ValidationMessage For="@(() => viewModel.Description)"></ValidationMessage>
             </div>
         </div>
 
         <!-- Account Type list -->
-        <div class="row">
-            <div class="col-3">
-                <label for="AccountType">Account Type</label>
-            </div>
-            <div class="col-6">
-                <InputSelect class="form-select" @bind-Value="@viewModel.AccountType">
-                    @{
-                        if(viewModel.AccountType == JournalAccountType.NotSet)
-                        {
-                            <option selected disabled value="@JournalAccountType.NotSet"></option>
-                        }
-
-                        foreach(var t in listValidAccountTypes)
-                        {
-                            if(t == viewModel.AccountType)
-                            {
-                                <option selected value="@t">@t.ToDisplayText()</option>
-                            }
-                            else
-                            {
-                                <option value="@t">@t.ToDisplayText()</option>
-                            }
-                        }
-
+        <div class="input-group row">
+            <label class="col-form-label col-2" for="AccountType">Account Type</label>
+            <div class="col">
+            <InputSelect id="cboAccountType" class="form-select AccountTypeWidth" @bind-Value="@viewModel.AccountType">
+                @{
+                    if(viewModel.AccountType == JournalAccountType.NotSet)
+                    {
+                        <option selected disabled value="@JournalAccountType.NotSet"></option>
                     }
 
-                </InputSelect>
+                    foreach(var t in listValidAccountTypes)
+                    {
+                        if(t == viewModel.AccountType)
+                        {
+                            <option selected value="@t">@t.ToDisplayText()</option>
+                        }
+                        else
+                        {
+                            <option value="@t">@t.ToDisplayText()</option>
+                        }
+                    }
+
+                }
+            </InputSelect>
             </div>
         </div>
-
+        
         <!-- Initial Balance -->
-        <div class="row">
-            <div class="col-3">
-                <label for="InitialBalance">Initial Balance</label>
-            </div>
-            <div class="col-6">
-                <InputNumber @bind-Value="@viewModel.InitialBalance"></InputNumber>
+        <div class="input-group row">
+            <label class="col-form-label col-2" for="InitialBalance">Initial Balance</label>
+            <div class="col">
+                <InputCurrency @bind-Value="@viewModel.InitialBalance" CSSClass="InitialBalanceWidth" IsEditEnabled="@isEditBalanceEnabled"></InputCurrency> 
+                <button type="button" onclick="@(() => this.ToggleInitialBalanceEdit())">@(isEditBalanceEnabled ? "LOCK" : "EDIT")</button>
+                <ValidationMessage For="@(() => viewModel.InitialBalance)"></ValidationMessage>
             </div>
         </div>
 
         <!-- Display Order -->
-        <div class="row">
-            <div class="col-3">
-                <label for="DisplayOrder">Display Order</label>
-            </div>
-            <div class="col-6">
-                <InputNumber @bind-Value="@viewModel.DisplayOrder"></InputNumber>
+        <div class="input-group row">
+            <label class="col-form-label col-2" for="DisplayOrder">Display Order</label>
+            <div class="col">
+                <InputNumber id="txtDisplayOrder" class="DisplayOrderWidth" @bind-Value="@viewModel.DisplayOrder"></InputNumber>
+                <ValidationMessage For="@(() => viewModel.DisplayOrder)"></ValidationMessage>
             </div>
         </div>
-
-
+                
     </EditForm>
 
 </section>
@@ -73,6 +67,8 @@
 
 
 @code {
+    private bool isEditBalanceEnabled = false;
+    private IJournalAccount _account;
 
     private List<JournalAccountType> listValidAccountTypes = new List<JournalAccountType>()
     {
@@ -83,6 +79,7 @@
 
     public void LoadAccount(IJournalAccount account)
     {
+        _account = account;
         viewModel.LoadData(account);
         StateHasChanged();
     }
@@ -99,6 +96,12 @@
     {
         viewModel.Clear();
         StateHasChanged();
+    }
+
+
+    private void ToggleInitialBalanceEdit()
+    {
+        isEditBalanceEnabled = !isEditBalanceEnabled;
     }
 
 }
