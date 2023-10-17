@@ -1,5 +1,5 @@
 ﻿@page "/EditMoneyAccount"
-@using DLPMoneyTracker.Data.LedgerAccounts;
+
 
 @inject ITrackerConfig config
 @inject IJournal journal
@@ -11,12 +11,15 @@
             <button onclick="@(() => this.AddNew())">
                 <img src="/icons/add-new-256.png" class="action-icon"/> Add New
             </button>
-            <button onclick="@(() => this.Save())">
-                <img src="/icons/save-256.png" class="action-icon" /> Save Changes
-            </button>
-            <button onclick="@(() => this.Discard())">
-                <img src="/icons/garbage-closed-256.png" class="action-icon" /> Discard 
-            </button>
+            @if (isEditorVisible)
+            {
+                <button onclick="@(() => this.Save())">
+                    <img src="/icons/save-256.png" class="action-icon" /> Save Changes
+                </button>
+                <button onclick="@(() => this.Discard())">
+                    <img src="/icons/garbage-closed-256.png" class="action-icon" /> Discard 
+                </button>
+            }
         </div>
     </div>
 
