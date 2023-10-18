@@ -4,3 +4,21 @@
     font-family: 'Times New Roman', Times, serif;
     margin-left: 10px;
 }
+
+
+
+::deep .DescriptionWidth {
+    width: 50%;
+    vertical-align: central;
+}
+
+::deep .AccountTypeWidth {
+    width: 25%;
+    margin-bottom: 10px;
+    vertical-align: central;
+}
+
+::deep .MonthlyBudgetWidth {
+    width: 25%;
+    vertical-align: central;
+}
