@@ -40,7 +40,7 @@ namespace DLPMoneyTracker2.Main.UpcomingReminders
         {
             this.RemindersList.Clear();
 
-            DateRange range = new DateRange(DateTime.Today.Year, DateTime.Today.Month);
+            DateRange range = new DateRange(DateTime.Today.AddDays(-7), DateTime.Today.AddDays(30));
             var listPlans = _planner.GetPlansForDateRange(range);
             if (listPlans?.Any() != true) return;
 
