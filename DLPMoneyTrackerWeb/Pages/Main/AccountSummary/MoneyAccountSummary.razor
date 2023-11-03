@@ -41,7 +41,7 @@
                                 </thead>
                                 
                                 <tbody>
-                                    @foreach (var budget in listBudgets)
+                                    @foreach (var budget in listBudgets.OrderBy(o => o.NextOccurrence))
                                     {
                                         rowCount++;
                                         switch (budget.PlanType)
