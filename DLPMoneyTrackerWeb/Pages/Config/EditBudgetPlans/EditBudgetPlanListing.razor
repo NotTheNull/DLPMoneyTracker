@@ -1,0 +1,74 @@
+﻿@page "/EditBudgetPlan"
+@using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
+
+@inject ITrackerConfig config
+@inject IJournalPlanner planner
+
+<section id="sectionEditBudgetPlan">
+    <!-- Top row for action buttons -->
+    
+    
+    <!-- Editing controls will be a separate UI that should slide out -->
+    <!-- Grid to list accounts -->
+
+
+</section>
+
+@code {
+    private bool isEditorVisible = false;
+    private BudgetPlanEditor editor;
+    private List<IJournalPlan> listBudgetPlans = new List<IJournalPlan>();
+
+
+
+    private void Refresh()
+    {
+        listBudgetPlans.Clear();
+        var listPlans = planner.GetAllPlans();
+        if(listPlans?.Any() == true)
+        {
+            listBudgetPlans.AddRange(listPlans);
+        }
+
+        StateHasChanged();
+    }
+
+    private void ShowEditUI(Guid idPlan)
+    {
+        var plan = listBudgetPlans.FirstOrDefault(x => x.UID == idPlan);
+        if (plan is null) return;
+
+        editor.LoadPlan(plan);
+        isEditorVisible = true;
+    }
+
+    private void DeletePlan(Guid idPlan)
+    {
+        var plan = listBudgetPlans.FirstOrDefault(x => x.UID == idPlan);
+        if (plan is null) return;
+        planner.RemovePlan(plan);
+        this.Refresh();
+    }
+
+
+    private void Save()
+    {
+        editor.SaveChanges();
+        isEditorVisible = false;
+        this.Refresh();
+    }
+
+    private void AddNew()
+    {
+        editor.Clear();
+        isEditorVisible = true;
+    }
+
+    private void Discard()
+    {
+        editor.Clear();
+        isEditorVisible = false;
+    }
+
+
+}

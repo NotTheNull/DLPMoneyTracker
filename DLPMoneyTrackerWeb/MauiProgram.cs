@@ -1,4 +1,5 @@
 ﻿using DLPMoneyTracker.Data;
+using DLPMoneyTrackerWeb.Pages.Config.EditBudgetPlans;
 using DLPMoneyTrackerWeb.Pages.Config.EditLedgerAccounts;
 using DLPMoneyTrackerWeb.Pages.Config.EditMoneyAccounts;
 using Microsoft.AspNetCore.Components.WebView.Maui;
@@ -33,7 +34,7 @@ namespace DLPMoneyTrackerWeb
                         
             builder.Services.AddTransient<MoneyAccountVM>();
             builder.Services.AddTransient<LedgerAccountVM>();
-
+            builder.Services.AddTransient<BudgetPlanVM>();
 
             return builder.Build();
         }

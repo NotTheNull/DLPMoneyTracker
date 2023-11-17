@@ -152,13 +152,13 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
                     // Remove existing (if applicable) in case we're changing the Type
                     if (this.IsReadyForSave)
                     {
-                        var plan = _planner.JournalPlanList.FirstOrDefault(x => x.UID == this.BudgetPlanId);
+                        var plan = _planner.GetPlan(this.BudgetPlanId);  //_planner.JournalPlanList.FirstOrDefault(x => x.UID == this.BudgetPlanId);
                         if (plan != null)
                         {
                             _planner.RemovePlan(plan);
                         }
 
-                        plan = JournalPlanFactory.Build(_config, this.SelectedPlanType, this.Description, this.SelectedCreditAccount, this.SelectedDebitAccount, this.Amount, this.Recurrence);
+                        plan = JournalPlanFactory.Build(this.SelectedPlanType, this.Description, this.SelectedCreditAccount, this.SelectedDebitAccount, this.Amount, this.Recurrence);
                         _planner.AddPlan(plan);
                     }
                     _planner.SaveToFile();
@@ -221,9 +221,10 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
         private void Reload()
         {
             this.PlanList.Clear();
-            if (_planner.JournalPlanList?.Any() != true) return;
+            var listPlans = _planner.GetAllPlans();
+            if (listPlans?.Any() != true) return;
 
-            foreach (var p in _planner.JournalPlanList.OrderBy(o => o.PriorityOrder).ThenBy(o => o.Description))
+            foreach (var p in listPlans.OrderBy(o => o.PriorityOrder).ThenBy(o => o.Description))
             {
                 this.PlanList.Add(p);
             }

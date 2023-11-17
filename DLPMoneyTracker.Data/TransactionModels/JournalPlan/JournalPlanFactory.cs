@@ -1,5 +1,6 @@
 ﻿using DLPMoneyTracker.Data.LedgerAccounts;
 using DLPMoneyTracker.Data.ScheduleRecurrence;
+using System.Diagnostics;
 
 namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
 {
@@ -70,7 +71,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
             }
         }
 
-        public static IJournalPlan Build(ITrackerConfig config, JournalPlanType pType, string desc, IJournalAccount credit, IJournalAccount debit, decimal amount, IScheduleRecurrence recurrence)
+        public static IJournalPlan Build(JournalPlanType pType, string desc, IJournalAccount credit, IJournalAccount debit, decimal amount, IScheduleRecurrence recurrence)
         {
             switch (pType)
             {
@@ -117,6 +118,43 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
                 default:
                     return null;
             }
+        }
+
+        public static void Update(ref IJournalPlan plan, string desc, IJournalAccount credit, IJournalAccount debit, decimal amount, IScheduleRecurrence recurrence)
+        {
+            if(plan is PayablePlan pay)
+            {
+                pay.Description = desc;
+                pay.DebitAccount = debit;
+                pay.CreditAccount = credit;
+                pay.ExpectedAmount = amount;
+                pay.Recurrence = recurrence;
+            }
+            else if(plan is ReceivablePlan r)
+            {
+                r.Description = desc;
+                r.DebitAccount = debit;
+                r.CreditAccount = credit;
+                r.ExpectedAmount = amount;
+                r.Recurrence = recurrence;
+            }
+            else if(plan is TransferPlan xfer)
+            {
+                xfer.Description = desc;
+                xfer.DebitAccount = debit;
+                xfer.CreditAccount = credit;
+                xfer.ExpectedAmount = amount;
+                xfer.Recurrence = recurrence;
+            }
+            else if(plan is DebtPaymentPlan debt)
+            {
+                debt.Description = desc;
+                debt.DebitAccount = debit;
+                debt.CreditAccount = credit;
+                debt.ExpectedAmount = amount;
+                debt.Recurrence = recurrence;
+            }
+
         }
 
         //#pragma warning disable CS0612 // Type or member is obsolete

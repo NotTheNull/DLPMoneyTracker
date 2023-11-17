@@ -12,7 +12,7 @@ namespace DLPMoneyTracker.Data
     public interface IJournalPlanner
     {
         string FilePath { get; }
-        ReadOnlyCollection<IJournalPlan> JournalPlanList { get; }
+        //ReadOnlyCollection<IJournalPlan> JournalPlanList { get; }
 
         void AddPlan(IJournalPlan journalPlan);
 
@@ -27,6 +27,9 @@ namespace DLPMoneyTracker.Data
         IEnumerable<IJournalPlan> GetUpcomingPlansForAccount(Guid accountId);
 
         IEnumerable<IJournalPlan> GetPlansForDateRange(DateRange range);
+
+        IEnumerable<IJournalPlan> GetAllPlans();
+        IJournalPlan GetPlan(Guid uid);
 
         void Copy(IJournalPlanner journalPlanner);
 
@@ -138,10 +141,22 @@ namespace DLPMoneyTracker.Data
         public void Copy(IJournalPlanner journalPlanner)
         {
             this.ClearRecordList();
-            foreach (var plan in journalPlanner.JournalPlanList)
+            foreach (var plan in journalPlanner.GetAllPlans())
             {
                 this.AddPlan(plan);
             }
+        }
+
+        public IEnumerable<IJournalPlan> GetAllPlans()
+        {
+            return this.JournalPlanList;
+        }
+
+        public IJournalPlan GetPlan(Guid uid)
+        {
+            if (uid == Guid.Empty) return null;
+
+            return this.JournalPlanList.FirstOrDefault(x => x.UID == uid);
         }
 
         //#pragma warning disable CS0618 // Type or member is obsolete

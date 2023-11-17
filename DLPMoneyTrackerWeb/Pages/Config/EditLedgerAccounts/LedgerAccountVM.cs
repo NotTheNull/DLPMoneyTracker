@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTrackerWeb.Pages.Config.EditLedgerAccounts
 {
-    public class LedgerAccountVM
+    public class LedgerAccountVM 
     {
         private readonly ITrackerConfig _config;
 
