@@ -245,11 +245,13 @@ namespace DLPMoneyTracker.Data
                 {
                     record.DebitAccount = SpecialAccount.InitialBalance;
                     record.CreditAccount = creditCard;
+                    record.TransactionAmount *= -1; // Sum of records will be negative
                 }
                 else if (account is LoanAccount loan)
                 {
                     record.DebitAccount = SpecialAccount.InitialBalance;
                     record.CreditAccount = loan;
+                    record.TransactionAmount *= -1; // Sum of records will be negative
                 }
 
                 this.AddTransaction(record);
