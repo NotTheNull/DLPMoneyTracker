@@ -297,7 +297,9 @@ namespace DLPMoneyTracker2.LedgerEntry
             {
                 JournalEntryType = this.JournalEntryType,
                 CreditAccount = this.SelectedCreditAccount,
+                CreditBankDate = this.CreditBankDate,
                 DebitAccount = this.SelectedDebitAccount,
+                DebitBankDate = this.DebitBankDate,
                 TransactionAmount = this.Amount,
                 TransactionDate = this.TransactionDate,
                 Description = this.Description

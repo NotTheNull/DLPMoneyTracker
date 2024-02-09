@@ -59,7 +59,9 @@ namespace DLPMoneyTracker2.LedgerEntry
 				TransactionDate = this.TransactionDate,
 				Description = this.Description,
 				CreditAccount = (action.Id == SpecialAccount.DebtInterest.Id) ? liability : action,
-				DebitAccount = (action.Id == SpecialAccount.DebtInterest.Id) ? action : liability
+				CreditBankDate = this.CreditBankDate,
+				DebitAccount = (action.Id == SpecialAccount.DebtInterest.Id) ? action : liability,
+				DebitBankDate = this.DebitBankDate
 			};
 
 			if (this.ExistingTransactionId.HasValue)
