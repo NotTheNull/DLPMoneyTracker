@@ -284,6 +284,8 @@ namespace DLPMoneyTracker2.LedgerEntry
             this.Description = entry.Description;
             this.SelectedCreditAccount = _config.GetJournalAccount(entry.CreditAccountId);
             this.SelectedDebitAccount = _config.GetJournalAccount(entry.DebitAccountId);
+            this.CreditBankDate = entry.CreditBankDate;
+            this.DebitBankDate = entry.DebitBankDate;
         }
 
         /// <summary>
