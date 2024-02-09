@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using DLPMoneyTracker.Data.TransactionModels;
+using System.Windows;
 
 namespace DLPMoneyTracker2.LedgerEntry
 {
@@ -15,6 +16,7 @@ namespace DLPMoneyTracker2.LedgerEntry
             this.DataContext = viewModel;
             _viewModel = viewModel;
         }
+
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {

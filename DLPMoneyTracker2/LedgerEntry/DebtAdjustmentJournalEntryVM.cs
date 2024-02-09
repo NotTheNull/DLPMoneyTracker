@@ -8,9 +8,15 @@ namespace DLPMoneyTracker2.LedgerEntry
     public class DebtAdjustmentJournalEntryVM : BaseRecordJournalEntryVM
     {
         public DebtAdjustmentJournalEntryVM(ITrackerConfig config, IJournal journal) :
-            base(journal, config, new List<JournalAccountType>() { JournalAccountType.LiabilityLoan, JournalAccountType.LiabilityCard }, new List<JournalAccountType>())
+            base(
+                journal, 
+                config, 
+                new List<JournalAccountType>() { JournalAccountType.LiabilityLoan, JournalAccountType.LiabilityCard }, 
+                new List<JournalAccountType>(), 
+                TransactionType.DebtAdjustment)
         {
         }
+
 
         public override bool IsValidTransaction
         {
@@ -50,13 +56,20 @@ namespace DLPMoneyTracker2.LedgerEntry
 
             JournalEntry record = new JournalEntry(_config)
             {
+                JournalEntryType = this.JournalEntryType,
                 TransactionAmount = this.Amount,
                 TransactionDate = this.TransactionDate,
                 Description = this.Description,
                 CreditAccount = (action.Id == SpecialAccount.DebtInterest.Id) ? liability : action,
                 DebitAccount = (action.Id == SpecialAccount.DebtInterest.Id) ? action : liability
             };
-            _journal.AddTransaction(record);
+
+			if (this.ExistingTransactionId.HasValue)
+			{
+				record.Id = this.ExistingTransactionId.Value;
+			}
+
+			_journal.AddUpdateTransaction(record);
         }
     }
 }

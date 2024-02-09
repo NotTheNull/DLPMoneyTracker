@@ -44,7 +44,7 @@ namespace DLPMoneyTracker.Data
 
 		void SaveToFile();
 
-		void AddTransaction(IJournalEntry trans);
+		void AddUpdateTransaction(IJournalEntry trans);
 
 
 		IEnumerable<IJournalEntry> Search(JournalSearchFilter filter);
@@ -93,7 +93,8 @@ namespace DLPMoneyTracker.Data
 		public ReadOnlyCollection<IJournalEntry> TransactionList
 		{ get { return _listTransactions.AsReadOnly(); } }
 
-		public void AddTransaction(IJournalEntry trans)
+
+		public void AddUpdateTransaction(IJournalEntry trans)
 		{
 			var record = _listTransactions.FirstOrDefault(x => x.Id == trans.Id);
 			if (record is null)
@@ -106,6 +107,10 @@ namespace DLPMoneyTracker.Data
 			}
 			this.SaveToFile();
 		}
+
+		
+
+
 
 		public IEnumerable<IJournalEntry> Search(JournalSearchFilter filter)
 		{
@@ -264,7 +269,7 @@ namespace DLPMoneyTracker.Data
 					record.TransactionAmount *= -1; // Sum of records will be negative
 				}
 
-				this.AddTransaction(record);
+				this.AddUpdateTransaction(record);
 			}
 		}
 

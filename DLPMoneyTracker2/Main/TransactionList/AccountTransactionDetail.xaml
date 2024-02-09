@@ -77,9 +77,26 @@
         <DataGrid Grid.Row="2"
                   ItemsSource="{Binding Path=DisplayRecordsList}">
             <DataGrid.Columns>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <Button Style="{StaticResource MenuButton}"
+                                        Command="{Binding Path=CommandEdit}"
+                                        Visibility="{Binding Path=CanUserEdit, Converter={StaticResource convertBoolToVisibility}}"
+                                        >
+                                    <Button.Content>
+                                        <Image Source="/Icons/Edit-Pencil-256.png" />
+                                    </Button.Content>
+                                </Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
                 <DataGridTextColumn SortDirection="Ascending"
                                     Header="Transaction Date"
-                                    Binding="{Binding TransactionDate}" />
+                                    Binding="{Binding DisplayTransactionDate}" />
 
                 <DataGridTextColumn Header="Account"
                                     MinWidth="120"

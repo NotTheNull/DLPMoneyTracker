@@ -30,6 +30,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="15" />
         </Grid.RowDefinitions>
 
@@ -60,6 +61,7 @@
                   SelectedValue="{Binding Path=SelectedDebitAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   DisplayMemberPath="Display"
                   SelectedValuePath="Value" />
+        
 
         <TextBlock Text="{Binding Path=CreditHeader, FallbackValue=CREDIT}"
                    Grid.Row="2"
@@ -79,12 +81,39 @@
                   SelectedValuePath="Value"
                   SelectedValue="{Binding Path=SelectedCreditAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
+        <TextBlock Grid.Column="1"
+                   Grid.Row="3"
+                   Text="Bank Date"
+                   Visibility="{Binding Path=IsNew, Converter={StaticResource convertBoolToVisibility}, ConverterParameter=R}"
+                   Style="{StaticResource StandardHeaderLabel}" />
+
+        <DatePicker x:Name="datDebitBank"
+                    Width="120"
+                    HorizontalAlignment="Left"
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    Margin="0, 5, 0, 5"
+                    Visibility="{Binding Path=IsDebitBankDateVisible, Converter={StaticResource convertBoolToVisibility}}"
+                    SelectedDate="{Binding Path=DebitBankDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <DatePicker x:Name="datcRebitBank"
+            Width="120"
+            HorizontalAlignment="Left"
+            Grid.Row="3"
+            Grid.Column="4"
+            Margin="0, 5, 0, 5"
+            Visibility="{Binding Path=IsCreditBankDateVisible, Converter={StaticResource convertBoolToVisibility}}"
+            SelectedDate="{Binding Path=CreditBankDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+
+
+
         <TextBlock Text="Description"
-                   Grid.Row="4"
+                   Grid.Row="5"
                    Grid.Column="1"
                    Style="{StaticResource StandardHeaderLabel}" />
         <TextBox x:Name="txtDescription"
-                 Grid.Row="4"
+                 Grid.Row="5"
                  Grid.Column="2"
                  Grid.ColumnSpan="3"
                  Margin="0, 5, 0, 5"
@@ -96,12 +125,12 @@
         </TextBox>
 
         <TextBlock Text="Amount"
-                   Grid.Row="5"
+                   Grid.Row="6"
                    Grid.Column="1"
                    Style="{StaticResource StandardHeaderLabel}" />
 
         <TextBox x:Name="txtTransAmount"
-                 Grid.Row="5"
+                 Grid.Row="6"
                  Grid.Column="2"
                  Width="150"
                  HorizontalAlignment="Left"
@@ -112,7 +141,7 @@
             </i:Interaction.Behaviors>
         </TextBox>
 
-        <StackPanel Grid.Row="6"
+        <StackPanel Grid.Row="7"
                     Grid.Column="3"
                     Grid.ColumnSpan="2"
                     Margin="0, 10, 0, 0"

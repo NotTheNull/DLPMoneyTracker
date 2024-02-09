@@ -1,4 +1,4 @@
-﻿#define TEST_NEW
+﻿#undef TEST_NEW
 
 namespace DLPMoneyTracker.Data
 {
@@ -10,11 +10,11 @@ namespace DLPMoneyTracker.Data
         public const string YEAR_FOLDER_PLACEHOLDER = "{YEAR}";
 
 #if DEBUG && !TEST_NEW
-        public static readonly string DATA_FOLDER_PATH = string.Format(@"C:\Users\Landon\OneDrive\Programs\DLP Money Tracker\{0}\Data\", YEAR_FOLDER_PLACEHOLDER);
+        public static readonly string DATA_FOLDER_PATH = string.Format(@"C:\Users\crc\OneDrive\Programs\DLP Money Tracker\{0}\Data\", YEAR_FOLDER_PLACEHOLDER);
 
-        public static readonly string CONFIG_FOLDER_PATH = string.Format(@"C:\Users\Landon\OneDrive\Programs\DLP Money Tracker\{0}\Config\", YEAR_FOLDER_PLACEHOLDER);
+        public static readonly string CONFIG_FOLDER_PATH = string.Format(@"C:\Users\crc\OneDrive\Programs\DLP Money Tracker\{0}\Config\", YEAR_FOLDER_PLACEHOLDER);
 
-        public static readonly string RECONCILE_FOLDER_PATH = string.Format(@"C:\Users\Landon\OneDrive\Programs\DLP Money Tracker\{0}\Reconciliation\", YEAR_FOLDER_PLACEHOLDER);
+        public static readonly string RECONCILE_FOLDER_PATH = string.Format(@"C:\Users\crc\OneDrive\Programs\DLP Money Tracker\{0}\Reconciliation\", YEAR_FOLDER_PLACEHOLDER);
 #else
 
 		public static string DATA_FOLDER_PATH

@@ -6,7 +6,13 @@ namespace DLPMoneyTracker2.LedgerEntry
 {
     public class ExpenseJournalEntryVM : BaseRecordJournalEntryVM
     {
-        public ExpenseJournalEntryVM(ITrackerConfig config, IJournal journal) : base(journal, config, new List<JournalAccountType>() { JournalAccountType.Payable }, new List<JournalAccountType>() { JournalAccountType.Bank, JournalAccountType.LiabilityCard })
+        public ExpenseJournalEntryVM(ITrackerConfig config, IJournal journal) : 
+            base(
+                journal, 
+                config, 
+                new List<JournalAccountType>() { JournalAccountType.Payable }, 
+                new List<JournalAccountType>() { JournalAccountType.Bank, JournalAccountType.LiabilityCard },
+                DLPMoneyTracker.Data.TransactionModels.TransactionType.Expense)
         {
         }
 

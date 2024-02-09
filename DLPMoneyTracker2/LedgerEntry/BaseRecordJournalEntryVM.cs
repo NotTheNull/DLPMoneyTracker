@@ -12,8 +12,10 @@ namespace DLPMoneyTracker2.LedgerEntry
 {
     public interface IJournalEntryVM
     {
+        bool IsNew { get; }
         bool IsValidTransaction { get; }
         DateTime TransactionDate { get; }
+        TransactionType JournalEntryType { get; }
 
         string DebitHeader { get; }
         ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidDebitAccounts { get; }
@@ -24,6 +26,8 @@ namespace DLPMoneyTracker2.LedgerEntry
         IJournalAccount SelectedCreditAccount { get; }
 
         bool IsCreditEnabled { get; }
+        bool IsCreditBankDateVisible { get; }
+        bool IsDebitBankDateVisible { get; }
 
         string Description { get; }
         decimal Amount { get; }
@@ -31,6 +35,7 @@ namespace DLPMoneyTracker2.LedgerEntry
         void Clear();
 
         void LoadAccounts();
+        void LoadTransaction(IJournalEntry entry);
 
         void SaveTransaction();
 
@@ -45,16 +50,26 @@ namespace DLPMoneyTracker2.LedgerEntry
         private readonly List<JournalAccountType> _validDebitTypes = new List<JournalAccountType>();
         private readonly List<JournalAccountType> _validCreditTypes = new List<JournalAccountType>();
 
-        public BaseRecordJournalEntryVM(IJournal journal, ITrackerConfig config, IEnumerable<JournalAccountType> validDebitTypes, IEnumerable<JournalAccountType> validCreditTypes)
+        protected BaseRecordJournalEntryVM(
+            IJournal journal, 
+            ITrackerConfig config,  
+            IEnumerable<JournalAccountType> validDebitTypes, 
+            IEnumerable<JournalAccountType> validCreditTypes,
+            TransactionType transType)
         {
             _config = config;
             _journal = journal;
+            _transType = transType;
             _date = DateTime.Today;
             _validDebitTypes.AddRange(validDebitTypes);
             _validCreditTypes.AddRange(validCreditTypes);
             this.LoadAccounts();
             this.NotifyAll();
         }
+
+
+        protected Guid? ExistingTransactionId { get; set; } = null;
+
 
         private DateTime _date;
 
@@ -68,6 +83,11 @@ namespace DLPMoneyTracker2.LedgerEntry
             }
         }
 
+        private TransactionType _transType;
+        public TransactionType JournalEntryType { get { return _transType; } }
+
+
+        public bool IsNew { get { return !this.ExistingTransactionId.HasValue; } }
         public abstract bool IsValidTransaction { get; }
 
         protected ObservableCollection<SpecialDropListItem<IJournalAccount>> _listValidDebits = new ObservableCollection<SpecialDropListItem<IJournalAccount>>();
@@ -86,16 +106,45 @@ namespace DLPMoneyTracker2.LedgerEntry
             {
                 _debit = value;
                 NotifyPropertyChanged(nameof(SelectedDebitAccount));
+                NotifyPropertyChanged(nameof(IsDebitBankDateVisible));
             }
         }
 
-        public virtual bool IsCreditEnabled
-        { get { return true; } }
+        private DateTime? _debitBankDate;
+
+        public DateTime? DebitBankDate
+        {
+            get { return _debitBankDate; }
+            set 
+            {
+                _debitBankDate = value;
+                NotifyPropertyChanged(nameof(DebitBankDate));
+            }
+        }
+
+
+        public virtual bool IsCreditEnabled        { get { return true; } }
+
+        public virtual bool IsCreditBankDateVisible
+        {
+            get
+            {
+                return !IsNew && IsCreditEnabled && (_credit is IMoneyAccount);
+            }
+        }
+
+        public virtual bool IsDebitBankDateVisible
+        {
+            get
+            {
+                return !IsNew && (_debit is IMoneyAccount);
+            }
+        }
+
 
         protected ObservableCollection<SpecialDropListItem<IJournalAccount>> _listValidCredits = new ObservableCollection<SpecialDropListItem<IJournalAccount>>();
 
-        public ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidCreditAccounts
-        { get { return _listValidCredits; } }
+        public ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidCreditAccounts        { get { return _listValidCredits; } }
 
         public abstract string CreditHeader { get; }
 
@@ -108,8 +157,25 @@ namespace DLPMoneyTracker2.LedgerEntry
             {
                 _credit = value;
                 NotifyPropertyChanged(nameof(SelectedCreditAccount));
+                NotifyPropertyChanged(nameof(IsCreditBankDateVisible));
             }
         }
+
+        private DateTime? _creditBankDate;
+
+        public DateTime? CreditBankDate
+        {
+            get { return _creditBankDate; }
+            set 
+            { 
+                _creditBankDate = value;
+                NotifyPropertyChanged(nameof(CreditBankDate));
+            }
+        }
+
+
+
+
 
         protected string _desc;
 
@@ -144,6 +210,8 @@ namespace DLPMoneyTracker2.LedgerEntry
             this.SelectedDebitAccount = null;
         }
 
+
+
         public virtual void LoadAccounts()
         {
             this.ValidCreditAccounts.Clear();
@@ -167,19 +235,41 @@ namespace DLPMoneyTracker2.LedgerEntry
             }
         }
 
+        public virtual void LoadTransaction(IJournalEntry entry)
+        {
+            if (entry is null) throw new ArgumentNullException(nameof(IJournalEntry));
+
+            this.ExistingTransactionId = entry.Id;
+            this.TransactionDate = entry.TransactionDate;
+            this.Amount = entry.TransactionAmount;
+            this.Description = entry.Description;
+            this.SelectedCreditAccount = _config.GetJournalAccount(entry.CreditAccountId);
+            this.SelectedDebitAccount = _config.GetJournalAccount(entry.DebitAccountId);
+        }
+
+        /// <summary>
+        /// If you override this save, make sure to check for the Existing Transaction
+        /// </summary>
         public virtual void SaveTransaction()
         {
             if (!IsValidTransaction) return;
 
             JournalEntry record = new JournalEntry(_config)
             {
+                JournalEntryType = this.JournalEntryType,
                 CreditAccount = this.SelectedCreditAccount,
                 DebitAccount = this.SelectedDebitAccount,
                 TransactionAmount = this.Amount,
                 TransactionDate = this.TransactionDate,
                 Description = this.Description
             };
-            _journal.AddTransaction(record);
+
+            if(this.ExistingTransactionId.HasValue)
+            {
+                record.Id = this.ExistingTransactionId.Value;
+            }
+
+            _journal.AddUpdateTransaction(record);
         }
 
         public void FillFromPlan(IJournalPlan plan)

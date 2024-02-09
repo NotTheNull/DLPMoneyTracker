@@ -181,7 +181,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
                 }
             }
             initBalRecord.TransactionAmount = this.InitialBalance;
-            _journal.AddTransaction(initBalRecord);
+            _journal.AddUpdateTransaction(initBalRecord);
         }
     }
 }
