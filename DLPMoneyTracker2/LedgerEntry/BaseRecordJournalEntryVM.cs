@@ -20,17 +20,27 @@ namespace DLPMoneyTracker2.LedgerEntry
         string DebitHeader { get; }
         ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidDebitAccounts { get; }
         IJournalAccount SelectedDebitAccount { get; }
+        string DebitAccountName { get; }
 
         string CreditHeader { get; }
         ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidCreditAccounts { get; }
         IJournalAccount SelectedCreditAccount { get; }
+        string CreditAccountName { get; }
 
         bool IsCreditEnabled { get; }
         bool IsCreditBankDateVisible { get; }
         bool IsDebitBankDateVisible { get; }
 
+        bool CanUserEditCreditAccount { get; }
+        bool CanUserEditDebitAccount { get; }
+
+
         string Description { get; }
         decimal Amount { get; }
+
+
+
+
 
         void Clear();
 
@@ -109,6 +119,8 @@ namespace DLPMoneyTracker2.LedgerEntry
                 NotifyPropertyChanged(nameof(IsDebitBankDateVisible));
             }
         }
+        public string DebitAccountName { get { return this.SelectedDebitAccount?.Description ?? string.Empty; } }
+
 
         private DateTime? _debitBankDate;
 
@@ -121,23 +133,49 @@ namespace DLPMoneyTracker2.LedgerEntry
                 NotifyPropertyChanged(nameof(DebitBankDate));
             }
         }
+        public virtual bool IsDebitBankDateVisible
+        {
+            get
+            {
+                return !IsNew && (_debit is IMoneyAccount);
+            }
+        }
 
 
-        public virtual bool IsCreditEnabled        { get { return true; } }
+
+		public bool CanUserEditCreditAccount 
+        {
+            get
+            {
+                if (this.IsNew) return true;
+                if(SelectedCreditAccount != null)
+                    return !SelectedCreditAccount.DateClosedUTC.HasValue;
+
+                return true;
+            } 
+        }
+		public bool CanUserEditDebitAccount 
+        { 
+            get
+            {
+                if (this.IsNew) return true;
+                if(SelectedDebitAccount != null)
+                    return !SelectedDebitAccount.DateClosedUTC.HasValue;
+
+                return true;
+            }
+        }
+    
+
+
+
+		public virtual bool IsCreditEnabled        { get { return CanUserEditCreditAccount; } }
 
         public virtual bool IsCreditBankDateVisible
         {
             get
             {
                 return !IsNew && IsCreditEnabled && (_credit is IMoneyAccount);
-            }
-        }
-
-        public virtual bool IsDebitBankDateVisible
-        {
-            get
-            {
-                return !IsNew && (_debit is IMoneyAccount);
             }
         }
 
@@ -160,6 +198,7 @@ namespace DLPMoneyTracker2.LedgerEntry
                 NotifyPropertyChanged(nameof(IsCreditBankDateVisible));
             }
         }
+        public string CreditAccountName { get { return this.SelectedCreditAccount?.Description ?? string.Empty; } }
 
         private DateTime? _creditBankDate;
 

@@ -70,11 +70,11 @@ namespace DLPMoneyTracker2.LedgerEntry
 			{
 				viewModel = UICore.DependencyHost.GetRequiredService<DebtPaymentJournalEntryVM>();
 			}
-			else if(debit is IDebtAccount && (credit == SpecialAccount.DebtInterest || credit == SpecialAccount.DebtReduction))
+			else if(debit is IDebtAccount && (credit.Id == SpecialAccount.DebtInterest.Id || credit.Id == SpecialAccount.DebtReduction.Id))
 			{
 				viewModel = UICore.DependencyHost.GetRequiredService<DebtAdjustmentJournalEntryVM>();
 			}
-			else if(debit == SpecialAccount.UnlistedAdjusment || credit == SpecialAccount.UnlistedAdjusment)
+			else if(debit.Id == SpecialAccount.UnlistedAdjusment.Id || credit.Id == SpecialAccount.UnlistedAdjusment.Id)
 			{
 				viewModel = UICore.DependencyHost.GetRequiredService<CorrectionJournalEntryVM>();
 			}

@@ -5,64 +5,62 @@ using System.Collections.Generic;
 
 namespace DLPMoneyTracker2.LedgerEntry
 {
-    public class DebtAdjustmentJournalEntryVM : BaseRecordJournalEntryVM
-    {
-        public DebtAdjustmentJournalEntryVM(ITrackerConfig config, IJournal journal) :
-            base(
-                journal, 
-                config, 
-                new List<JournalAccountType>() { JournalAccountType.LiabilityLoan, JournalAccountType.LiabilityCard }, 
-                new List<JournalAccountType>(), 
-                TransactionType.DebtAdjustment)
-        {
-        }
+	public class DebtAdjustmentJournalEntryVM : BaseRecordJournalEntryVM
+	{
+		public DebtAdjustmentJournalEntryVM(ITrackerConfig config, IJournal journal) :
+			base(
+				journal,
+				config,
+				new List<JournalAccountType>() { JournalAccountType.LiabilityLoan, JournalAccountType.LiabilityCard },
+				new List<JournalAccountType>(),
+				TransactionType.DebtAdjustment)
+		{
+		}
 
 
-        public override bool IsValidTransaction
-        {
-            get
-            {
-                return this.SelectedCreditAccount != null
-                    && this.SelectedDebitAccount != null
-                    && !string.IsNullOrWhiteSpace(this.Description)
-                    && this.Amount > decimal.Zero;
-            }
-        }
+		public override bool IsValidTransaction
+		{
+			get
+			{
+				return this.SelectedCreditAccount != null
+					&& this.SelectedDebitAccount != null
+					&& !string.IsNullOrWhiteSpace(this.Description)
+					&& this.Amount > decimal.Zero;
+			}
+		}
 
-        public override string DebitHeader
-        { get { return "Debt Account"; } }
+		public override string DebitHeader { get { return "Debt Account"; } }
 
-        public override string CreditHeader
-        { get { return "Action"; } }
+		public override string CreditHeader { get { return "Action"; } }
 
-        public override void LoadAccounts()
-        {
-            base.LoadAccounts();
+		public override void LoadAccounts()
+		{
+			base.LoadAccounts();
 
-            this.ValidCreditAccounts.Clear();
-            this.ValidCreditAccounts.Add(new Core.SpecialDropListItem<IJournalAccount>(SpecialAccount.DebtInterest.Description, SpecialAccount.DebtInterest));
-            this.ValidCreditAccounts.Add(new Core.SpecialDropListItem<IJournalAccount>(SpecialAccount.DebtReduction.Description, SpecialAccount.DebtReduction));
-        }
+			this.ValidCreditAccounts.Clear();
+			this.ValidCreditAccounts.Add(new Core.SpecialDropListItem<IJournalAccount>(SpecialAccount.DebtInterest.Description, SpecialAccount.DebtInterest));
+			this.ValidCreditAccounts.Add(new Core.SpecialDropListItem<IJournalAccount>(SpecialAccount.DebtReduction.Description, SpecialAccount.DebtReduction));
+		}
 
-        /// <summary>
-        /// Which account is Credit and which is debit will be determined by the Action.
-        /// </summary>
-        public override void SaveTransaction()
-        {
-            if (!IsValidTransaction) return;
+		/// <summary>
+		/// Which account is Credit and which is debit will be determined by the Action.
+		/// </summary>
+		public override void SaveTransaction()
+		{
+			if (!IsValidTransaction) return;
 
-            var liability = this.SelectedDebitAccount;
-            var action = this.SelectedCreditAccount;
+			var liability = this.SelectedDebitAccount;
+			var action = this.SelectedCreditAccount;
 
-            JournalEntry record = new JournalEntry(_config)
-            {
-                JournalEntryType = this.JournalEntryType,
-                TransactionAmount = this.Amount,
-                TransactionDate = this.TransactionDate,
-                Description = this.Description,
-                CreditAccount = (action.Id == SpecialAccount.DebtInterest.Id) ? liability : action,
-                DebitAccount = (action.Id == SpecialAccount.DebtInterest.Id) ? action : liability
-            };
+			JournalEntry record = new JournalEntry(_config)
+			{
+				JournalEntryType = this.JournalEntryType,
+				TransactionAmount = this.Amount,
+				TransactionDate = this.TransactionDate,
+				Description = this.Description,
+				CreditAccount = (action.Id == SpecialAccount.DebtInterest.Id) ? liability : action,
+				DebitAccount = (action.Id == SpecialAccount.DebtInterest.Id) ? action : liability
+			};
 
 			if (this.ExistingTransactionId.HasValue)
 			{
@@ -70,6 +68,6 @@ namespace DLPMoneyTracker2.LedgerEntry
 			}
 
 			_journal.AddUpdateTransaction(record);
-        }
-    }
+		}
+	}
 }

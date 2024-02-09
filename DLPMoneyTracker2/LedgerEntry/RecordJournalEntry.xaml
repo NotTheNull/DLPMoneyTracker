@@ -57,11 +57,19 @@
                   Width="120"
                   HorizontalAlignment="Left"
                   Margin="0, 5, 0, 5"
+                  Visibility="{Binding Path=CanUserEditDebitAccount, Converter={StaticResource convertBoolToVisibility}}"
                   ItemsSource="{Binding Path=ValidDebitAccounts}"
                   SelectedValue="{Binding Path=SelectedDebitAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   DisplayMemberPath="Display"
                   SelectedValuePath="Value" />
-        
+
+        <TextBlock x:Name="DebitAccountLabel"
+                   Text="{Binding Path=DebitAccountName}"
+                   Grid.Row="2"
+                   Grid.Column="2"
+                   Visibility="{Binding Path=CanUserEditDebitAccount, Converter={StaticResource convertBoolToVisibility}, ConverterParameter=R}"
+                   />
+
 
         <TextBlock Text="{Binding Path=CreditHeader, FallbackValue=CREDIT}"
                    Grid.Row="2"
@@ -80,6 +88,14 @@
                   DisplayMemberPath="Display"
                   SelectedValuePath="Value"
                   SelectedValue="{Binding Path=SelectedCreditAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <TextBlock x:Name="CreditAccountLabel"
+                   Text="{Binding Path=CreditAccountName}"
+                   Grid.Row="2"
+                   Grid.Column="4"
+                   Visibility="{Binding Path=CanUserEditCreditAccount, Converter={StaticResource convertBoolToVisibility}, ConverterParameter=R}"
+                   />
+
 
         <TextBlock Grid.Column="1"
                    Grid.Row="3"
