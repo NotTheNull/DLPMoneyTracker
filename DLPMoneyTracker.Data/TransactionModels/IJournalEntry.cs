@@ -8,10 +8,15 @@ namespace DLPMoneyTracker.Data.TransactionModels
     {
         Guid Id { get; }
         DateTime TransactionDate { get; }
+
         Guid DebitAccountId { get; }
         string DebitAccountName { get; }
+        DateTime? DebitBankDate { get; }
+
         Guid CreditAccountId { get; }
         string CreditAccountName { get; }
+        DateTime? CreditBankDate { get; }
+
         string Description { get; }
         decimal TransactionAmount { get; }
 
@@ -24,15 +29,21 @@ namespace DLPMoneyTracker.Data.TransactionModels
 
         public DateTime TransactionDate { get; set; }
 
+
         public Guid DebitAccountId { get; set; }
 
         [JsonIgnore]
         public string DebitAccountName { get; set; }
+        public DateTime? DebitBankDate { get; set; }
+
 
         public Guid CreditAccountId { get; set; }
 
         [JsonIgnore]
         public string CreditAccountName { get; set; }
+        public DateTime? CreditBankDate { get; set; }
+
+
 
         public string Description { get; set; }
 
@@ -71,6 +82,8 @@ namespace DLPMoneyTracker.Data.TransactionModels
         public Guid Id { get; set; }
         public DateTime TransactionDate { get; set; }
 
+
+
         public IJournalAccount DebitAccount { get; set; }
 
         public Guid DebitAccountId
@@ -79,7 +92,11 @@ namespace DLPMoneyTracker.Data.TransactionModels
         public string DebitAccountName
         { get { return DebitAccount?.Description ?? string.Empty; } }
 
-        public IJournalAccount CreditAccount { get; set; }
+		public DateTime? DebitBankDate { get; set; }
+
+
+
+		public IJournalAccount CreditAccount { get; set; }
 
         public Guid CreditAccountId
         { get { return CreditAccount?.Id ?? Guid.Empty; } }
@@ -87,7 +104,11 @@ namespace DLPMoneyTracker.Data.TransactionModels
         public string CreditAccountName
         { get { return CreditAccount?.Description ?? string.Empty; } }
 
-        public string Description { get; set; }
+		public DateTime? CreditBankDate { get; set; }
+
+
+
+		public string Description { get; set; }
         public decimal TransactionAmount { get; set; }
 
         public void Copy(IJournalEntry cpy)

@@ -2,7 +2,7 @@
 
 namespace DLPMoneyTracker.Data.LedgerAccounts
 {
-    public class ReceivableAccount : IJournalAccount
+    public class ReceivableAccount : IJournalAccount, ILedgerAccount
     {
         public Guid Id { get; set; }
 

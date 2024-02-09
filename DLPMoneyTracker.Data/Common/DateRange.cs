@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection.Metadata;
 
 namespace DLPMoneyTracker.Data.Common
 {
@@ -32,6 +33,13 @@ namespace DLPMoneyTracker.Data.Common
         public bool IsWithinRange(DateTime date)
         {
             return date >= Begin && date <= End;
+        }
+
+        public bool IsWithinRange(DateTime? date)
+        {
+            if (date.HasValue) return IsWithinRange(date.Value);
+            
+            return false;
         }
     }
 }

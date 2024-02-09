@@ -1,4 +1,5 @@
 ﻿using DLPMoneyTracker.Data;
+using DLPMoneyTracker.Data.BankReconciliation;
 using DLPMoneyTracker2.Config.AddEditBudgetPlans;
 using DLPMoneyTracker2.Config.AddEditLedgerAccounts;
 using DLPMoneyTracker2.Config.AddEditMoneyAccounts;
@@ -32,6 +33,7 @@ namespace DLPMoneyTracker2
             services.AddSingleton<ITrackerConfig, TrackerConfig>();
             services.AddSingleton<IJournal, DLPJournal>();
             services.AddSingleton<IJournalPlanner, JournalPlanner>();
+            services.AddSingleton<IBRManager, BRManager>();
 
             //#pragma warning disable CS0612 // Type or member is obsolete
             //#pragma warning disable CS0618 // Type or member is obsolete

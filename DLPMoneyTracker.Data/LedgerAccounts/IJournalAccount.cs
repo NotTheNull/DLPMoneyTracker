@@ -30,6 +30,13 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
         void Copy(IJournalAccount cpy);
     }
 
+    public interface IMoneyAccount { }
+    public interface ILedgerAccount { }
+    public interface IDebtAccount { }
+
+
+
+
     public sealed class JournalAccountJSON : IJournalAccount
     {
         public Guid Id { get; set; }
