@@ -120,6 +120,10 @@ namespace DLPMoneyTracker2.Main.TransactionList
 
 		#endregion Commands
 
+		public bool ShowBankDate { get { return this.FilterAccount is IMoneyAccount; } }
+
+		
+
 		/// <summary>
 		/// Copies the filter options into the model's filter.
 		/// By setting the values in this manner, we avoid the issue of zombie memory objects

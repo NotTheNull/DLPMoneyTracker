@@ -117,6 +117,15 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+
+                <DataGridTextColumn 
+                    Header="Bank Date"
+                    MinWidth="240"
+                    Visibility="{Binding Path=ShowBankDate, Converter={StaticResource convertBoolToVisibility}}"
+                    Binding="{Binding Path=DisplayBankDate}"
+                    />
+
+
             </DataGrid.Columns>
         </DataGrid>
 

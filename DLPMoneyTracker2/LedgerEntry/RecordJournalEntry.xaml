@@ -11,7 +11,7 @@
         Title="Enter Transaction"
         WindowStartupLocation="CenterScreen"
         Icon="\Cash-64.ico"
-        Height="240"
+        Height="290"
         Width="500">
     <Grid Style="{StaticResource MainGridStyle}">
         <Grid.ColumnDefinitions>

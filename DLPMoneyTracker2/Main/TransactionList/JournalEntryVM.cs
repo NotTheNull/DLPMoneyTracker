@@ -106,5 +106,15 @@ namespace DLPMoneyTracker2.Main.TransactionList
 
 		public DateTime TransactionDate { get { return _je.TransactionDate; } }
 		public string DisplayTransactionDate { get { return string.Format("{0:yyyy-MM-dd}", _je.TransactionDate); } }
+		public string DisplayBankDate 
+		{ 
+			get
+			{
+				DateTime? bankDate = this.IsCredit ? _je.CreditBankDate : _je.DebitBankDate;
+				if (!bankDate.HasValue) return string.Empty;
+
+				return string.Format("{0:yyyy-MM-dd}", bankDate);
+			} 
+		}
 	}
 }
