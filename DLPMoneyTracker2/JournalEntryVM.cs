@@ -80,6 +80,46 @@ namespace DLPMoneyTracker2
 			}
 		}
 
+		private RelayCommand _cmdSaveBankDate;
+		public RelayCommand CommandSaveBankDate
+		{
+			get
+			{
+				return _cmdSaveBankDate ?? (_cmdSaveBankDate = new RelayCommand((o) =>
+				{
+					this.SaveBankDateChanges();
+				}));
+			}
+		}
+		private RelayCommand _cmdEnableEditBankDate;
+		public RelayCommand CommandEnableEditBankDate
+		{
+			get
+			{
+				return _cmdEnableEditBankDate ?? (_cmdEnableEditBankDate = new RelayCommand((o) =>
+				{
+					this.CanEditBankDate = true;
+					NotifyPropertyChanged(nameof(BankDate));
+				}));
+			}
+		}
+
+		private RelayCommand _cmdCancelRemoveBankDate;
+		public RelayCommand CommandCancelRemoveBankDate
+		{
+			get
+			{
+				return _cmdCancelRemoveBankDate ?? (_cmdCancelRemoveBankDate = new RelayCommand((o) =>
+				{
+					this.BankDate = null;
+					this.CanEditBankDate = false;
+					this.SaveBankDateChanges();
+				}));
+			}
+		}
+
+
+
 		public bool CanUserEdit { get { return _je.DebitAccountId != SpecialAccount.InitialBalance.Id && _je.CreditAccountId != SpecialAccount.InitialBalance.Id; } }
 
 		public Guid JournalAccountId { get { return _parent.Id; } }
@@ -114,21 +154,41 @@ namespace DLPMoneyTracker2
 			}
 			set
 			{
-				if (_je is JournalEntry editThis)
+				if(_je is JournalEntry record)
 				{
-					if (this.IsCredit)
+					if(this.IsCredit)
 					{
-						editThis.CreditBankDate = value;
-					}
-					else
+						record.CreditBankDate = value;
+					} else
 					{
-						editThis.DebitBankDate = value;
+						record.DebitBankDate = value;
 					}
-
-					BankDateChanged?.Invoke();
 				}
+				NotifyPropertyChanged(nameof(BankDate));
 			}
 		}
+
+		private bool _canEditBankDate;
+
+		public bool CanEditBankDate
+		{
+			get { return _canEditBankDate; }
+			set 
+			{
+				_canEditBankDate = value;
+				NotifyPropertyChanged(nameof(CanEditBankDate));
+			}
+		}
+
+
+		private void SaveBankDateChanges()
+		{
+			var viewModel = JournalEntryVMFactory.BuildViewModel(_je);
+			viewModel.SaveTransaction();
+			this.CanEditBankDate = false;
+			BankDateChanged?.Invoke();
+		}
+
 
 	}
 }

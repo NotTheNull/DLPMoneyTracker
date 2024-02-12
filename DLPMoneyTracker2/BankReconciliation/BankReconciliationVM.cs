@@ -27,7 +27,7 @@ namespace DLPMoneyTracker2.BankReconciliation
 			this.journal.JournalModified += Journal_JournalModified;
 			this.bankManager = bankManager;
 		}
-
+		~BankReconciliationVM() { this.Dispose(); }
 		
 		private IJournalAccount _account;
 		private IMoneyAccount MoneyAccount { get { return (IMoneyAccount)_account; } }
@@ -114,6 +114,15 @@ namespace DLPMoneyTracker2.BankReconciliation
 			}
 		}
 
+		public decimal ReconcileDiscrepancy
+		{
+			get
+			{
+				return this.EndingBalance - this.ReconcileBalance;
+			}
+		}
+
+
 		public bool IsBalanced
 		{
 			get
@@ -168,7 +177,7 @@ namespace DLPMoneyTracker2.BankReconciliation
 		public void AddTransaction(SingleAccountDetailVM record)
 		{			
 			if (_listTrans.Contains(record)) return;
-			record.BankDateChanged += BankDateChanged;
+			record.BankDateChanged += LocalBankDateChanged;
 			_listTrans.Add(record);
 		}
 
@@ -185,7 +194,7 @@ namespace DLPMoneyTracker2.BankReconciliation
 			this.LoadCurrentTransactions();
 		}
 
-		private void BankDateChanged()
+		private void LocalBankDateChanged()
 		{
 			NotifyReconciledChange();
 		}
@@ -196,6 +205,7 @@ namespace DLPMoneyTracker2.BankReconciliation
 			NotifyPropertyChanged(nameof(ReconciledSum));
 			NotifyPropertyChanged(nameof(ReconcileBalance));
 			NotifyPropertyChanged(nameof(IsBalanced));
+			NotifyPropertyChanged(nameof(ReconcileDiscrepancy));
 		}
 
 
@@ -217,13 +227,16 @@ namespace DLPMoneyTracker2.BankReconciliation
 
 		}
 
-
-
-
-
 		public void Dispose()
 		{
+			GC.SuppressFinalize(this);
 			this.journal.JournalModified -= Journal_JournalModified;
+
+			if (this.TransactionList.Any() != true) return;
+			foreach(var t in this.TransactionList)
+			{
+				t.BankDateChanged -= LocalBankDateChanged;
+			}
 		}
 	}
 }

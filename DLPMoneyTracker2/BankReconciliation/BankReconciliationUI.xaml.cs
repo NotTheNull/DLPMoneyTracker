@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DLPMoneyTracker.Data.LedgerAccounts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,24 @@ namespace DLPMoneyTracker2.BankReconciliation
 	/// </summary>
 	public partial class BankReconciliationUI : Window
 	{
-		public BankReconciliationUI()
+		BankReconciliationVM _viewModel;
+
+		public BankReconciliationUI(BankReconciliationVM viewModel)
 		{
 			InitializeComponent();
+			this.DataContext = viewModel;
+			_viewModel = viewModel;
+		}
+
+
+		public void LoadAccount(IJournalAccount account)
+		{
+			_viewModel.LoadAccount(account);
+		}
+
+		private void btnSaveChanges_Click(object sender, RoutedEventArgs e)
+		{
+
 		}
 	}
 }

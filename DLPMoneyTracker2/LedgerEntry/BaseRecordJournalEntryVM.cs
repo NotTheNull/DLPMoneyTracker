@@ -21,11 +21,13 @@ namespace DLPMoneyTracker2.LedgerEntry
         ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidDebitAccounts { get; }
         IJournalAccount SelectedDebitAccount { get; }
         string DebitAccountName { get; }
+        DateTime? DebitBankDate { get; set; }
 
         string CreditHeader { get; }
         ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidCreditAccounts { get; }
         IJournalAccount SelectedCreditAccount { get; }
         string CreditAccountName { get; }
+        DateTime? CreditBankDate { get; set; }
 
         bool IsCreditEnabled { get; }
         bool IsCreditBankDateVisible { get; }

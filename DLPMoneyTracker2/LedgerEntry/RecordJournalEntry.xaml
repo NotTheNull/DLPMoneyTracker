@@ -40,11 +40,9 @@
                    Style="{StaticResource StandardHeaderLabel}" />
 
         <DatePicker x:Name="datTransaction"
-                    Width="120"
-                    HorizontalAlignment="Left"
+                    Style="{StaticResource StandardDatePicker}"
                     Grid.Row="1"
                     Grid.Column="2"
-                    Margin="0, 5, 0, 5"
                     SelectedDate="{Binding Path=TransactionDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <TextBlock Text="{Binding Path=DebitHeader, FallbackValue=DEBIT}"
@@ -104,22 +102,18 @@
                    Style="{StaticResource StandardHeaderLabel}" />
 
         <DatePicker x:Name="datDebitBank"
-                    Width="120"
-                    HorizontalAlignment="Left"
+                    Style="{StaticResource StandardDatePicker}"
                     Grid.Row="3"
                     Grid.Column="2"
-                    Margin="0, 5, 0, 5"
                     Visibility="{Binding Path=IsDebitBankDateVisible, Converter={StaticResource convertBoolToVisibility}}"
                     SelectedDate="{Binding Path=DebitBankDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <DatePicker x:Name="datcRebitBank"
-            Width="120"
-            HorizontalAlignment="Left"
-            Grid.Row="3"
-            Grid.Column="4"
-            Margin="0, 5, 0, 5"
-            Visibility="{Binding Path=IsCreditBankDateVisible, Converter={StaticResource convertBoolToVisibility}}"
-            SelectedDate="{Binding Path=CreditBankDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    Style="{StaticResource StandardDatePicker}"
+                    Grid.Row="3"
+                    Grid.Column="4"
+                    Visibility="{Binding Path=IsCreditBankDateVisible, Converter={StaticResource convertBoolToVisibility}}"
+                    SelectedDate="{Binding Path=CreditBankDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />   
 
 
 
