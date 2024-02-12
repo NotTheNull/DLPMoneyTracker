@@ -266,6 +266,24 @@
                             VerticalAlignment="Stretch"
                             Orientation="Vertical" />
                     </TabItem>
+
+                    <TabItem>
+                        <TabItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock
+                                    Foreground="DarkGoldenrod"
+                                    Style="{StaticResource TabHeaderLabel}"
+                                    Text="~ Bank Reconciliation ~"
+                                    />
+                            </StackPanel>
+                        </TabItem.Header>
+
+                        <StackPanel
+                            x:Name="panelBankRec"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Orientation="Vertical"/>
+                    </TabItem>
                 </TabControl>
             </Grid>
         </DockPanel>

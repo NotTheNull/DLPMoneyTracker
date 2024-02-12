@@ -150,10 +150,10 @@ namespace DLPMoneyTracker2.BankReconciliation
 		{
 			if (!this.MoneyAccount.PreviousBankReconciliationStatementDate.HasValue) return;
 
-			var prevReconciliation = bankManager.ReadFromFile(_account, this.MoneyAccount.PreviousBankReconciliationStatementDate.Value);
+			var prevReconciliation = bankManager.GetReconciliation(_account.Id, this.MoneyAccount.PreviousBankReconciliationStatementDate.Value);
 			if (prevReconciliation is null) return;
 
-			this.StartingDate = prevReconciliation.StatementDateRange.End.AddDays(1);
+			this.StartingDate = prevReconciliation.EndingDate.AddDays(1);
 			this.StartingBalance = prevReconciliation.EndingBalance;
 		}
 

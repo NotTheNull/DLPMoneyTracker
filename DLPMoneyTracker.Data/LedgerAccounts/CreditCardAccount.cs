@@ -15,11 +15,8 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         public DateTime? DateClosedUTC { get; set; }
 
-        // For backwards compatibility
-        //public string MoneyAccountId { get; set; }
-        //public MoneyAccountType AccountType { get { return MoneyAccountType.CreditCard; } }
-
-        //public Guid CategoryId { get { return Guid.Empty; } }
+		public DateTime? PreviousBankReconciliationStatementDate { get; set; }
+        
 
         public decimal MonthlyBudgetAmount
         { get { return decimal.Zero; } }
@@ -27,7 +24,8 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
         public bool ExcludeFromBudget
         { get { return false; } }
 
-        public CreditCardAccount()
+
+		public CreditCardAccount()
         {
             Id = Guid.NewGuid();
         }
@@ -45,23 +43,7 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
             this.Description = cpy.Description;
             this.OrderBy = cpy.OrderBy;
             this.DateClosedUTC = cpy.DateClosedUTC;
-            //this.MoneyAccountId = cpy.MoneyAccountId;
         }
 
-        //#pragma warning disable CS0612 // Type or member is obsolete
-        //        public CreditCardAccount(MoneyAccount old) : this()
-
-        //        {
-        //            this.Convert(old);
-        //        }
-
-        //        public void Convert(MoneyAccount act)
-        //        {
-        //            MoneyAccountId = act.ID;
-        //            Description = act.Description;
-        //            OrderBy = act.OrderBy;
-        //            DateClosedUTC = act.DateClosedUTC;
-        //        }
-        //#pragma warning restore CS0612 // Type or member is obsolete
     }
 }

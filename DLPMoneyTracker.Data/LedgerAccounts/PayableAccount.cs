@@ -42,8 +42,11 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
             this.Description = cpy.Description;
             this.OrderBy = cpy.OrderBy;
             this.DateClosedUTC = cpy.DateClosedUTC;
-            //this.CategoryId = cpy.CategoryId;
-            this.MonthlyBudgetAmount = cpy.MonthlyBudgetAmount;
+            
+            if(cpy is ILedgerAccount ledger)
+            {
+                this.MonthlyBudgetAmount = ledger.MonthlyBudgetAmount;
+            }
         }
 
         //#pragma warning disable CS0612 // Type or member is obsolete

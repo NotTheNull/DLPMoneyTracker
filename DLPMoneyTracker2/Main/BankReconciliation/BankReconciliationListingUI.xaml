@@ -1,0 +1,100 @@
+﻿<UserControl x:Class="DLPMoneyTracker2.Main.BankReconciliation.BankReconciliationListingUI"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DLPMoneyTracker2.Main.BankReconciliation"
+             mc:Ignorable="d" 
+             Height="650"
+Width="1000">
+    <Grid Style="{StaticResource MainGridStyle}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
+        </Grid.RowDefinitions>
+
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding Path=BankReconciliationList}"
+                  >
+            <DataGrid.Columns>
+
+                <DataGridTextColumn Header="Account"
+                                    Binding="{Binding Path=AccountDescription}"
+                                    />
+
+                <DataGridTextColumn Header="Starting"
+                                    Binding="{Binding Path=InitialBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                                    />
+
+                <DataGridTextColumn Header="January"
+                    Binding="{Binding Path=JanuaryBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="February"
+                    Binding="{Binding Path=FebruaryBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="March"
+                    Binding="{Binding Path=MarchBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="April"
+                    Binding="{Binding Path=AprilBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="May"
+                    Binding="{Binding Path=MayBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="June"
+                    Binding="{Binding Path=JuneBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="July"
+                    Binding="{Binding Path=JulyBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="August"
+                    Binding="{Binding Path=AugustBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="September"
+                    Binding="{Binding Path=SeptemberBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="October"
+                    Binding="{Binding Path=OctoberBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="November"
+                    Binding="{Binding Path=NovemberBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="December"
+                    Binding="{Binding Path=DecemberBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <Button Style="{StaticResource MenuButton}"
+                                        Command="{Binding Path=CommandStartNewReconciliation}"
+                                        >
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="/Icons/Add-New-256.png" />
+                                            <TextBlock Text="Start New" 
+                                                       FontWeight="Bold"
+                                                       FontSize="12"
+                                                       />
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+
+
+
+            </DataGrid.Columns>
+        </DataGrid>
+        
+        
+        
+        
+        
+    </Grid>
+</UserControl>

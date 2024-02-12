@@ -10,8 +10,9 @@ namespace DLPMoneyTracker.Data.BankReconciliation
 {
 	public interface IBankReconciliation
 	{
-		IJournalAccount BankAccount { get; } // Can be Bank or Credit card
-		DateRange StatementDateRange { get; }
+		Guid BankAccountId { get; } // Can be Bank or Credit card
+		DateTime StartingDate { get; }
+		DateTime EndingDate { get; }
 		decimal StartingBalance { get; }
 		decimal EndingBalance { get; }
 
@@ -28,11 +29,13 @@ namespace DLPMoneyTracker.Data.BankReconciliation
 	// Intended to write to individual JSON files by Account and Ending Date
 	public class BankReconciliationJSON : IBankReconciliation
 	{
-		public IJournalAccount BankAccount { get; set; }
+        public Guid BankAccountId { get; set; }
 
-		public DateRange StatementDateRange { get; set; }
+        public DateTime StartingDate { get; set; }
+        public DateTime EndingDate { get; set; }
 
-		public decimal StartingBalance { get; set; }
+
+        public decimal StartingBalance { get; set; }
 
 		public decimal EndingBalance { get; set; }
 
@@ -64,8 +67,9 @@ namespace DLPMoneyTracker.Data.BankReconciliation
 
 		public void Copy(IBankReconciliation cpy)
 		{
-			this.BankAccount = cpy.BankAccount;
-			this.StatementDateRange = cpy.StatementDateRange;
+			this.BankAccountId = cpy.BankAccountId;
+			this.StartingDate = cpy.StartingDate;
+			this.EndingDate = cpy.EndingDate;
 			this.StartingBalance = cpy.StartingBalance;
 			this.EndingBalance = cpy.EndingBalance;
 
@@ -92,27 +96,39 @@ namespace DLPMoneyTracker.Data.BankReconciliation
 			this.account = account;
 			this.dateRange = dateRange;
 		}
-        public BankReconciliation(IBankReconciliation cpy) : this(cpy.BankAccount, cpy.StatementDateRange)
+        public BankReconciliation(IBankReconciliation cpy, ITrackerConfig config)
         {
+			account = config.GetJournalAccount(cpy.BankAccountId);
+			dateRange = new DateRange(cpy.StartingDate, cpy.EndingDate);
+
 			this.Copy(cpy);
         }
 
 
-
-        public IJournalAccount BankAccount { get { return account; } }
+		public Guid BankAccountId { get { return account.Id; } }
 
 		public DateRange StatementDateRange { get { return dateRange; } }
+
+		public DateTime StartingDate { get { return dateRange.Begin; } }
+		public DateTime EndingDate { get { return dateRange.End; } }
 
 		public decimal StartingBalance { get; set; }
 
 		public decimal EndingBalance { get; set; }
 
+		
+		
+		
 		private List<IJournalEntry> _listTrans = new List<IJournalEntry>();
 		public List<IJournalEntry> TransactionList { get { return _listTrans; } }
 
+
+
+
+
 		public void Copy(IBankReconciliation cpy)
 		{
-			if (cpy.BankAccount != account) throw new InvalidOperationException("Bank accounts do not match");
+			if (cpy.BankAccountId != this.BankAccountId) throw new InvalidOperationException("Bank accounts do not match");
 
 			this.StartingBalance = cpy.StartingBalance;
 			this.EndingBalance = cpy.EndingBalance;

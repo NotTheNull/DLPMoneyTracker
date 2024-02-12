@@ -6,6 +6,7 @@ using DLPMoneyTracker2.Config.AddEditLedgerAccounts;
 using DLPMoneyTracker2.Config.AddEditMoneyAccounts;
 using DLPMoneyTracker2.LedgerEntry;
 using DLPMoneyTracker2.Main.AccountSummary;
+using DLPMoneyTracker2.Main.BankReconciliation;
 using DLPMoneyTracker2.Main.BudgetAnalysis;
 using DLPMoneyTracker2.Main.TransactionList;
 using DLPMoneyTracker2.Main.UpcomingReminders;
@@ -87,6 +88,9 @@ namespace DLPMoneyTracker2
 
             // Bank Reconciliation
             services.AddTransient<BankReconciliationVM>();
+            services.AddTransient<BankReconciliationUI>();
+            services.AddTransient<BankReconciliationListingVM>();
+            services.AddTransient<BankReconciliationListingUI>();
         }
     }
 }

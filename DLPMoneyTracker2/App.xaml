@@ -51,7 +51,7 @@
         <Style x:Key="StandardDatePicker" TargetType="DatePicker">
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="Width" Value="120" />
-            <Setter Property="Margin" Value="0, 5, 0, 5"
+            <Setter Property="Margin" Value="0, 5, 0, 5" />
         </Style>
 
         <Style TargetType="DataGrid">

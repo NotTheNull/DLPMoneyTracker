@@ -50,7 +50,10 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
         {
             get
             {
-                if (_listPlans.Count == 0) return _account.MonthlyBudgetAmount;
+                if (_listPlans.Count == 0)
+                {
+                    if (this.Account is ILedgerAccount ledger) return ledger.MonthlyBudgetAmount;
+                }
 
                 return _listPlans.Sum(s => s.ExpectedAmount);
             }
