@@ -89,7 +89,7 @@
 
                 <DataGridTextColumn SortDirection="Ascending"
                                     Header="Transaction Date"
-                                    Binding="{Binding DisplayTransactionDate}" />
+                                    Binding="{Binding TransactionDate, Converter={StaticResource convertDateToDisplay}}" />
 
                 <DataGridTextColumn Header="Debit Account"
                                     MinWidth="120"

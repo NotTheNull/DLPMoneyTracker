@@ -8,14 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DLPMoneyTracker2.Main.TransactionList
+namespace DLPMoneyTracker2
 {
 	public class JournalEntryVM : BaseViewModel
 	{
 		private readonly IJournalEntry _je;
 
 		public JournalEntryVM(IJournalEntry entry)
-        {
+		{
 			_je = entry;
 		}
 
@@ -39,11 +39,10 @@ namespace DLPMoneyTracker2.Main.TransactionList
 
 
 		public DateTime TransactionDate { get { return _je.TransactionDate; } }
-		public string DisplayTransactionDate { get { return string.Format("{0:yyyy-MM-dd}", _je.TransactionDate); } }
 		public string TransactionDescription { get { return _je.Description; } }
 
 		public decimal TransactionAmount { get { return _je.TransactionAmount; } }
-		
+
 		public string CreditAccountName { get { return _je.CreditAccountName; } }
 		public string DebitAccountName { get { return _je.DebitAccountName; } }
 
@@ -54,7 +53,9 @@ namespace DLPMoneyTracker2.Main.TransactionList
 
 	public class SingleAccountDetailVM : BaseViewModel
 	{
-		private readonly IJournalEntry _je;
+		public SimpleNotification BankDateChanged;
+
+		private IJournalEntry _je;
 		private readonly IJournalAccount _parent;
 
 		public SingleAccountDetailVM(IJournalAccount parent, IJournalEntry entry) : base()
@@ -63,7 +64,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
 			_parent = parent;
 		}
 
-
+		public IJournalEntry Source { get { return _je; } }
 
 		private RelayCommand _cmdEdit;
 		public RelayCommand CommandEdit
@@ -105,16 +106,29 @@ namespace DLPMoneyTracker2.Main.TransactionList
 		}
 
 		public DateTime TransactionDate { get { return _je.TransactionDate; } }
-		public string DisplayTransactionDate { get { return string.Format("{0:yyyy-MM-dd}", _je.TransactionDate); } }
-		public string DisplayBankDate 
-		{ 
+		public DateTime? BankDate
+		{
 			get
 			{
-				DateTime? bankDate = this.IsCredit ? _je.CreditBankDate : _je.DebitBankDate;
-				if (!bankDate.HasValue) return string.Empty;
+				return this.IsCredit ? _je.CreditBankDate : _je.DebitBankDate;
+			}
+			set
+			{
+				if (_je is JournalEntry editThis)
+				{
+					if (this.IsCredit)
+					{
+						editThis.CreditBankDate = value;
+					}
+					else
+					{
+						editThis.DebitBankDate = value;
+					}
 
-				return string.Format("{0:yyyy-MM-dd}", bankDate);
-			} 
+					BankDateChanged?.Invoke();
+				}
+			}
 		}
+
 	}
 }

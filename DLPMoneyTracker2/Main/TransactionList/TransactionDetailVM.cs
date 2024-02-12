@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace DLPMoneyTracker2.Main.TransactionList
 {
-	public class TransactionDetailVM : BaseViewModel
+    public class TransactionDetailVM : BaseViewModel
 	{
 		private readonly ITrackerConfig _config;
 		private readonly IJournal _journal;

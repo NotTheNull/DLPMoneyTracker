@@ -1,5 +1,6 @@
 ﻿using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.BankReconciliation;
+using DLPMoneyTracker2.BankReconciliation;
 using DLPMoneyTracker2.Config.AddEditBudgetPlans;
 using DLPMoneyTracker2.Config.AddEditLedgerAccounts;
 using DLPMoneyTracker2.Config.AddEditMoneyAccounts;
@@ -83,6 +84,9 @@ namespace DLPMoneyTracker2
             services.AddTransient<AddEditBudgetPlanVM>();
             services.AddTransient<RecurrenceEditor>();
             services.AddTransient<RecurrenceEditorVM>();
+
+            // Bank Reconciliation
+            services.AddTransient<BankReconciliationVM>();
         }
     }
 }

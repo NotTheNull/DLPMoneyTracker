@@ -72,8 +72,4 @@
     <Resource Include="Icons\Stock-Exchange-256.png" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Main\BankReconciliation\" />
-  </ItemGroup>
-
 </Project>

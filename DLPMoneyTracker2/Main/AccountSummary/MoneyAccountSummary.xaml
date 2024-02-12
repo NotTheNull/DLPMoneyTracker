@@ -103,7 +103,7 @@
 
                 <DataGridTextColumn Header="Next Date"
                                     Width="100"
-                                    Binding="{Binding Path=NextDueDate, Converter={StaticResource convertDateToDisplay}, ConverterParameter=yyyy/MM/dd}" />
+                                    Binding="{Binding Path=NextDueDate, Converter={StaticResource convertDateToDisplay}}" />
 
                 <DataGridTemplateColumn Header="Amount"
                                         Width="100">

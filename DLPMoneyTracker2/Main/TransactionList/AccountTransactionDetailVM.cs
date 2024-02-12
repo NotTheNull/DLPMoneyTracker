@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace DLPMoneyTracker2.Main.TransactionList
 {
-	public class AccountTransactionDetailVM : BaseViewModel
+    public class AccountTransactionDetailVM : BaseViewModel
 	{
 		private readonly ITrackerConfig _config;
 		private readonly IJournal _journal;
@@ -137,9 +137,6 @@ namespace DLPMoneyTracker2.Main.TransactionList
 			NotifyPropertyChanged(nameof(this.FilterBeginDate));
 			NotifyPropertyChanged(nameof(this.FilterEndDate));
 			NotifyPropertyChanged(nameof(this.FilterText));
-			//this.FilterBeginDate = filter.FilterDates?.Begin ?? DateTime.MinValue;
-			//this.FilterEndDate = filter.FilterDates?.End ?? DateTime.MaxValue;
-			//this.FilterText = filter.SearchText?.Trim() ?? string.Empty;
 			this.Reload();
 		}
 

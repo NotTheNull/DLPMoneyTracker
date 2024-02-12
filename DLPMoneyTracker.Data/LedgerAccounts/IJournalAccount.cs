@@ -20,24 +20,25 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
         int OrderBy { get; }
         DateTime? DateClosedUTC { get; set; }
 
-        //string MoneyAccountId { get; }
-        //MoneyAccountType AccountType { get; }
-        //Guid CategoryId { get; } // Reference to legacy TransactionCategory
-        decimal MonthlyBudgetAmount { get; } // Exclusive for Variable Expense accounts
-
-        bool ExcludeFromBudget { get; }
 
         void Copy(IJournalAccount cpy);
     }
 
-    public interface IMoneyAccount { }
-    public interface ILedgerAccount { }
+    public interface IMoneyAccount 
+    {
+		public DateTime? PreviousBankReconciliationStatementDate { get; set; }
+	}
+    public interface ILedgerAccount 
+    {
+		decimal MonthlyBudgetAmount { get; } // Exclusive for Variable Expense accounts
+		bool ExcludeFromBudget { get; }
+	}
     public interface IDebtAccount { }
 
 
 
 
-    public sealed class JournalAccountJSON : IJournalAccount
+    public sealed class JournalAccountJSON : IJournalAccount, IMoneyAccount, ILedgerAccount, IDebtAccount
     {
         public Guid Id { get; set; }
 
@@ -48,14 +49,10 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
         public int OrderBy { get; set; }
 
         public DateTime? DateClosedUTC { get; set; }
+		public DateTime? PreviousBankReconciliationStatementDate { get; set; }
 
-        //public string MoneyAccountId { get; set; }
-
-        //public MoneyAccountType AccountType { get; set; }
-
-        //public Guid CategoryId { get; set; }
-
-        public decimal MonthlyBudgetAmount { get; set; }
+		
+		public decimal MonthlyBudgetAmount { get; set; }
         public bool ExcludeFromBudget { get; set; }
 
         public void Copy(IJournalAccount cpy)
@@ -65,10 +62,16 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
             JournalType = cpy.JournalType;
             OrderBy = cpy.OrderBy;
             DateClosedUTC = cpy.DateClosedUTC;
-            //MoneyAccountId = cpy.MoneyAccountId;
-            //AccountType = cpy.AccountType;
-            //CategoryId = cpy.CategoryId;
-            MonthlyBudgetAmount = cpy.MonthlyBudgetAmount;
+
+            if(cpy is IMoneyAccount money)
+            {
+                PreviousBankReconciliationStatementDate = money.PreviousBankReconciliationStatementDate;
+            }
+            else if(cpy is ILedgerAccount ledger)
+            {
+                MonthlyBudgetAmount = ledger.MonthlyBudgetAmount;
+                ExcludeFromBudget = ledger.ExcludeFromBudget;
+            }
         }
     }
 }

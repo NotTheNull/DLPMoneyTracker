@@ -8,12 +8,13 @@ namespace DLPMoneyTracker2.Core.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is null) return DateTime.MinValue;
+            if (value is null) return string.Empty;
+
             if (value is DateTime date)
             {
                 if (parameter is null)
                 {
-                    return date.ToString();
+                    return string.Format("{0:yyyy/MM/dd}", date);
                 }
                 else
                 {
