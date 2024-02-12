@@ -8,6 +8,12 @@ namespace DLPMoneyTracker.Data.Common
         public DateTime Begin;
         public DateTime End;
 
+        public DateRange()
+        {
+            this.Begin = DateTime.Today;
+            this.End = DateTime.Today;
+        }
+
         /// <summary>
         /// Sets the date range to the given values
         /// </summary>

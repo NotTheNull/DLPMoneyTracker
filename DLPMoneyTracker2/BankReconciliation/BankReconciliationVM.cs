@@ -34,7 +34,7 @@ namespace DLPMoneyTracker2.BankReconciliation
 		public string AccountDescription { get { return _account.Description; } }
 
 
-		private DateRange statementDate;
+		private DateRange statementDate = new DateRange();
 		public DateTime StartingDate 
 		{
 			get { return statementDate.Begin; }
@@ -132,6 +132,22 @@ namespace DLPMoneyTracker2.BankReconciliation
 		}
 
 
+
+		private RelayCommand _cmdLoadTrans;
+		public RelayCommand CommandLoadTransactions
+		{
+			get
+			{
+				return _cmdLoadTrans ?? (_cmdLoadTrans = new RelayCommand((o) =>
+				{
+					this.LoadCurrentTransactions();
+				}));
+			}
+		}
+
+
+
+
 		public void LoadAccount(IJournalAccount account)
 		{
 			if (!(account is IMoneyAccount)) throw new InvalidOperationException("Selected Account MUST be a Money Account");
@@ -159,6 +175,8 @@ namespace DLPMoneyTracker2.BankReconciliation
 
 		private void LoadCurrentTransactions()
 		{
+			if (statementDate is null) return;
+
 			_listTrans.Clear();
 			var listRecords = journal.GetReconciledRecords(_account, statementDate);
 			foreach(var t in listRecords)
@@ -211,6 +229,8 @@ namespace DLPMoneyTracker2.BankReconciliation
 
 		public void Save()
 		{
+			if (!IsBalanced) return;
+
 			IBankReconciliation reconciliation = new DLPMoneyTracker.Data.BankReconciliation.BankReconciliation(_account, statementDate)
 			{
 				StartingBalance = this.StartingBalance,

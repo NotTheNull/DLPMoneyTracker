@@ -8,7 +8,7 @@
         xmlns:behave="clr-namespace:DLPMoneyTracker2.Core.Behaviors"
         mc:Ignorable="d"
         Title="Bank Reconciliation" 
-        Height="620" 
+        Height="650" 
         Width="800">
 
     <Window.Resources>
@@ -50,8 +50,9 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="140" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="120" />
                 <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="120" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
@@ -68,12 +69,26 @@
             <TextBlock Text="To"
                        Grid.Column="2"
                        Margin="10, 0, 10, 0"
+                       VerticalAlignment="Center"
                        FontSize="14"/>
 
             <DatePicker 
                 SelectedDate="{Binding Path=EndingDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 Grid.Column="3"
                 Style="{StaticResource StandardDatePicker}"/>
+
+            <Button Grid.Column="4"
+                    Style="{StaticResource MenuButton}"
+                    ToolTip="Load transactions"
+                    Command="{Binding Path=CommandLoadTransactions}"
+                    >
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Icons/Refresh-256.png" />
+
+                    </StackPanel>
+                </Button.Content>
+            </Button>
 
         </Grid>
 
@@ -278,6 +293,7 @@
                     Width="180"
                     Height="30"
                     Padding="5"
+                    Click="btnCancel_Click"
                     Margin="0, 0, 10, 0"
                     >
                 <Button.Content>

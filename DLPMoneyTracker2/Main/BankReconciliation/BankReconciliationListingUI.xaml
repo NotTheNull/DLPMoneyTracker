@@ -19,65 +19,18 @@ Width="1000">
                   >
             <DataGrid.Columns>
 
-                <DataGridTextColumn Header="Account"
-                                    Binding="{Binding Path=AccountDescription}"
-                                    />
-
-                <DataGridTextColumn Header="Starting"
-                                    Binding="{Binding Path=InitialBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
-                                    />
-
-                <DataGridTextColumn Header="January"
-                    Binding="{Binding Path=JanuaryBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
-                    />
-                <DataGridTextColumn Header="February"
-                    Binding="{Binding Path=FebruaryBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
-                    />
-                <DataGridTextColumn Header="March"
-                    Binding="{Binding Path=MarchBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
-                    />
-                <DataGridTextColumn Header="April"
-                    Binding="{Binding Path=AprilBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
-                    />
-                <DataGridTextColumn Header="May"
-                    Binding="{Binding Path=MayBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
-                    />
-                <DataGridTextColumn Header="June"
-                    Binding="{Binding Path=JuneBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
-                    />
-                <DataGridTextColumn Header="July"
-                    Binding="{Binding Path=JulyBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
-                    />
-                <DataGridTextColumn Header="August"
-                    Binding="{Binding Path=AugustBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
-                    />
-                <DataGridTextColumn Header="September"
-                    Binding="{Binding Path=SeptemberBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
-                    />
-                <DataGridTextColumn Header="October"
-                    Binding="{Binding Path=OctoberBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
-                    />
-                <DataGridTextColumn Header="November"
-                    Binding="{Binding Path=NovemberBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
-                    />
-                <DataGridTextColumn Header="December"
-                    Binding="{Binding Path=DecemberBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
-                    />
 
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <StackPanel>
+                            <StackPanel Orientation="Horizontal">
                                 <Button Style="{StaticResource MenuButton}"
                                         Command="{Binding Path=CommandStartNewReconciliation}"
+                                        ToolTip="Start new reconciliation"
                                         >
                                     <Button.Content>
                                         <StackPanel Orientation="Horizontal">
                                             <Image Source="/Icons/Add-New-256.png" />
-                                            <TextBlock Text="Start New" 
-                                                       FontWeight="Bold"
-                                                       FontSize="12"
-                                                       />
                                         </StackPanel>
                                     </Button.Content>
                                 </Button>
@@ -85,6 +38,66 @@ Width="1000">
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+
+
+                <DataGridTextColumn Header="Account"
+                                    Width="200"
+                                    Binding="{Binding Path=AccountDescription}"
+                                    />
+
+                <DataGridTextColumn Header="Starting"
+                                    Width="120"
+                                    Binding="{Binding Path=InitialBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                                    />
+
+                <DataGridTextColumn Header="January"
+                                    Width="120"
+                    Binding="{Binding Path=JanuaryBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="February"
+                                    Width="120"
+                    Binding="{Binding Path=FebruaryBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="March"
+                                    Width="120"
+                    Binding="{Binding Path=MarchBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="April"
+                                    Width="120"
+                    Binding="{Binding Path=AprilBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="May"
+                                    Width="120"
+                    Binding="{Binding Path=MayBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="June"
+                                    Width="120"
+                    Binding="{Binding Path=JuneBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="July"
+                                    Width="120"
+                    Binding="{Binding Path=JulyBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="August"
+                                    Width="120"
+                    Binding="{Binding Path=AugustBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="September"
+                                    Width="120"
+                    Binding="{Binding Path=SeptemberBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="October"
+                                    Width="120"
+                    Binding="{Binding Path=OctoberBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="November"
+                                    Width="120"
+                    Binding="{Binding Path=NovemberBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
+                <DataGridTextColumn Header="December"
+                                    Width="120"
+                    Binding="{Binding Path=DecemberBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c}"
+                    />
 
 
 

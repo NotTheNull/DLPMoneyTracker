@@ -38,6 +38,13 @@ namespace DLPMoneyTracker2.BankReconciliation
 		private void btnSaveChanges_Click(object sender, RoutedEventArgs e)
 		{
 
+			_viewModel.Save();
 		}
-	}
+
+		private void btnCancel_Click(object sender, RoutedEventArgs e)
+		{
+			_viewModel.Dispose();
+			this.Close();
+        }
+    }
 }

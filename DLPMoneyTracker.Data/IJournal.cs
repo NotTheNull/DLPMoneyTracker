@@ -289,6 +289,8 @@ namespace DLPMoneyTracker.Data
 
 		public IEnumerable<IJournalEntry> GetReconciledRecords(IJournalAccount account, DateRange dates)
 		{
+			if (dates is null) throw new ArgumentNullException(nameof(DateRange));
+			
 			List<Guid> listExcludeAccountsIDs = new List<Guid>();
 			listExcludeAccountsIDs.Add(SpecialAccount.InitialBalance.Id);
 

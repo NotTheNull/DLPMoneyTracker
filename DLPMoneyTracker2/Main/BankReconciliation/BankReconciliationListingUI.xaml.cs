@@ -20,9 +20,10 @@ namespace DLPMoneyTracker2.Main.BankReconciliation
 	/// </summary>
 	public partial class BankReconciliationListingUI : UserControl
 	{
-		public BankReconciliationListingUI()
+		public BankReconciliationListingUI(BankReconciliationListingVM viewModel)
 		{
 			InitializeComponent();
+			this.DataContext = viewModel;
 		}
 	}
 }
