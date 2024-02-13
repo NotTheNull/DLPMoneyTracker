@@ -30,14 +30,23 @@ namespace DLPMoneyTracker.Data.BankReconciliation
 			this.config = config;
 		}
 
+		private string ReconcileFolderPath
+		{
+			get
+			{
+				return AppConfigSettings.RECONCILE_FOLDER_PATH.Replace(AppConfigSettings.YEAR_FOLDER_PLACEHOLDER, DateTime.Today.Year.ToString());
+			}
+		}
+
 		public string GetPath(Guid accountId)
 		{
-			if (!Directory.Exists(AppConfigSettings.RECONCILE_FOLDER_PATH))
+			
+			if (!Directory.Exists(this.ReconcileFolderPath))
 			{
-				Directory.CreateDirectory(AppConfigSettings.RECONCILE_FOLDER_PATH);
+				Directory.CreateDirectory(this.ReconcileFolderPath);
 			}
 
-			return string.Format("{0}{1}.json", AppConfigSettings.RECONCILE_FOLDER_PATH, accountId);
+			return string.Format("{0}{1}.json", this.ReconcileFolderPath, accountId);
 		}
 
 		public IBankReconciliation Build(IJournalAccount account, DateRange dates)
