@@ -233,17 +233,6 @@ namespace DLPMoneyTracker2.Main.BankReconciliation
 			}
 		}
 
-		
-
-
-
-
-
-
-
-
-
-
 
 		public void LoadFile(IBankReconciliationFile file)
 		{

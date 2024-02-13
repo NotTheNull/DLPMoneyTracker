@@ -7,7 +7,8 @@ using System.Text.Json;
 
 namespace DLPMoneyTracker.Data
 {
-    public struct JournalAccountSearch
+	public delegate void SimpleNotification();
+	public struct JournalAccountSearch
     {
         public List<JournalAccountType> JournalTypes;
         public string NameFilterText;

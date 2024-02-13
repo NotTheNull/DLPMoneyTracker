@@ -10,8 +10,11 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Data.BankReconciliation
 {
+	public delegate void ReconciliationChangedHandler(Guid accountId, IBankReconciliationFile reconciliation);
+
 	public interface IBRManager
 	{
+		event ReconciliationChangedHandler ReconciliationChanged;
 		IBankReconciliation Build(IJournalAccount account, DateRange dates);
 		string GetPath(Guid accountId);
 		IBankReconciliation GetReconciliation(Guid accountId, DateTime statementDate);
@@ -21,6 +24,8 @@ namespace DLPMoneyTracker.Data.BankReconciliation
 
 	public class BRManager : IBRManager
 	{
+		public event ReconciliationChangedHandler ReconciliationChanged;
+
 		private readonly IJournal journal;
 		private readonly ITrackerConfig config;
 
@@ -84,6 +89,8 @@ namespace DLPMoneyTracker.Data.BankReconciliation
 			string json = JsonSerializer.Serialize(jsonFile);
 			string pathFile = this.GetPath(rec.BankAccountId);
 			File.WriteAllText(pathFile, json);
+
+			ReconciliationChanged?.Invoke(rec.BankAccountId, ConvertJSONToFile(jsonFile));
 		}
 
 		public IBankReconciliation GetReconciliation(Guid accountId, DateTime dateStatement)

@@ -2,7 +2,6 @@
 
 namespace DLPMoneyTracker2.Core
 {
-    public delegate void SimpleNotification();
 
     public abstract class BaseViewModel : INotifyPropertyChanged
     {
