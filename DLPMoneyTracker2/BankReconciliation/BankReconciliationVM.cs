@@ -52,6 +52,7 @@ namespace DLPMoneyTracker2.BankReconciliation
 			{
 				statementDate.End = value;
 				NotifyPropertyChanged(nameof(EndingDate));
+				this.LoadCurrentTransactions();
 			}
 		}
 		
@@ -78,6 +79,7 @@ namespace DLPMoneyTracker2.BankReconciliation
 			{
 				_endBal = value;
 				NotifyPropertyChanged(nameof(EndingBalance));
+				NotifyReconciledChange();
 			}
 		}
 
@@ -141,6 +143,7 @@ namespace DLPMoneyTracker2.BankReconciliation
 				return _cmdLoadTrans ?? (_cmdLoadTrans = new RelayCommand((o) =>
 				{
 					this.LoadCurrentTransactions();
+					NotifyReconciledChange();
 				}));
 			}
 		}

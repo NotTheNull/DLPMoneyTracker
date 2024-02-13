@@ -305,7 +305,7 @@ namespace DLPMoneyTracker.Data
 						(
 							t.DebitAccountId == account.Id && 
 							!listExcludeAccountsIDs.Contains(t.CreditAccountId) &&
-							(dates.IsWithinRange(t.DebitBankDate) || t.DebitBankDate.HasValue)
+							(dates.IsWithinRange(t.DebitBankDate) || !t.DebitBankDate.HasValue)
 						)
 					select t)
 					.ToList();

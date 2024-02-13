@@ -167,6 +167,12 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
+                <DataGridTextColumn
+                    Header="Bank Date"
+                    MinWidth="120"
+                    Binding="{Binding Path=BankDate, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource convertDateToDisplay}}"
+                    />
+
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -242,7 +248,7 @@
                        Grid.Column="0"
                        />
 
-            <TextBlock Text="{Binding Path=ReconcileBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, FallbackValue=0.00}"
+            <TextBlock Text="{Binding Path=ReconcileBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, FallbackValue=0.00, UpdateSourceTrigger=PropertyChanged}"
                        Grid.Column="1"
                        Grid.Row="0"
                        Style="{StaticResource LocalHeaderLabel}"
@@ -254,7 +260,7 @@
                        Grid.Row="1"
                        Grid.Column="0"/>
 
-            <TextBlock Text="{Binding Path=ReconcileDiscrepancy, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, FallbackValue=9876.54}"
+            <TextBlock Text="{Binding Path=ReconcileDiscrepancy, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, FallbackValue=9876.54, UpdateSourceTrigger=PropertyChanged}"
                        Grid.Column="1"
                        Grid.Row="1"
                        Style="{StaticResource LocalHeaderLabel}"
