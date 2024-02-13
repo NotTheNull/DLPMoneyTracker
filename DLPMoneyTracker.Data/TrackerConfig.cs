@@ -59,8 +59,6 @@ namespace DLPMoneyTracker.Data
         IEnumerable<IJournalAccount> GetJournalAccountList(JournalAccountSearch search);
 
         void Copy(ITrackerConfig config);
-
-        void Convert();
     }
 
     public class TrackerConfig : ITrackerConfig
