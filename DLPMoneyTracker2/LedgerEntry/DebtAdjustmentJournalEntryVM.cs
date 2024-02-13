@@ -1,6 +1,8 @@
 ﻿using DLPMoneyTracker.Data;
 using DLPMoneyTracker.Data.LedgerAccounts;
 using DLPMoneyTracker.Data.TransactionModels;
+using Microsoft.Xaml.Behaviors.Core;
+using System;
 using System.Collections.Generic;
 
 namespace DLPMoneyTracker2.LedgerEntry
@@ -12,7 +14,7 @@ namespace DLPMoneyTracker2.LedgerEntry
 				journal,
 				config,
 				new List<JournalAccountType>() { JournalAccountType.LiabilityLoan, JournalAccountType.LiabilityCard },
-				new List<JournalAccountType>(),
+				new List<JournalAccountType>() { JournalAccountType.NotSet },
 				TransactionType.DebtAdjustment)
 		{
 		}
@@ -43,6 +45,49 @@ namespace DLPMoneyTracker2.LedgerEntry
 		}
 
 		/// <summary>
+		/// NOTE: This View Model swaps things around for UX purposes
+		/// i.e. the Credit Card account is in the Credit but needs to be set to the Debit.
+		///      Same for the Bank Dates
+		/// </summary>
+		/// <param name="entry"></param>
+		/// <exception cref="ArgumentNullException"></exception>
+		public override void LoadTransaction(IJournalEntry entry)
+		{
+			if (entry is null) throw new ArgumentNullException(nameof(IJournalEntry));
+
+			IJournalAccount action, liability;
+			DateTime? actionDate, liabilityDate;
+
+			var account = _config.GetJournalAccount(entry.CreditAccountId);
+			var account2 = _config.GetJournalAccount(entry.DebitAccountId);
+			if(account.JournalType == JournalAccountType.NotSet)
+			{
+				action = account;
+				actionDate = entry.CreditBankDate;
+				liability = account2;
+				liabilityDate = entry.DebitBankDate;
+			}
+			else
+			{
+				liability = account;
+				liabilityDate = entry.CreditBankDate;
+				action = account2;
+				actionDate = entry.DebitBankDate;
+			}
+
+			
+			this.ExistingTransactionId = entry.Id;
+			this.TransactionDate = entry.TransactionDate;
+			this.Amount = entry.TransactionAmount;
+			this.Description = entry.Description;
+			this.SelectedCreditAccount = action;
+			this.SelectedDebitAccount = liability;
+			this.CreditBankDate = actionDate;
+			this.DebitBankDate = liabilityDate;
+		}
+
+
+		/// <summary>
 		/// Which account is Credit and which is debit will be determined by the Action.
 		/// </summary>
 		public override void SaveTransaction()
@@ -51,6 +96,7 @@ namespace DLPMoneyTracker2.LedgerEntry
 
 			var liability = this.SelectedDebitAccount;
 			var action = this.SelectedCreditAccount;
+			bool isSwapAccounts = (action.Id == SpecialAccount.DebtInterest.Id);
 
 			JournalEntry record = new JournalEntry(_config)
 			{
@@ -58,10 +104,10 @@ namespace DLPMoneyTracker2.LedgerEntry
 				TransactionAmount = this.Amount,
 				TransactionDate = this.TransactionDate,
 				Description = this.Description,
-				CreditAccount = (action.Id == SpecialAccount.DebtInterest.Id) ? liability : action,
-				CreditBankDate = this.CreditBankDate,
-				DebitAccount = (action.Id == SpecialAccount.DebtInterest.Id) ? action : liability,
-				DebitBankDate = this.DebitBankDate
+				CreditAccount = isSwapAccounts ? liability : action,
+				CreditBankDate = isSwapAccounts ? this.DebitBankDate : this.CreditBankDate,
+				DebitAccount = isSwapAccounts ? action : liability,
+				DebitBankDate = isSwapAccounts ? this.CreditBankDate : this.DebitBankDate
 			};
 
 			if (this.ExistingTransactionId.HasValue)
