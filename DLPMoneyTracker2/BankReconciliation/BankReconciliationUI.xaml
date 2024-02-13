@@ -124,7 +124,7 @@
                        Grid.Column="2" />
 
             <TextBox x:Name="txtEndingBalance"
-                     Text="{Binding Path=StartingBalance, Converter={StaticResource convertDecimalToDisplay}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                     Text="{Binding Path=EndingBalance, Converter={StaticResource convertDecimalToDisplay}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                      Grid.Column="3"
                      Style="{StaticResource LocalTextbox}"
                      Width="150"
