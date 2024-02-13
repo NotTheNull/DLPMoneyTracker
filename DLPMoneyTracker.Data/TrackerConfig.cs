@@ -97,11 +97,6 @@ namespace DLPMoneyTracker.Data
                 Directory.CreateDirectory(this.FolderPath);
             }
 
-            //#pragma warning disable CS0612 // Type or member is obsolete
-            //            // Will have to keep these until the conversion is done
-            //            this.LoadMoneyAccounts();
-            //            this.LoadCategories();
-            //#pragma warning restore CS0612 // Type or member is obsolete
             this.LoadJournalAccounts();
         }
 

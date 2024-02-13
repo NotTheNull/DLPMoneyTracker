@@ -26,11 +26,6 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
         public int OrderBy
         { get { return 0; } }
 
-        //public string MoneyAccountId { get { return string.Empty; } }
-
-        //public MoneyAccountType AccountType { get { return MoneyAccountType.NotSet; } }
-
-        //public Guid CategoryId { get { return Guid.Empty; } }
 
         public decimal MonthlyBudgetAmount
         { get { return decimal.Zero; } }
