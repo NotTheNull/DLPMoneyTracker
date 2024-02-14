@@ -13,6 +13,7 @@ namespace DLPMoneyTracker.Data
 {
 	public delegate void JournalModifiedHandler();
 
+	// TODO: Modify year end update to copy December transactions over for Bank Reconciliation purposes; will mean adjusting the Initial Balances accordingly
 	public class JournalSearchFilter
 	{
 		public DateRange? DateRange;
