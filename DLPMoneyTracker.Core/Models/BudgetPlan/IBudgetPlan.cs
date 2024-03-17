@@ -30,6 +30,7 @@ namespace DLPMoneyTracker.Core.Models.BudgetPlan
         string CreditAccountName { get; }
 
         // Recurrence
+        IScheduleRecurrence Recurrence { get; }
         DateTime NotificationDate { get; }
         DateTime NextOccurrence { get; }
 
