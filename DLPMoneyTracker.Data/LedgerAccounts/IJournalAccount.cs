@@ -2,7 +2,7 @@
 
 namespace DLPMoneyTracker.Data.LedgerAccounts
 {
-    public enum JournalAccountType
+    public enum LedgerType
     {
         Bank,
         LiabilityCard,
@@ -16,7 +16,7 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
     {
         Guid Id { get; }
         string Description { get; }
-        JournalAccountType JournalType { get; }
+        LedgerType JournalType { get; }
         int OrderBy { get; }
         DateTime? DateClosedUTC { get; set; }
 
@@ -44,7 +44,7 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
         public string Description { get; set; }
 
-        public JournalAccountType JournalType { get; set; }
+        public LedgerType JournalType { get; set; }
 
         public int OrderBy { get; set; }
 

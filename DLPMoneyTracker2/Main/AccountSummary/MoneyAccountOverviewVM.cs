@@ -12,11 +12,11 @@ namespace DLPMoneyTracker2.Main.AccountSummary
     {
         private readonly ITrackerConfig _config;
 
-        private readonly List<JournalAccountType> _listValidTypes = new List<JournalAccountType>()
+        private readonly List<LedgerType> _listValidTypes = new List<LedgerType>()
         {
-            JournalAccountType.Bank,
-            JournalAccountType.LiabilityCard,
-            JournalAccountType.LiabilityLoan
+            LedgerType.Bank,
+            LedgerType.LiabilityCard,
+            LedgerType.LiabilityLoan
         };
 
         public MoneyAccountOverviewVM(ITrackerConfig config)

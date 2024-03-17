@@ -11,20 +11,20 @@ namespace DLPMoneyTracker2.Core.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is null) return Brushes.White;
-            if (value is JournalAccountType acctType)
+            if (value is LedgerType acctType)
             {
                 Color primaryColor = Colors.White;
                 switch (acctType)
                 {
-                    case JournalAccountType.Bank:
+                    case LedgerType.Bank:
                         primaryColor = Colors.LightGreen;
                         break;
 
-                    case JournalAccountType.LiabilityCard:
+                    case LedgerType.LiabilityCard:
                         primaryColor = Colors.Yellow;
                         break;
 
-                    case JournalAccountType.LiabilityLoan:
+                    case LedgerType.LiabilityLoan:
                         primaryColor = Colors.Orange;
                         break;
 

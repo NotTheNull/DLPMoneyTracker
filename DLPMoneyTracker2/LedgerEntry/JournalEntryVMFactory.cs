@@ -58,15 +58,15 @@ namespace DLPMoneyTracker2.LedgerEntry
 			IJournalAccount debit = config.GetJournalAccount(transaction.DebitAccountId);
 			IJournalAccount credit = config.GetJournalAccount(transaction.CreditAccountId);
 
-			if(debit.JournalType == JournalAccountType.Bank && credit.JournalType == JournalAccountType.Receivable)
+			if(debit.JournalType == LedgerType.Bank && credit.JournalType == LedgerType.Receivable)
 			{
 				viewModel = UICore.DependencyHost.GetRequiredService<IncomeJournalEntryVM>();
 			}
-			else if(debit.JournalType == JournalAccountType.Payable && credit is IMoneyAccount)
+			else if(debit.JournalType == LedgerType.Payable && credit is IMoneyAccount)
 			{
 				viewModel = UICore.DependencyHost.GetRequiredService<ExpenseJournalEntryVM>();
 			}
-			else if(debit is IDebtAccount && credit.JournalType == JournalAccountType.Bank)
+			else if(debit is IDebtAccount && credit.JournalType == LedgerType.Bank)
 			{
 				viewModel = UICore.DependencyHost.GetRequiredService<DebtPaymentJournalEntryVM>();
 			}
@@ -78,7 +78,7 @@ namespace DLPMoneyTracker2.LedgerEntry
 			{
 				viewModel = UICore.DependencyHost.GetRequiredService<CorrectionJournalEntryVM>();
 			}
-			else if(debit.JournalType == JournalAccountType.Bank && credit.JournalType == JournalAccountType.Bank)
+			else if(debit.JournalType == LedgerType.Bank && credit.JournalType == LedgerType.Bank)
 			{
 				viewModel = UICore.DependencyHost.GetRequiredService<TransferJournalEntryVM>();
 			}

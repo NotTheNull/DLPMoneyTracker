@@ -253,7 +253,7 @@ namespace DLPMoneyTracker.Data
 		{
 			if (oldJournal is null) throw new ArgumentNullException("Journal");
 
-			JournalAccountSearch search = new JournalAccountSearch(new List<JournalAccountType>() { JournalAccountType.Bank, JournalAccountType.LiabilityCard, JournalAccountType.LiabilityLoan });
+			JournalAccountSearch search = new JournalAccountSearch(new List<LedgerType>() { LedgerType.Bank, LedgerType.LiabilityCard, LedgerType.LiabilityLoan });
 
 			_listTransactions.RemoveAll(x => x.DebitAccountId == SpecialAccount.InitialBalance.Id || x.CreditAccountId == SpecialAccount.InitialBalance.Id);
 			var listAccounts = _config.GetJournalAccountList(search);

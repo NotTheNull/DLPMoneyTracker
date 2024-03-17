@@ -10,22 +10,22 @@ namespace DLPMoneyTracker.Data
 	public delegate void SimpleNotification();
 	public struct JournalAccountSearch
     {
-        public List<JournalAccountType> JournalTypes;
+        public List<LedgerType> JournalTypes;
         public string NameFilterText;
         public bool IncludeDeleted;
 
         public JournalAccountSearch()
         {
-            JournalTypes = new List<JournalAccountType>();
+            JournalTypes = new List<LedgerType>();
             IncludeDeleted = false;
             NameFilterText = string.Empty;
         }
 
-        public JournalAccountSearch(IEnumerable<JournalAccountType> listAccountTypes)
+        public JournalAccountSearch(IEnumerable<LedgerType> listAccountTypes)
         {
             if (listAccountTypes is null) throw new ArgumentNullException(nameof(listAccountTypes));
 
-            JournalTypes = new List<JournalAccountType>();
+            JournalTypes = new List<LedgerType>();
             JournalTypes.AddRange(listAccountTypes);
             IncludeDeleted = false;
             NameFilterText = string.Empty;
@@ -35,7 +35,7 @@ namespace DLPMoneyTracker.Data
         {
             return new JournalAccountSearch
             {
-                JournalTypes = new List<JournalAccountType> { JournalAccountType.Bank, JournalAccountType.LiabilityCard },
+                JournalTypes = new List<LedgerType> { LedgerType.Bank, LedgerType.LiabilityCard },
                 IncludeDeleted = false,
                 NameFilterText = string.Empty
             };
@@ -103,7 +103,7 @@ namespace DLPMoneyTracker.Data
         public void AddJournalAccount(IJournalAccount act)
         {
             if (act is null) throw new ArgumentNullException("Journal Account");
-            if (act.JournalType == JournalAccountType.NotSet) throw new InvalidCastException("Journal Type is NOT SET");
+            if (act.JournalType == LedgerType.NotSet) throw new InvalidCastException("Journal Type is NOT SET");
             if (_listLedgerAccounts.Any(x => x.Id == act.Id)) return;
             _listLedgerAccounts.Add(act);
             SaveJournalAccounts();
@@ -121,7 +121,7 @@ namespace DLPMoneyTracker.Data
 
         public void SaveJournalAccounts()
         {
-            string json = JsonSerializer.Serialize(_listLedgerAccounts.Where(x => x.JournalType != JournalAccountType.NotSet).ToList(), typeof(List<IJournalAccount>));
+            string json = JsonSerializer.Serialize(_listLedgerAccounts.Where(x => x.JournalType != LedgerType.NotSet).ToList(), typeof(List<IJournalAccount>));
             File.WriteAllText(LedgerAccountsConfig, json);
         }
 
@@ -181,7 +181,7 @@ namespace DLPMoneyTracker.Data
         {
             _listLedgerAccounts.Clear();
             JournalAccountSearch search = new JournalAccountSearch();
-            search.JournalTypes.AddRange(new List<JournalAccountType>() { JournalAccountType.Bank, JournalAccountType.LiabilityCard, JournalAccountType.LiabilityLoan, JournalAccountType.Payable, JournalAccountType.Receivable });
+            search.JournalTypes.AddRange(new List<LedgerType>() { LedgerType.Bank, LedgerType.LiabilityCard, LedgerType.LiabilityLoan, LedgerType.Payable, LedgerType.Receivable });
             var listPreviousAccounts = config.GetJournalAccountList(search);
 
             foreach (var gl in listPreviousAccounts)

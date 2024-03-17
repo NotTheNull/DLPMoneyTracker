@@ -11,7 +11,7 @@ namespace DLPMoneyTracker2.Core.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is null) return string.Empty;
-            if (value is JournalAccountType acctType)
+            if (value is LedgerType acctType)
             {
                 return acctType.ToDisplayText();
             }

@@ -10,8 +10,8 @@ namespace DLPMoneyTracker2.LedgerEntry
 			base(
 				journal, 
 				config, 
-				new List<JournalAccountType>() { JournalAccountType.Bank, JournalAccountType.LiabilityCard, JournalAccountType.LiabilityLoan, JournalAccountType.Payable, JournalAccountType.Receivable }, 
-				new List<JournalAccountType>(),
+				new List<LedgerType>() { LedgerType.Bank, LedgerType.LiabilityCard, LedgerType.LiabilityLoan, LedgerType.Payable, LedgerType.Receivable }, 
+				new List<LedgerType>(),
 				DLPMoneyTracker.Data.TransactionModels.TransactionType.Correction)
 		{
 			this.SelectedCreditAccount = SpecialAccount.UnlistedAdjusment;

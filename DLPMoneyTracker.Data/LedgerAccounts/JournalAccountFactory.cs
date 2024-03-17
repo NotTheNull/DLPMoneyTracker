@@ -8,19 +8,19 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
         {
             switch (data.JournalType)
             {
-                case JournalAccountType.Bank:
+                case LedgerType.Bank:
                     return new BankAccount(data);
 
-                case JournalAccountType.LiabilityCard:
+                case LedgerType.LiabilityCard:
                     return new CreditCardAccount(data);
 
-                case JournalAccountType.LiabilityLoan:
+                case LedgerType.LiabilityLoan:
                     return new LoanAccount(data);
 
-                case JournalAccountType.Payable:
+                case LedgerType.Payable:
                     return new PayableAccount(data);
 
-                case JournalAccountType.Receivable:
+                case LedgerType.Receivable:
                     return new ReceivableAccount(data);
 
                 default:
@@ -28,23 +28,23 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
             }
         }
 
-        public static IJournalAccount Build(string desc, JournalAccountType jtype, decimal budget = decimal.Zero, int orderBy = 99)
+        public static IJournalAccount Build(string desc, LedgerType jtype, decimal budget = decimal.Zero, int orderBy = 99)
         {
             switch (jtype)
             {
-                case JournalAccountType.Bank:
+                case LedgerType.Bank:
                     return new BankAccount() { Description = desc, OrderBy = orderBy };
 
-                case JournalAccountType.LiabilityCard:
+                case LedgerType.LiabilityCard:
                     return new CreditCardAccount() { Description = desc, OrderBy = orderBy };
 
-                case JournalAccountType.LiabilityLoan:
+                case LedgerType.LiabilityLoan:
                     return new LoanAccount() { Description = desc, OrderBy = orderBy };
 
-                case JournalAccountType.Payable:
+                case LedgerType.Payable:
                     return new PayableAccount() { Description = desc, MonthlyBudgetAmount = budget };
 
-                case JournalAccountType.Receivable:
+                case LedgerType.Receivable:
                     return new ReceivableAccount() { Description = desc, MonthlyBudgetAmount = budget };
 
                 default:

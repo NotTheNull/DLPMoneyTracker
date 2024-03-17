@@ -135,7 +135,7 @@ namespace DLPMoneyTracker2
 		{
 			get
 			{
-				if (_parent.JournalType == JournalAccountType.LiabilityCard || _parent.JournalType == JournalAccountType.LiabilityLoan)
+				if (_parent.JournalType == LedgerType.LiabilityCard || _parent.JournalType == LedgerType.LiabilityLoan)
 				{
 					return IsCredit ? _je.TransactionAmount : _je.TransactionAmount * -1;
 				}

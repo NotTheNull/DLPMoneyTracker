@@ -59,14 +59,14 @@ namespace DLPMoneyTracker2.LedgerEntry
         protected readonly IJournal _journal;
         protected readonly ITrackerConfig _config;
 
-        private readonly List<JournalAccountType> _validDebitTypes = new List<JournalAccountType>();
-        private readonly List<JournalAccountType> _validCreditTypes = new List<JournalAccountType>();
+        private readonly List<LedgerType> _validDebitTypes = new List<LedgerType>();
+        private readonly List<LedgerType> _validCreditTypes = new List<LedgerType>();
 
         protected BaseRecordJournalEntryVM(
             IJournal journal, 
             ITrackerConfig config,  
-            IEnumerable<JournalAccountType> validDebitTypes, 
-            IEnumerable<JournalAccountType> validCreditTypes,
+            IEnumerable<LedgerType> validDebitTypes, 
+            IEnumerable<LedgerType> validCreditTypes,
             TransactionType transType)
         {
             _config = config;

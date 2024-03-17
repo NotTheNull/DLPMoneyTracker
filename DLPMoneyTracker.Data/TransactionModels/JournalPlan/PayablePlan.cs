@@ -15,21 +15,21 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
 
         public Guid UID { get; set; }
 
-        private List<JournalAccountType> _validDebits = new List<JournalAccountType>()
+        private List<LedgerType> _validDebits = new List<LedgerType>()
         {
-            JournalAccountType.Payable
+            LedgerType.Payable
         };
 
-        public List<JournalAccountType> ValidDebitAccountTypes
+        public List<LedgerType> ValidDebitAccountTypes
         { get { return _validDebits; } }
 
-        private List<JournalAccountType> _validCredits = new List<JournalAccountType>()
+        private List<LedgerType> _validCredits = new List<LedgerType>()
         {
-            JournalAccountType.Bank,
-            JournalAccountType.LiabilityCard
+            LedgerType.Bank,
+            LedgerType.LiabilityCard
         };
 
-        public List<JournalAccountType> ValidCreditAccountTypes
+        public List<LedgerType> ValidCreditAccountTypes
         { get { return _validCredits; } }
 
         public IJournalAccount DebitAccount { get; set; }

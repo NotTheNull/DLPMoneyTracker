@@ -13,8 +13,8 @@ namespace DLPMoneyTracker2.LedgerEntry
 			base(
 				journal,
 				config,
-				new List<JournalAccountType>() { JournalAccountType.LiabilityLoan, JournalAccountType.LiabilityCard },
-				new List<JournalAccountType>() { JournalAccountType.NotSet },
+				new List<LedgerType>() { LedgerType.LiabilityLoan, LedgerType.LiabilityCard },
+				new List<LedgerType>() { LedgerType.NotSet },
 				TransactionType.DebtAdjustment)
 		{
 		}
@@ -60,7 +60,7 @@ namespace DLPMoneyTracker2.LedgerEntry
 
 			var account = _config.GetJournalAccount(entry.CreditAccountId);
 			var account2 = _config.GetJournalAccount(entry.DebitAccountId);
-			if(account.JournalType == JournalAccountType.NotSet)
+			if(account.JournalType == LedgerType.NotSet)
 			{
 				action = account;
 				actionDate = entry.CreditBankDate;

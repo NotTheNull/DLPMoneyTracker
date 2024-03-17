@@ -13,20 +13,20 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
             UID = Guid.NewGuid();
         }
 
-        private List<JournalAccountType> _validDebits = new List<JournalAccountType>()
+        private List<LedgerType> _validDebits = new List<LedgerType>()
         {
-            JournalAccountType.Bank
+            LedgerType.Bank
         };
 
-        public List<JournalAccountType> ValidDebitAccountTypes
+        public List<LedgerType> ValidDebitAccountTypes
         { get { return _validDebits; } }
 
-        private List<JournalAccountType> _validCredits = new List<JournalAccountType>()
+        private List<LedgerType> _validCredits = new List<LedgerType>()
         {
-            JournalAccountType.Receivable
+            LedgerType.Receivable
         };
 
-        public List<JournalAccountType> ValidCreditAccountTypes
+        public List<LedgerType> ValidCreditAccountTypes
         { get { return _validCredits; } }
 
         public Guid UID { get; set; }

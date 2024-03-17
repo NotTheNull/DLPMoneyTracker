@@ -89,11 +89,11 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
 
         #endregion Commands
 
-        private List<JournalAccountType> ValidBudgetTypes = new List<JournalAccountType>()
+        private List<LedgerType> ValidBudgetTypes = new List<LedgerType>()
         {
-            JournalAccountType.Receivable,
-            JournalAccountType.Payable,
-            JournalAccountType.LiabilityLoan
+            LedgerType.Receivable,
+            LedgerType.Payable,
+            LedgerType.LiabilityLoan
         };
 
         public void Load()
@@ -111,14 +111,14 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
                 budget.Load(act);
                 switch (act.JournalType)
                 {
-                    case JournalAccountType.Receivable:
+                    case LedgerType.Receivable:
                         if (act.DateClosedUTC is null)
                         {
                             _listIncome.Add(budget);
                         }
                         break;
 
-                    case JournalAccountType.Payable:
+                    case LedgerType.Payable:
                         if (budget.IsVisible)
                         {
                             if (budget.IsFixedExpense)
@@ -132,7 +132,7 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
                         }
                         break;
 
-                    case JournalAccountType.LiabilityLoan:
+                    case LedgerType.LiabilityLoan:
                         if (budget.IsVisible)
                         {
                             this.FixedExpenses.Add(budget);

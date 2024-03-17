@@ -8,8 +8,8 @@ namespace DLPMoneyTracker.Data.LedgerAccounts
 
 		public string Description { get; set; }
 
-		public JournalAccountType JournalType
-		{ get { return JournalAccountType.Receivable; } }
+		public LedgerType JournalType
+		{ get { return LedgerType.Receivable; } }
 
 		public int OrderBy { get; set; }
 

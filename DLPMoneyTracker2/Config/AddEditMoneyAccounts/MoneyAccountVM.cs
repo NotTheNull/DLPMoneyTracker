@@ -13,9 +13,9 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
         private readonly ITrackerConfig _config;
         private readonly IJournal _journal;
 
-        private static readonly List<JournalAccountType> _listValidTypes = new List<JournalAccountType>() { JournalAccountType.Bank, JournalAccountType.LiabilityCard, JournalAccountType.LiabilityLoan };
+        private static readonly List<LedgerType> _listValidTypes = new List<LedgerType>() { LedgerType.Bank, LedgerType.LiabilityCard, LedgerType.LiabilityLoan };
 
-        public static List<JournalAccountType> ValidTypes
+        public static List<LedgerType> ValidTypes
         { get { return _listValidTypes; } }
 
         public MoneyAccountVM(ITrackerConfig config, IJournal journal) : base()
@@ -46,9 +46,9 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             }
         }
 
-        private JournalAccountType _acctType;
+        private LedgerType _acctType;
 
-        public JournalAccountType JournalType
+        public LedgerType JournalType
         {
             get { return _acctType; }
             set
@@ -114,7 +114,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             Id = Guid.Empty;
             Description = string.Empty;
             InitialBalance = decimal.Zero;
-            JournalType = JournalAccountType.NotSet;
+            JournalType = LedgerType.NotSet;
             this.DateClosedUTC = null;
         }
 
@@ -140,7 +140,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
         public void SaveAccount()
         {
             if (string.IsNullOrWhiteSpace(_desc)) return;
-            if (JournalType == JournalAccountType.NotSet) return;
+            if (JournalType == LedgerType.NotSet) return;
 
             IJournalAccount? acct = null;
             if (this.Id != Guid.Empty) acct = _config.GetJournalAccount(this.Id);
@@ -169,7 +169,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
                     Description = "*INITIAL BALANCE*"
                 };
 
-                if (this.JournalType == JournalAccountType.Bank)
+                if (this.JournalType == LedgerType.Bank)
                 {
                     initBalRecord.DebitAccount = acct;
                     initBalRecord.CreditAccount = SpecialAccount.InitialBalance;

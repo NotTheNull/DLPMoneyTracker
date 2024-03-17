@@ -10,8 +10,8 @@ namespace DLPMoneyTracker2.LedgerEntry
 			base(
 				journal,
 				config,
-				new List<JournalAccountType>() { JournalAccountType.Bank },
-				new List<JournalAccountType>() { JournalAccountType.Bank },
+				new List<LedgerType>() { LedgerType.Bank },
+				new List<LedgerType>() { LedgerType.Bank },
 				DLPMoneyTracker.Data.TransactionModels.TransactionType.Transfer)
 		{
 		}
@@ -20,8 +20,8 @@ namespace DLPMoneyTracker2.LedgerEntry
 		{
 			get
 			{
-				return this.SelectedCreditAccount.JournalType == JournalAccountType.Bank
-					&& this.SelectedDebitAccount.JournalType == JournalAccountType.Bank
+				return this.SelectedCreditAccount.JournalType == LedgerType.Bank
+					&& this.SelectedDebitAccount.JournalType == LedgerType.Bank
 					&& !string.IsNullOrWhiteSpace(this.Description)
 					&& this.Amount > decimal.Zero;
 			}

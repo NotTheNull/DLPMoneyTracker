@@ -20,7 +20,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
         Guid UID { get; }
 
         [JsonIgnore]
-        List<JournalAccountType> ValidDebitAccountTypes { get; }
+        List<LedgerType> ValidDebitAccountTypes { get; }
 
         Guid DebitAccountId { get; }
 
@@ -28,7 +28,7 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
         string DebitAccountName { get; }
 
         [JsonIgnore]
-        List<JournalAccountType> ValidCreditAccountTypes { get; }
+        List<LedgerType> ValidCreditAccountTypes { get; }
 
         Guid CreditAccountId { get; }
 
@@ -95,10 +95,10 @@ namespace DLPMoneyTracker.Data.TransactionModels.JournalPlan
         public DateTime NextOccurrence { get; set; }
 
         [JsonIgnore]
-        public List<JournalAccountType> ValidDebitAccountTypes => throw new NotImplementedException();
+        public List<LedgerType> ValidDebitAccountTypes => throw new NotImplementedException();
 
         [JsonIgnore]
-        public List<JournalAccountType> ValidCreditAccountTypes => throw new NotImplementedException();
+        public List<LedgerType> ValidCreditAccountTypes => throw new NotImplementedException();
 
         public bool IsValid()
         { return true; }

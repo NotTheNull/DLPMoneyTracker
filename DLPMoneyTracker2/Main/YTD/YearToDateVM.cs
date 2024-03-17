@@ -43,15 +43,15 @@ namespace DLPMoneyTracker2.Main.YTD
 
             JournalAccountSearch search = new JournalAccountSearch();
             search.IncludeDeleted = true;
-            search.JournalTypes.Add(DLPMoneyTracker.Data.LedgerAccounts.JournalAccountType.Receivable);
-            search.JournalTypes.Add(DLPMoneyTracker.Data.LedgerAccounts.JournalAccountType.Payable);
+            search.JournalTypes.Add(DLPMoneyTracker.Data.LedgerAccounts.LedgerType.Receivable);
+            search.JournalTypes.Add(DLPMoneyTracker.Data.LedgerAccounts.LedgerType.Payable);
 
             var listAccounts = _config.GetJournalAccountList(search);
             if (listAccounts?.Any() != true) return;
 
             foreach (var act in listAccounts)
             {
-                if (act.JournalType == DLPMoneyTracker.Data.LedgerAccounts.JournalAccountType.Receivable)
+                if (act.JournalType == DLPMoneyTracker.Data.LedgerAccounts.LedgerType.Receivable)
                 {
                     IncomeAccountDetailList.Add(new YTDAccountDetailVM(_year, act, _config, _journal));
                 }

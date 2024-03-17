@@ -10,9 +10,9 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 	{
 		private readonly ITrackerConfig _config;
 
-		private static readonly List<JournalAccountType> _listValidTypes = new List<JournalAccountType>() { JournalAccountType.Payable, JournalAccountType.Receivable };
+		private static readonly List<LedgerType> _listValidTypes = new List<LedgerType>() { LedgerType.Payable, LedgerType.Receivable };
 
-		public static List<JournalAccountType> ValidTypes
+		public static List<LedgerType> ValidTypes
 		{ get { return _listValidTypes; } }
 
 		public LedgerAccountVM(ITrackerConfig config) : base()
@@ -40,9 +40,9 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 			}
 		}
 
-		private JournalAccountType _acctType;
+		private LedgerType _acctType;
 
-		public JournalAccountType JournalType
+		public LedgerType JournalType
 		{
 			get { return _acctType; }
 			set
@@ -96,7 +96,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 			Id = Guid.Empty;
 			Description = string.Empty;
 			MonthlyBudget = decimal.Zero;
-			JournalType = JournalAccountType.NotSet;
+			JournalType = LedgerType.NotSet;
 			this.DateClosedUTC = null;
 		}
 
@@ -128,7 +128,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 		public void SaveAccount()
 		{
 			if (string.IsNullOrWhiteSpace(_desc)) return;
-			if (JournalType == JournalAccountType.NotSet) return;
+			if (JournalType == LedgerType.NotSet) return;
 
 			IJournalAccount? acct = null;
 			if (this.Id != Guid.Empty) acct = _config.GetJournalAccount(this.Id);

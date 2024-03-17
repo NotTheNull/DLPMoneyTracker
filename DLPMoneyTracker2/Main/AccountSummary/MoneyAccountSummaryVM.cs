@@ -34,7 +34,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
         public Guid AccountId
         { get { return _account.Id; } }
 
-        public JournalAccountType AccountType
+        public LedgerType AccountType
         { get { return _account.JournalType; } }
 
         public string AccountDesc
@@ -45,7 +45,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
         public decimal Balance
         {
             // Make sure the Liability accounts display as a Positive #
-            get { return this.AccountType == JournalAccountType.Bank ? _bal : _bal * -1; }
+            get { return this.AccountType == LedgerType.Bank ? _bal : _bal * -1; }
             set
             {
                 _bal = value;
@@ -92,7 +92,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
                                 break;
 
                             case JournalPlanType.DebtPayment:
-                                if (this.AccountType == JournalAccountType.Bank)
+                                if (this.AccountType == LedgerType.Bank)
                                 {
                                     bal -= p.Amount;
                                 }
@@ -104,7 +104,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
                         }
                     }
                 }
-                return this.AccountType == JournalAccountType.Bank ? bal : bal * -1;
+                return this.AccountType == LedgerType.Bank ? bal : bal * -1;
             }
         }
 

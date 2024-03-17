@@ -21,11 +21,11 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             _journal = journal;
             _editAccount = new MoneyAccountVM(config, journal);
 
-            this.JournalTypeList = new List<SpecialDropListItem<JournalAccountType>>
+            this.JournalTypeList = new List<SpecialDropListItem<LedgerType>>
             {
-                new SpecialDropListItem<JournalAccountType>("Bank", JournalAccountType.Bank),
-                new SpecialDropListItem<JournalAccountType>("Credit Card", JournalAccountType.LiabilityCard),
-                new SpecialDropListItem<JournalAccountType>("Loan", JournalAccountType.LiabilityLoan)
+                new SpecialDropListItem<LedgerType>("Bank", LedgerType.Bank),
+                new SpecialDropListItem<LedgerType>("Credit Card", LedgerType.LiabilityCard),
+                new SpecialDropListItem<LedgerType>("Loan", LedgerType.LiabilityLoan)
             };
             this.ReloadAccounts();
         }
@@ -43,7 +43,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
         public bool CanEdit
         { get { return _editAccount?.DateClosedUTC == null; } }
 
-        public List<SpecialDropListItem<JournalAccountType>> JournalTypeList { get; set; }
+        public List<SpecialDropListItem<LedgerType>> JournalTypeList { get; set; }
 
         #region Commands
 

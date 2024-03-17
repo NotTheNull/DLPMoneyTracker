@@ -18,10 +18,10 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
         {
             _config = config;
             _editAccount = new LedgerAccountVM(config);
-            this.JournalTypeList = new List<SpecialDropListItem<JournalAccountType>>
+            this.JournalTypeList = new List<SpecialDropListItem<LedgerType>>
             {
-                new SpecialDropListItem<JournalAccountType>("Receivable", JournalAccountType.Receivable),
-                new SpecialDropListItem<JournalAccountType>("Payable", JournalAccountType.Payable)
+                new SpecialDropListItem<LedgerType>("Receivable", LedgerType.Receivable),
+                new SpecialDropListItem<LedgerType>("Payable", LedgerType.Payable)
             };
             this.ReloadAccounts();
         }
@@ -34,7 +34,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
         public bool CanEdit
         { get { return _editAccount?.DateClosedUTC == null; } }
 
-        public List<SpecialDropListItem<JournalAccountType>> JournalTypeList { get; set; }
+        public List<SpecialDropListItem<LedgerType>> JournalTypeList { get; set; }
 
         private LedgerAccountVM _editAccount;
 
@@ -51,9 +51,9 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             }
         }
 
-        public JournalAccountType AccountType
+        public LedgerType AccountType
         {
-            get { return _editAccount?.JournalType ?? JournalAccountType.NotSet; }
+            get { return _editAccount?.JournalType ?? LedgerType.NotSet; }
             set
             {
                 _editAccount.JournalType = value;
