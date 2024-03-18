@@ -1,148 +1,112 @@
-﻿using DLPMoneyTracker.Data;
-using DLPMoneyTracker.Data.LedgerAccounts;
+﻿using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
+using DLPMoneyTracker.Plugins.SQL.Data;
 using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
 
 namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 {
-	public class LedgerAccountVM : BaseViewModel
-	{
-		private readonly ITrackerConfig _config;
+    public class LedgerAccountVM : BaseViewModel, IJournalAccount
+    {
 
-		private static readonly List<LedgerType> _listValidTypes = new List<LedgerType>() { LedgerType.Payable, LedgerType.Receivable };
+        private readonly List<LedgerType> _listValidTypes = new List<LedgerType>() { LedgerType.Payable, LedgerType.Receivable };
+        private readonly ISaveJournalAccountUseCase saveUseCase;
 
-		public static List<LedgerType> ValidTypes
-		{ get { return _listValidTypes; } }
 
-		public LedgerAccountVM(ITrackerConfig config) : base()
-		{
-			_config = config;
-		}
+        public LedgerAccountVM(ISaveJournalAccountUseCase saveUseCase) : base()
+        {
+            this.saveUseCase = saveUseCase;
+        }
 
-		public LedgerAccountVM(ITrackerConfig config, IJournalAccount act) : base()
-		{
-			_config = config;
-			this.LoadAccount(act);
-		}
+        public LedgerAccountVM(ISaveJournalAccountUseCase saveUseCase, IJournalAccount act) : this(saveUseCase)
+        {
+            this.Copy(act);
+        }
 
-		public Guid Id { get; private set; }
+        public Guid Id { get; private set; }
 
-		private string _desc = string.Empty;
+        private string _desc = string.Empty;
 
-		public string Description
-		{
-			get { return _desc; }
-			set
-			{
-				_desc = value;
-				NotifyPropertyChanged(nameof(Description));
-			}
-		}
+        public string Description
+        {
+            get { return _desc; }
+            set
+            {
+                _desc = value;
+                NotifyPropertyChanged(nameof(Description));
+            }
+        }
 
-		private LedgerType _acctType;
+        private LedgerType _acctType;
 
-		public LedgerType JournalType
-		{
-			get { return _acctType; }
-			set
-			{
-				_acctType = value;
-				NotifyPropertyChanged(nameof(JournalType));
-			}
-		}
+        public LedgerType JournalType
+        {
+            get { return _acctType; }
+            set
+            {
+                _acctType = value;
+                NotifyPropertyChanged(nameof(JournalType));
+            }
+        }
 
-		private decimal _budget;
+        private DateTime? _closeDateUTC;
 
-		public decimal MonthlyBudget
-		{
-			get { return _budget; }
-			set
-			{
-				_budget = value;
-				NotifyPropertyChanged(nameof(MonthlyBudget));
-			}
-		}
+        public DateTime? DateClosedUTC
+        {
+            get { return _closeDateUTC?.ToLocalTime(); }
+            set
+            {
+                _closeDateUTC = value;
+                NotifyPropertyChanged(nameof(DateClosedUTC));
+                NotifyPropertyChanged(nameof(IsClosed));
+                NotifyPropertyChanged(nameof(DisplayClosedMessage));
+            }
+        }
 
-		private DateTime? _closeDateUTC;
+        public bool IsClosed
+        { get { return _closeDateUTC.HasValue; } }
 
-		public DateTime? DateClosedUTC
-		{
-			get { return _closeDateUTC?.ToLocalTime(); }
-			set
-			{
-				_closeDateUTC = value;
-				NotifyPropertyChanged(nameof(DateClosedUTC));
-				NotifyPropertyChanged(nameof(IsClosed));
-				NotifyPropertyChanged(nameof(DisplayClosedMessage));
-			}
-		}
+        public string DisplayClosedMessage
+        {
+            get
+            {
+                if (this.IsClosed) return string.Format("CLOSED: {0}", _closeDateUTC.Value.ToLocalTime());
 
-		public bool IsClosed
-		{ get { return _closeDateUTC.HasValue; } }
+                return string.Empty;
+            }
+        }
 
-		public string DisplayClosedMessage
-		{
-			get
-			{
-				if (this.IsClosed) return string.Format("CLOSED: {0}", _closeDateUTC.Value.ToLocalTime());
+        public int OrderBy { get { return 9999; } }
 
-				return string.Empty;
-			}
-		}
 
-		public void Clear()
-		{
-			Id = Guid.Empty;
-			Description = string.Empty;
-			MonthlyBudget = decimal.Zero;
-			JournalType = LedgerType.NotSet;
-			this.DateClosedUTC = null;
-		}
 
-		public void Copy(LedgerAccountVM cpy)
-		{
-			Id = cpy.Id;
-			Description = cpy.Description;
-			JournalType = cpy.JournalType;
-			DateClosedUTC = cpy.DateClosedUTC;
-			MonthlyBudget = cpy.MonthlyBudget;
-		}
 
-		public void LoadAccount(IJournalAccount account)
-		{
-			if (account is null) throw new ArgumentNullException("Ledger Account");
-			if (!_listValidTypes.Contains(account.JournalType)) throw new InvalidCastException(string.Format("[{0} - {1}] is not a valid Money Account", account.JournalType.ToString(), account.Description));
+        public void Clear()
+        {
+            Id = Guid.Empty;
+            Description = string.Empty;
+            JournalType = LedgerType.NotSet;
+            this.DateClosedUTC = null;
+        }
 
-			Id = account.Id;
-			Description = account.Description;
-			JournalType = account.JournalType;
-			DateClosedUTC = account.DateClosedUTC;
+        public void Copy(IJournalAccount cpy)
+        {
+            ArgumentNullException.ThrowIfNull(cpy);
+            if (!_listValidTypes.Contains(cpy.JournalType)) throw new InvalidCastException(string.Format("[{0} - {1}] is not a valid Ledger Account", cpy.JournalType.ToString(), cpy.Description));
 
-			if (account is ILedgerAccount ledger)
-			{
-				MonthlyBudget = ledger.MonthlyBudgetAmount;
-			}
-		}
+            Id = cpy.Id;
+            Description = cpy.Description;
+            JournalType = cpy.JournalType;
+            DateClosedUTC = cpy.DateClosedUTC;
+        }
 
-		public void SaveAccount()
-		{
-			if (string.IsNullOrWhiteSpace(_desc)) return;
-			if (JournalType == LedgerType.NotSet) return;
+        public void SaveAccount()
+        {
+            if (string.IsNullOrWhiteSpace(_desc)) return;
+            if (JournalType == LedgerType.NotSet) return;
 
-			IJournalAccount? acct = null;
-			if (this.Id != Guid.Empty) acct = _config.GetJournalAccount(this.Id);
-
-			if (acct is null)
-			{
-				acct = JournalAccountFactory.Build(this.Description, this.JournalType, this.MonthlyBudget);
-				_config.AddJournalAccount(acct);
-			}
-			else
-			{
-				JournalAccountFactory.Update(ref acct, this.Description, this.MonthlyBudget);
-			}
-			_config.SaveJournalAccounts();
-		}
-	}
+            saveUseCase.Execute(this);
+        }
+    }
 }

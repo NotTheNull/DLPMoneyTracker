@@ -60,7 +60,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DLPMoneyTracker.Data\DLPMoneyTracker.Data.csproj" />
+    <ProjectReference Include="..\DLPMoneyTracker.BusinessLogic\DLPMoneyTracker.BusinessLogic.csproj" />
+    <ProjectReference Include="..\DLPMoneyTracker.Core\DLPMoneyTracker.Core.csproj" />
+    <ProjectReference Include="..\DLPMoneyTracker.Plugins.JSON\DLPMoneyTracker.Plugins.JSON.csproj" />
+    <ProjectReference Include="..\DLPMoneyTracker.Plugins.SQL\DLPMoneyTracker.Plugins.SQL.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,6 @@
-﻿using DLPMoneyTracker.Data.ScheduleRecurrence;
+﻿using DLPMoneyTracker.BusinessLogic.Factories;
+using DLPMoneyTracker.Core.Models.ScheduleRecurrence;
+using DLPMoneyTracker.Data.ScheduleRecurrence;
 using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
@@ -29,19 +31,19 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
             get { return this.SelectedFrequency == RecurrenceFrequency.Monthly; }
         }
 
-        private int _monthDay;
+        //private int _monthDay;
 
-        public int DayOfMonth
-        {
-            get { return _monthDay; }
-            set
-            {
-                if (value < 1) _monthDay = 1;
-                else if (value > 31) _monthDay = 31;
-                else _monthDay = value;
-                NotifyPropertyChanged(nameof(this.DayOfMonth));
-            }
-        }
+        //public int DayOfMonth
+        //{
+        //    get { return _monthDay; }
+        //    set
+        //    {
+        //        if (value < 1) _monthDay = 1;
+        //        else if (value > 31) _monthDay = 31;
+        //        else _monthDay = value;
+        //        NotifyPropertyChanged(nameof(this.DayOfMonth));
+        //    }
+        //}
 
         private DateTime _dateStart;
 
@@ -79,7 +81,6 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
 
         public RecurrenceEditorVM() : base()
         {
-            _monthDay = 1;
             _dateStart = DateTime.Today;
             this.LoadFrequenceList();
         }
@@ -96,9 +97,8 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
 
         public IScheduleRecurrence GetRecurrence()
         {
-            if (this.IsMonthly) return ScheduleRecurrenceFactory.Build(this.SelectedFrequency, this.DayOfMonth);
-
-            return ScheduleRecurrenceFactory.Build(this.SelectedFrequency, this.StartDate);
+            ScheduleRecurrenceFactory factory = new ScheduleRecurrenceFactory();
+            return factory.Build(this.SelectedFrequency, this.StartDate);
         }
 
         public void EditRecurrence(IScheduleRecurrence recurr)
@@ -108,7 +108,7 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
 
             if (recurr is MonthlyRecurrence monthly)
             {
-                this.DayOfMonth = monthly.DayOfMonth;
+                this.StartDate = monthly.StartDate;
             }
             else if (recurr is SemiAnnualRecurrence semi)
             {

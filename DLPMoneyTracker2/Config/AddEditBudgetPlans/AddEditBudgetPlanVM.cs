@@ -1,7 +1,10 @@
-﻿using DLPMoneyTracker.Data;
-using DLPMoneyTracker.Data.LedgerAccounts;
-using DLPMoneyTracker.Data.ScheduleRecurrence;
-using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
+﻿
+using DLPMoneyTracker.BusinessLogic.Factories;
+using DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans.Interfaces;
+using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
+using DLPMoneyTracker.Core.Models.BudgetPlan;
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
+using DLPMoneyTracker.Core.Models.ScheduleRecurrence;
 using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
@@ -12,38 +15,54 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
 {
     public class AddEditBudgetPlanVM : BaseViewModel
     {
-        private readonly ITrackerConfig _config;
-        private readonly IJournalPlanner _planner;
 
-        public AddEditBudgetPlanVM(ITrackerConfig config, IJournalPlanner planner) : base()
+        private readonly IGetBudgetPlanListUseCase getPlanListUseCase;
+        private readonly IGetJournalAccountByUIDUseCase getAccountByUIDUseCase;
+        private readonly IGetJournalAccountListByTypesUseCase getAccountsByTypesUseCase;
+        private readonly IDeleteBudgetPlanUseCase deletePlanUseCase;
+        private readonly ISaveBudgetPlanUseCase savePlanUseCase;
+        private readonly ScheduleRecurrenceFactory recurrenceFactory;
+        private readonly BudgetPlanFactory budgetFactory;
+
+        public AddEditBudgetPlanVM(
+            IGetBudgetPlanListUseCase getPlanListUseCase, 
+            IGetJournalAccountByUIDUseCase getAccountByUIDUseCase,
+            IGetJournalAccountListByTypesUseCase getAccountsByTypesUseCase,
+            IDeleteBudgetPlanUseCase deletePlanUseCase,
+            ISaveBudgetPlanUseCase savePlanUseCase,
+            BudgetPlanFactory budgetFactory,
+            ScheduleRecurrenceFactory recurrenceFactory) : base()
         {
-            _config = config;
-            _planner = planner;
+            this.getPlanListUseCase = getPlanListUseCase;
+            this.getAccountByUIDUseCase = getAccountByUIDUseCase;
+            this.getAccountsByTypesUseCase = getAccountsByTypesUseCase;
+            this.deletePlanUseCase = deletePlanUseCase;
+            this.savePlanUseCase = savePlanUseCase;
+            this.budgetFactory = budgetFactory;
+            this.recurrenceFactory = recurrenceFactory;
+
 
             this.Reload();
         }
 
-        private ObservableCollection<IJournalPlan> _listPlans = new ObservableCollection<IJournalPlan>();
-
-        public ObservableCollection<IJournalPlan> PlanList
-        { get { return _listPlans; } }
+        private ObservableCollection<IBudgetPlan> _listPlans = new ObservableCollection<IBudgetPlan>();
+        public ObservableCollection<IBudgetPlan> PlanList { get { return _listPlans; } }
 
         public Guid BudgetPlanId { get; set; }
 
-        private List<SpecialDropListItem<JournalPlanType>> _listPlanTypes = new List<SpecialDropListItem<JournalPlanType>>()
+        private List<SpecialDropListItem<BudgetPlanType>> _listPlanTypes = new List<SpecialDropListItem<BudgetPlanType>>()
         {
-            new SpecialDropListItem<JournalPlanType>("Income", JournalPlanType.Receivable),
-            new SpecialDropListItem<JournalPlanType>("Expense", JournalPlanType.Payable),
-            new SpecialDropListItem<JournalPlanType>("Debt Payment", JournalPlanType.DebtPayment),
-            new SpecialDropListItem<JournalPlanType>("Transfer", JournalPlanType.Transfer)
+            new SpecialDropListItem<BudgetPlanType>("Income", BudgetPlanType.Receivable),
+            new SpecialDropListItem<BudgetPlanType>("Expense", BudgetPlanType.Payable),
+            new SpecialDropListItem<BudgetPlanType>("Debt Payment", BudgetPlanType.DebtPayment),
+            new SpecialDropListItem<BudgetPlanType>("Transfer", BudgetPlanType.Transfer)
         };
 
-        public List<SpecialDropListItem<JournalPlanType>> PlanTypes
-        { get { return _listPlanTypes; } }
+        public List<SpecialDropListItem<BudgetPlanType>> PlanTypes { get { return _listPlanTypes; } }
 
-        private JournalPlanType _planType;
+        private BudgetPlanType _planType;
 
-        public JournalPlanType SelectedPlanType
+        public BudgetPlanType SelectedPlanType
         {
             get { return _planType; }
             set
@@ -130,7 +149,7 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
             {
                 if (this.SelectedCreditAccount is null) return false;
                 if (this.SelectedDebitAccount is null) return false;
-                if (this.SelectedPlanType == JournalPlanType.NotSet) return false;
+                if (this.SelectedPlanType == BudgetPlanType.NotSet) return false;
                 if (string.IsNullOrWhiteSpace(this.Description)) return false;
                 if (this.Amount == decimal.Zero) return false;
                 if (this.Recurrence is null) return false;
@@ -149,19 +168,10 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
             {
                 return _cmdSaveChanges ?? (_cmdSaveChanges = new RelayCommand((o) =>
                 {
-                    // Remove existing (if applicable) in case we're changing the Type
                     if (this.IsReadyForSave)
                     {
-                        var plan = _planner.JournalPlanList.FirstOrDefault(x => x.UID == this.BudgetPlanId);
-                        if (plan != null)
-                        {
-                            _planner.RemovePlan(plan);
-                        }
-
-                        plan = JournalPlanFactory.Build(_config, this.SelectedPlanType, this.Description, this.SelectedCreditAccount, this.SelectedDebitAccount, this.Amount, this.Recurrence);
-                        _planner.AddPlan(plan);
+                        savePlanUseCase.Execute(budgetFactory.Build(this.SelectedPlanType, this.BudgetPlanId, this.Description, this.SelectedDebitAccount?.Id ?? Guid.Empty, this.SelectedCreditAccount?.Id ?? Guid.Empty, this.Amount, this.Recurrence));
                     }
-                    _planner.SaveToFile();
 
                     this.Clear();
                     this.Reload();
@@ -190,7 +200,7 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
             {
                 return _cmdEditRecord ?? (_cmdEditRecord = new RelayCommand((plan) =>
                 {
-                    if (plan is IJournalPlan jplan)
+                    if (plan is IBudgetPlan jplan)
                     {
                         this.LoadJournalPlan(jplan);
                     }
@@ -199,6 +209,7 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
         }
 
         private RelayCommand _cmdDeleteRecord;
+        
 
         public RelayCommand CommandDeleteRecord
         {
@@ -206,9 +217,10 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
             {
                 return _cmdDeleteRecord ?? (_cmdDeleteRecord = new RelayCommand((plan) =>
                 {
-                    if (plan is IJournalPlan jplan)
+                    if (plan is IBudgetPlan jplan)
                     {
-                        _planner.RemovePlan(jplan);
+                        deletePlanUseCase.Execute(jplan.UID);
+
                         this.Clear();
                         this.Reload();
                     }
@@ -221,9 +233,10 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
         private void Reload()
         {
             this.PlanList.Clear();
-            if (_planner.JournalPlanList?.Any() != true) return;
+            var listFull = getPlanListUseCase.Execute();
+            if (listFull?.Any() != true) return;
 
-            foreach (var p in _planner.JournalPlanList.OrderBy(o => o.PriorityOrder).ThenBy(o => o.Description))
+            foreach (var p in listFull.OrderBy(o => o.Description))
             {
                 this.PlanList.Add(p);
             }
@@ -236,8 +249,8 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
             this.Description = string.Empty;
             this.SelectedCreditAccount = null;
             this.SelectedDebitAccount = null;
-            this.SelectedPlanType = JournalPlanType.Payable;
-            this.Recurrence = ScheduleRecurrenceFactory.Build(RecurrenceFrequency.Annual, DateTime.Today);
+            this.SelectedPlanType = BudgetPlanType.Payable;
+            this.Recurrence = recurrenceFactory.Build(RecurrenceFrequency.Annual, DateTime.Today);
         }
 
         /// <summary>
@@ -245,25 +258,25 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
         /// </summary>
         private void LoadValidJournalAccounts()
         {
-            IJournalPlan plan;
+            IBudgetPlan plan;
             this.ValidCreditAccounts.Clear();
             this.ValidDebitAccounts.Clear();
 
             switch (this.SelectedPlanType)
             {
-                case JournalPlanType.Receivable:
+                case BudgetPlanType.Receivable:
                     plan = new ReceivablePlan();
                     break;
 
-                case JournalPlanType.Payable:
+                case BudgetPlanType.Payable:
                     plan = new PayablePlan();
                     break;
 
-                case JournalPlanType.Transfer:
+                case BudgetPlanType.Transfer:
                     plan = new TransferPlan();
                     break;
 
-                case JournalPlanType.DebtPayment:
+                case BudgetPlanType.DebtPayment:
                     plan = new DebtPaymentPlan();
                     break;
 
@@ -271,36 +284,29 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
                     return;
             }
 
-            var listCreditAccounts = _config.GetJournalAccountList(new JournalAccountSearch(plan.ValidCreditAccountTypes));
+            var listCreditAccounts = getAccountsByTypesUseCase.Execute(plan.ValidCreditAccountTypes);
             foreach (var act in listCreditAccounts.OrderBy(o => o.Description))
             {
                 this.ValidCreditAccounts.Add(new SpecialDropListItem<IJournalAccount>(act.Description, act));
             }
 
-            var listDebitAccounts = _config.GetJournalAccountList(new JournalAccountSearch(plan.ValidDebitAccountTypes));
+            var listDebitAccounts = getAccountsByTypesUseCase.Execute(plan.ValidDebitAccountTypes);
             foreach (var act in listDebitAccounts.OrderBy(o => o.Description))
             {
                 this.ValidDebitAccounts.Add(new SpecialDropListItem<IJournalAccount>(act.Description, act));
             }
         }
 
-        private void LoadJournalPlan(IJournalPlan plan)
+        private void LoadJournalPlan(IBudgetPlan plan)
         {
             this.BudgetPlanId = plan.UID;
             this.SelectedPlanType = plan.PlanType;
-            this.SelectedCreditAccount = _config.GetJournalAccount(plan.CreditAccountId);
-            this.SelectedDebitAccount = _config.GetJournalAccount(plan.DebitAccountId);
+            this.SelectedCreditAccount = getAccountByUIDUseCase.Execute(plan.CreditAccountId);
+            this.SelectedDebitAccount = getAccountByUIDUseCase.Execute(plan.DebitAccountId);
             this.Description = plan.Description;
             this.Amount = plan.ExpectedAmount;
-
-            if (string.IsNullOrWhiteSpace(plan.RecurrenceJSON))
-            {
-                this.Recurrence = ScheduleRecurrenceFactory.Build(RecurrenceFrequency.Annual, DateTime.Today);
-            }
-            else
-            {
-                this.Recurrence = ScheduleRecurrenceFactory.Build(plan.RecurrenceJSON);
-            }
+            this.Recurrence = plan.Recurrence;
+            
         }
     }
 }

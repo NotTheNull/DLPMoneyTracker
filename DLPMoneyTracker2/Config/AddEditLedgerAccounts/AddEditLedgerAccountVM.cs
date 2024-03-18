@@ -1,6 +1,7 @@
-﻿using DLPMoneyTracker.Data;
-using DLPMoneyTracker.Data.LedgerAccounts;
+﻿using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker2.Core;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,15 +10,17 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 {
     public class AddEditLedgerAccountVM : BaseViewModel
     {
-        private readonly ITrackerConfig _config;
+        private readonly IGetLedgerAccountsUseCase getLedgerAccountsUseCase;
+        private readonly IDeleteJournalAccountUseCase deleteAcountUseCase;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-        public AddEditLedgerAccountVM(ITrackerConfig config) : base()
+        public AddEditLedgerAccountVM(IGetLedgerAccountsUseCase getLedgerAccountsUseCase, IDeleteJournalAccountUseCase deleteAcountUseCase) : base()
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
-            _config = config;
-            _editAccount = new LedgerAccountVM(config);
+            this.getLedgerAccountsUseCase = getLedgerAccountsUseCase;
+            this.deleteAcountUseCase = deleteAcountUseCase;
+            _editAccount = UICore.DependencyHost.GetRequiredService<LedgerAccountVM>();
             this.JournalTypeList = new List<SpecialDropListItem<LedgerType>>
             {
                 new SpecialDropListItem<LedgerType>("Receivable", LedgerType.Receivable),
@@ -27,19 +30,15 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
         }
 
         private ObservableCollection<LedgerAccountVM> _listAccounts = new ObservableCollection<LedgerAccountVM>();
+        public ObservableCollection<LedgerAccountVM> AccountList { get { return _listAccounts; } }
 
-        public ObservableCollection<LedgerAccountVM> AccountList
-        { get { return _listAccounts; } }
-
-        public bool CanEdit
-        { get { return _editAccount?.DateClosedUTC == null; } }
+        public bool CanEdit { get { return _editAccount?.DateClosedUTC == null; } }
 
         public List<SpecialDropListItem<LedgerType>> JournalTypeList { get; set; }
 
         private LedgerAccountVM _editAccount;
 
-        public LedgerAccountVM EditAccount
-        { get { return _editAccount; } }
+        public LedgerAccountVM EditAccount { get { return _editAccount; } }
 
         public string Description
         {
@@ -61,15 +60,6 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             }
         }
 
-        public decimal MonthlyBudget
-        {
-            get { return _editAccount?.MonthlyBudget ?? decimal.Zero; }
-            set
-            {
-                _editAccount.MonthlyBudget = value;
-                NotifyPropertyChanged(nameof(MonthlyBudget));
-            }
-        }
 
         #region Commands
 
@@ -122,7 +112,6 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
         }
 
         public RelayCommand _cmdDel;
-
         public RelayCommand CommandRemove
         {
             get
@@ -130,10 +119,10 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                 return _cmdDel ?? (_cmdDel = new RelayCommand((act) =>
                 {
                     if (act is null) throw new ArgumentNullException("Account");
-                    //if (act.GetType() != typeof(IJournalAccount)) throw new InvalidCastException(string.Format("Cannot Load type [{0}", act.GetType().FullName));
+                    
                     if (act is LedgerAccountVM vm)
                     {
-                        _config.RemoveJournalAccount(vm.Id);
+                        deleteAcountUseCase.Execute(vm.Id);
                     }
                     _editAccount.Clear();
                     this.NotifyAll();
@@ -150,10 +139,12 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
         public void ReloadAccounts()
         {
             this.AccountList.Clear();
-            var listAccounts = _config.GetJournalAccountList(new JournalAccountSearch(LedgerAccountVM.ValidTypes));
+            var listAccounts = getLedgerAccountsUseCase.Execute(true); //_config.GetJournalAccountList(new JournalAccountSearch(LedgerAccountVM.ValidTypes));
             foreach (var act in listAccounts)
             {
-                this.AccountList.Add(new LedgerAccountVM(_config, act));
+                LedgerAccountVM vm = UICore.DependencyHost.GetRequiredService<LedgerAccountVM>();
+                vm.Copy(act);
+                this.AccountList.Add(vm);
             }
         }
 
@@ -162,7 +153,6 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             NotifyPropertyChanged(nameof(EditAccount));
             NotifyPropertyChanged(nameof(Description));
             NotifyPropertyChanged(nameof(AccountType));
-            NotifyPropertyChanged(nameof(MonthlyBudget));
         }
     }
 }

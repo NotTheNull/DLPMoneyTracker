@@ -73,7 +73,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Description" Binding="{Binding Path=Description, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Account Type" Binding="{Binding Path=JournalType, Converter={StaticResource converterMoneyAccountToString}, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Monthly Budget" Binding="{Binding Path=MonthlyBudget, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, UpdateSourceTrigger=PropertyChanged}" />
+                <!--<DataGridTextColumn Header="Monthly Budget" Binding="{Binding Path=MonthlyBudget, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, UpdateSourceTrigger=PropertyChanged}" />-->
 
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
@@ -161,7 +161,7 @@
                       SelectedValuePath="Value"
                       SelectedValue="{Binding Path=AccountType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-            <TextBlock Text="Monthly Budget"
+            <!--<TextBlock Text="Monthly Budget"
                        Grid.Column="1"
                        Grid.Row="3"
                        Style="{StaticResource HeaderLabel}" />
@@ -172,7 +172,7 @@
                      Width="120"
                      Background="{Binding Path=CanEdit, Converter={StaticResource convertEnabledToBgColor}, UpdateSourceTrigger=PropertyChanged}"
                      IsEnabled="{Binding Path=CanEdit, UpdateSourceTrigger=PropertyChanged}"
-                     Text="{Binding Path=MonthlyBudget, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=0.00,  Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                     Text="{Binding Path=MonthlyBudget, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=0.00,  Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />-->
         </Grid>
     </Grid>
 </Window>

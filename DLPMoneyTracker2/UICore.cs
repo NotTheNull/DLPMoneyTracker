@@ -1,5 +1,10 @@
-﻿using DLPMoneyTracker.Data;
-using DLPMoneyTracker.Data.BankReconciliation;
+﻿using DLPMoneyTracker.BusinessLogic.Factories;
+using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
+using DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans;
+using DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans.Interfaces;
+using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts;
+using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
+using DLPMoneyTracker.Plugins.JSON.Repositories;
 using DLPMoneyTracker2.BankReconciliation;
 using DLPMoneyTracker2.Config.AddEditBudgetPlans;
 using DLPMoneyTracker2.Config.AddEditLedgerAccounts;
@@ -16,7 +21,7 @@ using System;
 
 namespace DLPMoneyTracker2
 {
-    
+
     internal static class UICore
     {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -32,18 +37,31 @@ namespace DLPMoneyTracker2
 
         private static void ConfigureServices(ServiceCollection services)
         {
-            services.AddSingleton<ITrackerConfig, TrackerConfig>();
-            services.AddSingleton<IJournal, DLPJournal>();
-            services.AddSingleton<IJournalPlanner, JournalPlanner>();
-            services.AddSingleton<IBRManager, BRManager>();
 
-            //#pragma warning disable CS0612 // Type or member is obsolete
-            //#pragma warning disable CS0618 // Type or member is obsolete
-            //            // Keep until conversion is done
-            //            services.AddSingleton<ILedger, Ledger>();
-            //            services.AddSingleton<IMoneyPlanner, MoneyPlanner>();
-            //#pragma warning restore CS0618 // Type or member is obsolete
-            //#pragma warning restore CS0612 // Type or member is obsolete
+            // TODO: Swap these to the SQL repository when ready
+            // Repositories
+            services.AddSingleton<ILedgerAccountRepository, JSONLedgerAccountRepository>();
+            services.AddSingleton<IBudgetPlanRepository, JSONBudgetPlanRepository>();
+            services.AddSingleton<ITransactionRepository, JSONTransactionRepository>();
+            services.AddSingleton<IBankReconciliationRepository, JSONBankReconciliationRepository>();
+
+
+            // Use Cases
+            services.AddTransient<ISaveJournalAccountUseCase, SaveJournalAccountUseCase>();
+            services.AddTransient<IGetJournalAccountListByTypesUseCase, GetJournalAccountListByTypesUseCase>();
+            services.AddTransient<IGetLedgerAccountsUseCase, GetLedgerAccountsUseCase>();
+            services.AddTransient<IGetMoneyAccountsUseCase, GetMoneyAccountsUseCase>();
+            services.AddTransient<IGetJournalAccountByUIDUseCase, GetJournalAccountByUIDUseCase>();
+            services.AddTransient<IDeleteJournalAccountUseCase, DeleteJournalAccountUseCase>();
+            services.AddTransient<IGetBudgetPlanListUseCase, GetBudgetPlanListUseCase>();
+            services.AddTransient<IDeleteBudgetPlanUseCase, DeleteBudgetPlanUseCase>();
+            services.AddTransient<ISaveBudgetPlanUseCase, SaveBudgetPlanUseCase>();
+
+            // Factories
+            services.AddTransient<JournalAccountFactory>();
+            services.AddTransient<BudgetPlanFactory>();
+            services.AddTransient<ScheduleRecurrenceFactory>();
+            
 
             // Main UI
             services.AddSingleton<MainWindow>();

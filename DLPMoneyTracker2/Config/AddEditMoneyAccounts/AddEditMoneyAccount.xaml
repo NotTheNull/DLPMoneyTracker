@@ -72,7 +72,6 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Description" Binding="{Binding Path=Description, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Account Type" Binding="{Binding Path=JournalType, Converter={StaticResource converterMoneyAccountToString}, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Initial Bal" Binding="{Binding Path=InitialBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, UpdateSourceTrigger=PropertyChanged}" />
 
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
@@ -160,19 +159,7 @@
                       SelectedValuePath="Value"
                       SelectedValue="{Binding Path=EditAccount.JournalType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-            <TextBlock Text="Initial Balance"
-                       Grid.Column="1"
-                       Grid.Row="3"
-                       Style="{StaticResource HeaderLabel}" />
-
-            <TextBox x:Name="txtInitialBalance"
-                     Grid.Column="2"
-                     Grid.Row="3"
-                     Width="120"
-                     Background="{Binding Path=CanEdit, Converter={StaticResource convertEnabledToBgColor}, UpdateSourceTrigger=PropertyChanged}"
-                     IsEnabled="{Binding Path=CanEdit, UpdateSourceTrigger=PropertyChanged}"
-                     Text="{Binding Path=EditAccount.InitialBalance, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=0.00,  Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
-
+            
             <TextBlock Text="Display Order"
                        Grid.Column="1"
                        Grid.Row="4"

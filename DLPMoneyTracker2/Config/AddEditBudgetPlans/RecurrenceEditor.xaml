@@ -49,26 +49,9 @@
                       SelectedValue="{Binding Path=SelectedFrequency, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
 
-        <StackPanel x:Name="panelMonthly"
-                    Orientation="Horizontal"
-                    Visibility="{Binding Path=IsMonthly, Converter={StaticResource convertBoolToVisibility}, UpdateSourceTrigger=PropertyChanged}"
-                    Grid.Row="2">
-            <TextBlock Text="Day of Month"
-                       Style="{StaticResource LocalHeader}" />
-
-            <TextBox Text="{Binding Path=DayOfMonth, Converter={StaticResource convertNumberToDisplay}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                     MaxLength="2"
-                     Margin="0, 5"
-                     Width="40">
-                <i:Interaction.Behaviors>
-                    <behave:TextBoxFocusBehavior />
-                </i:Interaction.Behaviors>
-            </TextBox>
-        </StackPanel>
 
         <StackPanel x:Name="panelAnnual"
                     Orientation="Horizontal"
-                    Visibility="{Binding Path=IsMonthly, Converter={StaticResource convertBoolToVisibility}, ConverterParameter=R, UpdateSourceTrigger=PropertyChanged}"
                     Grid.Row="3">
             <TextBlock Text="Start Date"
                        Style="{StaticResource LocalHeader}" />
