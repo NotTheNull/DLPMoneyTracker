@@ -43,7 +43,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             var dataList = (List<JournalPlanJSON>)JsonSerializer.Deserialize(json, typeof(List<JournalPlanJSON>));
             if (dataList?.Any() != true) return;
 
-            BudgetPlanFactory factory = new BudgetPlanFactory(null, ledgerRepository);
+            BudgetPlanFactory factory = new BudgetPlanFactory(ledgerRepository);
             JSONScheduleRecurrenceAdapter adapter = new JSONScheduleRecurrenceAdapter();
             foreach(var data in dataList)
             {

@@ -2,7 +2,6 @@
 using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
 using DLPMoneyTracker.Core.Models.BudgetPlan;
 using DLPMoneyTracker.Core.Models.ScheduleRecurrence;
-using DLPMoneyTracker.Core.Models.Source;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,20 +12,13 @@ namespace DLPMoneyTracker.BusinessLogic.Factories
 {
     public class BudgetPlanFactory
     {
-        private ISourceToBudgetPlanAdapter adapter;
         private readonly ILedgerAccountRepository accountRepository;
 
-        public BudgetPlanFactory(ISourceToBudgetPlanAdapter adapter, ILedgerAccountRepository accountRepository)
+        public BudgetPlanFactory(ILedgerAccountRepository accountRepository)
         {
-            this.adapter = adapter;
             this.accountRepository = accountRepository;
         }
 
-        public IBudgetPlan Build(BudgetPlan source)
-        {
-            adapter.ImportSource(source);
-            return Build(adapter);
-        }
 
         public IBudgetPlan Build(IBudgetPlan plan)
         {
@@ -37,7 +29,7 @@ namespace DLPMoneyTracker.BusinessLogic.Factories
         {
             switch(planType)
             {
-                case Core.Models.Source.BudgetPlanType.Receivable:
+                case BudgetPlanType.Receivable:
                     return new ReceivablePlan()
                     {
                         UID = uid,
@@ -47,7 +39,7 @@ namespace DLPMoneyTracker.BusinessLogic.Factories
                         Recurrence = recurrence,
                         ExpectedAmount = amount
                     };
-                case Core.Models.Source.BudgetPlanType.Payable:
+                case BudgetPlanType.Payable:
                     return new PayablePlan()
                     {
                         UID = uid,
@@ -57,7 +49,7 @@ namespace DLPMoneyTracker.BusinessLogic.Factories
                         Recurrence = recurrence,
                         ExpectedAmount = amount
                     };
-                case Core.Models.Source.BudgetPlanType.DebtPayment:
+                case BudgetPlanType.DebtPayment:
                     return new DebtPaymentPlan()
                     {
                         UID = uid,
@@ -67,7 +59,7 @@ namespace DLPMoneyTracker.BusinessLogic.Factories
                         Recurrence = recurrence,
                         ExpectedAmount = amount
                     };
-                case Core.Models.Source.BudgetPlanType.Transfer:
+                case BudgetPlanType.Transfer:
                     return new TransferPlan()
                     {
                         UID = uid,
@@ -78,7 +70,7 @@ namespace DLPMoneyTracker.BusinessLogic.Factories
                         ExpectedAmount = amount
                     };
                 default:
-                    throw new InvalidOperationException($"Type [{data.PlanType}] is not currently supported");
+                    throw new InvalidOperationException($"Type [{planType}] is not currently supported");
             }
 
         }

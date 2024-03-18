@@ -11,9 +11,8 @@ namespace DLPMoneyTracker.Plugins.SQL.Data
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public Guid BatchUID { get; set; }
         public TransactionBatch Batch { get; set; }
-        public Account LedgerAccount { get; set; }
+        public Account? LedgerAccount { get; set; }
         public decimal Amount { get; set; }
         public DateTime? BankReconciliationDate { get; set; }
 

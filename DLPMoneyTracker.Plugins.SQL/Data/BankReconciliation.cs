@@ -11,11 +11,11 @@ namespace DLPMoneyTracker.Plugins.SQL.Data
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public Account BankAccount { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public decimal StartBalance { get; set; }
-        public decimal EndingBalance { get; set; }
+        public Account? BankAccount { get; set; }
+        public DateTime StartingDate { get; set; } = DateTime.Today.AddDays(-30);
+        public DateTime EndingDate { get; set; } = DateTime.Today;
+        public decimal StartingBalance { get; set; } = decimal.Zero;
+        public decimal EndingBalance { get; set; } = decimal.Zero;
 
     }
 }

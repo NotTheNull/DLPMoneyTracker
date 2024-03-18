@@ -9,15 +9,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Core.Models.BudgetPlan
 {
-    public enum RecurrenceFrequency
-    {
-        BiWeekly, // every two weeks [26 times a year]
-        SemiMonthly, // twice a month [24 times a year]
-        Monthly,
-        SemiAnnual,
-        Annual
-    }
-
+    
     public enum BudgetPlanType
     {
         Payable,

@@ -14,11 +14,12 @@ namespace DLPMoneyTracker.Plugins.SQL.Data
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public Guid AccountUID { get; set; }
+        public Guid AccountUID { get; set; } = Guid.NewGuid();
+
         [Required, StringLength(50)]
         public string Description { get; set; } = string.Empty;
-        public LedgerType AccountType { get; set; }
-        public int MainTabSortingId { get; set; } // Helps determine priority sorting when displaying the accounts on the main tab
+        public LedgerType AccountType { get; set; } = LedgerType.NotSet;
+        public int MainTabSortingId { get; set; } = 0; // Helps determine priority sorting when displaying the accounts on the main tab
         public DateTime? DateClosedUTC { get; set; }
 
     }

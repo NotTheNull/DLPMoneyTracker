@@ -15,9 +15,10 @@ namespace DLPMoneyTracker.Plugins.SQL.Data
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        public Guid BatchUID { get; set; }
         public DateTime EnteredDateUTC { get; set; } = DateTime.UtcNow; // Should not be set by user
-        public DateTime TransactionDate { get; set; } = DateTime.Today; 
-        public TransactionType BatchType { get; set; }
+        public DateTime TransactionDate { get; set; } = DateTime.Today;
+        public TransactionType BatchType { get; set; } = TransactionType.NotSet;
 
         [Required, StringLength(200)]
         public string Description { get; set; } = string.Empty;
