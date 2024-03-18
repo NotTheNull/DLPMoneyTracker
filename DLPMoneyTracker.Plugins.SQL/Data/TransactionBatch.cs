@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DLPMoneyTracker.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,16 +9,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.SQL.Data
 {
-    public enum TransactionType
-    {
-        NotSet,
-        Expense,
-        Income,
-        DebtPayment,
-        DebtAdjustment,
-        Correction,
-        Transfer
-    }
+    
 
     public class TransactionBatch
     {

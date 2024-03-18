@@ -1,4 +1,4 @@
-﻿using DLPMoneyTracker.Core.Models.BudgetPlan;
+﻿using DLPMoneyTracker.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.BusinessLogic.AdapterInterfaces
 {
-    public interface ISourceToBudgetPlanAdapter<T> : IBudgetPlan, IDLPAdapter<T>
+    public interface ISourceToTransactionAdapter<T> : IMoneyTransaction, IDLPAdapter<T>
     {
-        void ImportCopy(IBudgetPlan acct);
     }
 }

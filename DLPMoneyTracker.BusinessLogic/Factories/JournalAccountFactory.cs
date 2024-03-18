@@ -13,17 +13,10 @@ namespace DLPMoneyTracker.BusinessLogic.Factories
 {
     public class JournalAccountFactory
     {
-        private ISourceToJournalAccountAdapter adapter;
-
-        public JournalAccountFactory(ISourceToJournalAccountAdapter adapter)
+        
+        public JournalAccountFactory()
         {
-            this.adapter = adapter;
-        }
-
-        public IJournalAccount Build(Account acct)
-        {
-            adapter.ImportSource(acct);
-            return this.Build(adapter);
+            
         }
 
 
