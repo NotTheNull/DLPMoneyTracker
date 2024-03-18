@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DLPMoneyTracker.Core.Models.Source
+namespace DLPMoneyTracker.Plugins.SQL.Data
 {
     public class TransactionDetail
     {
