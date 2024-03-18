@@ -1,15 +1,15 @@
 ﻿using DLPMoneyTracker.BusinessLogic.AdapterInterfaces;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
-using DLPMoneyTracker.Plugins.JSON.Models;
+using DLPMoneyTracker.Plugins.SQL.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DLPMoneyTracker.Plugins.JSON.Adapters
+namespace DLPMoneyTracker.Plugins.SQL.Adapters
 {
-    internal class JSONSourceToJournalAccountAdapter : ISourceToJournalAccountAdapter<JournalAccountJSON>
+    public class SQLSourceToJournalAccountAdapter : ISourceToJournalAccountAdapter<Account>
     {
         public Guid Id { get; set; }
 
@@ -32,28 +32,25 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             this.DateClosedUTC = cpy.DateClosedUTC;
         }
 
-        public void ExportSource(ref JournalAccountJSON acct)
+        public void ExportSource(ref Account acct)
         {
             ArgumentNullException.ThrowIfNull(acct);
 
-            acct.Id = this.Id;
+            acct.AccountUID = this.Id;
             acct.Description = this.Description;
-            acct.JournalType = this.JournalType;
-            acct.OrderBy = this.OrderBy;
+            acct.AccountType = this.JournalType;
+            acct.MainTabSortingId = this.OrderBy;
             acct.DateClosedUTC = this.DateClosedUTC;
-
-            // All other fields in the JSON are lost in this conversion as I am rethinking them
         }
-                
 
-        public void ImportSource(JournalAccountJSON acct)
+        public void ImportSource(Account acct)
         {
             ArgumentNullException.ThrowIfNull(acct);
 
-            this.Id = acct.Id;
+            this.Id = acct.AccountUID;
             this.Description = acct.Description;
-            this.JournalType = acct.JournalType;
-            this.OrderBy = acct.OrderBy;
+            this.JournalType = acct.AccountType;
+            this.OrderBy = acct.MainTabSortingId;
             this.DateClosedUTC = acct.DateClosedUTC;
         }
     }

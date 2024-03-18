@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DLPMoneyTracker.Core.Models.LedgerAccounts;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,16 +9,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.SQL.Data
 {
-    public enum LedgerType
-    {
-        Bank,
-        LiabilityCard,
-        LiabilityLoan,
-        Receivable,
-        Payable,
-        NotSet
-    }
-
+    
     public class Account
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

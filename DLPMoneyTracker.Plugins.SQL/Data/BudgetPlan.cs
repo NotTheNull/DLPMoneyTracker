@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DLPMoneyTracker.Core.Models.BudgetPlan;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,24 +9,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.SQL.Data
 {
-    public enum RecurrenceFrequency
-    {
-        BiWeekly, // every two weeks [26 times a year]
-        SemiMonthly, // twice a month [24 times a year]
-        Monthly,
-        SemiAnnual,
-        Annual
-    }
-
-    public enum BudgetPlanType
-    {
-        Payable,
-        Receivable,
-        Transfer,
-        DebtPayment,
-        NotSet
-    }
-
+    
     public class BudgetPlan
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
