@@ -52,11 +52,11 @@ namespace DLPMoneyTracker.Core.Models
             this.Copy(transaction);
         }
 
-        public Guid UID { get; set; } 
-        public DateTime TransactionDate { get; set; } 
-        public TransactionType JournalEntryType { get; set; }
-        public string Description { get; set; }
-        public decimal TransactionAmount { get; set; }
+        public Guid UID { get; set; } = Guid.NewGuid();
+        public DateTime TransactionDate { get; set; } = DateTime.Today;
+        public TransactionType JournalEntryType { get; set; } = TransactionType.NotSet;
+        public string Description { get; set; } = string.Empty;
+        public decimal TransactionAmount { get; set; } = decimal.Zero;
 
         public IJournalAccount DebitAccount { get; set; }
         public Guid DebitAccountId { get { return DebitAccount?.Id ?? Guid.Empty; } }

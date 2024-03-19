@@ -1,6 +1,5 @@
-﻿using DLPMoneyTracker.Data;
-using DLPMoneyTracker.Data.LedgerAccounts;
-using DLPMoneyTracker.Data.TransactionModels;
+﻿using DLPMoneyTracker.Core.Models;
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -12,14 +11,14 @@ namespace DLPMoneyTracker2.LedgerEntry
 {
 	public static class JournalEntryVMFactory
 	{
-		public static IJournalEntryVM BuildViewModel(IJournalEntry transaction)
+		public static IJournalEntryVM BuildViewModel(IMoneyTransaction transaction)
 		{
 			if (transaction.JournalEntryType == null || transaction.JournalEntryType == TransactionType.NotSet) return GetViewModelByLogic(transaction);
 
 			return GetViewModelByType(transaction);
 		}
 
-		private static IJournalEntryVM GetViewModelByType(IJournalEntry transaction)
+		private static IJournalEntryVM GetViewModelByType(IMoneyTransaction transaction)
 		{
 			IJournalEntryVM viewModel;
 			switch(transaction.JournalEntryType)
@@ -50,13 +49,12 @@ namespace DLPMoneyTracker2.LedgerEntry
 			return viewModel;
 		}
 
-		private static IJournalEntryVM GetViewModelByLogic(IJournalEntry transaction)
+		private static IJournalEntryVM GetViewModelByLogic(IMoneyTransaction transaction)
 		{
 			IJournalEntryVM viewModel;
-			ITrackerConfig config = UICore.DependencyHost.GetRequiredService<ITrackerConfig>();
 
-			IJournalAccount debit = config.GetJournalAccount(transaction.DebitAccountId);
-			IJournalAccount credit = config.GetJournalAccount(transaction.CreditAccountId);
+			IJournalAccount debit = transaction.DebitAccount;
+			IJournalAccount credit = transaction.CreditAccount;
 
 			if(debit.JournalType == LedgerType.Bank && credit.JournalType == LedgerType.Receivable)
 			{
@@ -66,11 +64,11 @@ namespace DLPMoneyTracker2.LedgerEntry
 			{
 				viewModel = UICore.DependencyHost.GetRequiredService<ExpenseJournalEntryVM>();
 			}
-			else if(debit is IDebtAccount && credit.JournalType == LedgerType.Bank)
+			else if(debit is ILiabilityAccount && credit.JournalType == LedgerType.Bank)
 			{
 				viewModel = UICore.DependencyHost.GetRequiredService<DebtPaymentJournalEntryVM>();
 			}
-			else if(debit is IDebtAccount && (credit.Id == SpecialAccount.DebtInterest.Id || credit.Id == SpecialAccount.DebtReduction.Id))
+			else if(debit is ILiabilityAccount && (credit.Id == SpecialAccount.DebtInterest.Id || credit.Id == SpecialAccount.DebtReduction.Id))
 			{
 				viewModel = UICore.DependencyHost.GetRequiredService<DebtAdjustmentJournalEntryVM>();
 			}

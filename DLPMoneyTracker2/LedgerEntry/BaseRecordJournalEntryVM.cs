@@ -1,7 +1,9 @@
-﻿using DLPMoneyTracker.Data;
-using DLPMoneyTracker.Data.LedgerAccounts;
-using DLPMoneyTracker.Data.TransactionModels;
-using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
+﻿
+using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
+using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
+using DLPMoneyTracker.Core.Models;
+using DLPMoneyTracker.Core.Models.BudgetPlan;
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
@@ -47,30 +49,33 @@ namespace DLPMoneyTracker2.LedgerEntry
         void Clear();
 
         void LoadAccounts();
-        void LoadTransaction(IJournalEntry entry);
+        void LoadTransaction(IMoneyTransaction entry);
 
         void SaveTransaction();
 
-        void FillFromPlan(IJournalPlan plan);
+        void FillFromPlan(IBudgetPlan plan);
     }
 
     public abstract class BaseRecordJournalEntryVM : BaseViewModel, IJournalEntryVM
     {
-        protected readonly IJournal _journal;
-        protected readonly ITrackerConfig _config;
-
+        
         private readonly List<LedgerType> _validDebitTypes = new List<LedgerType>();
         private readonly List<LedgerType> _validCreditTypes = new List<LedgerType>();
+        protected readonly IGetJournalAccountListByTypesUseCase getAccountsByTypeUseCase;
+        protected readonly IGetJournalAccountByUIDUseCase getAccountByUIDUseCase;
+        protected readonly ISaveTransactionUseCase saveMoneyRecordUseCase;
 
         protected BaseRecordJournalEntryVM(
-            IJournal journal, 
-            ITrackerConfig config,  
+            IGetJournalAccountListByTypesUseCase getAccountsByTypeUseCase,
+            IGetJournalAccountByUIDUseCase getAccountByUIDUseCase,
+            ISaveTransactionUseCase saveMoneyRecordUseCase,
             IEnumerable<LedgerType> validDebitTypes, 
             IEnumerable<LedgerType> validCreditTypes,
             TransactionType transType)
         {
-            _config = config;
-            _journal = journal;
+            this.getAccountsByTypeUseCase = getAccountsByTypeUseCase;
+            this.getAccountByUIDUseCase = getAccountByUIDUseCase;
+            this.saveMoneyRecordUseCase = saveMoneyRecordUseCase;
             _transType = transType;
             _date = DateTime.Today;
             _validDebitTypes.AddRange(validDebitTypes);
@@ -256,7 +261,7 @@ namespace DLPMoneyTracker2.LedgerEntry
         public virtual void LoadAccounts()
         {
             this.ValidCreditAccounts.Clear();
-            var listCredits = _config.GetJournalAccountList(new JournalAccountSearch(_validCreditTypes));
+            var listCredits = getAccountsByTypeUseCase.Execute(_validCreditTypes);
             if (listCredits?.Any() == true)
             {
                 foreach (var c in listCredits.OrderBy(o => o.Description))
@@ -266,7 +271,7 @@ namespace DLPMoneyTracker2.LedgerEntry
             }
 
             this.ValidDebitAccounts.Clear();
-            var listDebits = _config.GetJournalAccountList(new JournalAccountSearch(_validDebitTypes));
+            var listDebits = getAccountsByTypeUseCase.Execute(_validDebitTypes);
             if (listDebits?.Any() == true)
             {
                 foreach (var d in listDebits.OrderBy(o => o.Description))
@@ -276,16 +281,16 @@ namespace DLPMoneyTracker2.LedgerEntry
             }
         }
 
-        public virtual void LoadTransaction(IJournalEntry entry)
+        public virtual void LoadTransaction(IMoneyTransaction entry)
         {
-            if (entry is null) throw new ArgumentNullException(nameof(IJournalEntry));
+            if (entry is null) throw new ArgumentNullException(nameof(IMoneyTransaction));
 
-            this.ExistingTransactionId = entry.Id;
+            this.ExistingTransactionId = entry.UID;
             this.TransactionDate = entry.TransactionDate;
             this.Amount = entry.TransactionAmount;
             this.Description = entry.Description;
-            this.SelectedCreditAccount = _config.GetJournalAccount(entry.CreditAccountId);
-            this.SelectedDebitAccount = _config.GetJournalAccount(entry.DebitAccountId);
+            this.SelectedCreditAccount = entry.CreditAccount;
+            this.SelectedDebitAccount = entry.DebitAccount;
             this.CreditBankDate = entry.CreditBankDate;
             this.DebitBankDate = entry.DebitBankDate;
         }
@@ -297,7 +302,7 @@ namespace DLPMoneyTracker2.LedgerEntry
         {
             if (!IsValidTransaction) return;
 
-            JournalEntry record = new JournalEntry(_config)
+            MoneyTransaction record = new MoneyTransaction()
             {
                 JournalEntryType = this.JournalEntryType,
                 CreditAccount = this.SelectedCreditAccount,
@@ -311,17 +316,17 @@ namespace DLPMoneyTracker2.LedgerEntry
 
             if(this.ExistingTransactionId.HasValue)
             {
-                record.Id = this.ExistingTransactionId.Value;
+                record.UID = this.ExistingTransactionId.Value;
             }
 
-            _journal.AddUpdateTransaction(record);
+            saveMoneyRecordUseCase.Execute(record);
         }
 
-        public void FillFromPlan(IJournalPlan plan)
+        public void FillFromPlan(IBudgetPlan plan)
         {
             this.TransactionDate = DateTime.Today;
-            this.SelectedCreditAccount = _config.GetJournalAccount(plan.CreditAccountId);
-            this.SelectedDebitAccount = _config.GetJournalAccount(plan.DebitAccountId);
+            this.SelectedCreditAccount = getAccountByUIDUseCase.Execute(plan.CreditAccountId);
+            this.SelectedDebitAccount = getAccountByUIDUseCase.Execute(plan.DebitAccountId);
             this.Description = plan.Description;
             this.Amount = plan.ExpectedAmount;
         }

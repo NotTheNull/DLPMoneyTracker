@@ -1,4 +1,4 @@
-﻿using DLPMoneyTracker.Data.TransactionModels;
+﻿
 using System.Windows;
 
 namespace DLPMoneyTracker2.LedgerEntry

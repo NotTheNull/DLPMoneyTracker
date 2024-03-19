@@ -1,18 +1,25 @@
-﻿using DLPMoneyTracker.Data;
-using DLPMoneyTracker.Data.LedgerAccounts;
+﻿
+using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
+using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
+using DLPMoneyTracker.Core.Models;
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using System.Collections.Generic;
 
 namespace DLPMoneyTracker2.LedgerEntry
 {
 	public class DebtPaymentJournalEntryVM : BaseRecordJournalEntryVM
 	{
-		public DebtPaymentJournalEntryVM(ITrackerConfig config, IJournal journal) :
-			base(
-				journal,
-				config,
-				new List<LedgerType>() { LedgerType.LiabilityCard, LedgerType.LiabilityLoan },
+		public DebtPaymentJournalEntryVM(
+            IGetJournalAccountListByTypesUseCase getAccountsByTypeUseCase,
+            IGetJournalAccountByUIDUseCase getAccountByUIDUseCase,
+            ISaveTransactionUseCase saveMoneyRecordUseCase) :
+            base(
+                getAccountsByTypeUseCase,
+                getAccountByUIDUseCase,
+                saveMoneyRecordUseCase,
+                new List<LedgerType>() { LedgerType.LiabilityCard, LedgerType.LiabilityLoan },
 				new List<LedgerType>() { LedgerType.Bank },
-				DLPMoneyTracker.Data.TransactionModels.TransactionType.DebtPayment)
+				TransactionType.DebtPayment)
 		{
 		}
 

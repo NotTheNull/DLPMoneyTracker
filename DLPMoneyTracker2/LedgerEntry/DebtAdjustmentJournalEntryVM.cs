@@ -1,6 +1,8 @@
-﻿using DLPMoneyTracker.Data;
-using DLPMoneyTracker.Data.LedgerAccounts;
-using DLPMoneyTracker.Data.TransactionModels;
+﻿
+using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
+using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
+using DLPMoneyTracker.Core.Models;
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using Microsoft.Xaml.Behaviors.Core;
 using System;
 using System.Collections.Generic;
@@ -9,11 +11,15 @@ namespace DLPMoneyTracker2.LedgerEntry
 {
 	public class DebtAdjustmentJournalEntryVM : BaseRecordJournalEntryVM
 	{
-		public DebtAdjustmentJournalEntryVM(ITrackerConfig config, IJournal journal) :
-			base(
-				journal,
-				config,
-				new List<LedgerType>() { LedgerType.LiabilityLoan, LedgerType.LiabilityCard },
+		public DebtAdjustmentJournalEntryVM(
+            IGetJournalAccountListByTypesUseCase getAccountsByTypeUseCase,
+            IGetJournalAccountByUIDUseCase getAccountByUIDUseCase,
+            ISaveTransactionUseCase saveMoneyRecordUseCase) :
+            base(
+                getAccountsByTypeUseCase,
+                getAccountByUIDUseCase,
+                saveMoneyRecordUseCase,
+                new List<LedgerType>() { LedgerType.LiabilityLoan, LedgerType.LiabilityCard },
 				new List<LedgerType>() { LedgerType.NotSet },
 				TransactionType.DebtAdjustment)
 		{
@@ -51,15 +57,15 @@ namespace DLPMoneyTracker2.LedgerEntry
 		/// </summary>
 		/// <param name="entry"></param>
 		/// <exception cref="ArgumentNullException"></exception>
-		public override void LoadTransaction(IJournalEntry entry)
+		public override void LoadTransaction(IMoneyTransaction entry)
 		{
-			if (entry is null) throw new ArgumentNullException(nameof(IJournalEntry));
+			if (entry is null) throw new ArgumentNullException(nameof(IMoneyTransaction));
 
 			IJournalAccount action, liability;
 			DateTime? actionDate, liabilityDate;
 
-			var account = _config.GetJournalAccount(entry.CreditAccountId);
-			var account2 = _config.GetJournalAccount(entry.DebitAccountId);
+			var account = entry.CreditAccount;
+			var account2 = entry.DebitAccount;
 			if(account.JournalType == LedgerType.NotSet)
 			{
 				action = account;
@@ -76,7 +82,7 @@ namespace DLPMoneyTracker2.LedgerEntry
 			}
 
 			
-			this.ExistingTransactionId = entry.Id;
+			this.ExistingTransactionId = entry.UID;
 			this.TransactionDate = entry.TransactionDate;
 			this.Amount = entry.TransactionAmount;
 			this.Description = entry.Description;
@@ -98,7 +104,7 @@ namespace DLPMoneyTracker2.LedgerEntry
 			var action = this.SelectedCreditAccount;
 			bool isSwapAccounts = (action.Id == SpecialAccount.DebtInterest.Id);
 
-			JournalEntry record = new JournalEntry(_config)
+			MoneyTransaction record = new MoneyTransaction()
 			{
 				JournalEntryType = this.JournalEntryType,
 				TransactionAmount = this.Amount,
@@ -112,10 +118,10 @@ namespace DLPMoneyTracker2.LedgerEntry
 
 			if (this.ExistingTransactionId.HasValue)
 			{
-				record.Id = this.ExistingTransactionId.Value;
+				record.UID = this.ExistingTransactionId.Value;
 			}
 
-			_journal.AddUpdateTransaction(record);
+			saveMoneyRecordUseCase.Execute(record);
 		}
 	}
 }

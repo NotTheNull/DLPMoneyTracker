@@ -4,6 +4,8 @@ using DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans;
 using DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans.Interfaces;
 using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts;
 using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
+using DLPMoneyTracker.BusinessLogic.UseCases.Transactions;
+using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
 using DLPMoneyTracker.Plugins.JSON.Repositories;
 using DLPMoneyTracker2.BankReconciliation;
 using DLPMoneyTracker2.Config.AddEditBudgetPlans;
@@ -56,6 +58,7 @@ namespace DLPMoneyTracker2
             services.AddTransient<IGetBudgetPlanListUseCase, GetBudgetPlanListUseCase>();
             services.AddTransient<IDeleteBudgetPlanUseCase, DeleteBudgetPlanUseCase>();
             services.AddTransient<ISaveBudgetPlanUseCase, SaveBudgetPlanUseCase>();
+            services.AddTransient<ISaveTransactionUseCase, SaveTransactionUseCase>();
 
             // Factories
             services.AddTransient<JournalAccountFactory>();
@@ -109,6 +112,7 @@ namespace DLPMoneyTracker2
             services.AddTransient<BankReconciliationUI>();
             services.AddTransient<BankReconciliationListingVM>();
             services.AddTransient<BankReconciliationListingUI>();
+
         }
     }
 }
