@@ -1,6 +1,6 @@
-﻿using DLPMoneyTracker.Data;
-using DLPMoneyTracker.Data.LedgerAccounts;
-using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
+﻿
+
+
 using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
@@ -33,7 +33,7 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
             this.Refresh();
         }
 
-        private List<IJournalPlan> _listPlans = new List<IJournalPlan>();
+        private List<IBudgetPlan> _listPlans = new List<IBudgetPlan>();
 
         private IJournalAccount _account;
 

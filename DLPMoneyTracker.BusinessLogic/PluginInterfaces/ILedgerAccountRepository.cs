@@ -48,7 +48,6 @@ namespace DLPMoneyTracker.BusinessLogic.PluginInterfaces
 
     public interface ILedgerAccountRepository
     {
-
         IJournalAccount GetAccountByUID(Guid uid);
         List<IJournalAccount> GetAccountsBySearch(JournalAccountSearch search);
         void SaveJournalAccount(IJournalAccount account);

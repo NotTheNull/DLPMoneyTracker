@@ -1,4 +1,4 @@
-﻿using DLPMoneyTracker.Data;
+﻿
 using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.ObjectModel;

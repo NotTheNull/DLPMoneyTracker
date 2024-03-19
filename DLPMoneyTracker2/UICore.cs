@@ -6,6 +6,7 @@ using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts;
 using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
 using DLPMoneyTracker.BusinessLogic.UseCases.Transactions;
 using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
+using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Plugins.JSON.Repositories;
 using DLPMoneyTracker2.BankReconciliation;
 using DLPMoneyTracker2.Config.AddEditBudgetPlans;
@@ -46,7 +47,7 @@ namespace DLPMoneyTracker2
             services.AddSingleton<IBudgetPlanRepository, JSONBudgetPlanRepository>();
             services.AddSingleton<ITransactionRepository, JSONTransactionRepository>();
             services.AddSingleton<IBankReconciliationRepository, JSONBankReconciliationRepository>();
-
+            services.AddSingleton<NotificationSystem>();
 
             // Use Cases
             services.AddTransient<ISaveJournalAccountUseCase, SaveJournalAccountUseCase>();
@@ -59,6 +60,9 @@ namespace DLPMoneyTracker2
             services.AddTransient<IDeleteBudgetPlanUseCase, DeleteBudgetPlanUseCase>();
             services.AddTransient<ISaveBudgetPlanUseCase, SaveBudgetPlanUseCase>();
             services.AddTransient<ISaveTransactionUseCase, SaveTransactionUseCase>();
+            services.AddTransient<IGetJournalAccountBalanceUseCase, GetJournalAccountBalanceUseCase>();
+            services.AddTransient<IGetUpcomingPlansForAccountUseCase, GetUpcomingPlansForAccountUseCase>();
+            services.AddTransient<IFindTransactionForBudgetPlanUseCase, FindTransactionForBudgetPlanUseCase>();
 
             // Factories
             services.AddTransient<JournalAccountFactory>();

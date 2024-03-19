@@ -1,7 +1,7 @@
-﻿using DLPMoneyTracker.Data;
+﻿
 using DLPMoneyTracker.Data.BankReconciliation;
 using DLPMoneyTracker.Data.Common;
-using DLPMoneyTracker.Data.LedgerAccounts;
+
 using DLPMoneyTracker.Data.TransactionModels;
 using DLPMoneyTracker2.Core;
 using System;
@@ -189,7 +189,7 @@ namespace DLPMoneyTracker2.BankReconciliation
 		}
 
 
-		public void AddTransaction(IJournalEntry record)
+		public void AddTransaction(IMoneyTransaction record)
 		{
 			SingleAccountDetailVM vm = new SingleAccountDetailVM(_account, record);
 			this.AddTransaction(vm);

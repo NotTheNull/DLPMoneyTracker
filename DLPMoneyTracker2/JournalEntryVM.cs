@@ -1,5 +1,5 @@
-﻿using DLPMoneyTracker.Data;
-using DLPMoneyTracker.Data.LedgerAccounts;
+﻿
+
 using DLPMoneyTracker.Data.TransactionModels;
 using DLPMoneyTracker2.Core;
 using DLPMoneyTracker2.LedgerEntry;
@@ -13,9 +13,9 @@ namespace DLPMoneyTracker2
 {
 	public class JournalEntryVM : BaseViewModel
 	{
-		private readonly IJournalEntry _je;
+		private readonly IMoneyTransaction _je;
 
-		public JournalEntryVM(IJournalEntry entry)
+		public JournalEntryVM(IMoneyTransaction entry)
 		{
 			_je = entry;
 		}
@@ -56,16 +56,16 @@ namespace DLPMoneyTracker2
 	{
 		public SimpleNotification BankDateChanged;
 
-		private IJournalEntry _je;
+		private IMoneyTransaction _je;
 		private readonly IJournalAccount _parent;
 
-		public SingleAccountDetailVM(IJournalAccount parent, IJournalEntry entry) : base()
+		public SingleAccountDetailVM(IJournalAccount parent, IMoneyTransaction entry) : base()
 		{
 			_je = entry;
 			_parent = parent;
 		}
 
-		public IJournalEntry Source { get { return _je; } }
+		public IMoneyTransaction Source { get { return _je; } }
 
 		private RelayCommand _cmdEdit;
 		public RelayCommand CommandEdit

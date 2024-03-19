@@ -1,6 +1,6 @@
-﻿using DLPMoneyTracker.Data;
+﻿
 using DLPMoneyTracker.Data.BankReconciliation;
-using DLPMoneyTracker.Data.LedgerAccounts;
+
 using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;

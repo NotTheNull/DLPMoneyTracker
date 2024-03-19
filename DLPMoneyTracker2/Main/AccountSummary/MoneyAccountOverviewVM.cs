@@ -1,5 +1,7 @@
-﻿using DLPMoneyTracker.Data;
-using DLPMoneyTracker.Data.LedgerAccounts;
+﻿
+
+using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker2.Core;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
@@ -10,19 +12,21 @@ namespace DLPMoneyTracker2.Main.AccountSummary
 {
     public class MoneyAccountOverviewVM : BaseViewModel
     {
-        private readonly ITrackerConfig _config;
 
-        private readonly List<LedgerType> _listValidTypes = new List<LedgerType>()
-        {
-            LedgerType.Bank,
-            LedgerType.LiabilityCard,
-            LedgerType.LiabilityLoan
-        };
+        //private readonly List<LedgerType> _listValidTypes = new List<LedgerType>()
+        //{
+        //    LedgerType.Bank,
+        //    LedgerType.LiabilityCard,
+        //    LedgerType.LiabilityLoan
+        //};
+        private readonly IGetMoneyAccountsUseCase getMoneyAccountsUseCase;
 
-        public MoneyAccountOverviewVM(ITrackerConfig config)
+        public MoneyAccountOverviewVM(IGetMoneyAccountsUseCase getMoneyAccountsUseCase)
         {
-            _config = config;
+            
+
             this.Load();
+            this.getMoneyAccountsUseCase = getMoneyAccountsUseCase;
         }
 
         private ObservableCollection<MoneyAccountSummaryVM> _listAcctSummary = new ObservableCollection<MoneyAccountSummaryVM>();
@@ -33,7 +37,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
         public void Load()
         {
             _listAcctSummary.Clear();
-            var listAccounts = _config.GetJournalAccountList(new JournalAccountSearch(_listValidTypes));
+            var listAccounts = getMoneyAccountsUseCase.Execute(false);
             foreach (var act in listAccounts.OrderBy(o => o.OrderBy).ThenBy(o => o.Description))
             {
                 MoneyAccountSummaryVM summary = UICore.DependencyHost.GetRequiredService<MoneyAccountSummaryVM>();
@@ -56,7 +60,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
                 return !this.AccountSummaryList.Any(x => x.AccountId == act.Id);
             }
 
-            var listAccounts = _config.GetJournalAccountList(new JournalAccountSearch(_listValidTypes));
+            var listAccounts = getMoneyAccountsUseCase.Execute(false);
             if (listAccounts.Any(hasNEWAccounts))
             {
                 foreach (var act in listAccounts.Where(hasNEWAccounts))

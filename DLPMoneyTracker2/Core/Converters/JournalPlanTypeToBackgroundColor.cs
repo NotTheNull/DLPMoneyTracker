@@ -1,4 +1,4 @@
-﻿using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
+﻿
 using System;
 using System.Globalization;
 using System.Windows.Data;
@@ -11,17 +11,17 @@ namespace DLPMoneyTracker2.Core.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is null) return Brushes.White;
-            if (value is JournalPlanType planType)
+            if (value is BudgetPlanType planType)
             {
                 switch (planType)
                 {
-                    case JournalPlanType.Receivable:
+                    case BudgetPlanType.Receivable:
                         return Brushes.Green;
 
-                    case JournalPlanType.Payable:
+                    case BudgetPlanType.Payable:
                         return Brushes.Red;
 
-                    case JournalPlanType.Transfer:
+                    case BudgetPlanType.Transfer:
                         return Brushes.Blue;
 
                     default:

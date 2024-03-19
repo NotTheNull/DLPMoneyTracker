@@ -1,6 +1,6 @@
-﻿using DLPMoneyTracker.Data;
+﻿
 using DLPMoneyTracker.Data.Common;
-using DLPMoneyTracker.Data.LedgerAccounts;
+
 using DLPMoneyTracker.Data.TransactionModels;
 using DLPMoneyTracker2.Core;
 using System;
@@ -183,7 +183,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
 			_listRecords.Clear();
 		}
 
-		private void LoadRecords(IEnumerable<IJournalEntry> records)
+		private void LoadRecords(IEnumerable<IMoneyTransaction> records)
 		{
 			if (records?.Any() != true) return;
 

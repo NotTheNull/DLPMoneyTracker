@@ -1,5 +1,5 @@
-﻿using DLPMoneyTracker.Data;
-using DLPMoneyTracker.Data.LedgerAccounts;
+﻿
+
 using DLPMoneyTracker2.Core;
 using DLPMoneyTracker2.Main.TransactionList;
 using System;

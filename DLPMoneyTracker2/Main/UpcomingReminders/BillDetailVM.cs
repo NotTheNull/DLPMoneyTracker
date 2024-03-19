@@ -1,4 +1,4 @@
-﻿using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
+﻿
 using DLPMoneyTracker2.Core;
 using System;
 
@@ -6,9 +6,9 @@ namespace DLPMoneyTracker2.Main.UpcomingReminders
 {
     public class BillDetailVM : BaseViewModel
     {
-        private readonly IJournalPlan _plan;
+        private readonly IBudgetPlan _plan;
 
-        public BillDetailVM(IJournalPlan plan)
+        public BillDetailVM(IBudgetPlan plan)
         {
             _plan = plan;
         }

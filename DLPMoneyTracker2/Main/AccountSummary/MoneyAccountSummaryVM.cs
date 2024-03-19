@@ -1,6 +1,8 @@
-﻿using DLPMoneyTracker.Data;
-using DLPMoneyTracker.Data.LedgerAccounts;
-using DLPMoneyTracker.Data.TransactionModels.JournalPlan;
+﻿using DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans.Interfaces;
+using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
+using DLPMoneyTracker.Core;
+using DLPMoneyTracker.Core.Models.BudgetPlan;
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker2.Core;
 using DLPMoneyTracker2.LedgerEntry;
 using DLPMoneyTracker2.Main.TransactionList;
@@ -13,32 +15,39 @@ namespace DLPMoneyTracker2.Main.AccountSummary
 {
     public class MoneyAccountSummaryVM : BaseViewModel
     {
-        private readonly ITrackerConfig _config;
-        private readonly IJournalPlanner _planner;
-        private readonly IJournal _journal;
+        private readonly IGetJournalAccountBalanceUseCase getAccountBalanceUseCase;
+        private readonly IGetUpcomingPlansForAccountUseCase getUpcomingPlansUseCase;
+        private readonly IFindTransactionForBudgetPlanUseCase findBudgetPlanTransactionUseCase;
+        private readonly NotificationSystem notifications;
         private IJournalAccount _account;
 
-        public MoneyAccountSummaryVM(ITrackerConfig config, IJournalPlanner planner, IJournal journal)
+
+        public MoneyAccountSummaryVM(
+            IGetJournalAccountBalanceUseCase getAccountBalanceUseCase,
+            IGetUpcomingPlansForAccountUseCase getUpcomingPlansUseCase,
+            IFindTransactionForBudgetPlanUseCase findBudgetPlanTransactionUseCase,
+            NotificationSystem notifications)
         {
-            _config = config;
-            _planner = planner;
-            _journal = journal;
-            _journal.JournalModified += _journal_JournalModified;
+            this.getAccountBalanceUseCase = getAccountBalanceUseCase;
+            this.getUpcomingPlansUseCase = getUpcomingPlansUseCase;
+            this.findBudgetPlanTransactionUseCase = findBudgetPlanTransactionUseCase;
+            this.notifications = notifications;
+            this.notifications.TransactionsModified += Notifications_TransactionsModified;
         }
 
-        private void _journal_JournalModified()
+        private void Notifications_TransactionsModified(Guid debitAccountId, Guid creditAccountId)
         {
+            if (this.AccountId != debitAccountId && this.AccountId != creditAccountId) return;
+
             this.Refresh();
         }
 
-        public Guid AccountId
-        { get { return _account.Id; } }
 
-        public LedgerType AccountType
-        { get { return _account.JournalType; } }
+        public Guid AccountId { get { return _account.Id; } }
 
-        public string AccountDesc
-        { get { return _account.Description; } }
+        public LedgerType AccountType { get { return _account.JournalType; } }
+
+        public string AccountDesc { get { return _account.Description; } }
 
         private decimal _bal;
 
@@ -55,11 +64,9 @@ namespace DLPMoneyTracker2.Main.AccountSummary
 
         private ObservableCollection<JournalPlanVM> _listPlans = new ObservableCollection<JournalPlanVM>();
 
-        public ObservableCollection<JournalPlanVM> PlanList
-        { get { return _listPlans; } }
+        public ObservableCollection<JournalPlanVM> PlanList { get { return _listPlans; } }
 
-        public bool ShowBudgetData
-        { get { return PlanList.Count > 0; } }
+        public bool ShowBudgetData { get { return PlanList.Count > 0; } }
 
         public decimal BudgetBalance
         {
@@ -72,15 +79,15 @@ namespace DLPMoneyTracker2.Main.AccountSummary
                     {
                         switch (p.PlanType)
                         {
-                            case JournalPlanType.Receivable:
+                            case BudgetPlanType.Receivable:
                                 bal += p.Amount;
                                 break;
 
-                            case JournalPlanType.Payable:
+                            case BudgetPlanType.Payable:
                                 bal -= p.Amount;
                                 break;
 
-                            case JournalPlanType.Transfer:
+                            case BudgetPlanType.Transfer:
                                 if (p.IsParentDebit)
                                 {
                                     bal += p.Amount;
@@ -91,7 +98,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
                                 }
                                 break;
 
-                            case JournalPlanType.DebtPayment:
+                            case BudgetPlanType.DebtPayment:
                                 if (this.AccountType == LedgerType.Bank)
                                 {
                                     bal -= p.Amount;
@@ -138,19 +145,19 @@ namespace DLPMoneyTracker2.Main.AccountSummary
                         IJournalEntryVM transVM;
                         switch (jPlan.PlanType)
                         {
-                            case JournalPlanType.Payable:
+                            case BudgetPlanType.Payable:
                                 transVM = UICore.DependencyHost.GetRequiredService<ExpenseJournalEntryVM>();
                                 break;
 
-                            case JournalPlanType.Receivable:
+                            case BudgetPlanType.Receivable:
                                 transVM = UICore.DependencyHost.GetRequiredService<IncomeJournalEntryVM>();
                                 break;
 
-                            case JournalPlanType.Transfer:
+                            case BudgetPlanType.Transfer:
                                 transVM = UICore.DependencyHost.GetRequiredService<TransferJournalEntryVM>();
                                 break;
 
-                            case JournalPlanType.DebtPayment:
+                            case BudgetPlanType.DebtPayment:
                                 transVM = UICore.DependencyHost.GetRequiredService<DebtPaymentJournalEntryVM>();
                                 break;
 
@@ -171,7 +178,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
 
         public void Refresh()
         {
-            this.Balance = _journal.GetAccountBalance(this.AccountId, false);
+            this.Balance = getAccountBalanceUseCase.Execute(this.AccountId);
             this.LoadBudgetPlans();
             this.NotifyAll();
         }
@@ -185,20 +192,20 @@ namespace DLPMoneyTracker2.Main.AccountSummary
         private void LoadBudgetPlans()
         {
             _listPlans.Clear();
-            var list = _planner.GetUpcomingPlansForAccount(this.AccountId);
+            var list = getUpcomingPlansUseCase.Execute(this.AccountId);
             if (list?.Any() != true) return;
 
             foreach (var p in list)
             {
                 // See if we already have a transaction for this budget plan
-                var listTrans = _journal.Search(new JournalSearchFilter(p, _account));
-                if (listTrans?.Any() == true) continue;
+                var record = findBudgetPlanTransactionUseCase.Execute(p, _account);
+                if (record != null) continue;
 
                 this.AddBudgetPlan(p);
             }
         }
 
-        private void AddBudgetPlan(IJournalPlan plan)
+        private void AddBudgetPlan(IBudgetPlan plan)
         {
             if (_listPlans.Any(x => x.PlanUID == plan.UID)) return;
             _listPlans.Add(new JournalPlanVM(_account, plan));
