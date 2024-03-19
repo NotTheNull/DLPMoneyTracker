@@ -1,5 +1,9 @@
 ﻿
-using DLPMoneyTracker.Data.Common;
+
+using DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans.Interfaces;
+using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
+using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
+using DLPMoneyTracker.Core;
 using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.ObjectModel;
@@ -9,21 +13,27 @@ namespace DLPMoneyTracker2.Main.UpcomingReminders
 {
     public class RemindersVM : BaseViewModel
     {
-        private readonly ITrackerConfig _config;
-        private readonly IJournal _journal;
-        private readonly IJournalPlanner _planner;
+        private readonly IGetBudgetPlanListByDateRangeUseCase getPlansByDatesUseCase;
+        private readonly IGetJournalAccountByUIDUseCase getAccountByUIDUseCase;
+        private readonly IFindTransactionForBudgetPlanUseCase findTransactionByPlanUseCase;
+        private readonly NotificationSystem notifications;
 
-        public RemindersVM(ITrackerConfig config, IJournal journal, IJournalPlanner planner)
+        public RemindersVM(
+            IGetBudgetPlanListByDateRangeUseCase getPlansByDatesUseCase,
+            IGetJournalAccountByUIDUseCase getAccountByUIDUseCase,
+            IFindTransactionForBudgetPlanUseCase findTransactionByPlanUseCase,
+            NotificationSystem notifications)
         {
-            _config = config;
-            _journal = journal;
-            _planner = planner;
-
-            _journal.JournalModified += _journal_JournalModified;
+            this.getPlansByDatesUseCase = getPlansByDatesUseCase;
+            this.getAccountByUIDUseCase = getAccountByUIDUseCase;
+            this.findTransactionByPlanUseCase = findTransactionByPlanUseCase;
+            this.notifications = notifications;
+            this.notifications.TransactionsModified += Notifications_TransactionsModified;
+            
             _listBills = new ObservableCollection<BillDetailVM>();
         }
 
-        private void _journal_JournalModified()
+        private void Notifications_TransactionsModified(Guid debitAccountId, Guid creditAccountId)
         {
             this.Load();
         }
@@ -41,15 +51,15 @@ namespace DLPMoneyTracker2.Main.UpcomingReminders
             this.RemindersList.Clear();
 
             DateRange range = new DateRange(DateTime.Today.AddDays(-7), DateTime.Today.AddDays(30));
-            var listPlans = _planner.GetPlansForDateRange(range);
+            var listPlans = getPlansByDatesUseCase.Execute(range);
             if (listPlans?.Any() != true) return;
 
             foreach (var plan in listPlans.OrderBy(o => o.NextOccurrence))
             {
-                // See if we already have a transaction for this plan
-                var account = _config.GetJournalAccount(plan.CreditAccountId);
-                var transactions = _journal.Search(new JournalSearchFilter(plan, account));
-                if (transactions?.Any() == true) continue;
+                // See if we already have a transaction for this plan; either account Id should be sufficient
+                var account = getAccountByUIDUseCase.Execute(plan.CreditAccountId);
+                var transactions = findTransactionByPlanUseCase.Execute(plan, account);
+                if (transactions != null) continue;
 
                 this.RemindersList.Add(new BillDetailVM(plan));
             }
