@@ -1,6 +1,8 @@
 ﻿
-using DLPMoneyTracker.Data.BankReconciliation;
 
+using DLPMoneyTracker.BusinessLogic.UseCases.BankReconciliation.Interfaces;
+using DLPMoneyTracker.Core;
+using DLPMoneyTracker.Plugins.SQL.Data;
 using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
@@ -14,53 +16,48 @@ namespace DLPMoneyTracker2.Main.BankReconciliation
 {
 	public class BankReconciliationListingVM : BaseViewModel, IDisposable
 	{
-		private readonly ITrackerConfig config;
-		private readonly IBRManager bankManager;
+        private readonly IGetBankReconciliationListUseCase getReconciliationListUseCase;
+        private readonly NotificationSystem notifications;
 
-		public BankReconciliationListingVM(ITrackerConfig config, IBRManager bankManager)
+        public BankReconciliationListingVM(
+			IGetBankReconciliationListUseCase getReconciliationListUseCase,
+			NotificationSystem notifications)
 		{
-			this.config = config;
-			this.bankManager = bankManager;
-			bankManager.ReconciliationChanged += BankManager_ReconciliationChanged;
+            this.getReconciliationListUseCase = getReconciliationListUseCase;
+            this.notifications = notifications;
+            this.notifications.BankReconciliationChanged += Notifications_BankReconciliationChanged;
+			
 
 			this.Load();
-		}
+        }
 
-		private void BankManager_ReconciliationChanged(Guid accountId, IBankReconciliationFile reconciliation)
-		{
-			var vm = this.BankReconciliationList.FirstOrDefault(x => x.AccountId == accountId);
-			if (vm is null)
-			{
-				vm = new BankFileVM(config, reconciliation);
-				this.BankReconciliationList.Add(vm);
-			}
-			else
-			{
-				vm.LoadFile(reconciliation);
-			}
+        private void Notifications_BankReconciliationChanged(Guid bankAccountUID)
+        {
+			// Currently, we'll just reload the full listing
+			this.Load();
+        }
 
-		}
 
 		public ObservableCollection<BankFileVM> BankReconciliationList { get; } = new ObservableCollection<BankFileVM>();
 
 		private void Load()
 		{
-			var listMoneyAccounts = config.GetJournalAccountList(JournalAccountSearch.GetMoneyAccounts()).ToList();
-
 			this.BankReconciliationList.Clear();
-			foreach (var account in listMoneyAccounts.OrderBy(o => o.OrderBy))
+			var listReconciliations = getReconciliationListUseCase.Execute();
+			foreach(var record in listReconciliations.OrderBy(o => o.BankAccount.OrderBy))
 			{
-				var file = bankManager.GetReconciliationFile(account.Id);
-				this.BankReconciliationList.Add(new BankFileVM(config, file));
-			}
+				BankFileVM vm = new BankFileVM();
+				vm.LoadBankReconciliation(record);
 
+				this.BankReconciliationList.Add(vm);
+			}
 
 		}
 
 
 		public void Dispose()
 		{
-			bankManager.ReconciliationChanged -= BankManager_ReconciliationChanged;
+			this.notifications.BankReconciliationChanged -= Notifications_BankReconciliationChanged;
 		}
 	}
 }

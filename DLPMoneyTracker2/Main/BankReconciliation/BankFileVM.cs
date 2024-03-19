@@ -1,4 +1,5 @@
 ﻿
+using DLPMoneyTracker.Core.Models.BankReconciliation;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker2.BankReconciliation;
 using DLPMoneyTracker2.Core;
@@ -18,33 +19,18 @@ namespace DLPMoneyTracker2.Main.BankReconciliation
 		public BankFileVM()
         {
 
-			this.LoadFile(file);
 		}
 
 		private IJournalAccount account;
 
-		private Guid _uid;
-
 		public Guid AccountId
 		{
-			get { return _uid; }
-			set 
-			{ 
-				_uid = value;
-				NotifyPropertyChanged(nameof(AccountId));
-			}
+			get { return account.Id; }
 		}
-
-		private string _desc = string.Empty;
 
 		public string AccountDescription
 		{
-			get { return _desc; }
-			set 
-			{ 
-				_desc = value;
-				NotifyPropertyChanged(nameof(AccountDescription));
-			}
+			get { return account.Description; }			
 		}
 
 
@@ -231,59 +217,60 @@ namespace DLPMoneyTracker2.Main.BankReconciliation
 			}
 		}
 
-		// TODO: How are we replacing the file?
-		public void LoadFile(IBankReconciliationFile file)
+		public void LoadBankReconciliation(BankReconciliationOverviewDTO dto)
 		{
-			account = config.GetJournalAccount(file.AccountId);
-			this.AccountId = account.Id;
-			this.AccountDescription = account.Description;
-			if (file.ReconciliationList.Any() != true) return;
+			account = dto.BankAccount;
+			NotifyPropertyChanged(nameof(this.AccountId));
+			NotifyPropertyChanged(nameof(this.AccountDescription));
 
-			var firstRecord = file.ReconciliationList.OrderBy(o => o.EndingDate).FirstOrDefault();
+			if (dto.ReconciliationList?.Any() != true) return;
+
+			var firstRecord = dto.ReconciliationList.OrderBy(o => o.StatementDate.End).FirstOrDefault();
 			this.InitialBalance = firstRecord.StartingBalance;
 
-			foreach (var record in file.ReconciliationList.OrderBy(o => o.EndingDate))
+			foreach(var record in dto.ReconciliationList.OrderBy(o => o.StatementDate.End))
 			{
-				switch(record.EndingDate.Month)
+				switch(record.StatementDate.End.Month)
 				{
-					case 1:
-						this.JanuaryBalance = record.EndingBalance;
-						break;
-					case 2:
-						this.FebruaryBalance = record.EndingBalance;
-						break;
-					case 3:
-						this.MarchBalance = record.EndingBalance;
-						break;
-					case 4:
-						this.AprilBalance = record.EndingBalance;
-						break;
-					case 5:
-						this.MayBalance = record.EndingBalance;
-						break;
-					case 6:
-						this.JuneBalance = record.EndingBalance;
-						break;
-					case 7:
-						this.JulyBalance = record.EndingBalance;
-						break;
-					case 8:
-						this.AugustBalance = record.EndingBalance;
-						break;
-					case 9:
-						this.SeptemberBalance = record.EndingBalance;
-						break;
-					case 10:
-						this.OctoberBalance = record.EndingBalance;
-						break;
-					case 11:
-						this.NovemberBalance = record.EndingBalance;
-						break;
-					case 12:
-						this.DecemberBalance = record.EndingBalance;
-						break;
-				}
+                    case 1:
+                        this.JanuaryBalance = record.EndingBalance;
+                        break;
+                    case 2:
+                        this.FebruaryBalance = record.EndingBalance;
+                        break;
+                    case 3:
+                        this.MarchBalance = record.EndingBalance;
+                        break;
+                    case 4:
+                        this.AprilBalance = record.EndingBalance;
+                        break;
+                    case 5:
+                        this.MayBalance = record.EndingBalance;
+                        break;
+                    case 6:
+                        this.JuneBalance = record.EndingBalance;
+                        break;
+                    case 7:
+                        this.JulyBalance = record.EndingBalance;
+                        break;
+                    case 8:
+                        this.AugustBalance = record.EndingBalance;
+                        break;
+                    case 9:
+                        this.SeptemberBalance = record.EndingBalance;
+                        break;
+                    case 10:
+                        this.OctoberBalance = record.EndingBalance;
+                        break;
+                    case 11:
+                        this.NovemberBalance = record.EndingBalance;
+                        break;
+                    case 12:
+                        this.DecemberBalance = record.EndingBalance;
+                        break;
+                }
 			}
+
 		}
 
 

@@ -1,9 +1,11 @@
 ﻿
-using DLPMoneyTracker.Data.BankReconciliation;
-using DLPMoneyTracker.Data.Common;
-
-using DLPMoneyTracker.Data.TransactionModels;
+using DLPMoneyTracker.BusinessLogic.UseCases.BankReconciliation.Interfaces;
+using DLPMoneyTracker.Core;
+using DLPMoneyTracker.Core.Models;
+using DLPMoneyTracker.Core.Models.BankReconciliation;
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker2.Core;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,18 +18,35 @@ namespace DLPMoneyTracker2.BankReconciliation
 {
 	public class BankReconciliationVM : BaseViewModel, IDisposable
 	{
-		private readonly ITrackerConfig config;
-		private readonly IJournal journal;
-		private readonly IBRManager bankManager;
+        private readonly IGetReconciliationTransactionsUseCase getBankRecTransactionsUseCase;
+        private readonly ISaveReconciliationUseCase saveReconciliationUseCase;
+        private readonly NotificationSystem notifications;
 
-		public BankReconciliationVM(ITrackerConfig config, IJournal journal, IBRManager bankManager)
+        public BankReconciliationVM(
+			IGetReconciliationTransactionsUseCase getBankRecTransactionsUseCase,
+			ISaveReconciliationUseCase saveReconciliationUseCase,
+			NotificationSystem notifications)
 		{
-			this.config = config;
-			this.journal = journal;
-			this.journal.JournalModified += Journal_JournalModified;
-			this.bankManager = bankManager;
-		}
-		~BankReconciliationVM() { this.Dispose(); }
+            this.getBankRecTransactionsUseCase = getBankRecTransactionsUseCase;
+            this.saveReconciliationUseCase = saveReconciliationUseCase;
+            this.notifications = notifications;
+            this.notifications.TransactionsModified += Notifications_TransactionsModified;
+            this.notifications.BankDateChanged += Notifications_BankDateChanged;
+        }
+        ~BankReconciliationVM() { this.Dispose(); }
+
+
+
+        private void Notifications_BankDateChanged(Guid moneyAccountUID)
+        {
+			NotifyReconciledChange();   
+        }
+
+        private void Notifications_TransactionsModified(Guid debitAccountId, Guid creditAccountId)
+        {
+            this.LoadCurrentTransactions();
+        }
+
 		
 		private IJournalAccount _account;
 		private IMoneyAccount MoneyAccount { get { return (IMoneyAccount)_account; } }
@@ -156,51 +175,34 @@ namespace DLPMoneyTracker2.BankReconciliation
 			if (!(account is IMoneyAccount)) throw new InvalidOperationException("Selected Account MUST be a Money Account");
 			
 			_account = account;
-			this.LoadLastReconciliation();
+		
 			this.LoadCurrentTransactions();
 			NotifyPropertyChanged(nameof(AccountDescription));
 			NotifyReconciledChange();
 		}
 
-		/// <summary>
-		/// Will prefill certain properties with previous reconciliation's data
-		/// </summary>
-		private void LoadLastReconciliation()
-		{
-			if (!this.MoneyAccount.PreviousBankReconciliationStatementDate.HasValue) return;
-
-			var prevReconciliation = bankManager.GetReconciliation(_account.Id, this.MoneyAccount.PreviousBankReconciliationStatementDate.Value);
-			if (prevReconciliation is null) return;
-
-			this.StartingDate = prevReconciliation.EndingDate.AddDays(1);
-			this.StartingBalance = prevReconciliation.EndingBalance;
-		}
+		
 
 		private void LoadCurrentTransactions()
 		{
 			if (statementDate is null) return;
 
 			_listTrans.Clear();
-			var listRecords = journal.GetReconciledRecords(_account, statementDate);
+			var listRecords = getBankRecTransactionsUseCase.Execute(_account.Id, statementDate);
 			foreach(var t in listRecords)
 			{
-				_listTrans.Add(new SingleAccountDetailVM(_account, t));
+				_listTrans.Add(new SingleAccountDetailVM(_account, t, notifications));
 			}
 		}
 
 
 		public void AddTransaction(IMoneyTransaction record)
 		{
-			SingleAccountDetailVM vm = new SingleAccountDetailVM(_account, record);
-			this.AddTransaction(vm);
-		}
+			SingleAccountDetailVM vm = new SingleAccountDetailVM(_account, record, notifications);					
 
-		public void AddTransaction(SingleAccountDetailVM record)
-		{			
-			if (_listTrans.Contains(record)) return;
-			record.BankDateChanged += LocalBankDateChanged;
-			_listTrans.Add(record);
-		}
+            if (_listTrans.Contains(vm)) return;
+            _listTrans.Add(vm);
+        }
 
 		public void RemoveTransaction(SingleAccountDetailVM record)
 		{
@@ -210,16 +212,7 @@ namespace DLPMoneyTracker2.BankReconciliation
 		}
 
 
-		private void Journal_JournalModified()
-		{
-			this.LoadCurrentTransactions();
-		}
-
-		private void LocalBankDateChanged()
-		{
-			NotifyReconciledChange();
-		}
-
+		
 		private void NotifyReconciledChange()
 		{
 			NotifyPropertyChanged(nameof(ReconcileList));
@@ -234,32 +227,23 @@ namespace DLPMoneyTracker2.BankReconciliation
 		{
 			if (!IsBalanced) return;
 
-			IBankReconciliation reconciliation = new DLPMoneyTracker.Data.BankReconciliation.BankReconciliation(_account, statementDate)
+			BankReconciliationDTO reconciliation = new BankReconciliationDTO()
 			{
+				BankAccount = _account,
+				StatementDate = statementDate,
 				StartingBalance = this.StartingBalance,
 				EndingBalance = this.EndingBalance
 			};
-
-			foreach(var transaction in this.ReconcileList.Select(s => s.Source))
-			{
-				reconciliation.AddTransaction(transaction);
-			}
-
-
-			bankManager.WriteToFile(reconciliation);
+			saveReconciliationUseCase.Execute(reconciliation);
 
 		}
 
 		public void Dispose()
 		{
 			GC.SuppressFinalize(this);
-			this.journal.JournalModified -= Journal_JournalModified;
+            this.notifications.TransactionsModified -= Notifications_TransactionsModified;
+            this.notifications.BankDateChanged -= Notifications_BankDateChanged;
 
-			if (this.TransactionList.Any() != true) return;
-			foreach(var t in this.TransactionList)
-			{
-				t.BankDateChanged -= LocalBankDateChanged;
-			}
-		}
+        }
 	}
 }
