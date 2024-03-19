@@ -8,17 +8,25 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.BusinessLogic.UseCases.Transactions
 {
-    public class GetJournalAccountBalanceUseCase : IGetJournalAccountBalanceUseCase
+
+    public class GetJournalAccountCurrentMonthBalanceUseCase : IGetJournalAccountCurrentMonthBalanceUseCase
     {
         private readonly ITransactionRepository moneyRepository;
 
-        public GetJournalAccountBalanceUseCase(ITransactionRepository moneyRepository)
+        public GetJournalAccountCurrentMonthBalanceUseCase(ITransactionRepository moneyRepository)
         {
             this.moneyRepository = moneyRepository;
         }
 
         public decimal Execute(Guid accountUID)
         {
+            /*
+             * This should be different depending on the account
+             * MONEY ACCOUNTS -> sum of all records
+             * NOMINAL ACCOUNTS -> sum of current month records
+             * Will need to have a separate YTD use case
+             * 
+             */
             return moneyRepository.GetAccountBalance(accountUID);
         }
     }

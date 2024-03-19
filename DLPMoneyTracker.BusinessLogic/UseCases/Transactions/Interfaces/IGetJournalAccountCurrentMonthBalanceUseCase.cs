@@ -1,6 +1,6 @@
 ﻿namespace DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces
 {
-    public interface IGetJournalAccountBalanceUseCase
+    public interface IGetJournalAccountCurrentMonthBalanceUseCase
     {
         decimal Execute(Guid accountUID);
     }

@@ -15,7 +15,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
 {
     public class MoneyAccountSummaryVM : BaseViewModel
     {
-        private readonly IGetJournalAccountBalanceUseCase getAccountBalanceUseCase;
+        private readonly IGetJournalAccountCurrentMonthBalanceUseCase getAccountBalanceUseCase;
         private readonly IGetUpcomingPlansForAccountUseCase getUpcomingPlansUseCase;
         private readonly IFindTransactionForBudgetPlanUseCase findBudgetPlanTransactionUseCase;
         private readonly NotificationSystem notifications;
@@ -23,7 +23,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
 
 
         public MoneyAccountSummaryVM(
-            IGetJournalAccountBalanceUseCase getAccountBalanceUseCase,
+            IGetJournalAccountCurrentMonthBalanceUseCase getAccountBalanceUseCase,
             IGetUpcomingPlansForAccountUseCase getUpcomingPlansUseCase,
             IFindTransactionForBudgetPlanUseCase findBudgetPlanTransactionUseCase,
             NotificationSystem notifications)

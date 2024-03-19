@@ -1,5 +1,8 @@
 ﻿
 
+using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
+using DLPMoneyTracker.Core;
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker2.Core;
 using DLPMoneyTracker2.Main.TransactionList;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,19 +15,21 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
 {
     public class CurrentMonthBudgetVM : BaseViewModel
     {
-        private readonly ITrackerConfig _config;
-        private readonly IJournal _journal;
+        private readonly IGetJournalAccountListByTypesUseCase getAccountsByTypeUseCase;
+        private readonly NotificationSystem notifications;
 
-        public CurrentMonthBudgetVM(ITrackerConfig config, IJournal journal)
+        public CurrentMonthBudgetVM(
+            IGetJournalAccountListByTypesUseCase getAccountsByTypeUseCase,
+            NotificationSystem notifications)
         {
-            _config = config;
-            _journal = journal;
+            this.getAccountsByTypeUseCase = getAccountsByTypeUseCase;
+            this.notifications = notifications;
+            this.notifications.TransactionsModified += Notifications_TransactionsModified;
 
-            _journal.JournalModified += _journal_JournalModified;
             this.Load();
         }
 
-        private void _journal_JournalModified()
+        private void Notifications_TransactionsModified(Guid debitAccountId, Guid creditAccountId)
         {
             this.NotifyAll();
         }
@@ -32,33 +37,26 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
         // List of Receivable IJournalAccounts; NOT TO BE DISPLAYED
         private List<JournalAccountBudgetVM> _listIncome = new List<JournalAccountBudgetVM>();
 
-        public decimal TotalBudgetIncome
-        { get { return _listIncome?.Sum(s => s.MonthlyBudget) ?? decimal.Zero; } }
+        public decimal TotalBudgetIncome { get { return _listIncome?.Sum(s => s.MonthlyBudget) ?? decimal.Zero; } }
 
         // TODO: Liability accounts are displaying payments as negative which is affecting the Fixed Expense Budget Total [Add Exclude from Budget option first]
         // List of Payable IJournalAccounts WITH a Journal Plan
         private ObservableCollection<JournalAccountBudgetVM> _listFixed = new ObservableCollection<JournalAccountBudgetVM>();
 
-        public ObservableCollection<JournalAccountBudgetVM> FixedExpenses
-        { get { return _listFixed; } }
+        public ObservableCollection<JournalAccountBudgetVM> FixedExpenses { get { return _listFixed; } }
 
-        public decimal FixedExpenseBudgetTotal
-        { get { return this.FixedExpenses?.Sum(s => s.MonthlyBudget > s.CurrentMonthTotal ? s.MonthlyBudget : s.CurrentMonthTotal) ?? decimal.Zero; } }
+        public decimal FixedExpenseBudgetTotal { get { return this.FixedExpenses?.Sum(s => s.MonthlyBudget > s.CurrentMonthTotal ? s.MonthlyBudget : s.CurrentMonthTotal) ?? decimal.Zero; } }
 
         // The remaining Payable accounts
         private ObservableCollection<JournalAccountBudgetVM> _listVariable = new ObservableCollection<JournalAccountBudgetVM>();
 
-        public ObservableCollection<JournalAccountBudgetVM> VariableExpenses
-        { get { return _listVariable; } }
+        public ObservableCollection<JournalAccountBudgetVM> VariableExpenses { get { return _listVariable; } }
 
-        public decimal VariableExpenseBudgetTotal
-        { get { return this.VariableExpenses?.Sum(s => s.MonthlyBudget > s.CurrentMonthTotal ? s.MonthlyBudget : s.CurrentMonthTotal) ?? decimal.Zero; } }
+        public decimal VariableExpenseBudgetTotal { get { return this.VariableExpenses?.Sum(s => s.MonthlyBudget > s.CurrentMonthTotal ? s.MonthlyBudget : s.CurrentMonthTotal) ?? decimal.Zero; } }
 
-        public decimal TotalExpenseBudget
-        { get { return this.FixedExpenseBudgetTotal + this.VariableExpenseBudgetTotal; } }
+        public decimal TotalExpenseBudget { get { return this.FixedExpenseBudgetTotal + this.VariableExpenseBudgetTotal; } }
 
-        public decimal MonthlyBalance
-        { get { return this.TotalBudgetIncome - this.TotalExpenseBudget; } }
+        public decimal MonthlyBalance { get { return this.TotalBudgetIncome - this.TotalExpenseBudget; } }
 
         #region Commands
 
@@ -77,7 +75,7 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
                         TransDetailFilter filter = new TransDetailFilter()
                         {
                             Account = ja,
-                            FilterDates = new DLPMoneyTracker.Data.Common.DateRange(start, end),
+                            FilterDates = new DateRange(start, end),
                             AreFilterControlsVisible = false
                         };
                         AccountTransactionDetail window = new AccountTransactionDetail(filter);
@@ -96,13 +94,14 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
             LedgerType.LiabilityLoan
         };
 
+
         public void Load()
         {
             _listIncome.Clear();
             _listFixed.Clear();
             _listVariable.Clear();
 
-            var listAccounts = _config.GetJournalAccountList(new JournalAccountSearch(ValidBudgetTypes));
+            var listAccounts = getAccountsByTypeUseCase.Execute(ValidBudgetTypes);
             if (listAccounts?.Any() != true) return;
 
             foreach (var act in listAccounts)

@@ -1,6 +1,11 @@
 ﻿
 
 
+using DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans.Interfaces;
+using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
+using DLPMoneyTracker.Core;
+using DLPMoneyTracker.Core.Models.BudgetPlan;
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
@@ -11,25 +16,27 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
 {
     public class JournalAccountBudgetVM : BaseViewModel
     {
-        private readonly IJournal _journal;
-        private readonly IJournalPlanner _planner;
-        private readonly ITrackerConfig _config;
+        private readonly IGetCurrentMonthBudgetPlansForAccountUseCase getCurrentMonthPlansUseCase;
+        private readonly IGetJournalAccountCurrentMonthBalanceUseCase getCurrentMonthBalanceUseCase;
+        private readonly NotificationSystem notifications;
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-        public JournalAccountBudgetVM(ITrackerConfig config, IJournalPlanner planner, IJournal journal)
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        public JournalAccountBudgetVM(
+            IGetCurrentMonthBudgetPlansForAccountUseCase getCurrentMonthPlansUseCase,
+            IGetJournalAccountCurrentMonthBalanceUseCase getCurrentMonthBalanceUseCase,
+            NotificationSystem notifications)
         {
-            _journal = journal;
-            _planner = planner;
-            _config = config;
+            this.getCurrentMonthPlansUseCase = getCurrentMonthPlansUseCase;
+            this.getCurrentMonthBalanceUseCase = getCurrentMonthBalanceUseCase;
+            this.notifications = notifications;
 
-            _currMon = decimal.Zero;
-            _journal.JournalModified += _journal_JournalModified;
+            this.notifications.TransactionsModified += Notifications_TransactionsModified;
         }
 
-        private void _journal_JournalModified()
+        private void Notifications_TransactionsModified(Guid debitAccountId, Guid creditAccountId)
         {
+            if (this.AccountId != debitAccountId && this.AccountId != creditAccountId) return;
+
             this.Refresh();
         }
 
@@ -37,24 +44,16 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
 
         private IJournalAccount _account;
 
-        public IJournalAccount Account
-        { get { return _account; } }
+        public IJournalAccount Account { get { return _account; } }
 
-        public Guid AccountId
-        { get { return _account.Id; } }
+        public Guid AccountId { get { return _account.Id; } }
 
-        public string AccountDesc
-        { get { return _account.Description; } }
+        public string AccountDesc { get { return _account.Description; } }
 
         public decimal MonthlyBudget
         {
             get
             {
-                if (_listPlans.Count == 0)
-                {
-                    if (this.Account is ILedgerAccount ledger) return ledger.MonthlyBudgetAmount;
-                }
-
                 return _listPlans.Sum(s => s.ExpectedAmount);
             }
         }
@@ -109,12 +108,15 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
 
         public void Refresh()
         {
-            this.CurrentMonthTotal = _journal.GetAccountBalance_CurrentMonth(this.AccountId, true);
+            this.CurrentMonthTotal = getCurrentMonthBalanceUseCase.Execute(this.AccountId);
 
-            if (_planner.JournalPlanList.Any(x => x.DebitAccountId == _account.Id || x.CreditAccountId == _account.Id))
+            _listPlans.Clear();
+            var listPlans = getCurrentMonthPlansUseCase.Execute(this.AccountId);
+            if(listPlans?.Any() == true)
             {
-                _listPlans.AddRange(_planner.JournalPlanList.Where(x => x.DebitAccountId == _account.Id || x.CreditAccountId == _account.Id));
+                _listPlans.AddRange(listPlans);
             }
+
             this.NotifyAll();
         }
 
