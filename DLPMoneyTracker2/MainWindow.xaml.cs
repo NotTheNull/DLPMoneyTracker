@@ -123,8 +123,9 @@ namespace DLPMoneyTracker2
         /// <param name="e"></param>
         private void MenuNewYearSetup_Click(object sender, RoutedEventArgs e)
         {
-            if (DateTime.Today.Month == 12) NewYearBuilder.SetupNewYear();
-            else if (DateTime.Today.Month == 1) NewYearBuilder.RebuildCurrentYear();
+            // TODO: Remove this feature; no longer needed
+            //if (DateTime.Today.Month == 12) NewYearBuilder.SetupNewYear();
+            //else if (DateTime.Today.Month == 1) NewYearBuilder.RebuildCurrentYear();
         }
 
         private void MenuRecordDebtAdjustment_Click(object sender, RoutedEventArgs e)

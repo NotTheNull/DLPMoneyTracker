@@ -63,6 +63,7 @@ namespace DLPMoneyTracker2
             services.AddTransient<IGetJournalAccountCurrentMonthBalanceUseCase, GetJournalAccountCurrentMonthBalanceUseCase>();
             services.AddTransient<IGetUpcomingPlansForAccountUseCase, GetUpcomingPlansForAccountUseCase>();
             services.AddTransient<IFindTransactionForBudgetPlanUseCase, FindTransactionForBudgetPlanUseCase>();
+            services.AddTransient<IGetTransactionsBySearchUseCase, GetTransactionsBySearchUseCase>();
             services.AddTransient<IGetCurrentMonthBudgetPlansForAccountUseCase, GetCurrentMonthBudgetPlansForAccountUseCase>();
 
             // Factories

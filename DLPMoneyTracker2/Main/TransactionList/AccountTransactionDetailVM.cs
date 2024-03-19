@@ -1,6 +1,9 @@
 ﻿
 
-using DLPMoneyTracker.Data.TransactionModels;
+using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
+using DLPMoneyTracker.Core;
+using DLPMoneyTracker.Core.Models;
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker2.Core;
 using DLPMoneyTracker2.LedgerEntry;
 using System;
@@ -12,20 +15,26 @@ namespace DLPMoneyTracker2.Main.TransactionList
 {
     public class AccountTransactionDetailVM : BaseViewModel
 	{
-		private readonly ITrackerConfig _config;
-		private readonly IJournal _journal;
+        private readonly IGetTransactionsBySearchUseCase searchTransactionsUseCase;
+        private readonly NotificationSystem notifications;
 
-		public AccountTransactionDetailVM(ITrackerConfig config, IJournal journal)
+        public AccountTransactionDetailVM(
+			IGetTransactionsBySearchUseCase searchTransactionsUseCase,
+			NotificationSystem notifications)
 		{
-			_config = config;
-			_journal = journal;
+            this.searchTransactionsUseCase = searchTransactionsUseCase;
+            this.notifications = notifications;
+            this.notifications.TransactionsModified += Notifications_TransactionsModified;
+        }
 
-			_journal.JournalModified += _journal_JournalModified;
-		}
+        private void Notifications_TransactionsModified(Guid debitAccountId, Guid creditAccountId)
+        {
+			this.Reload();
+        }
 
-		public string HeaderText
+        public string HeaderText
 		{
-			get { return string.Format("{0}: {1}", this.FilterAccount.JournalType.ToDisplayText().ToUpper(), this.FilterAccount.Description); }
+			get { return string.Format("{0}: {1}", this.FilterAccount?.JournalType.ToDisplayText().ToUpper(), this.FilterAccount?.Description); }
 		}
 
 		private ObservableCollection<SingleAccountDetailVM> _listRecords = new ObservableCollection<SingleAccountDetailVM>();
@@ -99,8 +108,9 @@ namespace DLPMoneyTracker2.Main.TransactionList
 		}
 
 		private RelayCommand _cmdResetFilter;
+        
 
-		public RelayCommand CommandResetFilter
+        public RelayCommand CommandResetFilter
 		{
 			get
 			{
@@ -140,35 +150,13 @@ namespace DLPMoneyTracker2.Main.TransactionList
 			this.Reload();
 		}
 
-		private void _journal_JournalModified()
-		{
-			this.Reload();
-		}
-
 		public void Reload()
 		{
 			this.Clear();
-			if (_journal.TransactionList?.Any() != true) return;
-
-			// Testing against NULL to force the VAR class type
-			var records = _journal.TransactionList.Where(x => x != null);
-			if (_filter?.IsFilterEnabled == true)
-			{
-				if (this.FilterAccount != null)
-				{
-					records = records.Where(x => x.DebitAccountId == this.FilterAccount.Id || x.CreditAccountId == this.FilterAccount.Id);
-				}
-
-				if (_filter.FilterDates != null)
-				{
-					records = records.Where(x => x.TransactionDate >= FilterBeginDate && x.TransactionDate <= FilterEndDate);
-				}
-
-				if (!string.IsNullOrWhiteSpace(FilterText))
-				{
-					records = records.Where(x => x.Description.Contains(FilterText.Trim()));
-				}
-			}
+			var records = searchTransactionsUseCase.Execute(_filter.FilterDates, this.FilterText, this.FilterAccount);
+			if (records?.Any() != true) return;
+			
+			
 			this.LoadRecords(records);
 		}
 
@@ -183,7 +171,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
 
 			foreach (var rec in records.OrderBy(o => o.TransactionDate).ThenBy(o => o.Description))
 			{
-				SingleAccountDetailVM vm = new SingleAccountDetailVM(FilterAccount, rec);
+				SingleAccountDetailVM vm = new SingleAccountDetailVM(FilterAccount, rec, notifications);
 				_listRecords.Add(vm);
 			}
 		}

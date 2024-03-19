@@ -1,6 +1,8 @@
 ﻿
 
-using DLPMoneyTracker.Data.TransactionModels;
+using DLPMoneyTracker.Core;
+using DLPMoneyTracker.Core.Models;
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker2.Core;
 using DLPMoneyTracker2.LedgerEntry;
 using System;
@@ -36,7 +38,8 @@ namespace DLPMoneyTracker2
 			}
 		}
 
-		public bool CanUserEdit { get { return _je.DebitAccountId != SpecialAccount.InitialBalance.Id && _je.CreditAccountId != SpecialAccount.InitialBalance.Id; } }
+		// Currently don't have any transacitons that I don't want to edit; will leave this here in case I change my mind
+		public bool CanUserEdit { get { return true; } }
 
 
 		public DateTime TransactionDate { get { return _je.TransactionDate; } }
@@ -54,15 +57,15 @@ namespace DLPMoneyTracker2
 
 	public class SingleAccountDetailVM : BaseViewModel
 	{
-		public SimpleNotification BankDateChanged;
-
 		private IMoneyTransaction _je;
-		private readonly IJournalAccount _parent;
+        private readonly NotificationSystem notifications;
+        private readonly IJournalAccount _parent;
 
-		public SingleAccountDetailVM(IJournalAccount parent, IMoneyTransaction entry) : base()
+		public SingleAccountDetailVM(IJournalAccount parent, IMoneyTransaction entry, NotificationSystem notifications) : base()
 		{
 			_je = entry;
-			_parent = parent;
+            this.notifications = notifications;
+            _parent = parent;
 		}
 
 		public IMoneyTransaction Source { get { return _je; } }
@@ -155,7 +158,7 @@ namespace DLPMoneyTracker2
 			}
 			set
 			{
-				if(_je is JournalEntry record)
+				if(_je is MoneyTransaction record)
 				{
 					if(this.IsCredit)
 					{
@@ -187,7 +190,7 @@ namespace DLPMoneyTracker2
 			var viewModel = JournalEntryVMFactory.BuildViewModel(_je);
 			viewModel.SaveTransaction();
 			this.CanEditBankDate = false;
-			BankDateChanged?.Invoke();
+			notifications.TriggerBankDateChanged(this.JournalAccountId);
 		}
 
 

@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.SQL.Repositories
 {
+    // TODO: .NET Minimum dates are outside SQL's; make sure the Initial Balance transactions are changed to B-Day
     public class SQLTransactionRepository : ITransactionRepository
     {
+        
     }
 }

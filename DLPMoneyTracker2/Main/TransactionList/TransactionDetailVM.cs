@@ -1,7 +1,8 @@
 ﻿
-using DLPMoneyTracker.Data.Common;
-
-using DLPMoneyTracker.Data.TransactionModels;
+using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
+using DLPMoneyTracker.Core;
+using DLPMoneyTracker.Core.Models;
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
@@ -12,22 +13,27 @@ namespace DLPMoneyTracker2.Main.TransactionList
 {
     public class TransactionDetailVM : BaseViewModel
 	{
-		private readonly ITrackerConfig _config;
-		private readonly IJournal _journal;
+        private readonly IGetTransactionsBySearchUseCase searchTransactionUseCase;
+        private readonly NotificationSystem notifications;
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-
-		public TransactionDetailVM(ITrackerConfig config, IJournal journal) : base()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        public TransactionDetailVM(
+			IGetTransactionsBySearchUseCase searchTransactionUseCase,
+			NotificationSystem notifications) : base()
 		{
-			_config = config;
-			_journal = journal;
+            this.searchTransactionUseCase = searchTransactionUseCase;
+            this.notifications = notifications;
+            this.notifications.TransactionsModified += Notifications_TransactionsModified;
 
-			_journal.JournalModified += _journal_JournalModified;
+
 			this.Reload();
-		}
+        }
 
-		private ObservableCollection<JournalEntryVM> _listRecords = new ObservableCollection<JournalEntryVM>();
+        private void Notifications_TransactionsModified(Guid debitAccountId, Guid creditAccountId)
+        {
+			this.Reload();
+        }
+
+        private ObservableCollection<JournalEntryVM> _listRecords = new ObservableCollection<JournalEntryVM>();
 
 		public ObservableCollection<JournalEntryVM> DisplayRecordsList { get { return _listRecords; } }
 
@@ -113,8 +119,9 @@ namespace DLPMoneyTracker2.Main.TransactionList
 		}
 
 		private RelayCommand _cmdResetFilter;
+        
 
-		public RelayCommand CommandResetFilter
+        public RelayCommand CommandResetFilter
 		{
 			get
 			{
@@ -146,35 +153,13 @@ namespace DLPMoneyTracker2.Main.TransactionList
 			this.FilterText = filter.SearchText?.Trim() ?? string.Empty;
 		}
 
-		private void _journal_JournalModified()
-		{
-			this.Reload();
-		}
-
+		
 		public void Reload()
 		{
 			this.Clear();
-			if (_journal.TransactionList?.Any() != true) return;
+			var records = searchTransactionUseCase.Execute(_filter.FilterDates, this.FilterText, this.FilterAccount);
+			if (records?.Any() != true) return;
 
-			// Testing against NULL to force the VAR class type
-			var records = _journal.TransactionList.Where(x => x != null);
-			if (_filter?.IsFilterEnabled == true)
-			{
-				if (this.FilterAccount != null)
-				{
-					records = records.Where(x => x.DebitAccountId == this.FilterAccount.Id || x.CreditAccountId == this.FilterAccount.Id);
-				}
-
-				if (_filter.FilterDates != null)
-				{
-					records = records.Where(x => x.TransactionDate >= FilterBeginDate && x.TransactionDate <= FilterEndDate);
-				}
-
-				if (!string.IsNullOrWhiteSpace(FilterText))
-				{
-					records = records.Where(x => x.Description.Contains(FilterText.Trim()));
-				}
-			}
 			this.LoadRecords(records);
 		}
 
@@ -189,7 +174,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
 
 			foreach (var rec in records.OrderBy(o => o.TransactionDate).ThenBy(o => o.Description))
 			{
-				if (rec is JournalEntry je)
+				if (rec is IMoneyTransaction je)
 				{
 
 					_listRecords.Add(new JournalEntryVM(je));
