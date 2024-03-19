@@ -1,6 +1,5 @@
 ﻿
-using DLPMoneyTracker.Data.BankReconciliation;
-
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker2.BankReconciliation;
 using DLPMoneyTracker2.Core;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,11 +14,10 @@ namespace DLPMoneyTracker2.Main.BankReconciliation
 {
 	public class BankFileVM : BaseViewModel
 	{
-		private readonly ITrackerConfig config;
 
-		public BankFileVM(ITrackerConfig config, IBankReconciliationFile file)
+		public BankFileVM()
         {
-			this.config = config;
+
 			this.LoadFile(file);
 		}
 
@@ -233,7 +231,7 @@ namespace DLPMoneyTracker2.Main.BankReconciliation
 			}
 		}
 
-
+		// TODO: How are we replacing the file?
 		public void LoadFile(IBankReconciliationFile file)
 		{
 			account = config.GetJournalAccount(file.AccountId);
