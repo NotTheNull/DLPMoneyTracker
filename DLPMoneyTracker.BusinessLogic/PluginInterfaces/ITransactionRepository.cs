@@ -21,7 +21,9 @@ namespace DLPMoneyTracker.BusinessLogic.PluginInterfaces
     public interface ITransactionRepository
     {
         List<IMoneyTransaction> Search(MoneyRecordSearch search);
-        decimal GetAccountBalance(Guid uid);
+        decimal GetCurrentAccountBalance(Guid accountUID);
+        decimal GetAccountBalanceByMonth(Guid accountUID, int year, int month);
+        decimal GetAccountBalanceYTD(Guid accountUID, int year);
         void GetTransactionsForAccount(Guid accountUID);
         void RemoveTransaction(IMoneyTransaction transaction);
         void SaveTransaction(IMoneyTransaction transaction);

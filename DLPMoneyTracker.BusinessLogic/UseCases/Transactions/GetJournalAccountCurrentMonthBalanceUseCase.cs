@@ -1,5 +1,6 @@
 ﻿using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
 using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
+using DLPMoneyTracker.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,8 +27,9 @@ namespace DLPMoneyTracker.BusinessLogic.UseCases.Transactions
              * NOMINAL ACCOUNTS -> sum of current month records
              * Will need to have a separate YTD use case
              * 
-             */
-            return moneyRepository.GetAccountBalance(accountUID);
+             */            
+
+            return moneyRepository.GetCurrentAccountBalance(accountUID);
         }
     }
 }

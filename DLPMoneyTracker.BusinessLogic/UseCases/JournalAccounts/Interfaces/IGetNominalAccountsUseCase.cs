@@ -2,7 +2,7 @@
 
 namespace DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces
 {
-    public interface IGetLedgerAccountsUseCase
+    public interface IGetNominalAccountsUseCase
     {
         List<IJournalAccount> Execute(bool includeDeleted);
     }

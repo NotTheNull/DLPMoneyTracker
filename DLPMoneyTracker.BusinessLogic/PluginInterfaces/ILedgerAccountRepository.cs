@@ -34,7 +34,7 @@ namespace DLPMoneyTracker.BusinessLogic.PluginInterfaces
         }
 
 
-        public static JournalAccountSearch GetLedgerAccounts(bool includeDeleted = false)
+        public static JournalAccountSearch GetNominalAccounts(bool includeDeleted = false)
         {
             return new JournalAccountSearch
             {

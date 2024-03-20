@@ -10,12 +10,12 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 {
     public class AddEditLedgerAccountVM : BaseViewModel
     {
-        private readonly IGetLedgerAccountsUseCase getLedgerAccountsUseCase;
+        private readonly IGetNominalAccountsUseCase getLedgerAccountsUseCase;
         private readonly IDeleteJournalAccountUseCase deleteAcountUseCase;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-        public AddEditLedgerAccountVM(IGetLedgerAccountsUseCase getLedgerAccountsUseCase, IDeleteJournalAccountUseCase deleteAcountUseCase) : base()
+        public AddEditLedgerAccountVM(IGetNominalAccountsUseCase getLedgerAccountsUseCase, IDeleteJournalAccountUseCase deleteAcountUseCase) : base()
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             this.getLedgerAccountsUseCase = getLedgerAccountsUseCase;

@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts
 {
-    public class GetLedgerAccountsUseCase : IGetLedgerAccountsUseCase
+    public class GetNominalAccountsUseCase : IGetNominalAccountsUseCase
     {
         private readonly ILedgerAccountRepository accountRepository;
 
-        public GetLedgerAccountsUseCase(ILedgerAccountRepository accountRepository)
+        public GetNominalAccountsUseCase(ILedgerAccountRepository accountRepository)
         {
             this.accountRepository = accountRepository;
         }
 
         public List<IJournalAccount> Execute(bool includeDeleted)
         {
-            return accountRepository.GetAccountsBySearch(JournalAccountSearch.GetLedgerAccounts(includeDeleted));
+            return accountRepository.GetAccountsBySearch(JournalAccountSearch.GetNominalAccounts(includeDeleted));
         }
     }
 }

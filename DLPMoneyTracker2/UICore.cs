@@ -54,7 +54,7 @@ namespace DLPMoneyTracker2
             // Use Cases
             services.AddTransient<ISaveJournalAccountUseCase, SaveJournalAccountUseCase>();
             services.AddTransient<IGetJournalAccountListByTypesUseCase, GetJournalAccountListByTypesUseCase>();
-            services.AddTransient<IGetLedgerAccountsUseCase, GetLedgerAccountsUseCase>();
+            services.AddTransient<IGetNominalAccountsUseCase, GetNominalAccountsUseCase>();
             services.AddTransient<IGetMoneyAccountsUseCase, GetMoneyAccountsUseCase>();
             services.AddTransient<IGetJournalAccountByUIDUseCase, GetJournalAccountByUIDUseCase>();
             services.AddTransient<IDeleteJournalAccountUseCase, DeleteJournalAccountUseCase>();
@@ -71,6 +71,8 @@ namespace DLPMoneyTracker2
             services.AddTransient<IGetBankReconciliationListUseCase, GetBankReconciliationListUseCase>();
             services.AddTransient<IGetReconciliationTransactionsUseCase, GetReconciliationTransactionsUseCase>();
             services.AddTransient<ISaveReconciliationUseCase, SaveReconciliationUseCase>();
+            services.AddTransient<IGetJournalAccountBalanceByMonthUseCase, GetJournalAccountBalanceByMonthUseCase>();
+            services.AddTransient<IGetJournalAccountYTDUseCase, GetJournalAccountYTDUseCase>();
 
 
             // Factories
@@ -101,6 +103,7 @@ namespace DLPMoneyTracker2
 
             services.AddTransient<YearToDateUI>();
             services.AddTransient<YearToDateVM>();
+            services.AddTransient<YTDAccountDetailVM>();
 
             // Ledger
             services.AddTransient<IncomeJournalEntryVM>();
@@ -126,8 +129,7 @@ namespace DLPMoneyTracker2
             services.AddTransient<BankReconciliationListingVM>();
             services.AddTransient<BankReconciliationListingUI>();
 
-            // Models
-
+            
         }
     }
 }
