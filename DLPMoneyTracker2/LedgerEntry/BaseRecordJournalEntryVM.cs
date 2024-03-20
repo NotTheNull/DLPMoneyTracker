@@ -65,7 +65,6 @@ namespace DLPMoneyTracker2.LedgerEntry
         protected readonly IGetJournalAccountListByTypesUseCase getAccountsByTypeUseCase;
         protected readonly IGetJournalAccountByUIDUseCase getAccountByUIDUseCase;
         protected readonly ISaveTransactionUseCase saveMoneyRecordUseCase;
-        private readonly NotificationSystem notifications;
 
         protected BaseRecordJournalEntryVM(
             IGetJournalAccountListByTypesUseCase getAccountsByTypeUseCase,
@@ -73,14 +72,12 @@ namespace DLPMoneyTracker2.LedgerEntry
             ISaveTransactionUseCase saveMoneyRecordUseCase,
             IEnumerable<LedgerType> validDebitTypes, 
             IEnumerable<LedgerType> validCreditTypes,
-            TransactionType transType,
-            NotificationSystem notifications)
+            TransactionType transType)
         {
             this.getAccountsByTypeUseCase = getAccountsByTypeUseCase;
             this.getAccountByUIDUseCase = getAccountByUIDUseCase;
             this.saveMoneyRecordUseCase = saveMoneyRecordUseCase;
             _transType = transType;
-            this.notifications = notifications;
             _date = DateTime.Today;
             _validDebitTypes.AddRange(validDebitTypes);
             _validCreditTypes.AddRange(validCreditTypes);
