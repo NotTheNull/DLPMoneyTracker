@@ -1,4 +1,4 @@
-﻿using DLPMoneyTracker.Data.ScheduleRecurrence;
+﻿using DLPMoneyTracker.Core.Models.ScheduleRecurrence;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 

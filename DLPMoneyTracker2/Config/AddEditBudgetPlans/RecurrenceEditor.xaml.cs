@@ -1,4 +1,4 @@
-﻿using DLPMoneyTracker.Data.ScheduleRecurrence;
+﻿using DLPMoneyTracker.Core.Models.ScheduleRecurrence;
 using System.Windows;
 
 namespace DLPMoneyTracker2.Config.AddEditBudgetPlans

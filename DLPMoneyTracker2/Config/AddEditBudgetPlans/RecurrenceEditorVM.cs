@@ -1,6 +1,5 @@
 ﻿using DLPMoneyTracker.BusinessLogic.Factories;
 using DLPMoneyTracker.Core.Models.ScheduleRecurrence;
-using DLPMoneyTracker.Data.ScheduleRecurrence;
 using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
@@ -31,19 +30,6 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
             get { return this.SelectedFrequency == RecurrenceFrequency.Monthly; }
         }
 
-        //private int _monthDay;
-
-        //public int DayOfMonth
-        //{
-        //    get { return _monthDay; }
-        //    set
-        //    {
-        //        if (value < 1) _monthDay = 1;
-        //        else if (value > 31) _monthDay = 31;
-        //        else _monthDay = value;
-        //        NotifyPropertyChanged(nameof(this.DayOfMonth));
-        //    }
-        //}
 
         private DateTime _dateStart;
 
