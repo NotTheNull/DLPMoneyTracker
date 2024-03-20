@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace DLPMoneyTracker.Plugins.JSON.Models
 {
 
-    internal class JournalEntryJSON
+    internal sealed class JournalEntryJSON
     {
         public Guid Id { get; set; }
 

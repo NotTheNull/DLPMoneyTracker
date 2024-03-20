@@ -13,9 +13,16 @@ namespace DLPMoneyTracker.BusinessLogic.PluginInterfaces
 {
     public struct MoneyRecordSearch
     {
-        public DateRange? DateRange;
-        public string? SearchText;
+        public DateRange DateRange;
+        public string SearchText;
         public IJournalAccount? Account;
+
+        public MoneyRecordSearch()
+        {
+            DateRange = new DateRange(DateTime.MinValue, DateTime.MaxValue);
+            SearchText = string.Empty;
+            Account = null;
+        }
     }
 
     public interface ITransactionRepository

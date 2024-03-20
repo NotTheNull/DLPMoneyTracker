@@ -82,7 +82,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
 
         public List<IMoneyTransaction> Search(MoneyRecordSearch search)
         {
-            var listRecords = this.TransactionList.Where(x => search.DateRange.IsWithinRange(x.TransactionDate));
+            var listRecords = this.TransactionList.Where(x => x.TransactionAmount != decimal.Zero);
 
             if(search.Account != null)
             {
