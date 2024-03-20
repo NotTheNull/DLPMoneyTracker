@@ -10,7 +10,7 @@ namespace DLPMoneyTracker.Core.Models.BankReconciliation
     public class BankReconciliationOverviewDTO
     {
         public IJournalAccount BankAccount { get; set; }
-        public List<BankReconciliationDTO> ReconciliationList { get; set; }
+        public List<BankReconciliationDTO> ReconciliationList { get; set; } = new List<BankReconciliationDTO>();
 
     }
 }

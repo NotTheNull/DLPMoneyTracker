@@ -22,6 +22,8 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         {
             this.accountRepository = accountRepository;
             this.moneyRepository = moneyRepository;
+
+            this.LoadFromFile();
         }
 
         public List<BankReconciliationOverviewDTO> BankReconciliationList { get; set; } = new List<BankReconciliationOverviewDTO>();
