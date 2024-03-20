@@ -27,7 +27,14 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
             }
         }
 
+        public List<IJournalAccount> GetAccountsBySearch(JournalAccountSearch search)
+        {
+            throw new NotImplementedException();
+        }
 
-
+        public void SaveJournalAccount(IJournalAccount account)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
