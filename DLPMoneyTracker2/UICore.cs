@@ -129,6 +129,10 @@ namespace DLPMoneyTracker2
             services.AddTransient<BankReconciliationListingVM>();
             services.AddTransient<BankReconciliationListingUI>();
 
+            // Other models
+            services.AddTransient<LedgerAccountVM>();
+            services.AddTransient<MoneyAccountVM>();
+
             
         }
     }
