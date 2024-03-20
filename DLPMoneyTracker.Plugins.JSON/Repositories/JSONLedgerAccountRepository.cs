@@ -47,6 +47,11 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             }
             else if(File.Exists(OldFilePath))
             {
+                if(!Directory.Exists(AppSettings.NEW_CONFIG_FOLDER_PATH))
+                {
+                    Directory.CreateDirectory(AppSettings.NEW_CONFIG_FOLDER_PATH);
+                }
+
                 json = File.ReadAllText(OldFilePath);
                 File.WriteAllText(FilePath, json);
             }
