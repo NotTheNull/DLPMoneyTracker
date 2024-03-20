@@ -55,12 +55,14 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             var dataList = (List<JournalPlanJSON>)JsonSerializer.Deserialize(json, typeof(List<JournalPlanJSON>));
             if (dataList?.Any() != true) return;
 
-            BudgetPlanFactory factory = new BudgetPlanFactory(ledgerRepository);
+            BudgetPlanFactory budgetFactory = new BudgetPlanFactory(ledgerRepository);
+            ScheduleRecurrenceFactory recurrenceFactory = new ScheduleRecurrenceFactory();
             JSONScheduleRecurrenceAdapter adapter = new JSONScheduleRecurrenceAdapter();
             foreach(var data in dataList)
             {
                 adapter.ImportJSON(data.RecurrenceJSON);
-                BudgetPlanList.Add(factory.Build(data.PlanType, data.UID, data.Description, data.DebitAccountId, data.CreditAccountId, data.ExpectedAmount, adapter));
+                var recurrence = recurrenceFactory.Build(adapter);
+                BudgetPlanList.Add(budgetFactory.Build(data.PlanType, data.UID, data.Description, data.DebitAccountId, data.CreditAccountId, data.ExpectedAmount, recurrence));
             }
         }
 
