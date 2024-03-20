@@ -13,7 +13,7 @@ namespace DLPMoneyTracker.Core.Models.BudgetPlan
     {
         public Guid UID { get; set; } = Guid.NewGuid();
 
-        public BudgetPlanType PlanType { get { return BudgetPlanType.DebtPayment; } }
+        public BudgetPlanType PlanType { get { return BudgetPlanType.Receivable; } }
 
         public string Description { get; set; }
 

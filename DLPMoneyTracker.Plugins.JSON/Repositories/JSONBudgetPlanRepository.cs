@@ -62,7 +62,8 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             {
                 adapter.ImportJSON(data.RecurrenceJSON);
                 var recurrence = recurrenceFactory.Build(adapter);
-                BudgetPlanList.Add(budgetFactory.Build(data.PlanType, data.UID, data.Description, data.DebitAccountId, data.CreditAccountId, data.ExpectedAmount, recurrence));
+                var newPlan = budgetFactory.Build(data.PlanType, data.UID, data.Description, data.DebitAccountId, data.CreditAccountId, data.ExpectedAmount, recurrence);
+                BudgetPlanList.Add(newPlan);
             }
         }
 
