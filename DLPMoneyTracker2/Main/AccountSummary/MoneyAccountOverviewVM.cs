@@ -13,20 +13,13 @@ namespace DLPMoneyTracker2.Main.AccountSummary
     public class MoneyAccountOverviewVM : BaseViewModel
     {
 
-        //private readonly List<LedgerType> _listValidTypes = new List<LedgerType>()
-        //{
-        //    LedgerType.Bank,
-        //    LedgerType.LiabilityCard,
-        //    LedgerType.LiabilityLoan
-        //};
         private readonly IGetMoneyAccountsUseCase getMoneyAccountsUseCase;
 
         public MoneyAccountOverviewVM(IGetMoneyAccountsUseCase getMoneyAccountsUseCase)
         {
-            
+            this.getMoneyAccountsUseCase = getMoneyAccountsUseCase;
 
             this.Load();
-            this.getMoneyAccountsUseCase = getMoneyAccountsUseCase;
         }
 
         private ObservableCollection<MoneyAccountSummaryVM> _listAcctSummary = new ObservableCollection<MoneyAccountSummaryVM>();
