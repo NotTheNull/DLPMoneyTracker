@@ -1,6 +1,7 @@
 ﻿
 using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
 using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
+using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.BudgetPlan;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
@@ -64,6 +65,7 @@ namespace DLPMoneyTracker2.LedgerEntry
         protected readonly IGetJournalAccountListByTypesUseCase getAccountsByTypeUseCase;
         protected readonly IGetJournalAccountByUIDUseCase getAccountByUIDUseCase;
         protected readonly ISaveTransactionUseCase saveMoneyRecordUseCase;
+        private readonly NotificationSystem notifications;
 
         protected BaseRecordJournalEntryVM(
             IGetJournalAccountListByTypesUseCase getAccountsByTypeUseCase,
@@ -71,12 +73,14 @@ namespace DLPMoneyTracker2.LedgerEntry
             ISaveTransactionUseCase saveMoneyRecordUseCase,
             IEnumerable<LedgerType> validDebitTypes, 
             IEnumerable<LedgerType> validCreditTypes,
-            TransactionType transType)
+            TransactionType transType,
+            NotificationSystem notifications)
         {
             this.getAccountsByTypeUseCase = getAccountsByTypeUseCase;
             this.getAccountByUIDUseCase = getAccountByUIDUseCase;
             this.saveMoneyRecordUseCase = saveMoneyRecordUseCase;
             _transType = transType;
+            this.notifications = notifications;
             _date = DateTime.Today;
             _validDebitTypes.AddRange(validDebitTypes);
             _validCreditTypes.AddRange(validCreditTypes);
