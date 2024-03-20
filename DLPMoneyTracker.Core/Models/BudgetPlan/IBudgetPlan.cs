@@ -1,5 +1,6 @@
 ﻿using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Core.Models.ScheduleRecurrence;
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,12 +31,14 @@ namespace DLPMoneyTracker.Core.Models.BudgetPlan
 
         // Debit
         List<LedgerType> ValidDebitAccountTypes { get; }
+        IJournalAccount DebitAccount { get; }
         Guid DebitAccountId { get; }
         string DebitAccountName { get; }
 
 
         // Credit
         List<LedgerType> ValidCreditAccountTypes { get; }
+        IJournalAccount CreditAccount { get; }
         Guid CreditAccountId { get; }
         string CreditAccountName { get; }
 
@@ -46,5 +49,6 @@ namespace DLPMoneyTracker.Core.Models.BudgetPlan
 
 
         bool IsValid();
+        void Copy(IBudgetPlan plan);
     }
 }

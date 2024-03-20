@@ -64,5 +64,19 @@ namespace DLPMoneyTracker.Core.Models.BudgetPlan
 
             return true;
         }
+
+        public void Copy(IBudgetPlan plan)
+        {
+            ArgumentNullException.ThrowIfNull(plan);
+            if (plan.PlanType != this.PlanType) throw new InvalidOperationException("Plan types do not match");
+
+            this.UID = plan.UID;
+            this.CreditAccount = plan.CreditAccount;
+            this.DebitAccount = plan.DebitAccount;
+            this.Description = plan.Description;
+            this.Recurrence = plan.Recurrence;
+            this.ExpectedAmount = plan.ExpectedAmount;
+
+        }
     }
 }

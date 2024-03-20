@@ -10,5 +10,6 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
     {
         string FilePath { get; }
         void LoadFromFile();
+        void SaveToFile();
     }
 }

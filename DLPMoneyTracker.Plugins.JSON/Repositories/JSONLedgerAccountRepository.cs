@@ -25,10 +25,10 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         public List<IJournalAccount> AccountList { get; set; } = new List<IJournalAccount>();
 
 
-        private string FolderPath { get { return AppSettings.CONFIG_FOLDER_PATH.Replace(AppSettings.YEAR_FOLDER_PLACEHOLDER, _year.ToString()); } }
-
-        public string FilePath { get { return string.Concat(this.FolderPath, "LedgerAccounts.json"); } }
-
+        // TODO: Once conversions are complete, remove the OLD paths
+        private string OldFolderPath { get { return AppSettings.OLD_CONFIG_FOLDER_PATH.Replace(AppSettings.YEAR_FOLDER_PLACEHOLDER, _year.ToString()); } }
+        public string OldFilePath { get { return Path.Combine(this.OldFolderPath, "LedgerAccounts.json"); } }
+        public string FilePath { get { return Path.Combine(AppSettings.NEW_CONFIG_FOLDER_PATH, "LedgerAccounts.json"); } }
 
 
 
@@ -40,24 +40,54 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             this.AccountList.Add(SpecialAccount.DebtInterest);
             this.AccountList.Add(SpecialAccount.DebtReduction);
 
+            string json = string.Empty;
             if (File.Exists(FilePath))
             {
-                string json = File.ReadAllText(FilePath);
-                if (string.IsNullOrWhiteSpace(json)) return;
+                json = File.ReadAllText(FilePath);
+            }
+            else if(File.Exists(OldFilePath))
+            {
+                json = File.ReadAllText(OldFilePath);
+                File.WriteAllText(FilePath, json);
+            }
+            else
+            {
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(json)) return;
 
-                var dataList = (List<JournalAccountJSON>)JsonSerializer.Deserialize(json, typeof(List<JournalAccountJSON>));
-                if (dataList?.Any() != true) return;
+            var dataList = (List<JournalAccountJSON>)JsonSerializer.Deserialize(json, typeof(List<JournalAccountJSON>));
+            if (dataList?.Any() != true) return;
 
-                JSONSourceToJournalAccountAdapter adapter = new JSONSourceToJournalAccountAdapter();
-                JournalAccountFactory factory = new JournalAccountFactory();
+            JSONSourceToJournalAccountAdapter adapter = new JSONSourceToJournalAccountAdapter();
+            JournalAccountFactory factory = new JournalAccountFactory();
 
-                foreach (var data in dataList)
-                {
-                    adapter.ImportSource(data);
-                    this.AccountList.Add(factory.Build(adapter));
-                }
+            foreach (var data in dataList)
+            {
+                adapter.ImportSource(data);
+                this.AccountList.Add(factory.Build(adapter));
             }
         }
+
+        public void SaveToFile()
+        {
+            List<JournalAccountJSON> listJSONData = new List<JournalAccountJSON>();
+            JSONSourceToJournalAccountAdapter adapter = new JSONSourceToJournalAccountAdapter();
+            foreach (var account in this.AccountList)
+            {
+                if (account.JournalType == LedgerType.NotSet) continue;
+                adapter.Copy(account);
+                
+                JournalAccountJSON jsonAccount = new JournalAccountJSON();
+                adapter.ExportSource(ref jsonAccount);
+                listJSONData.Add(jsonAccount);                
+            }
+
+            if (listJSONData.Any() != true) return;
+            string json = JsonSerializer.Serialize<List<JournalAccountJSON>>(listJSONData);
+            File.WriteAllText(this.FilePath, json);
+        }
+
 
 
 
@@ -66,6 +96,41 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         public IJournalAccount GetAccountByUID(Guid uid)
         {
             return this.AccountList.FirstOrDefault(x => x.Id == uid);
+        }
+
+        public List<IJournalAccount> GetAccountsBySearch(JournalAccountSearch search)
+        {
+            if (search.JournalTypes.Any() != true) return null;
+
+            var listAccounts = this.AccountList.Where(x => search.JournalTypes.Contains(x.JournalType));
+            if(!string.IsNullOrWhiteSpace(search.NameFilterText))
+            {
+                listAccounts = listAccounts.Where(x => x.Description.Contains(search.NameFilterText));
+            }
+
+            if(!search.IncludeDeleted)
+            {
+                listAccounts = listAccounts.Where(x => !x.DateClosedUTC.HasValue);
+            }
+
+            return listAccounts.ToList();
+        }
+
+        public void SaveJournalAccount(IJournalAccount account)
+        {
+            ArgumentNullException.ThrowIfNull(account);
+
+            var existingAccount = this.AccountList.FirstOrDefault(x => x.Id == account.Id);
+            if(existingAccount is null)
+            {
+                this.AccountList.Add(account);
+            }
+            else
+            {
+                existingAccount.Copy(account);
+            }
+
+            this.SaveToFile();
         }
     }
 }

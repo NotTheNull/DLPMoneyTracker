@@ -1,8 +1,10 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace DLPMoneyTracker.Plugins.JSON
 {
@@ -11,36 +13,23 @@ namespace DLPMoneyTracker.Plugins.JSON
         public const string YEAR_FOLDER_PLACEHOLDER = "{YEAR}";
 
 #if DEBUG && !TEST_NEW
-        public static readonly string DATA_FOLDER_PATH = string.Format(@"C:\Users\crc\OneDrive\Programs\DLP Money Tracker\{0}\Data\", YEAR_FOLDER_PLACEHOLDER);
+        private static readonly string ONEDRIVE_PATH = @"C:\Users\crc\OneDrive\Programs\DLP Money Tracker\";
 
-        public static readonly string CONFIG_FOLDER_PATH = string.Format(@"C:\Users\crc\OneDrive\Programs\DLP Money Tracker\{0}\Config\", YEAR_FOLDER_PLACEHOLDER);
-
-        public static readonly string RECONCILE_FOLDER_PATH = string.Format(@"C:\Users\crc\OneDrive\Programs\DLP Money Tracker\{0}\Reconciliation\", YEAR_FOLDER_PLACEHOLDER);
+        public static readonly string OLD_DATA_FOLDER_PATH = Path.Combine(ONEDRIVE_PATH, YEAR_FOLDER_PLACEHOLDER, "Data");
+        public static readonly string OLD_CONFIG_FOLDER_PATH = Path.Combine(ONEDRIVE_PATH, YEAR_FOLDER_PLACEHOLDER, "Config");
+        public static readonly string OLD_RECONCILE_FOLDER_PATH = Path.Combine(ONEDRIVE_PATH, YEAR_FOLDER_PLACEHOLDER, "Reconciliation");
+        public static readonly string NEW_DATA_FOLDER_PATH = Path.Combine(ONEDRIVE_PATH, "Data");
+        public static readonly string NEW_CONFIG_FOLDER_PATH = Path.Combine(ONEDRIVE_PATH, "Config");
+        public static readonly string NEW_RECONCILE_FOLDER_PATH = Path.Combine(ONEDRIVE_PATH, "Reconciliation");
 #else
 
-        public static string DATA_FOLDER_PATH
-        {
-            get
-            {
-                return string.Format(@"{0}\{1}\Data\", System.IO.Directory.GetCurrentDirectory(), YEAR_FOLDER_PLACEHOLDER);
-            }
-        }
+        public static readonly string OLD_DATA_FOLDER_PATH = Path.Combine(Directory.GetCurrentDirectory(), YEAR_FOLDER_PLACEHOLDER, "Data");
+        public static readonly string OLD_CONFIG_FOLDER_PATH = Path.Combine(Directory.GetCurrentDirectory(), YEAR_FOLDER_PLACEHOLDER, "Config");
+        public static readonly string OLD_RECONCILE_FOLDER_PATH = Path.Combine(Directory.GetCurrentDirectory(), YEAR_FOLDER_PLACEHOLDER, "Reconciliation");
+        public static readonly string NEW_DATA_FOLDER_PATH = Path.Combine(Directory.GetCurrentDirectory(), "Data");
+        public static readonly string NEW_CONFIG_FOLDER_PATH = Path.Combine(Directory.GetCurrentDirectory(), "Config");
+        public static readonly string NEW_RECONCILE_FOLDER_PATH = Path.Combine(Directory.GetCurrentDirectory(), "Reconciliation");
 
-        public static string CONFIG_FOLDER_PATH
-        {
-            get
-            {
-                return string.Format(@"{0}\{1}\Config\", System.IO.Directory.GetCurrentDirectory(), YEAR_FOLDER_PLACEHOLDER);
-            }
-        }
-
-        public static string RECONCILE_FOLDER_PATH
-        {
-            get
-            {
-                return string.Format(@"{0}\{1}\Reconciliation\", System.IO.Directory.GetCurrentDirectory(), YEAR_FOLDER_PLACEHOLDER);
-            }
-        }
 
 #endif
     }
