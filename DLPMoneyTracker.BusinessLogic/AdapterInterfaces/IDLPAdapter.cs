@@ -8,7 +8,7 @@ namespace DLPMoneyTracker.BusinessLogic.AdapterInterfaces
 {
     public interface IDLPAdapter<T>
     {
-        void ImportSource(T acct);
-        void ExportSource(ref T acct);
+        void ImportSource(T src);
+        void ExportSource(ref T src);
     }
 }

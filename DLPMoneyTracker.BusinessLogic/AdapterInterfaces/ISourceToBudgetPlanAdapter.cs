@@ -9,6 +9,6 @@ namespace DLPMoneyTracker.BusinessLogic.AdapterInterfaces
 {
     public interface ISourceToBudgetPlanAdapter<T> : IBudgetPlan, IDLPAdapter<T>
     {
-        void ImportCopy(IBudgetPlan acct);
+
     }
 }

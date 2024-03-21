@@ -1,6 +1,7 @@
 ﻿using DLPMoneyTracker.BusinessLogic.Factories;
 using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
 using DLPMoneyTracker.Core.Models.BudgetPlan;
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.JSON.Adapters;
 using DLPMoneyTracker.Plugins.JSON.Models;
 using System;
@@ -15,12 +16,12 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
     public class JSONBudgetPlanRepository : IBudgetPlanRepository, IJSONRepository
     {
         private int _year;
-        private readonly ILedgerAccountRepository ledgerRepository;
+        private readonly ILedgerAccountRepository accountRepository;
 
         public JSONBudgetPlanRepository(ILedgerAccountRepository ledgerRepository)
         {
             _year = DateTime.Today.Year;
-            this.ledgerRepository = ledgerRepository;
+            this.accountRepository = ledgerRepository;
 
             this.LoadFromFile();
         }
@@ -55,14 +56,16 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             var dataList = (List<JournalPlanJSON>)JsonSerializer.Deserialize(json, typeof(List<JournalPlanJSON>));
             if (dataList?.Any() != true) return;
 
-            BudgetPlanFactory budgetFactory = new BudgetPlanFactory(ledgerRepository);
+            BudgetPlanFactory budgetFactory = new BudgetPlanFactory();
             ScheduleRecurrenceFactory recurrenceFactory = new ScheduleRecurrenceFactory();
             JSONScheduleRecurrenceAdapter adapter = new JSONScheduleRecurrenceAdapter();
             foreach(var data in dataList)
             {
                 adapter.ImportJSON(data.RecurrenceJSON);
                 var recurrence = recurrenceFactory.Build(adapter);
-                var newPlan = budgetFactory.Build(data.PlanType, data.UID, data.Description, data.DebitAccountId, data.CreditAccountId, data.ExpectedAmount, recurrence);
+                IJournalAccount debit = accountRepository.GetAccountByUID(data.DebitAccountId);
+                IJournalAccount credit = accountRepository.GetAccountByUID(data.CreditAccountId);
+                var newPlan = budgetFactory.Build(data.PlanType, data.UID, data.Description, debit, credit, data.ExpectedAmount, recurrence);
                 BudgetPlanList.Add(newPlan);
             }
         }

@@ -29,12 +29,55 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         public List<IJournalAccount> GetAccountsBySearch(JournalAccountSearch search)
         {
-            throw new NotImplementedException();
+            List<IJournalAccount> listAccountsFinal = new List<IJournalAccount>();
+            if (search.JournalTypes?.Any() != true) return listAccountsFinal;
+
+            using (DataContext context = new DataContext())
+            {
+                var listAccountsQuery = context.Accounts.Where(x => search.JournalTypes.Contains(x.AccountType));
+
+                if(!string.IsNullOrWhiteSpace(search.NameFilterText))
+                {
+                    listAccountsQuery = listAccountsQuery.Where(x => x.Description.Contains(search.NameFilterText));
+                }
+
+                if(!search.IncludeDeleted)
+                {
+                    listAccountsQuery = listAccountsQuery.Where(x => !x.DateClosedUTC.HasValue);
+                }
+
+                var listAccountsLoop = listAccountsQuery.ToList();
+                if (listAccountsLoop?.Any() != true) return listAccountsFinal;
+                                
+                SQLSourceToJournalAccountAdapter adapter = new SQLSourceToJournalAccountAdapter();
+                JournalAccountFactory factory = new JournalAccountFactory();
+                foreach(var account in listAccountsLoop) 
+                {
+                    adapter.ImportSource(account);
+                    listAccountsFinal.Add(factory.Build(adapter));
+                }
+            }
+
+            return listAccountsFinal;
         }
 
         public void SaveJournalAccount(IJournalAccount account)
         {
-            throw new NotImplementedException();
+            using (DataContext context = new DataContext())
+            {
+                SQLSourceToJournalAccountAdapter adapter = new SQLSourceToJournalAccountAdapter();
+                adapter.Copy(account);
+
+                var existingAccount = context.Accounts.FirstOrDefault(x => x.AccountUID == account.Id);
+                if(existingAccount is null)
+                {
+                    existingAccount = new Data.Account();
+                    context.Accounts.Add(existingAccount);
+                }
+
+                adapter.ExportSource(ref existingAccount);
+                context.SaveChanges();
+            }
         }
     }
 }

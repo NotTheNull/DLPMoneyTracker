@@ -3,21 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DLPMoneyTracker.Data", "DLPMoneyTracker.Data\DLPMoneyTracker.Data.csproj", "{F4D979FF-60D1-4A6E-A696-32158DCF66F4}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DLPMoneyTrackerWeb", "DLPMoneyTrackerWeb\DLPMoneyTrackerWeb.csproj", "{257192C8-E017-4978-B9B2-EC08FC07DD49}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DLPMoneyTracker2", "DLPMoneyTracker2\DLPMoneyTracker2.csproj", "{1C1B9D8B-AA65-4323-B020-BC365DC60656}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{BA9168B9-92D7-4AF4-B403-4386341CDC0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLPMoneyTracker.Core", "DLPMoneyTracker.Core\DLPMoneyTracker.Core.csproj", "{2F48FED1-77A7-4AC5-B9EF-B66F2D183F58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DLPMoneyTracker.Core", "DLPMoneyTracker.Core\DLPMoneyTracker.Core.csproj", "{2F48FED1-77A7-4AC5-B9EF-B66F2D183F58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLPMoneyTracker.BusinessLogic", "DLPMoneyTracker.BusinessLogic\DLPMoneyTracker.BusinessLogic.csproj", "{3769D619-8E05-451B-A52F-34B0559FE25B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DLPMoneyTracker.BusinessLogic", "DLPMoneyTracker.BusinessLogic\DLPMoneyTracker.BusinessLogic.csproj", "{3769D619-8E05-451B-A52F-34B0559FE25B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLPMoneyTracker.Plugins.SQL", "DLPMoneyTracker.Plugins.SQL\DLPMoneyTracker.Plugins.SQL.csproj", "{91B7A0FB-11A2-45C4-B69F-43082C3FAAE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DLPMoneyTracker.Plugins.SQL", "DLPMoneyTracker.Plugins.SQL\DLPMoneyTracker.Plugins.SQL.csproj", "{91B7A0FB-11A2-45C4-B69F-43082C3FAAE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLPMoneyTracker.Plugins.JSON", "DLPMoneyTracker.Plugins.JSON\DLPMoneyTracker.Plugins.JSON.csproj", "{7C5D42A4-B84D-47CE-950E-0ED321ED6AE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DLPMoneyTracker.Plugins.JSON", "DLPMoneyTracker.Plugins.JSON\DLPMoneyTracker.Plugins.JSON.csproj", "{7C5D42A4-B84D-47CE-950E-0ED321ED6AE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +23,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F4D979FF-60D1-4A6E-A696-32158DCF66F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F4D979FF-60D1-4A6E-A696-32158DCF66F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F4D979FF-60D1-4A6E-A696-32158DCF66F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F4D979FF-60D1-4A6E-A696-32158DCF66F4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{257192C8-E017-4978-B9B2-EC08FC07DD49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{257192C8-E017-4978-B9B2-EC08FC07DD49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{257192C8-E017-4978-B9B2-EC08FC07DD49}.Debug|Any CPU.Deploy.0 = Debug|Any CPU

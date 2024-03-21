@@ -170,7 +170,7 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
                 {
                     if (this.IsReadyForSave)
                     {
-                        savePlanUseCase.Execute(budgetFactory.Build(this.SelectedPlanType, this.BudgetPlanId, this.Description, this.SelectedDebitAccount?.Id ?? Guid.Empty, this.SelectedCreditAccount?.Id ?? Guid.Empty, this.Amount, this.Recurrence));
+                        savePlanUseCase.Execute(budgetFactory.Build(this.SelectedPlanType, this.BudgetPlanId, this.Description, this.SelectedDebitAccount, this.SelectedCreditAccount, this.Amount, this.Recurrence));
                     }
 
                     this.Clear();

@@ -1,6 +1,7 @@
 ﻿using DLPMoneyTracker.BusinessLogic.AdapterInterfaces;
 using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
 using DLPMoneyTracker.Core.Models.BudgetPlan;
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Core.Models.ScheduleRecurrence;
 using System;
 using System.Collections.Generic;
@@ -11,21 +12,14 @@ using System.Threading.Tasks;
 namespace DLPMoneyTracker.BusinessLogic.Factories
 {
     public class BudgetPlanFactory
-    {
-        private readonly ILedgerAccountRepository accountRepository;
-
-        public BudgetPlanFactory(ILedgerAccountRepository accountRepository)
-        {
-            this.accountRepository = accountRepository;
-        }
-
+    {   
 
         public IBudgetPlan Build(IBudgetPlan plan)
         {
-            return Build(plan.PlanType, plan.UID, plan.Description, plan.DebitAccountId, plan.CreditAccountId, plan.ExpectedAmount, plan.Recurrence);
+            return Build(plan.PlanType, plan.UID, plan.Description, plan.DebitAccount, plan.CreditAccount, plan.ExpectedAmount, plan.Recurrence);
         }
 
-        public IBudgetPlan Build(BudgetPlanType planType, Guid uid, string desc, Guid debit, Guid credit, decimal amount, IScheduleRecurrence recurrence)
+        public IBudgetPlan Build(BudgetPlanType planType, Guid uid, string desc, IJournalAccount debit, IJournalAccount credit, decimal amount, IScheduleRecurrence recurrence)
         {
             switch(planType)
             {
@@ -34,8 +28,8 @@ namespace DLPMoneyTracker.BusinessLogic.Factories
                     {
                         UID = uid,
                         Description = desc,
-                        DebitAccount = accountRepository.GetAccountByUID(debit),
-                        CreditAccount = accountRepository.GetAccountByUID(credit),
+                        DebitAccount = debit,
+                        CreditAccount = credit,
                         Recurrence = recurrence,
                         ExpectedAmount = amount
                     };
@@ -44,8 +38,8 @@ namespace DLPMoneyTracker.BusinessLogic.Factories
                     {
                         UID = uid,
                         Description = desc,
-                        DebitAccount = accountRepository.GetAccountByUID(debit),
-                        CreditAccount = accountRepository.GetAccountByUID(credit),
+                        DebitAccount = debit,
+                        CreditAccount = credit,
                         Recurrence = recurrence,
                         ExpectedAmount = amount
                     };
@@ -54,8 +48,8 @@ namespace DLPMoneyTracker.BusinessLogic.Factories
                     {
                         UID = uid,
                         Description = desc,
-                        DebitAccount = accountRepository.GetAccountByUID(debit),
-                        CreditAccount = accountRepository.GetAccountByUID(credit),
+                        DebitAccount = debit,
+                        CreditAccount = credit,
                         Recurrence = recurrence,
                         ExpectedAmount = amount
                     };
@@ -64,8 +58,8 @@ namespace DLPMoneyTracker.BusinessLogic.Factories
                     {
                         UID = uid,
                         Description = desc,
-                        DebitAccount = accountRepository.GetAccountByUID(debit),
-                        CreditAccount = accountRepository.GetAccountByUID(credit),
+                        DebitAccount = debit,
+                        CreditAccount = credit,
                         Recurrence = recurrence,
                         ExpectedAmount = amount
                     };

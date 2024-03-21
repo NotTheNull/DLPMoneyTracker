@@ -9,19 +9,21 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.SQL.Data
 {
-    
+
 
     public class TransactionBatch
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public Guid BatchUID { get; set; }
+        public Guid BatchUID { get; set; } = Guid.NewGuid();
         public DateTime EnteredDateUTC { get; set; } = DateTime.UtcNow; // Should not be set by user
         public DateTime TransactionDate { get; set; } = DateTime.Today;
         public TransactionType BatchType { get; set; } = TransactionType.NotSet;
 
         [Required, StringLength(200)]
         public string Description { get; set; } = string.Empty;
+
+        public List<TransactionDetail> Details { get; set; }
 
     }
 }
