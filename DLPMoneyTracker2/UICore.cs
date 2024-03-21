@@ -43,7 +43,9 @@ namespace DLPMoneyTracker2
         private static void ConfigureServices(ServiceCollection services)
         {
 
-            // TODO: Swap these to the SQL repository when ready
+            // TODO: Create a means of converting between the repositories
+            // TODO: Create a JSON config file to hold WHICH repository the system should read from
+            // TODO: Update this section based on the JSON config setting
             // Repositories
             services.AddSingleton<ILedgerAccountRepository, JSONLedgerAccountRepository>();
             services.AddSingleton<IBudgetPlanRepository, JSONBudgetPlanRepository>();
