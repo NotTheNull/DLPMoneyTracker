@@ -27,6 +27,26 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
             }
         }
 
+        public List<IJournalAccount> GetFullList()
+        {
+            List<IJournalAccount> listAccountsFinal = new List<IJournalAccount>();
+            using (DataContext context = new DataContext())
+            {
+                var listAccounts = context.Accounts.ToList();
+                if (listAccounts?.Any() != true) return listAccountsFinal;
+
+                SQLSourceToJournalAccountAdapter adapter = new SQLSourceToJournalAccountAdapter();
+                JournalAccountFactory factory = new JournalAccountFactory();
+                foreach (var account in listAccounts)
+                {
+                    adapter.ImportSource(account);
+                    listAccountsFinal.Add(factory.Build(adapter));
+                }
+            }
+
+            return listAccountsFinal;
+        }
+
         public List<IJournalAccount> GetAccountsBySearch(JournalAccountSearch search)
         {
             List<IJournalAccount> listAccountsFinal = new List<IJournalAccount>();
@@ -59,6 +79,14 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
             }
 
             return listAccountsFinal;
+        }
+
+        public int GetRecordCount()
+        {
+            using (DataContext context = new DataContext())
+            {
+                return context.Accounts.Count();
+            }
         }
 
         public void SaveJournalAccount(IJournalAccount account)

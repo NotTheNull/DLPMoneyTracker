@@ -10,10 +10,12 @@ using DLPMoneyTracker.BusinessLogic.UseCases.Transactions;
 using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
 using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Plugins.JSON.Repositories;
+using DLPMoneyTracker.Plugins.SQL.Repositories;
 using DLPMoneyTracker2.BankReconciliation;
 using DLPMoneyTracker2.Config.AddEditBudgetPlans;
 using DLPMoneyTracker2.Config.AddEditLedgerAccounts;
 using DLPMoneyTracker2.Config.AddEditMoneyAccounts;
+using DLPMoneyTracker2.Conversion;
 using DLPMoneyTracker2.LedgerEntry;
 using DLPMoneyTracker2.Main.AccountSummary;
 using DLPMoneyTracker2.Main.BankReconciliation;
@@ -43,10 +45,20 @@ namespace DLPMoneyTracker2
         private static void ConfigureServices(ServiceCollection services)
         {
 
+            
+            // Repositories
+            services.AddSingleton<SQLBankReconciliationRepository>();
+            services.AddSingleton<SQLLedgerAccountRepository>();
+            services.AddSingleton<SQLBudgetPlanRepository>();
+            services.AddSingleton<SQLTransactionRepository>();
+            services.AddSingleton<JSONLedgerAccountRepository>();
+            services.AddSingleton<JSONBudgetPlanRepository>();
+            services.AddSingleton<JSONTransactionRepository>();
+            services.AddSingleton<JSONBankReconciliationRepository>();
+
             // TODO: Create a means of converting between the repositories
             // TODO: Create a JSON config file to hold WHICH repository the system should read from
             // TODO: Update this section based on the JSON config setting
-            // Repositories
             services.AddSingleton<ILedgerAccountRepository, JSONLedgerAccountRepository>();
             services.AddSingleton<IBudgetPlanRepository, JSONBudgetPlanRepository>();
             services.AddSingleton<ITransactionRepository, JSONTransactionRepository>();
@@ -134,6 +146,9 @@ namespace DLPMoneyTracker2
             // Other models
             services.AddTransient<LedgerAccountVM>();
             services.AddTransient<MoneyAccountVM>();
+
+            services.AddTransient<JSONConversionVM>();
+            services.AddTransient<JSONConversion>();
 
             
         }

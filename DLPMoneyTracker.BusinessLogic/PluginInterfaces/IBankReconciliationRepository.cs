@@ -14,5 +14,6 @@ namespace DLPMoneyTracker.BusinessLogic.PluginInterfaces
         List<BankReconciliationOverviewDTO> GetFullList();
         List<IMoneyTransaction> GetReconciliationTransactions(Guid accountUID, DateRange statementDates);
         void SaveReconciliation(BankReconciliationDTO dto);
+        int GetRecordCount();
     }
 }

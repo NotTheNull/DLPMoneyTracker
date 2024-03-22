@@ -103,6 +103,11 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             return this.AccountList.FirstOrDefault(x => x.Id == uid);
         }
 
+        public List<IJournalAccount> GetFullList()
+        {
+            return this.AccountList.ToList();
+        }
+
         public List<IJournalAccount> GetAccountsBySearch(JournalAccountSearch search)
         {
             if (search.JournalTypes.Any() != true) return null;
@@ -136,6 +141,11 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             }
 
             this.SaveToFile();
+        }
+
+        public int GetRecordCount()
+        {
+            return this.AccountList.Count;
         }
     }
 }

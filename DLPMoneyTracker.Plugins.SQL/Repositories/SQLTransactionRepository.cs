@@ -87,6 +87,25 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
             }
         }
 
+        public List<IMoneyTransaction> GetFullList()
+        {
+            List<IMoneyTransaction> listMoneyFinal = new List<IMoneyTransaction>();
+            using (DataContext context = new DataContext())
+            {
+                var listRecords = context.TransactionBatches.Include(x => x.Details).ToList();
+                if (listRecords?.Any() != true) return listMoneyFinal;
+
+                SQLSourceToTransactionAdapter adapter = new SQLSourceToTransactionAdapter(context);
+                foreach (var record in listRecords)
+                {
+                    adapter.ImportSource(record);
+                    listMoneyFinal.Add(new MoneyTransaction(adapter));
+                }
+
+            }
+            return listMoneyFinal;
+        }
+
         public List<IMoneyTransaction> Search(MoneyRecordSearch search)
         {
             List<IMoneyTransaction> listMoneyFinal = new List<IMoneyTransaction>();
@@ -116,6 +135,14 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
             }
 
             return listMoneyFinal;
+        }
+
+        public long GetRecordCount()
+        {
+            using (DataContext context = new DataContext())
+            {
+                return context.TransactionBatches.LongCount();
+            }
         }
     }
 }

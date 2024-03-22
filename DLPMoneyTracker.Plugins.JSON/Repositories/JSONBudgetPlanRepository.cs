@@ -123,7 +123,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
 
         public List<IBudgetPlan> GetFullList()
         {
-            return this.BudgetPlanList;
+            return this.BudgetPlanList.ToList();
         }
 
         public void DeletePlan(Guid planUID)
@@ -150,6 +150,11 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             }
 
             this.SaveToFile();
+        }
+
+        public int GetRecordCount()
+        {
+            return this.BudgetPlanList.Count;
         }
     }
 }

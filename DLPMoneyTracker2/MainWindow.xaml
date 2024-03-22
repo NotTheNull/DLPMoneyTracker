@@ -26,9 +26,10 @@
                 <Menu>
                     <MenuItem Header="_File">
 
-                        <MenuItem x:Name="MenuNewYearSetup"
-                                  Header="_Setup New Year"
-                                  Click="MenuNewYearSetup_Click" />
+                        <MenuItem x:Name="MenuConvertData"
+                                  Header="_Convert Data"
+                                  Click="MenuConvertData_Click"
+                                   />
 
                         <MenuItem x:Name="MenuExit"
                                   Header="_Exit"

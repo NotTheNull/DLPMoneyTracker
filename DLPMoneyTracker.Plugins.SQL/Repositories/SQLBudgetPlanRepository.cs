@@ -120,5 +120,13 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
             return listPlanFinal;
         }
+
+        public int GetRecordCount()
+        {
+            using(DataContext context = new DataContext())
+            {
+                return context.BudgetPlans.Count();
+            }
+        }
     }
 }

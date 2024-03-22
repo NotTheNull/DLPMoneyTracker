@@ -148,6 +148,14 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
                 context.SaveChanges();
             }
         }
+
+        public int GetRecordCount()
+        {
+            using (DataContext context = new DataContext())
+            {
+                return context.Reconciliations.Count();
+            }
+        }
     }
 
     public class BadReconciliationException : Exception

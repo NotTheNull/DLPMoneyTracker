@@ -2,6 +2,7 @@
 using DLPMoneyTracker2.Config.AddEditBudgetPlans;
 using DLPMoneyTracker2.Config.AddEditLedgerAccounts;
 using DLPMoneyTracker2.Config.AddEditMoneyAccounts;
+using DLPMoneyTracker2.Conversion;
 using DLPMoneyTracker2.LedgerEntry;
 using DLPMoneyTracker2.Main.AccountSummary;
 using DLPMoneyTracker2.Main.BankReconciliation;
@@ -116,22 +117,17 @@ namespace DLPMoneyTracker2
             window.Show();
         }
 
-        /// <summary>
-        /// If its December, build the New year.  If it's January, rebuild the curren tyear
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MenuNewYearSetup_Click(object sender, RoutedEventArgs e)
-        {
-            // TODO: Remove this feature; no longer needed
-            //if (DateTime.Today.Month == 12) NewYearBuilder.SetupNewYear();
-            //else if (DateTime.Today.Month == 1) NewYearBuilder.RebuildCurrentYear();
-        }
-
+        
         private void MenuRecordDebtAdjustment_Click(object sender, RoutedEventArgs e)
         {
             DebtAdjustmentJournalEntryVM viewModel = UICore.DependencyHost.GetRequiredService<DebtAdjustmentJournalEntryVM>();
             RecordJournalEntry window = new RecordJournalEntry(viewModel);
+            window.Show();
+        }
+
+        private void MenuConvertData_Click(object sender, RoutedEventArgs e)
+        {
+            JSONConversion window = UICore.DependencyHost.GetRequiredService<JSONConversion>();
             window.Show();
         }
     }

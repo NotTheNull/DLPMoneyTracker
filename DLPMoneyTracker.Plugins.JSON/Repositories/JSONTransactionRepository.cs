@@ -85,6 +85,12 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             File.WriteAllText(this.FilePath, json);
         }
 
+
+        public List<IMoneyTransaction> GetFullList()
+        {
+            return this.TransactionList.ToList();
+        }
+
         public List<IMoneyTransaction> Search(MoneyRecordSearch search)
         {
             var listRecords = this.TransactionList.Where(x => search.DateRange.IsWithinRange(x.TransactionDate));
@@ -194,6 +200,11 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             }
 
             this.SaveToFile();
+        }
+
+        public long GetRecordCount()
+        {
+            return this.TransactionList.Count;
         }
     }
 }

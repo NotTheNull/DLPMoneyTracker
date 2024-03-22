@@ -116,7 +116,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
 
         public List<BankReconciliationOverviewDTO> GetFullList()
         {
-            return BankReconciliationList;
+            return BankReconciliationList.ToList();
         }
 
         public List<IMoneyTransaction> GetReconciliationTransactions(Guid accountUID, DateRange statementDates)
@@ -152,6 +152,13 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             }
 
             this.SaveToFile(dto.BankAccount.Id);
+        }
+
+        public int GetRecordCount()
+        {
+            return this.BankReconciliationList
+                .SelectMany(s => s.ReconciliationList)
+                .Count();
         }
     }
 }

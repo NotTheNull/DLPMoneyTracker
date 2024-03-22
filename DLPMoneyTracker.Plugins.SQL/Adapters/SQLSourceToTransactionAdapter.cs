@@ -1,5 +1,6 @@
 ﻿using DLPMoneyTracker.BusinessLogic.AdapterInterfaces;
 using DLPMoneyTracker.BusinessLogic.Factories;
+using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.SQL.Data;
@@ -52,7 +53,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
             ArgumentNullException.ThrowIfNull(transaction);
 
             this.UID = transaction.UID;
-            this.TransactionDate = transaction.TransactionDate;
+            this.TransactionDate = transaction.TransactionDate < Common.MINIMUM_DATE ? Common.MINIMUM_DATE : transaction.TransactionDate; 
             this.JournalEntryType = transaction.JournalEntryType;
             this.DebitAccount = transaction.DebitAccount;
             this.DebitBankDate = transaction.DebitBankDate;
