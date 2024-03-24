@@ -9,7 +9,7 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
 {
     public class SpecialAccount : IJournalAccount
     {
-        public static SpecialAccount InitialBalance        { get { return new SpecialAccount() { Id = Guid.Empty, Description = "*STARTING BALANCE*" }; } }
+        public static SpecialAccount InitialBalance        { get { return new SpecialAccount() { Id = new Guid("11111111-1111-1111-111111111111"), Description = "*STARTING BALANCE*" }; } }
         public static SpecialAccount UnlistedAdjusment        { get { return new SpecialAccount() { Id = new Guid("99999999-8888-7777-6666-555555555555"), Description = "*CORRECTION*" }; } }
         public static SpecialAccount DebtInterest        { get { return new SpecialAccount() { Id = new Guid("DDDDDDDD-EEEE-BBBB-FFFF-999999999999"), Description = "*INTEREST ACCRUES*" }; } }
         public static SpecialAccount DebtReduction        { get { return new SpecialAccount() { Id = new Guid("FFFFFFFF-0000-0000-0000-999999999999"), Description = "*DEBT REDUCTION*" }; } }

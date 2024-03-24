@@ -29,19 +29,20 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
         void Copy(IJournalAccount cpy);
     }
 
-    public interface IMoneyAccount
+    public interface IMoneyAccount : IJournalAccount
     {
 
     }
 
-    public interface ILiabilityAccount
+    public interface ILiabilityAccount : IJournalAccount
     {
         
     }
 
-    public interface INominalAccount
+    public interface INominalAccount : IJournalAccount
     {
-
+        // Controls whether the Income's / Expense's subtotal is displayed on the account's Card UI
+        public bool IsTracked { get; set; }
     }
 
     

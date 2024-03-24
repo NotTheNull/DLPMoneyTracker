@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Core.Models.LedgerAccounts
 {
-    public class PayableAccount : IJournalAccount, INominalAccount
+    public class PayableAccount : INominalAccount
     {
         public Guid Id { get; set; }
 
