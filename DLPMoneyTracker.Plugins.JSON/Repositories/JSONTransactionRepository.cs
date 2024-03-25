@@ -60,10 +60,18 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             if (dataList?.Any() != true) return;
 
             JSONSourceToTransactionAdapter adapter = new JSONSourceToTransactionAdapter(accountRepository);
+            bool reSaveFile = false; // Mainly here to help correct the change for Initial Balance accounts
             foreach(var data in dataList)
             {
                 adapter.ImportSource(data);
+                reSaveFile = reSaveFile || ( adapter.CreditAccountId != data.CreditAccountId || adapter.DebitAccountId != data.DebitAccountId);
                 this.TransactionList.Add(new MoneyTransaction(adapter));
+            }
+
+            // TODO: Remove this after updating accounts accordingly
+            if(reSaveFile)
+            {
+                this.SaveToFile();
             }
         }
 

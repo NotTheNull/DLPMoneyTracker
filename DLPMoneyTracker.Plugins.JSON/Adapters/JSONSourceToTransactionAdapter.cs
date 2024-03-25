@@ -28,7 +28,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
         public string Description { get; set; } = string.Empty;
         public decimal TransactionAmount { get; set; }
 
-        
+
         public IJournalAccount DebitAccount { get; set; }
         public Guid DebitAccountId { get { return DebitAccount?.Id ?? Guid.Empty; } }
         public string DebitAccountName { get { return DebitAccount?.Description ?? string.Empty; } }
@@ -84,8 +84,23 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             this.DebitBankDate = acct.DebitBankDate;
             this.CreditBankDate = acct.CreditBankDate;
 
-            this.DebitAccount = accountRepository.GetAccountByUID(acct.DebitAccountId);
-            this.CreditAccount = accountRepository.GetAccountByUID(acct.CreditAccountId);
+            if (this.DebitAccount.Id == Guid.Empty)
+            {
+                this.DebitAccount = SpecialAccount.InitialBalance;
+            }
+            else
+            {
+                this.DebitAccount = accountRepository.GetAccountByUID(acct.DebitAccountId);
+            }
+
+            if (this.CreditAccount.Id == Guid.Empty)
+            {
+                this.CreditAccount = SpecialAccount.InitialBalance;
+            }
+            else
+            {
+                this.CreditAccount = accountRepository.GetAccountByUID(acct.CreditAccountId);
+            }
         }
     }
 }

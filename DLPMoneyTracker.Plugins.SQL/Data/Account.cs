@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,6 +22,8 @@ namespace DLPMoneyTracker.Plugins.SQL.Data
         public LedgerType AccountType { get; set; } = LedgerType.NotSet;
         public int MainTabSortingId { get; set; } = 0; // Helps determine priority sorting when displaying the accounts on the main tab
         public DateTime? DateClosedUTC { get; set; }
+
+        public bool IsTracked { get; set; } = false; // Only available for Nominal accounts
 
     }
 }

@@ -16,12 +16,17 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
         NotSet
     }
 
-
+    // TODO: Add some General Ledger style ids to help group these together
     public interface IJournalAccount
     {
         Guid Id { get; }
         string Description { get; }
         LedgerType JournalType { get; }
+        string LedgerNumber { get; } // Combination of Account Type #, Category #, Subledger #
+        int CategoryId { get; }
+        int SubLedgerId { get; } // 0 = is always the main account; all others will be a Fund type 
+
+
         int OrderBy { get; }
         DateTime? DateClosedUTC { get; set; }
 
@@ -41,10 +46,18 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
 
     public interface INominalAccount : IJournalAccount
     {
-        // Controls whether the Income's / Expense's subtotal is displayed on the account's Card UI
-        public bool IsTracked { get; set; }
+
     }
 
-    
+    // Funds serve as sub-ledgers for Money Accounts 
+
+    // These are Income / Expense Accounts linked to a Money Account; they total into the main Receivable / Payable account
+    // Incomes should only be linked to a Bank account
+    // Expenses can be any money account
+    public interface IFundAccount : IJournalAccount
+    {
+        IMoneyAccount BankAccount { get; } // This is the account the funds are paired with
+    }
+
 
 }

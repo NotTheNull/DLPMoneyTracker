@@ -162,12 +162,12 @@
             
             <TextBlock Text="Display Order"
                        Grid.Column="1"
-                       Grid.Row="4"
+                       Grid.Row="3"
                        Style="{StaticResource HeaderLabel}" />
 
             <TextBox x:Name="txtDisplayOrder"
                      Grid.Column="2"
-                     Grid.Row="4"
+                     Grid.Row="3"
                      Width="80"
                      Background="{Binding Path=CanEdit, Converter={StaticResource convertEnabledToBgColor}, UpdateSourceTrigger=PropertyChanged}"
                      IsEnabled="{Binding Path=CanEdit, UpdateSourceTrigger=PropertyChanged}"

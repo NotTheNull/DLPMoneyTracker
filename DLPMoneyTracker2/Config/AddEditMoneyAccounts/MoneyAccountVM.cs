@@ -1,5 +1,6 @@
 ﻿using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
+using DLPMoneyTracker.Core;
 using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
@@ -9,14 +10,19 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
 {
     public class MoneyAccountVM : BaseViewModel, IJournalAccount
     {
-        
+        private readonly IGetNextCategoryIdUseCase getNextCategoryUseCase;
+        private readonly IGetJournalAccountByLedgerNumberUseCase getAccountByLedgerNumberUseCase;
         private readonly ISaveJournalAccountUseCase saveAccountUseCase;
         private readonly List<LedgerType> _listValidTypes = new List<LedgerType>() { LedgerType.Bank, LedgerType.LiabilityCard, LedgerType.LiabilityLoan };
 
-        //public static List<LedgerType> ValidTypes        { get { return _listValidTypes; } }
 
-        public MoneyAccountVM(ISaveJournalAccountUseCase saveAccountUseCase) : base()
+        public MoneyAccountVM(
+            IGetNextCategoryIdUseCase getNextCategoryUseCase,
+            IGetJournalAccountByLedgerNumberUseCase getAccountByLedgerNumberUseCase,
+            ISaveJournalAccountUseCase saveAccountUseCase) : base()
         {
+            this.getNextCategoryUseCase = getNextCategoryUseCase;
+            this.getAccountByLedgerNumberUseCase = getAccountByLedgerNumberUseCase;
             this.saveAccountUseCase = saveAccountUseCase;
             this.Clear();
         }
@@ -89,6 +95,12 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
         }
         public int OrderBy { get { return DisplayOrder; } }
 
+        public string LedgerNumber { get { return string.Format("{0}-{1}-{2}", JournalType.ToLedgerNumber(), CategoryId, SubLedgerId); } }
+
+        public int CategoryId { get; set; } = -1;
+
+        public int SubLedgerId { get; set; } = 0;
+
         public void Clear()
         {
             Id = Guid.Empty;
@@ -107,12 +119,29 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             JournalType = account.JournalType;
             DateClosedUTC = account.DateClosedUTC;
             DisplayOrder = account.OrderBy;
+            this.CategoryId = account.CategoryId;
+            this.SubLedgerId = account.SubLedgerId;
         }
 
         public void SaveAccount()
         {
             if (string.IsNullOrWhiteSpace(_desc)) return;
             if (JournalType == LedgerType.NotSet) return;
+
+            int nextCategoryId = getNextCategoryUseCase.Execute();
+            if(this.CategoryId > 0)
+            {
+                var account = getAccountByLedgerNumberUseCase.Execute(this.LedgerNumber);
+                if(account.Id != this.Id)
+                {
+                    this.CategoryId = nextCategoryId;
+                }
+            }
+            else
+            {
+                this.CategoryId = nextCategoryId;
+            }
+            
 
             saveAccountUseCase.Execute(this);
             

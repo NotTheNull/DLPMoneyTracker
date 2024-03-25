@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Core
 {
-    public static class StringOverrides
+    public static class GeneralOverrides
     {
         public static string ToDisplayText(this LedgerType journalType)
         {
@@ -34,5 +34,26 @@ namespace DLPMoneyTracker.Core
             }
         }
 
+
+        public static int ToLedgerNumber(this LedgerType journalType)
+        {
+            switch(journalType)
+            {
+                case LedgerType.Bank:
+                    return 1;
+                case LedgerType.LiabilityCard:
+                    return 2;
+                case LedgerType.LiabilityLoan:
+                    return 3;
+                case LedgerType.Receivable:
+                    return 4;
+                case LedgerType.Payable:
+                    return 5;
+                case LedgerType.NotSet:
+                    return 6;
+                default:
+                    return 0;
+            }
+        }
     }
 }
