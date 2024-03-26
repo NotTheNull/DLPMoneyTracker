@@ -16,6 +16,13 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
         NotSet
     }
 
+    public enum BudgetTrackingType
+    {
+        DO_NOT_TRACK,
+        Fixed, // Expense (Utility Bill) or Income (Paycheck)
+        Variable // Expense (Grocery) or Income (Roommates)
+    }
+
     // TODO: Add some General Ledger style ids to help group these together
     public interface IJournalAccount
     {
@@ -43,7 +50,7 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
 
     public interface INominalAccount : IJournalAccount
     {
-
+        BudgetTrackingType BudgetType { get; }
     }
 
 

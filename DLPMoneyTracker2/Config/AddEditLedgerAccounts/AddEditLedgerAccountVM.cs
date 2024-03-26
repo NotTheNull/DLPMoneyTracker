@@ -20,11 +20,8 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             this.getLedgerAccountsUseCase = getLedgerAccountsUseCase;
             this.deleteAcountUseCase = deleteAcountUseCase;
             _editAccount = UICore.DependencyHost.GetRequiredService<LedgerAccountVM>();
-            this.JournalTypeList = new List<SpecialDropListItem<LedgerType>>
-            {
-                new SpecialDropListItem<LedgerType>("Receivable", LedgerType.Receivable),
-                new SpecialDropListItem<LedgerType>("Payable", LedgerType.Payable)
-            };
+            
+
             this.ReloadAccounts();
         }
 
@@ -33,15 +30,27 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 
         public bool CanEdit { get { return _editAccount?.DateClosedUTC == null; } }
 
-        public List<SpecialDropListItem<LedgerType>> JournalTypeList { get; set; }
+        public List<SpecialDropListItem<LedgerType>> JournalTypeList { get; set; } = new List<SpecialDropListItem<LedgerType>>()
+            {
+                new SpecialDropListItem<LedgerType>("Receivable", LedgerType.Receivable),
+                new SpecialDropListItem<LedgerType>("Payable", LedgerType.Payable)
+            };
+        public List<SpecialDropListItem<BudgetTrackingType>> BudgetTypeList { get; set; } = new List<SpecialDropListItem<BudgetTrackingType>>()
+        {
+            new SpecialDropListItem<BudgetTrackingType>("DO NOT TRACK", BudgetTrackingType.DO_NOT_TRACK),
+            new SpecialDropListItem<BudgetTrackingType>("Fixed Expense/Income", BudgetTrackingType.Fixed),
+            new SpecialDropListItem<BudgetTrackingType>("Variable Expense/Income", BudgetTrackingType.Variable)
+        };
+
+
+        #region Editing Data Fields
 
         private LedgerAccountVM _editAccount;
 
-        public LedgerAccountVM EditAccount { get { return _editAccount; } }
 
         public string Description
         {
-            get { return _editAccount?.Description ?? string.Empty; }
+            get { return _editAccount.Description; }
             set
             {
                 _editAccount.Description = value;
@@ -51,7 +60,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 
         public LedgerType AccountType
         {
-            get { return _editAccount?.JournalType ?? LedgerType.NotSet; }
+            get { return _editAccount.JournalType; }
             set
             {
                 _editAccount.JournalType = value;
@@ -59,6 +68,17 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             }
         }
 
+        public BudgetTrackingType BudgetType
+        {
+            get { return _editAccount.BudgetType; }
+            set
+            {
+                _editAccount.BudgetType = value;
+                NotifyPropertyChanged(nameof(BudgetType));
+            }
+        }
+
+        #endregion
 
 
         #region Commands
@@ -153,9 +173,9 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 
         private void NotifyAll()
         {
-            NotifyPropertyChanged(nameof(EditAccount));
             NotifyPropertyChanged(nameof(Description));
             NotifyPropertyChanged(nameof(AccountType));
+            NotifyPropertyChanged(nameof(BudgetType));
         }
     }
 }

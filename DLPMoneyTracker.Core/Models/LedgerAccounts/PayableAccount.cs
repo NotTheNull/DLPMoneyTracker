@@ -18,7 +18,8 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
         public int OrderBy { get; set; }
 
         public DateTime? DateClosedUTC { get; set; }
-        
+
+        public BudgetTrackingType BudgetType { get; set; }
 
         public PayableAccount()
         {

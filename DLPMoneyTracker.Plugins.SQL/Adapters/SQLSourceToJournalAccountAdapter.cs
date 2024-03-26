@@ -21,6 +21,9 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
 
         public DateTime? DateClosedUTC { get; set; }
 
+        public BudgetTrackingType BudgetType { get; set; } = BudgetTrackingType.DO_NOT_TRACK;
+
+
         public void Copy(IJournalAccount cpy)
         {
             ArgumentNullException.ThrowIfNull(cpy);
@@ -30,6 +33,11 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
             this.JournalType = cpy.JournalType;
             this.OrderBy = cpy.OrderBy;
             this.DateClosedUTC = cpy.DateClosedUTC;
+            
+            if(cpy is INominalAccount nominal)
+            {
+                this.BudgetType = nominal.BudgetType;
+            }
         }
 
         public void ExportSource(ref Account acct)
@@ -41,6 +49,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
             acct.AccountType = this.JournalType;
             acct.MainTabSortingId = this.OrderBy;
             acct.DateClosedUTC = this.DateClosedUTC;
+            acct.BudgetType = this.BudgetType;
         }
 
         public void ImportSource(Account acct)
@@ -52,6 +61,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
             this.JournalType = acct.AccountType;
             this.OrderBy = acct.MainTabSortingId;
             this.DateClosedUTC = acct.DateClosedUTC;
+            this.BudgetType = acct.BudgetType;
         }
     }
 }

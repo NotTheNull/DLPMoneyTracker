@@ -27,6 +27,12 @@
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
+        <Style x:Key="LocalComboBox" TargetType="ComboBox">
+            <Setter Property="Margin" Value="10, 5, 5, 5"/>
+            <Setter Property="MinWidth" Value="180"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+        
         <core:BindingProxy x:Key="proxy" Data="{Binding}" />
     </Window.Resources>
 
@@ -80,15 +86,6 @@
                                 <StackPanel Orientation="Horizontal"
                                             Visibility="{Binding Path=IsClosed, Converter={StaticResource convertBoolToVisibility}, ConverterParameter=R}">
 
-                                    <Button x:Name="btnAddSubLedger"
-                                            ToolTip="Add SubLedger Account"
-                                            Style="{StaticResource MenuButton}"
-                                            Visibility="{Binding Path=CanHaveSubLedger, Converter={StaticResource convertBoolToVisibility}}"
-                                            Command="{Binding Path=Data.CommandAddSubLedger, Source={StaticResource proxy}}"
-                                            CommandParameter="{Binding}">
-                                        <Image Source="/Icons/Add-New-256.png" />
-                                    </Button>
-                                    
                                     <Button x:Name="btnEdit"
                                         ToolTip="Edit Account"
                                         Style="{StaticResource MenuButton}"
@@ -155,20 +152,11 @@
                        Grid.Row="2"
                        Style="{StaticResource HeaderLabel}" />
 
-            <TextBlock Text="{Binding Path=DisplayJournalType}"
-                       Grid.Column="2"
-                       Grid.Row="2"
-                       Visibility="{Binding Path=IsSubLedger, Converter={StaticResource convertBoolToVisibility}, UpdateSourceTrigger=PropertyChanged}"
-                       />
 
             <ComboBox x:Name="cboAccountType"
                       Grid.Column="2"
                       Grid.Row="2"
-                      Margin="10, 5, 5, 5"
-                      MinWidth="180"
-                      Width="Auto"
-                      HorizontalAlignment="Left"
-                      Visibility="{Binding Path=IsSubLedger, Converter={StaticResource convertBoolToVisibility}, ConverterParameter=R, UpdateSourceTrigger=PropertyChanged}"
+                      Style="{StaticResource LocalComboBox}"
                       IsEnabled="{Binding Path=CanEdit, UpdateSourceTrigger=PropertyChanged}"
                       ItemsSource="{Binding Path=JournalTypeList}"
                       DisplayMemberPath="Display"
@@ -176,6 +164,21 @@
                       SelectedValue="{Binding Path=AccountType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
 
+            <TextBlock Text="Budget Type"
+                       Grid.Column="1"
+                       Grid.Row="3"
+                       Style="{StaticResource HeaderLabel}"/>
+
+            <ComboBox x:Name="cboBudgetType"
+                      Grid.Column="2"
+                      Grid.Row="3"
+                      Style="{StaticResource LocalComboBox}"
+                      IsEnabled="{Binding Path=CanEdit, UpdateSourceTrigger=PropertyChanged}"
+                      ItemsSource="{Binding Path=BudgetTypeList}"
+                      DisplayMemberPath="Display"
+                      SelectedValuePath="Value"
+                      SelectedValue="{Binding Path=BudgetType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                />
 
 
         </Grid>

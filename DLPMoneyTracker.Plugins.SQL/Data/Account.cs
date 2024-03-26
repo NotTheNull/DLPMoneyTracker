@@ -23,7 +23,8 @@ namespace DLPMoneyTracker.Plugins.SQL.Data
         public int MainTabSortingId { get; set; } = 0; // Helps determine priority sorting when displaying the accounts on the main tab
         public DateTime? DateClosedUTC { get; set; }
 
-        public bool IsTracked { get; set; } = false; // Only available for Nominal accounts
+        // For Nominal Accounts
+        public BudgetTrackingType BudgetType { get; set; } = BudgetTrackingType.DO_NOT_TRACK; 
 
     }
 }

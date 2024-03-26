@@ -21,6 +21,8 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
 
         public DateTime? DateClosedUTC { get; set; }
 
+        public BudgetTrackingType BudgetType { get; set; } = BudgetTrackingType.DO_NOT_TRACK;
+
         public void Copy(IJournalAccount cpy)
         {
             ArgumentNullException.ThrowIfNull(cpy);
@@ -30,6 +32,11 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             this.JournalType = cpy.JournalType;
             this.OrderBy = cpy.OrderBy;
             this.DateClosedUTC = cpy.DateClosedUTC;
+
+            if(cpy is INominalAccount nominal)
+            {
+                this.BudgetType = nominal.BudgetType;
+            }
         }
 
         public void ExportSource(ref JournalAccountJSON acct)
@@ -41,6 +48,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             acct.JournalType = this.JournalType;
             acct.OrderBy = this.OrderBy;
             acct.DateClosedUTC = this.DateClosedUTC;
+            acct.BudgetType = this.BudgetType;
 
             // All other fields in the JSON are lost in this conversion as I am rethinking them
         }
@@ -55,6 +63,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             this.JournalType = acct.JournalType;
             this.OrderBy = acct.OrderBy;
             this.DateClosedUTC = acct.DateClosedUTC;
+            this.BudgetType = acct.BudgetType;
         }
     }
 }

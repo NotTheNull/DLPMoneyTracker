@@ -9,7 +9,7 @@ using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts;
 
 namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 {
-    public class LedgerAccountVM : BaseViewModel, IJournalAccount
+    public class LedgerAccountVM : BaseViewModel, INominalAccount
     {
 
         private readonly List<LedgerType> _listValidTypes = new List<LedgerType>() { LedgerType.Payable, LedgerType.Receivable };
@@ -96,10 +96,20 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             }
         }
 
+        private BudgetTrackingType _budgetType;
 
-        
+        public BudgetTrackingType BudgetType
+        {
+            get { return _budgetType; }
+            set
+            {
+                _budgetType = value;
+                NotifyPropertyChanged(nameof(BudgetType));
+                NotifyPropertyChanged(nameof(DisplayBudgetType));
+            }
+        }
 
-
+        public string DisplayBudgetType { get { return this.BudgetType.ToDisplayText(); } }
 
 
         public void Clear()
@@ -115,10 +125,14 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             ArgumentNullException.ThrowIfNull(cpy);
             if (!_listValidTypes.Contains(cpy.JournalType)) throw new InvalidCastException(string.Format("[{0} - {1}] is not a valid Ledger Account", cpy.JournalType.ToString(), cpy.Description));
 
-            Id = cpy.Id;
-            Description = cpy.Description;
-            JournalType = cpy.JournalType;
-            DateClosedUTC = cpy.DateClosedUTC;
+            if (cpy is INominalAccount account)
+            {
+                Id = account.Id;
+                Description = account.Description;
+                JournalType = account.JournalType;
+                DateClosedUTC = account.DateClosedUTC;
+                BudgetType = account.BudgetType;
+            }
         }
 
         public void CreateNewSubLedger(IJournalAccount mainAccount)

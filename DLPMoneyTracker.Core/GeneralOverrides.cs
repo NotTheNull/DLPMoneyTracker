@@ -34,6 +34,21 @@ namespace DLPMoneyTracker.Core
             }
         }
 
+        public static string ToDisplayText(this BudgetTrackingType budgetType)
+        {
+            switch(budgetType)
+            {
+                case BudgetTrackingType.DO_NOT_TRACK:
+                    return "DO NOT TRACK";
+                case BudgetTrackingType.Fixed:
+                    return "FIXED";
+                case BudgetTrackingType.Variable:
+                    return "VARIABLE";
+                default:
+                    return string.Empty;
+            }
+        }
+
 
         public static int ToLedgerNumber(this LedgerType journalType)
         {
