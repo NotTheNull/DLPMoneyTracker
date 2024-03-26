@@ -17,11 +17,6 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
         public int OrderBy { get; set; }
         public DateTime? DateClosedUTC { get; set; }
 
-        public string LedgerNumber { get { return string.Format("{0}-{1}-{2}", JournalType.ToLedgerNumber(), CategoryId, SubLedgerId); } }
-
-        public int CategoryId { get; set; } = -1;
-
-        public int SubLedgerId { get; set; } = -1;
 
         public BankAccount()
         {
@@ -41,8 +36,6 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
             this.Description = cpy.Description;
             this.OrderBy = cpy.OrderBy;
             this.DateClosedUTC = cpy.DateClosedUTC;
-            this.CategoryId = cpy.CategoryId;
-            this.SubLedgerId = cpy.SubLedgerId;
         }
 
     }

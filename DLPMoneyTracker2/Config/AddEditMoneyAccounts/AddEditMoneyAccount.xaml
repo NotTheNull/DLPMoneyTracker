@@ -134,7 +134,7 @@
                      Width="260"
                      Background="{Binding Path=CanEdit, Converter={StaticResource convertEnabledToBgColor}, UpdateSourceTrigger=PropertyChanged}"
                      IsEnabled="{Binding Path=CanEdit, UpdateSourceTrigger=PropertyChanged}"
-                     Text="{Binding Path=EditAccount.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                     Text="{Binding Path=Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <i:Interaction.Behaviors>
                     <behave:TextBoxFocusBehavior />
                 </i:Interaction.Behaviors>
@@ -157,7 +157,7 @@
                       ItemsSource="{Binding Path=JournalTypeList}"
                       DisplayMemberPath="Display"
                       SelectedValuePath="Value"
-                      SelectedValue="{Binding Path=EditAccount.JournalType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                      SelectedValue="{Binding Path=AccountType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
             
             <TextBlock Text="Display Order"

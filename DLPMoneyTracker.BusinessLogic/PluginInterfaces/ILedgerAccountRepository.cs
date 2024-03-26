@@ -53,8 +53,5 @@ namespace DLPMoneyTracker.BusinessLogic.PluginInterfaces
         List<IJournalAccount> GetAccountsBySearch(JournalAccountSearch search);
         void SaveJournalAccount(IJournalAccount account);
         int GetRecordCount();
-        int GetNextCategoryId();
-        int GetNextSubLedgerId(LedgerType accountType, int idCategory);
-        IJournalAccount GetAccountByLedgerNumber(string cPAId);
     }
 }

@@ -22,9 +22,6 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
         Guid Id { get; }
         string Description { get; }
         LedgerType JournalType { get; }
-        string LedgerNumber { get; } // Combination of Account Type #, Category #, Subledger #
-        int CategoryId { get; }
-        int SubLedgerId { get; } // 0 = is always the main account; all others will be a Fund type 
 
 
         int OrderBy { get; }
@@ -49,15 +46,32 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
 
     }
 
-    // Funds serve as sub-ledgers for Money Accounts 
 
-    // These are Income / Expense Accounts linked to a Money Account; they total into the main Receivable / Payable account
-    // Incomes should only be linked to a Bank account
-    // Expenses can be any money account
-    public interface IFundAccount : IJournalAccount
-    {
-        IMoneyAccount BankAccount { get; } // This is the account the funds are paired with
-    }
+    #region FUNDS IDEA
+    /*
+     * The idea was to have a system similar to "Envelopes of Cash" i.e. set aside money for a specific purpose
+     * MY problem is that I'm too far behind;  all of my expenses go onto the credit cards but the total debt exceeds my paychecks
+     * 
+     * Leaving this reminder here in case I ever want to revisit
+     * Will need to strip out the Ledger #s and Category Ids
+     * 
+     */
 
+
+
+    //// This is a sub-ledger of a "Bank" account that holds an allocation of money for a particular Expense
+    //// The point is for this to serve as a means of Budgeting by filtering my paycheck into various accounts with intended purpose
+    //public interface IFundAccount : IJournalAccount
+    //{
+
+    //}
+
+
+    //// This is a sub-ledger of a "Payable" account that is used to help balance the Fund accounts
+    //public interface IExpenseTrackingAccount : IJournalAccount
+    //{
+    //    IMoneyAccount MoneyAccount { get; } // This is the money account the expense is reported with
+    //}
+    #endregion
 
 }

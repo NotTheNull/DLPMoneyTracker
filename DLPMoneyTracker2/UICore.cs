@@ -87,10 +87,7 @@ namespace DLPMoneyTracker2
             services.AddTransient<ISaveReconciliationUseCase, SaveReconciliationUseCase>();
             services.AddTransient<IGetJournalAccountBalanceByMonthUseCase, GetJournalAccountBalanceByMonthUseCase>();
             services.AddTransient<IGetJournalAccountYTDUseCase, GetJournalAccountYTDUseCase>();
-            services.AddTransient<IGetNextCategoryIdUseCase, GetNextCategoryIdUseCase>();
-            services.AddTransient<IGetJournalAccountByLedgerNumberUseCase, GetJournalAccountByLedgerNumber>();
-            services.AddTransient<IGetNextSubLedgerIdUseCase, GetNextSubLedgerIdUseCase>();
-
+            
 
             // Factories
             services.AddTransient<JournalAccountFactory>();

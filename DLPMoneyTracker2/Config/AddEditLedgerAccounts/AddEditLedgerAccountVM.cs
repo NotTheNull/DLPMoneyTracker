@@ -11,19 +11,13 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
     public class AddEditLedgerAccountVM : BaseViewModel
     {
         private readonly IGetNominalAccountsUseCase getLedgerAccountsUseCase;
-        private readonly IGetMoneyAccountsUseCase getMoneyAccountsUseCase;
-        private readonly IGetNextSubLedgerIdUseCase getNextSubLedgerIdUseCase;
         private readonly IDeleteJournalAccountUseCase deleteAcountUseCase;
 
         public AddEditLedgerAccountVM(
             IGetNominalAccountsUseCase getLedgerAccountsUseCase,
-            IGetMoneyAccountsUseCase getMoneyAccountsUseCase,
-            IGetNextSubLedgerIdUseCase getNextSubLedgerIdUseCase,
             IDeleteJournalAccountUseCase deleteAcountUseCase) : base()
         {
             this.getLedgerAccountsUseCase = getLedgerAccountsUseCase;
-            this.getMoneyAccountsUseCase = getMoneyAccountsUseCase;
-            this.getNextSubLedgerIdUseCase = getNextSubLedgerIdUseCase;
             this.deleteAcountUseCase = deleteAcountUseCase;
             _editAccount = UICore.DependencyHost.GetRequiredService<LedgerAccountVM>();
             this.JournalTypeList = new List<SpecialDropListItem<LedgerType>>
@@ -64,23 +58,6 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                 NotifyPropertyChanged(nameof(AccountType));
             }
         }
-
-        public IMoneyAccount SelectedMoneyAccount
-        {
-            get { return _editAccount.BankAccount; }
-            set
-            {
-                _editAccount.BankAccount = value;
-                NotifyPropertyChanged(nameof(SelectedMoneyAccount));
-            }
-        }
-
-        public bool IsSubLedger { get { return _editAccount.IsSubLedger; } }
-
-
-
-        List<SpecialDropListItem<IMoneyAccount>> listMoneyAccounts = new List<SpecialDropListItem<IMoneyAccount>>();
-        public List<SpecialDropListItem<IMoneyAccount>> MoneyAccountList { get { return listMoneyAccounts; } }
 
 
 
@@ -154,27 +131,6 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             }
         }
 
-        private RelayCommand _cmdAddSubLedger;
-        public RelayCommand CommandAddSubLedger
-        {
-            get
-            {
-                return _cmdAddSubLedger ?? (_cmdAddSubLedger = new RelayCommand((objAccount) =>
-                {
-                    if (objAccount is IJournalAccount account)
-                    {
-                        _editAccount.Clear();
-                        _editAccount.Description = string.Format("{0} - Subledger Name", account.Description);
-                        _editAccount.JournalType = account.JournalType;
-                        _editAccount.CategoryId = account.CategoryId;
-                        _editAccount.SubLedgerId = getNextSubLedgerIdUseCase.Execute(_editAccount.JournalType, _editAccount.CategoryId);
-                        _editAccount.IsSubLedger = true;
-                        this.NotifyAll();
-                    }
-                }));
-            }
-        }
-
 
 
         #endregion Commands
@@ -193,15 +149,6 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                 this.AccountList.Add(vm);
             }
 
-            this.MoneyAccountList.Clear();
-            var listMoneyAccounts = getMoneyAccountsUseCase.Execute(false);
-            foreach (var account in listMoneyAccounts)
-            {
-                if (account is IMoneyAccount money)
-                {
-                    this.MoneyAccountList.Add(new SpecialDropListItem<IMoneyAccount>(money.Description, money));
-                }
-            }
         }
 
         private void NotifyAll()
@@ -209,8 +156,6 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             NotifyPropertyChanged(nameof(EditAccount));
             NotifyPropertyChanged(nameof(Description));
             NotifyPropertyChanged(nameof(AccountType));
-            NotifyPropertyChanged(nameof(SelectedMoneyAccount));
-            NotifyPropertyChanged(nameof(IsSubLedger));
         }
     }
 }

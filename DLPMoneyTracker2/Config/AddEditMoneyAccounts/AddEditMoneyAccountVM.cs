@@ -35,8 +35,41 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
 
         public ObservableCollection<MoneyAccountVM> AccountList { get { return _listAccounts; } }
 
+
+        #region Editing Data Fields
+
         private MoneyAccountVM _editAccount;
-        public MoneyAccountVM EditAccount { get { return _editAccount; } }
+
+        public LedgerType AccountType
+        {
+            get { return _editAccount.JournalType; }
+            set
+            {
+                _editAccount.JournalType = value;
+                NotifyPropertyChanged(nameof(AccountType));
+            }
+        }
+
+        public string Description
+        {
+            get { return _editAccount.Description; }
+            set
+            {
+                _editAccount.Description = value;
+                NotifyPropertyChanged(nameof(Description));
+            }
+        }
+
+        public int DisplayOrder
+        {
+            get { return _editAccount.DisplayOrder; }
+            set
+            {
+                _editAccount.DisplayOrder = value;
+                NotifyPropertyChanged(nameof(DisplayOrder));
+            }
+        }
+        #endregion
 
         public bool CanEdit { get { return _editAccount?.DateClosedUTC == null; } }
 
@@ -54,6 +87,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
                 {
                     _editAccount.SaveAccount();
                     this.ReloadAccounts();
+                    this.NotifyAll();
                 }));
             }
         }
@@ -67,6 +101,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
                 return _cmdClear ?? (_cmdClear = new RelayCommand((o) =>
                 {
                     _editAccount.Clear();
+                    this.NotifyAll();
                 }));
             }
         }
@@ -88,7 +123,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
                         _editAccount = vm;
                     }
 
-                    NotifyPropertyChanged(nameof(EditAccount));
+                    this.NotifyAll();
                 }));
             }
         }
@@ -110,6 +145,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
                     }
                     this.ReloadAccounts();
                     _editAccount.Clear();
+                    this.NotifyAll();
                 }));
             }
         }
@@ -129,6 +165,14 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
                 vm.Copy(act);
                 this.AccountList.Add(vm);
             }
+        }
+
+        private void NotifyAll()
+        {
+            NotifyPropertyChanged(nameof(Description));
+            NotifyPropertyChanged(nameof(AccountType));
+            NotifyPropertyChanged(nameof(DisplayOrder));
+            NotifyPropertyChanged(nameof(CanEdit));
         }
     }
 }
