@@ -111,14 +111,14 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
                 switch (act.JournalType)
                 {
                     case LedgerType.Receivable:
-                        if (act.DateClosedUTC is null)
+                        if (act.DateClosedUTC is null && budget.BudgetType != BudgetTrackingType.DO_NOT_TRACK)
                         {
                             _listIncome.Add(budget);
                         }
                         break;
 
                     case LedgerType.Payable:
-                        if (budget.IsVisible)
+                        if (budget.IsVisible && budget.BudgetType != BudgetTrackingType.DO_NOT_TRACK)
                         {
                             if (budget.IsFixedExpense)
                             {

@@ -39,6 +39,11 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
             this.Description = cpy.Description;
             this.OrderBy = cpy.OrderBy;
             this.DateClosedUTC = cpy.DateClosedUTC;
+            
+            if(cpy is INominalAccount nominal)
+            {
+                this.BudgetType = nominal.BudgetType;
+            }
         }
     }
 }

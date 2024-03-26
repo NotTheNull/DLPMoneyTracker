@@ -45,10 +45,13 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
         private IJournalAccount _account;
 
         public IJournalAccount Account { get { return _account; } }
+        public INominalAccount NominalAccount { get { return (INominalAccount)this.Account; } }
 
         public Guid AccountId { get { return _account.Id; } }
 
         public string AccountDesc { get { return _account.Description; } }
+
+        public BudgetTrackingType BudgetType { get { return this.NominalAccount.BudgetType; } }
 
         public decimal MonthlyBudget
         {
@@ -62,7 +65,7 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
         {
             get
             {
-                return _listPlans.Count > 0;
+                return this.BudgetType == BudgetTrackingType.Fixed;
             }
         }
 
@@ -71,7 +74,11 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
         {
             get
             {
-                return this.CurrentMonthTotal != decimal.Zero || _account?.DateClosedUTC == null;
+                return
+                    (
+                        this.CurrentMonthTotal != decimal.Zero ||
+                        _account?.DateClosedUTC == null
+                    );
             }
         }
 
@@ -84,6 +91,7 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
             {
                 _currMon = value;
                 NotifyPropertyChanged(nameof(CurrentMonthTotal));
+                NotifyPropertyChanged(nameof(CurrentValueFontColor));
             }
         }
 

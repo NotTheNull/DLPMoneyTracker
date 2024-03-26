@@ -117,6 +117,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             Id = Guid.Empty;
             Description = string.Empty;
             JournalType = LedgerType.NotSet;
+            BudgetType = BudgetTrackingType.DO_NOT_TRACK;
             this.DateClosedUTC = null;
         }
 
@@ -135,13 +136,6 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             }
         }
 
-        public void CreateNewSubLedger(IJournalAccount mainAccount)
-        {
-            _mainAccount = mainAccount;
-            this.Id = Guid.NewGuid();
-            this.Description = "Enter Subledger Name";
-            this.JournalType = mainAccount.JournalType;
-        }
 
         public void SaveAccount()
         {
