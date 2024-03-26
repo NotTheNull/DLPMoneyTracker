@@ -84,7 +84,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             this.DebitBankDate = acct.DebitBankDate;
             this.CreditBankDate = acct.CreditBankDate;
 
-            if (this.DebitAccount.Id == Guid.Empty)
+            if (acct.DebitAccountId == Guid.Empty)
             {
                 this.DebitAccount = SpecialAccount.InitialBalance;
             }
@@ -93,7 +93,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
                 this.DebitAccount = accountRepository.GetAccountByUID(acct.DebitAccountId);
             }
 
-            if (this.CreditAccount.Id == Guid.Empty)
+            if (acct.CreditAccountId == Guid.Empty)
             {
                 this.CreditAccount = SpecialAccount.InitialBalance;
             }
