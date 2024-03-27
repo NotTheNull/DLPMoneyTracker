@@ -131,8 +131,8 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
 
             var listWithBankDates = listMoney
                 .Where(x => 
-                    (x.DebitAccountId == accountUID && statementDates.IsWithinRange(x.DebitBankDate.Value)) || 
-                    (x.CreditAccountId == accountUID && statementDates.IsWithinRange(x.CreditBankDate.Value)));
+                    (x.DebitAccountId == accountUID && statementDates.IsWithinRange(x.DebitBankDate)) || 
+                    (x.CreditAccountId == accountUID && statementDates.IsWithinRange(x.CreditBankDate)));
             listReconciliation.AddRange(listWithBankDates);
 
             return listReconciliation;
