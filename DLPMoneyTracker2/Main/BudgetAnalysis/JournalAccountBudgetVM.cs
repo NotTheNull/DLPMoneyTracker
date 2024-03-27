@@ -16,18 +16,18 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
 {
     public class JournalAccountBudgetVM : BaseViewModel
     {
-        private readonly IGetCurrentMonthBudgetPlansForAccountUseCase getCurrentMonthPlansUseCase;
-        private readonly IGetJournalAccountCurrentMonthBalanceUseCase getCurrentMonthBalanceUseCase;
+        private readonly IGetAllCurrentMonthBudgetPlansForAccountUseCase getCurrentMonthPlansUseCase;
+        private readonly IGetBudgetTransactionBalanceForAccountUseCase getBudgetBalanceForAccountUseCase;
         private readonly NotificationSystem notifications;
 
 
         public JournalAccountBudgetVM(
-            IGetCurrentMonthBudgetPlansForAccountUseCase getCurrentMonthPlansUseCase,
-            IGetJournalAccountCurrentMonthBalanceUseCase getCurrentMonthBalanceUseCase,
+            IGetAllCurrentMonthBudgetPlansForAccountUseCase getCurrentMonthPlansUseCase,
+            IGetBudgetTransactionBalanceForAccountUseCase getBudgetBalanceForAccountUseCase,
             NotificationSystem notifications)
         {
             this.getCurrentMonthPlansUseCase = getCurrentMonthPlansUseCase;
-            this.getCurrentMonthBalanceUseCase = getCurrentMonthBalanceUseCase;
+            this.getBudgetBalanceForAccountUseCase = getBudgetBalanceForAccountUseCase;
             this.notifications = notifications;
 
             this.notifications.TransactionsModified += Notifications_TransactionsModified;
@@ -116,13 +116,35 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
 
         public void Refresh()
         {
-            this.CurrentMonthTotal = getCurrentMonthBalanceUseCase.Execute(this.AccountId);
+            this.CurrentMonthTotal = getBudgetBalanceForAccountUseCase.Execute(this.AccountId);
 
             _listPlans.Clear();
             var listPlans = getCurrentMonthPlansUseCase.Execute(this.AccountId);
-            if(listPlans?.Any() == true)
+            if (listPlans?.Any() == true)
             {
-                _listPlans.AddRange(listPlans);
+                // Need to make sure they apply to the current month
+                foreach (var plan in listPlans)
+                {
+                    bool addPlanToList = false;
+                    switch (plan.Recurrence.Frequency)
+                    {
+                        case DLPMoneyTracker.Core.Models.ScheduleRecurrence.RecurrenceFrequency.Annual:
+                            addPlanToList = plan.Recurrence.StartDate.Month == DateTime.Today.Month;
+                            break;
+                        case DLPMoneyTracker.Core.Models.ScheduleRecurrence.RecurrenceFrequency.SemiAnnual:
+                            addPlanToList = plan.Recurrence.StartDate.Month == DateTime.Today.Month || plan.Recurrence.StartDate.AddMonths(6).Month == DateTime.Today.Month;
+                            break;
+                        case DLPMoneyTracker.Core.Models.ScheduleRecurrence.RecurrenceFrequency.Monthly:
+                            addPlanToList = true;
+                            break;
+                    }
+
+                    if (addPlanToList)
+                    {
+                        _listPlans.Add(plan);
+                    }
+                }
+                
             }
 
             this.NotifyAll();

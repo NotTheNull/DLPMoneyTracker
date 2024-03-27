@@ -156,5 +156,10 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         {
             return this.BudgetPlanList.Count;
         }
+
+        public List<IBudgetPlan> GetAllPlansForAccount(Guid accountUID)
+        {
+            return this.BudgetPlanList.Where(x => x.DebitAccountId == accountUID || x.CreditAccountId == accountUID).ToList();
+        }
     }
 }

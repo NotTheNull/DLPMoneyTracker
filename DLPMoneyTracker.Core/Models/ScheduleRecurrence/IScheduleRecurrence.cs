@@ -9,8 +9,9 @@ namespace DLPMoneyTracker.Core.Models.ScheduleRecurrence
 {
     public enum RecurrenceFrequency
     {
-        BiWeekly, // every two weeks [26 times a year]
-        SemiMonthly, // twice a month [24 times a year]
+        // TODO: Decide whether we should implement these two recurrence types
+        //BiWeekly, // every two weeks [26 times a year]
+        //SemiMonthly, // twice a month [24 times a year]
         Monthly,
         SemiAnnual,
         Annual

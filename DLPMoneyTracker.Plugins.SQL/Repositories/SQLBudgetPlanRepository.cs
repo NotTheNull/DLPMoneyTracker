@@ -128,5 +128,23 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
                 return context.BudgetPlans.Count();
             }
         }
+
+        public List<IBudgetPlan> GetAllPlansForAccount(Guid accountUID)
+        {
+            List<IBudgetPlan> listPlanFinal = new List<IBudgetPlan>();
+            using (DataContext context = new DataContext())
+            {
+                var listPlanLoop = context.BudgetPlans.Where(x => x.Debit.AccountUID == accountUID || x.Credit.AccountUID == accountUID).ToList();
+                if (listPlanLoop?.Any() != true) return listPlanFinal;
+
+                foreach(var src in listPlanLoop)
+                {
+                    IBudgetPlan plan = SourceToPlan(src, context);
+                    listPlanFinal.Add(plan);
+                }
+            }
+
+            return listPlanFinal;
+        }
     }
 }

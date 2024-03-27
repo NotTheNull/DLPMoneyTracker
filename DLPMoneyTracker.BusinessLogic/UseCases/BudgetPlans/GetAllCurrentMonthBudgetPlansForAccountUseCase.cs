@@ -9,24 +9,18 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans
 {
-    public class GetCurrentMonthBudgetPlansForAccountUseCase : IGetCurrentMonthBudgetPlansForAccountUseCase
+    public class GetAllCurrentMonthBudgetPlansForAccountUseCase : IGetAllCurrentMonthBudgetPlansForAccountUseCase
     {
         private readonly IBudgetPlanRepository budgetRepository;
 
-        public GetCurrentMonthBudgetPlansForAccountUseCase(IBudgetPlanRepository budgetRepository)
+        public GetAllCurrentMonthBudgetPlansForAccountUseCase(IBudgetPlanRepository budgetRepository)
         {
             this.budgetRepository = budgetRepository;
         }
 
         public List<IBudgetPlan> Execute(Guid accountUID)
         {
-            BudgetPlanSearch search = new BudgetPlanSearch
-            {
-                AccountUID = accountUID,
-                DateRange = new Core.DateRange(DateTime.Today.Year, DateTime.Today.Month)
-            };
-
-            return budgetRepository.Search(search);
+            return budgetRepository.GetAllPlansForAccount(accountUID);
         }
     }
 }

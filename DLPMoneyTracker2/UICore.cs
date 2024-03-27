@@ -79,7 +79,7 @@ namespace DLPMoneyTracker2
             services.AddTransient<IGetUpcomingPlansForAccountUseCase, GetUpcomingPlansForAccountUseCase>();
             services.AddTransient<IFindTransactionForBudgetPlanUseCase, FindTransactionForBudgetPlanUseCase>();
             services.AddTransient<IGetTransactionsBySearchUseCase, GetTransactionsBySearchUseCase>();
-            services.AddTransient<IGetCurrentMonthBudgetPlansForAccountUseCase, GetCurrentMonthBudgetPlansForAccountUseCase>();
+            services.AddTransient<IGetAllCurrentMonthBudgetPlansForAccountUseCase, GetAllCurrentMonthBudgetPlansForAccountUseCase>();
             services.AddTransient<IGetBudgetPlanListByDateRangeUseCase, GetBudgetPlanListByDateRangeUseCase>();
             services.AddTransient<IGetBankReconciliationListUseCase, GetBankReconciliationListUseCase>();
             services.AddTransient<IGetReconciliationTransactionsUseCase, GetReconciliationTransactionsUseCase>();
@@ -87,6 +87,7 @@ namespace DLPMoneyTracker2
             services.AddTransient<IGetJournalAccountBalanceByMonthUseCase, GetJournalAccountBalanceByMonthUseCase>();
             services.AddTransient<IGetJournalAccountYTDUseCase, GetJournalAccountYTDUseCase>();
             services.AddTransient<IGetPaymentAccountsUseCase, GetPaymentAccountsUseCase>();
+            services.AddTransient<IGetBudgetTransactionBalanceForAccountUseCase, GetBudgetTransactionBalanceForAccountUseCase>();
             
 
             // Factories

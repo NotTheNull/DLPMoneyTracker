@@ -2,7 +2,7 @@
 
 namespace DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans.Interfaces
 {
-    public interface IGetCurrentMonthBudgetPlansForAccountUseCase
+    public interface IGetAllCurrentMonthBudgetPlansForAccountUseCase
     {
         List<IBudgetPlan> Execute(Guid accountUID);
     }
