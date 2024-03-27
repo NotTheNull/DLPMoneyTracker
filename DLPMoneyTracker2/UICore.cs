@@ -56,7 +56,6 @@ namespace DLPMoneyTracker2
             services.AddSingleton<JSONTransactionRepository>();
             services.AddSingleton<JSONBankReconciliationRepository>();
 
-            // TODO: Create a means of converting between the repositories
             // TODO: Create a JSON config file to hold WHICH repository the system should read from
             // TODO: Update this section based on the JSON config setting
             services.AddSingleton<ILedgerAccountRepository, JSONLedgerAccountRepository>();
@@ -87,6 +86,7 @@ namespace DLPMoneyTracker2
             services.AddTransient<ISaveReconciliationUseCase, SaveReconciliationUseCase>();
             services.AddTransient<IGetJournalAccountBalanceByMonthUseCase, GetJournalAccountBalanceByMonthUseCase>();
             services.AddTransient<IGetJournalAccountYTDUseCase, GetJournalAccountYTDUseCase>();
+            services.AddTransient<IGetPaymentAccountsUseCase, GetPaymentAccountsUseCase>();
             
 
             // Factories

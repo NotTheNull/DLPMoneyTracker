@@ -21,7 +21,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
         private readonly NotificationSystem notifications;
         private IJournalAccount _account;
 
-        // TODO: Loans aren't displaying
+        // TODO: Loan balances are not correct
         public MoneyAccountSummaryVM(
             IGetJournalAccountCurrentMonthBalanceUseCase getAccountBalanceUseCase,
             IGetUpcomingPlansForAccountUseCase getUpcomingPlansUseCase,

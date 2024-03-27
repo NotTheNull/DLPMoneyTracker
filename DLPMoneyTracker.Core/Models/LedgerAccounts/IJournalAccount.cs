@@ -23,7 +23,6 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
         Variable // Expense (Grocery) or Income (Roommates)
     }
 
-    // TODO: Add some General Ledger style ids to help group these together
     public interface IJournalAccount
     {
         Guid Id { get; }

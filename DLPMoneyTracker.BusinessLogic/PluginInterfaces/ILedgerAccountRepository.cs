@@ -23,12 +23,22 @@ namespace DLPMoneyTracker.BusinessLogic.PluginInterfaces
             };
         }
 
-        public static JournalAccountSearch GetMoneyAccounts(bool includDeleted = false)
+        public static JournalAccountSearch GetMoneyAccounts(bool includeDeleted = false)
+        {
+            return new JournalAccountSearch
+            {
+                JournalTypes = new List<LedgerType> { LedgerType.Bank, LedgerType.LiabilityCard, LedgerType.LiabilityLoan },
+                IncludeDeleted = includeDeleted,
+                NameFilterText = string.Empty
+            };
+        }
+
+        public static JournalAccountSearch GetPaymentAccounts(bool includeDeleted = false)
         {
             return new JournalAccountSearch
             {
                 JournalTypes = new List<LedgerType> { LedgerType.Bank, LedgerType.LiabilityCard },
-                IncludeDeleted = includDeleted,
+                IncludeDeleted = includeDeleted,
                 NameFilterText = string.Empty
             };
         }
