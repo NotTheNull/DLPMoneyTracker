@@ -28,7 +28,7 @@ namespace DLPMoneyTracker2.Conversion
             JSONTransactionRepository jsonTransactionRepository,
             SQLLedgerAccountRepository sqlAccountRepository,
             SQLBudgetPlanRepository sqlPlanRepository,
-            SQLBankReconciliationRepository sqlReconciliationrepository,
+            SQLBankReconciliationRepository sqlReconciliationRepository,
             SQLTransactionRepository sqlTransactionRepository
             )
         {
@@ -38,7 +38,7 @@ namespace DLPMoneyTracker2.Conversion
             this.jsonTransactionRepository = jsonTransactionRepository;
             this.sqlAccountRepository = sqlAccountRepository;
             this.sqlPlanRepository = sqlPlanRepository;
-            this.sqlReconciliationRepository = sqlReconciliationrepository;
+            this.sqlReconciliationRepository = sqlReconciliationRepository;
             this.sqlTransactionRepository = sqlTransactionRepository;
 
             this.Refresh();

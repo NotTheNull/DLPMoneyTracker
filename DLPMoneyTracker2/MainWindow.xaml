@@ -27,7 +27,7 @@
                     <MenuItem Header="_File">
 
                         <MenuItem x:Name="MenuConvertData"
-                                  Header="_Convert Data"
+                                  Header="_Import/Export Data"
                                   Click="MenuConvertData_Click"
                                    />
 
