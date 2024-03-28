@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace DLPMoneyTracker2.Conversion
 {
@@ -197,6 +198,10 @@ namespace DLPMoneyTracker2.Conversion
                 jsonReconciliationRepository.BankReconciliationList.AddRange(listReconciliations);
                 jsonReconciliationRepository.SaveToFile();
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unable to export: {ex.Message}");
+            }
             finally
             {
                 this.Refresh();
@@ -235,6 +240,10 @@ namespace DLPMoneyTracker2.Conversion
                 {
                     sqlReconciliationRepository.SaveReconciliation(reconciliation);
                 }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"Unable to import: {ex.Message}");
             }
             finally
             {
