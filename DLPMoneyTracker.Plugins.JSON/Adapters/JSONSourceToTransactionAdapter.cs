@@ -1,5 +1,6 @@
 ﻿using DLPMoneyTracker.BusinessLogic.AdapterInterfaces;
 using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
+using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.JSON.Models;
@@ -87,6 +88,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             if (acct.DebitAccountId == Guid.Empty)
             {
                 this.DebitAccount = SpecialAccount.InitialBalance;
+                this.DebitBankDate = Common.MINIMUM_DATE;
             }
             else
             {
@@ -96,6 +98,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             if (acct.CreditAccountId == Guid.Empty)
             {
                 this.CreditAccount = SpecialAccount.InitialBalance;
+                this.CreditBankDate = Common.MINIMUM_DATE;
             }
             else
             {
