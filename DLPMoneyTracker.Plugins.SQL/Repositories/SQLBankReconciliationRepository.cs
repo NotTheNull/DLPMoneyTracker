@@ -18,7 +18,13 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 {
     public class SQLBankReconciliationRepository : IBankReconciliationRepository
     {
-        
+        private readonly NotificationSystem notification;
+
+        public SQLBankReconciliationRepository(NotificationSystem notification)
+        {
+            this.notification = notification;
+        }
+
         public List<BankReconciliationOverviewDTO> GetFullList()
         {
             List<BankReconciliationOverviewDTO> listOverviews = new List<BankReconciliationOverviewDTO>();
@@ -147,6 +153,8 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
                 context.SaveChanges();
             }
+
+            notification.TriggerBankReconciliationChanged(dto.BankAccount.Id);
         }
 
         public int GetRecordCount()

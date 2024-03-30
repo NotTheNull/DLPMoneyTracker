@@ -17,12 +17,16 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
     {
         private readonly ILedgerAccountRepository accountRepository;
         private readonly ITransactionRepository moneyRepository;
+        private readonly NotificationSystem notification;
 
-        public JSONBankReconciliationRepository(ILedgerAccountRepository accountRepository, ITransactionRepository moneyRepository)
+        public JSONBankReconciliationRepository(
+            ILedgerAccountRepository accountRepository, 
+            ITransactionRepository moneyRepository,
+            NotificationSystem notification)
         {
             this.accountRepository = accountRepository;
             this.moneyRepository = moneyRepository;
-
+            this.notification = notification;
             this.LoadFromFile();
         }
 
@@ -152,6 +156,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             }
 
             this.SaveToFile(dto.BankAccount.Id);
+            notification.TriggerBankReconciliationChanged(dto.BankAccount.Id);
         }
 
         public int GetRecordCount()
