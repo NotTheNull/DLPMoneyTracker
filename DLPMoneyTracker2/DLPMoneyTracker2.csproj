@@ -8,8 +8,8 @@
     <StartupObject></StartupObject>
     <ApplicationIcon>Cash-64.ico</ApplicationIcon>
     <Title>DLP Money Tracker</Title>
-    <AssemblyVersion>2.2.2024.330</AssemblyVersion>
-    <FileVersion>2.2.2024.330</FileVersion>
+    <AssemblyVersion>2.2.2024.401</AssemblyVersion>
+    <FileVersion>2.2.2024.401</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
