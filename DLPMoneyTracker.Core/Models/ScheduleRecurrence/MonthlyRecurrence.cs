@@ -18,10 +18,10 @@ namespace DLPMoneyTracker.Core.Models.ScheduleRecurrence
             {
                 if (DateTime.Today < this.StartDate) return this.StartDate;
 
-                DateTime nextTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, this.StartDate.Day);
+                DateTime nextTime = this.GetNextDate(DateTime.Today.Month);
                 if (DateTime.Today < nextTime) return nextTime;
 
-                return nextTime.AddMonths(1);
+                return this.GetNextDate(DateTime.Today.Month + 1);
             }
         }
 
@@ -33,6 +33,27 @@ namespace DLPMoneyTracker.Core.Models.ScheduleRecurrence
             }
         }
 
+        /// <summary>
+        /// Deduces the next start date by verifying whether the Start Date exceeds the number of days
+        /// in the given month
+        /// </summary>
+        /// <param name="month">The month to get the next Start date</param>
+        /// <returns>
+        /// DateTime representing the next start date
+        /// </returns>
+        private DateTime GetNextDate(int month)
+        {
+            DateRange validRange = new DateRange(DateTime.Today.Year, month);
+            if (this.StartDate.Day > validRange.End.Day)
+            {
+                // This is typical for February and months that end in 30
+                return new DateTime(DateTime.Today.Year, DateTime.Today.Month, validRange.End.Day);
+            }
+            else
+            {
+                return new DateTime(DateTime.Today.Year, DateTime.Today.Month, this.StartDate.Day);
+            }
+        }
 
     }
 }
