@@ -1,4 +1,5 @@
-﻿using DLPMoneyTracker.Core.Models.ScheduleRecurrence;
+﻿using DLPMoneyTracker.Core;
+using DLPMoneyTracker.Core.Models.ScheduleRecurrence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,6 +63,13 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             {
                 if (int.TryParse(breakdown[1], out int startDay))
                 {
+                    DateRange validDates = new DateRange(DateTime.Today.Year, DateTime.Today.Month);
+                    if(validDates.End.Day < startDay)
+                    {
+                        // Likely the case for February or months that end with 30 instead of 31
+                        startDay = validDates.End.Day;
+                    }
+
                     this.StartDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, startDay);
                 }
                 else
