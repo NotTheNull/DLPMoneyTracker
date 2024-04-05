@@ -45,6 +45,24 @@ namespace DLPMoneyTracker2.Main.YTD
             this.NovemberTotal = getMTDUseCase.Execute(account.Id, year, 11);
             this.DecemberTotal = getMTDUseCase.Execute(account.Id, year, 12);
 
+            // Receivable accounts are the Credit side, will need to negate them
+            if(account.JournalType == LedgerType.Receivable)
+            {
+                this.YearTotal *= -1;
+                this.JanuaryTotal *= -1;
+                this.FebruaryTotal *= -1;
+                this.MarchTotal *= -1;
+                this.AprilTotal *= -1;
+                this.MayTotal *= -1;
+                this.JuneTotal *= -1;
+                this.JulyTotal *= -1;
+                this.AugustTotal *= -1;
+                this.SeptemberTotal *= -1;
+                this.OctoberTotal *= -1;
+                this.NovemberTotal *= -1;
+                this.DecemberTotal *= -1;
+            }
+
             this.NotifyAll();
         }
 
