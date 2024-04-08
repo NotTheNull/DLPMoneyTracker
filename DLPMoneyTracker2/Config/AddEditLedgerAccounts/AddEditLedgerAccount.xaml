@@ -78,6 +78,7 @@
                 <DataGridTextColumn Header="Description" Binding="{Binding Path=Description, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Account Type" Binding="{Binding Path=JournalType, Converter={StaticResource converterMoneyAccountToString}, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Budget Type" Binding="{Binding Path=BudgetType, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Budget Amount" Binding="{Binding Path=DefaultMonthlyBudgetAmount, Converter={StaticResource convertDecimalToDisplay}, UpdateSourceTrigger=PropertyChanged}" />
 
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
@@ -124,6 +125,7 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="15" />
+                <RowDefinition Height="30" />
                 <RowDefinition Height="30" />
                 <RowDefinition Height="30" />
                 <RowDefinition Height="30" />
@@ -180,6 +182,18 @@
                       SelectedValuePath="Value"
                       SelectedValue="{Binding Path=BudgetType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                 />
+
+            <TextBlock Text="Monthly Budget"
+                       Grid.Column="1"
+                       Grid.Row="4"
+                       Style="{StaticResource HeaderLabel}"/>
+            <TextBox Grid.Column="2"
+                     Grid.Row="4"
+                     Width="120"
+                     Background="{Binding Path=CanEdit, Converter={StaticResource convertEnabledToBgColor}, UpdateSourceTrigger=PropertyChanged}"
+                     IsEnabled="{Binding Path=CanEdit, UpdateSourceTrigger=PropertyChanged}"
+                     Text="{Binding Path=DefaultMonthlyBudgetAmount, Mode=TwoWay, Converter={StaticResource convertDecimalToDisplay}, UpdateSourceTrigger=LostFocus}"
+                     />
 
 
         </Grid>

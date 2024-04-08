@@ -2,6 +2,7 @@
 
 
 using DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans.Interfaces;
+using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
 using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
 using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models.BudgetPlan;
@@ -18,16 +19,19 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
     {
         private readonly IGetAllCurrentMonthBudgetPlansForAccountUseCase getCurrentMonthPlansUseCase;
         private readonly IGetBudgetTransactionBalanceForAccountUseCase getBudgetBalanceForAccountUseCase;
+        private readonly ISaveJournalAccountUseCase saveNominalAccountUseCase;
         private readonly NotificationSystem notifications;
 
 
         public JournalAccountBudgetVM(
             IGetAllCurrentMonthBudgetPlansForAccountUseCase getCurrentMonthPlansUseCase,
             IGetBudgetTransactionBalanceForAccountUseCase getBudgetBalanceForAccountUseCase,
+            ISaveJournalAccountUseCase saveNominalAccountUseCase,
             NotificationSystem notifications)
         {
             this.getCurrentMonthPlansUseCase = getCurrentMonthPlansUseCase;
             this.getBudgetBalanceForAccountUseCase = getBudgetBalanceForAccountUseCase;
+            this.saveNominalAccountUseCase = saveNominalAccountUseCase;
             this.notifications = notifications;
 
             this.notifications.TransactionsModified += Notifications_TransactionsModified;
@@ -52,6 +56,19 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
         public string AccountDesc { get { return _account.Description; } }
 
         public BudgetTrackingType BudgetType { get { return this.NominalAccount.BudgetType; } }
+        public decimal MonthlyBudgetAmount
+        {
+            get { return this.NominalAccount.CurrentBudgetAmount; }
+            set
+            {
+                if (this.IsFixedExpense) return;
+                if(this.NominalAccount is PayableAccount payable)
+                {
+                    payable.CurrentBudgetAmount = value;
+                    saveNominalAccountUseCase.Execute(_account);
+                }
+            }
+        }
 
         public decimal MonthlyBudget
         {
@@ -147,7 +164,14 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
                 
             }
 
+
             this.NotifyAll();
+        }
+
+
+        public void ResetBudget()
+        {
+            this.MonthlyBudgetAmount = this.NominalAccount.DefaultMonthlyBudgetAmount;
         }
 
         private void NotifyAll()

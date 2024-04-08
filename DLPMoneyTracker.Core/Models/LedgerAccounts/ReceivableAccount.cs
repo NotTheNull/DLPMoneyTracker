@@ -13,14 +13,15 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
 
         public string Description { get; set; }
 
-        public LedgerType JournalType        { get { return LedgerType.Receivable; } }
+        public LedgerType JournalType { get { return LedgerType.Receivable; } }
 
         public int OrderBy { get; set; }
 
         public DateTime? DateClosedUTC { get; set; }
 
         public BudgetTrackingType BudgetType { get; set; }
-        public decimal MonthlyBudgetAmount { get; set; }
+        public decimal DefaultMonthlyBudgetAmount { get; set; } = decimal.Zero;
+        public decimal CurrentBudgetAmount { get; set; } = decimal.Zero;
 
         public ReceivableAccount()
         {
@@ -41,10 +42,11 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
             this.OrderBy = cpy.OrderBy;
             this.DateClosedUTC = cpy.DateClosedUTC;
 
-            if(cpy is INominalAccount nominal)
+            if (cpy is INominalAccount nominal)
             {
                 this.BudgetType = nominal.BudgetType;
-                this.MonthlyBudgetAmount = nominal.MonthlyBudgetAmount;
+                this.DefaultMonthlyBudgetAmount = nominal.DefaultMonthlyBudgetAmount;
+                this.CurrentBudgetAmount = nominal.CurrentBudgetAmount;
             }
         }
 

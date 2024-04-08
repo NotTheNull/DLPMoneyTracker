@@ -37,7 +37,14 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
         // List of Receivable IJournalAccounts; NOT TO BE DISPLAYED
         private List<JournalAccountBudgetVM> _listIncome = new List<JournalAccountBudgetVM>();
 
-        public decimal TotalBudgetIncome { get { return _listIncome?.Sum(s => s.MonthlyBudget) ?? decimal.Zero; } }
+        public decimal TotalBudgetIncome 
+        { 
+            get 
+            { 
+                return _listIncome.Where(x => x.IsFixedExpense).Sum(s => s.MonthlyBudget) +
+                    _listIncome.Where(x => !x.IsFixedExpense).Sum(s => s.MonthlyBudgetAmount); 
+            } 
+        }
 
         // List of Payable IJournalAccounts WITH a Journal Plan
         private ObservableCollection<JournalAccountBudgetVM> _listFixed = new ObservableCollection<JournalAccountBudgetVM>();
@@ -79,6 +86,23 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
                         };
                         AccountTransactionDetail window = new AccountTransactionDetail(filter);
                         window.Show();
+                    }
+                }));
+            }
+        }
+
+
+        private RelayCommand _cmdResetBudgets;
+        public RelayCommand CommandResetBudgets
+        {
+            get
+            {
+                return _cmdResetBudgets ?? (_cmdResetBudgets = new RelayCommand((o) =>
+                {
+                    if (this.VariableExpenses.Any() != true) return;
+                    foreach (var account in this.VariableExpenses)
+                    {
+                        account.ResetBudget();
                     }
                 }));
             }
@@ -140,6 +164,7 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
             }
             this.NotifyAll();
         }
+
 
         public void NotifyAll()
         {

@@ -6,6 +6,7 @@ using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
 using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts;
+using System.Reflection.Metadata.Ecma335;
 
 namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 {
@@ -112,6 +113,26 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
         public string DisplayBudgetType { get { return this.BudgetType.ToDisplayText(); } }
 
 
+        private decimal _budget;
+
+        public decimal DefaultMonthlyBudgetAmount
+        {
+            get { return _budget; }
+            set 
+            { 
+                _budget = value;
+                this.CurrentBudgetAmount = value;
+                NotifyPropertyChanged(nameof(DefaultMonthlyBudgetAmount));
+            }
+        }
+
+        public decimal CurrentBudgetAmount { get; set; } 
+
+
+
+
+
+
         public void Clear()
         {
             Id = Guid.Empty;
@@ -133,6 +154,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                 JournalType = account.JournalType;
                 DateClosedUTC = account.DateClosedUTC;
                 BudgetType = account.BudgetType;
+                this.DefaultMonthlyBudgetAmount = account.DefaultMonthlyBudgetAmount;
             }
         }
 

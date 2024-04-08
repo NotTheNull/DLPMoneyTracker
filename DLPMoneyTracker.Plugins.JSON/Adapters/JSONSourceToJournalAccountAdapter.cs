@@ -22,7 +22,8 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
         public DateTime? DateClosedUTC { get; set; }
 
         public BudgetTrackingType BudgetType { get; set; } = BudgetTrackingType.DO_NOT_TRACK;
-        public decimal MonthlyBudgetAmount { get; set; } = decimal.Zero;
+        public decimal DefaultMonthlyBudgetAmount { get; set; } = decimal.Zero;
+        public decimal CurrentBudgetAmount { get; set; } = decimal.Zero;
 
         public void Copy(IJournalAccount cpy)
         {
@@ -37,7 +38,8 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             if(cpy is INominalAccount nominal)
             {
                 this.BudgetType = nominal.BudgetType;
-                this.MonthlyBudgetAmount = nominal.MonthlyBudgetAmount;
+                this.DefaultMonthlyBudgetAmount = nominal.DefaultMonthlyBudgetAmount;
+                this.CurrentBudgetAmount = nominal.CurrentBudgetAmount;
             }
         }
 
@@ -51,9 +53,8 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             acct.OrderBy = this.OrderBy;
             acct.DateClosedUTC = this.DateClosedUTC;
             acct.BudgetType = this.BudgetType;
-            acct.MonthlyBudgetAmount = this.MonthlyBudgetAmount;
-
-            // All other fields in the JSON are lost in this conversion as I am rethinking them
+            acct.DefaultMonthlyBudgetAmount = this.DefaultMonthlyBudgetAmount;
+            acct.CurrentBudgetAmount = this.CurrentBudgetAmount;            
         }
                 
 
@@ -67,7 +68,8 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             this.OrderBy = acct.OrderBy;
             this.DateClosedUTC = acct.DateClosedUTC;
             this.BudgetType = acct.BudgetType;
-            this.MonthlyBudgetAmount = acct.MonthlyBudgetAmount;
+            this.DefaultMonthlyBudgetAmount = acct.DefaultMonthlyBudgetAmount;
+            this.CurrentBudgetAmount = acct.CurrentBudgetAmount;
         }
     }
 }

@@ -17,7 +17,8 @@ namespace DLPMoneyTracker.Plugins.JSON.Models
 
         public LedgerType JournalType { get; set; }
         public BudgetTrackingType BudgetType { get; set; } = BudgetTrackingType.DO_NOT_TRACK;
-        public decimal MonthlyBudgetAmount { get; set; } = decimal.Zero;
+        public decimal DefaultMonthlyBudgetAmount { get; set; } = decimal.Zero;
+        public decimal CurrentBudgetAmount { get; set; } = decimal.Zero;
 
         public int OrderBy { get; set; }
 

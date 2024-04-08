@@ -25,7 +25,8 @@ namespace DLPMoneyTracker.Plugins.SQL.Data
 
         // For Nominal Accounts
         public BudgetTrackingType BudgetType { get; set; } = BudgetTrackingType.DO_NOT_TRACK;
-        public decimal MonthlyBudgetAmount { get; set; } = decimal.Zero;
+        public decimal DefaultBudget { get; set; } = decimal.Zero;
+        public decimal CurrentBudget { get; set; } = decimal.Zero;
 
     }
 }

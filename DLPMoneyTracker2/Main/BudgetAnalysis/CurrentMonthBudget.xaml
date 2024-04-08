@@ -91,11 +91,30 @@
                 </DataGrid.Columns>
             </DataGrid>
 
-            <TextBlock Text="Variable Expenses"
+
+            <StackPanel x:Name="pnlVariableExpenses"
+                        Orientation="Horizontal"
+                        Grid.Column="2" 
+                        Margin="120,0,0,0">
+                <TextBlock Text="Variable Expenses"
                        Style="{StaticResource StandardHeaderLabel}"
                        HorizontalAlignment="Left"
                        FontSize="16"
-                       Grid.Column="2" Margin="120,0,0,0" />
+                        />
+                <Button Style="{StaticResource MenuButton}"
+                        ToolTip="Reset Budgets"
+                        Command="{Binding Path=CommandResetBudgets}"
+                        >
+                    <Button.Content>
+                        <Image Source="/Icons/Refresh-256.png" />
+                    </Button.Content>
+                </Button>
+                
+            </StackPanel>
+            
+            
+            
+            
 
             <DataGrid Grid.Column="2"
                       Grid.Row="1"
@@ -107,10 +126,22 @@
                                         Width="150"
                                         Binding="{Binding Path=AccountDesc}" />
 
-                    <DataGridTextColumn Header="Budget"
-                                        Width="100"
-                                        Binding="{Binding Path=MonthlyBudget, Converter={StaticResource convertDecimalToDisplay}, ConverterParameter=c, UpdateSourceTrigger=PropertyChanged}" />
 
+                    <DataGridTemplateColumn Header="Budget"
+                                            Width="120">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBox Text="{Binding Path=MonthlyBudgetAmount, Mode=TwoWay, Converter={StaticResource convertDecimalToDisplay}, UpdateSourceTrigger=LostFocus}"
+                                             Width="100"
+                                             />
+
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    
+                    
                     <DataGridTemplateColumn Header="Current"
                                             Width="100">
                         <DataGridTemplateColumn.CellTemplate>
