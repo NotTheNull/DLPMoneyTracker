@@ -5,6 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:core="clr-namespace:DLPMoneyTracker2.Core"
              xmlns:local="clr-namespace:DLPMoneyTracker2.Main.BudgetAnalysis"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:behave="clr-namespace:DLPMoneyTracker2.Core.Behaviors"
              mc:Ignorable="d"
              Height="650"
              Width="1000">
@@ -133,8 +135,12 @@
                             <DataTemplate>
                                 <StackPanel Orientation="Vertical">
                                     <TextBox Text="{Binding Path=MonthlyBudgetAmount, Mode=TwoWay, Converter={StaticResource convertDecimalToDisplay}, UpdateSourceTrigger=LostFocus}"
-                                             Width="100"
-                                             />
+                                             Width="100">
+                                        <i:Interaction.Behaviors>
+                                            <behave:TextBoxFocusBehavior />
+                                        </i:Interaction.Behaviors>
+                                    </TextBox>
+                                             
 
                                 </StackPanel>
                             </DataTemplate>
