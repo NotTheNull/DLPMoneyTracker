@@ -22,6 +22,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
         public DateTime? DateClosedUTC { get; set; }
 
         public BudgetTrackingType BudgetType { get; set; } = BudgetTrackingType.DO_NOT_TRACK;
+        public decimal MonthlyBudgetAmount { get; set; } = decimal.Zero;
 
 
         public void Copy(IJournalAccount cpy)
@@ -37,6 +38,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
             if(cpy is INominalAccount nominal)
             {
                 this.BudgetType = nominal.BudgetType;
+                this.MonthlyBudgetAmount = nominal.MonthlyBudgetAmount;
             }
         }
 
@@ -50,6 +52,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
             acct.MainTabSortingId = this.OrderBy;
             acct.DateClosedUTC = this.DateClosedUTC;
             acct.BudgetType = this.BudgetType;
+            acct.MonthlyBudgetAmount = this.MonthlyBudgetAmount;
         }
 
         public void ImportSource(Account acct)
@@ -62,6 +65,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
             this.OrderBy = acct.MainTabSortingId;
             this.DateClosedUTC = acct.DateClosedUTC;
             this.BudgetType = acct.BudgetType;
+            this.MonthlyBudgetAmount = acct.MonthlyBudgetAmount;
         }
     }
 }

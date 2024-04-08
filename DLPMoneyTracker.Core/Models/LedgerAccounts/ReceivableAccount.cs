@@ -20,6 +20,7 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
         public DateTime? DateClosedUTC { get; set; }
 
         public BudgetTrackingType BudgetType { get; set; }
+        public decimal MonthlyBudgetAmount { get; set; }
 
         public ReceivableAccount()
         {
@@ -43,6 +44,7 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
             if(cpy is INominalAccount nominal)
             {
                 this.BudgetType = nominal.BudgetType;
+                this.MonthlyBudgetAmount = nominal.MonthlyBudgetAmount;
             }
         }
 

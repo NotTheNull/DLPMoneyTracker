@@ -24,7 +24,8 @@ namespace DLPMoneyTracker.Plugins.SQL.Data
         public DateTime? DateClosedUTC { get; set; }
 
         // For Nominal Accounts
-        public BudgetTrackingType BudgetType { get; set; } = BudgetTrackingType.DO_NOT_TRACK; 
+        public BudgetTrackingType BudgetType { get; set; } = BudgetTrackingType.DO_NOT_TRACK;
+        public decimal MonthlyBudgetAmount { get; set; } = decimal.Zero;
 
     }
 }

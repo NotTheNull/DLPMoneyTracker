@@ -50,6 +50,7 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
     public interface INominalAccount : IJournalAccount
     {
         BudgetTrackingType BudgetType { get; }
+        decimal MonthlyBudgetAmount { get; }
     }
 
 
