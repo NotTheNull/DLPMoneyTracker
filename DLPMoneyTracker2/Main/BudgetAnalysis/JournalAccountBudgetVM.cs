@@ -172,6 +172,7 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
         public void ResetBudget()
         {
             this.MonthlyBudgetAmount = this.NominalAccount.DefaultMonthlyBudgetAmount;
+            this.NotifyAll();
         }
 
         private void NotifyAll()
@@ -181,6 +182,7 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
             NotifyPropertyChanged(nameof(MonthlyBudget));
             NotifyPropertyChanged(nameof(IsFixedExpense));
             NotifyPropertyChanged(nameof(CurrentValueFontColor));
+            NotifyPropertyChanged(nameof(MonthlyBudgetAmount));
         }
     }
 }
