@@ -78,6 +78,16 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             }
         }
 
+        public decimal MonthlyBudget
+        {
+            get { return _editAccount.DefaultMonthlyBudgetAmount; }
+            set
+            {
+                _editAccount.DefaultMonthlyBudgetAmount = value;
+                NotifyPropertyChanged(nameof(MonthlyBudget));
+            }
+        }
+
         #endregion
 
 
@@ -176,6 +186,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             NotifyPropertyChanged(nameof(Description));
             NotifyPropertyChanged(nameof(AccountType));
             NotifyPropertyChanged(nameof(BudgetType));
+            NotifyPropertyChanged(nameof(MonthlyBudget));
         }
     }
 }
