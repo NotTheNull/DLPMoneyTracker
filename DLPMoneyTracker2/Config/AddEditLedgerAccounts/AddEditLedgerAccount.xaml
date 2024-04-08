@@ -192,7 +192,7 @@
                      Width="120"
                      Background="{Binding Path=CanEdit, Converter={StaticResource convertEnabledToBgColor}, UpdateSourceTrigger=PropertyChanged}"
                      IsEnabled="{Binding Path=CanEdit, UpdateSourceTrigger=PropertyChanged}"
-                     Text="{Binding Path=DefaultMonthlyBudgetAmount, Mode=TwoWay, Converter={StaticResource convertDecimalToDisplay}, UpdateSourceTrigger=LostFocus}"
+                     Text="{Binding Path=MonthlyBudget, Mode=TwoWay, Converter={StaticResource convertDecimalToDisplay}, UpdateSourceTrigger=LostFocus}"
                      />
 
 
