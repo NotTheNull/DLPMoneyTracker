@@ -140,6 +140,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             JournalType = LedgerType.NotSet;
             BudgetType = BudgetTrackingType.DO_NOT_TRACK;
             this.DefaultMonthlyBudgetAmount = decimal.Zero;
+            this.CurrentBudgetAmount = decimal.Zero;
             this.DateClosedUTC = null;
         }
 
