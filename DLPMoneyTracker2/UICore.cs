@@ -6,6 +6,8 @@ using DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans;
 using DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans.Interfaces;
 using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts;
 using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
+using DLPMoneyTracker.BusinessLogic.UseCases.Reports;
+using DLPMoneyTracker.BusinessLogic.UseCases.Reports.Interfaces;
 using DLPMoneyTracker.BusinessLogic.UseCases.Transactions;
 using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
 using DLPMoneyTracker.Core;
@@ -23,6 +25,7 @@ using DLPMoneyTracker2.Main.BudgetAnalysis;
 using DLPMoneyTracker2.Main.TransactionList;
 using DLPMoneyTracker2.Main.UpcomingReminders;
 using DLPMoneyTracker2.Main.YTD;
+using DLPMoneyTracker2.Reports;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -88,6 +91,7 @@ namespace DLPMoneyTracker2
             services.AddTransient<IGetJournalAccountYTDUseCase, GetJournalAccountYTDUseCase>();
             services.AddTransient<IGetPaymentAccountsUseCase, GetPaymentAccountsUseCase>();
             services.AddTransient<IGetBudgetTransactionBalanceForAccountUseCase, GetBudgetTransactionBalanceForAccountUseCase>();
+            services.AddTransient<IGetBudgetAnalysisDataUseCase, GetBudgetAnalysisDataUseCase>();
             
 
             // Factories
@@ -144,12 +148,17 @@ namespace DLPMoneyTracker2
             services.AddTransient<BankReconciliationListingVM>();
             services.AddTransient<BankReconciliationListingUI>();
 
+            // Reports
+            services.AddTransient<ReportBudgetAnalysis>();
+
             // Other models
             services.AddTransient<LedgerAccountVM>();
             services.AddTransient<MoneyAccountVM>();
 
             services.AddTransient<JSONConversionVM>();
             services.AddTransient<JSONConversion>();
+
+            
 
             
         }

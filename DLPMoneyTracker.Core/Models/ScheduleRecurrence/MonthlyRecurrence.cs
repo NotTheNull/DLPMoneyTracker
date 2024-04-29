@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,15 +44,22 @@ namespace DLPMoneyTracker.Core.Models.ScheduleRecurrence
         /// </returns>
         private DateTime GetNextDate(int month)
         {
-            DateRange validRange = new DateRange(DateTime.Today.Year, month);
+            int year = DateTime.Today.Year;
+            if(DateTime.Today.Month == 12 && month < DateTime.Today.Month)
+            {
+                // Likely we're going from December to January
+                year++;
+            }
+
+            DateRange validRange = new DateRange(year, month);
             if (this.StartDate.Day > validRange.End.Day)
             {
                 // This is typical for February and months that end in 30
-                return new DateTime(DateTime.Today.Year, DateTime.Today.Month, validRange.End.Day);
+                return new DateTime(year, month, validRange.End.Day);
             }
             else
             {
-                return new DateTime(DateTime.Today.Year, DateTime.Today.Month, this.StartDate.Day);
+                return new DateTime(year, month, this.StartDate.Day);
             }
         }
 
