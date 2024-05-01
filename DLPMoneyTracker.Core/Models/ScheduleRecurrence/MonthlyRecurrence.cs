@@ -20,7 +20,7 @@ namespace DLPMoneyTracker.Core.Models.ScheduleRecurrence
                 if (DateTime.Today < this.StartDate) return this.StartDate;
 
                 DateTime nextTime = this.GetNextDate(DateTime.Today.Month);
-                if (DateTime.Today < nextTime) return nextTime;
+                if (DateTime.Today <= nextTime) return nextTime;
 
                 return this.GetNextDate(DateTime.Today.Month + 1);
             }
