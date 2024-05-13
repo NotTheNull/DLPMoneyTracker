@@ -22,6 +22,8 @@ using DLPMoneyTracker2.LedgerEntry;
 using DLPMoneyTracker2.Main.AccountSummary;
 using DLPMoneyTracker2.Main.BankReconciliation;
 using DLPMoneyTracker2.Main.BudgetAnalysis;
+using DLPMoneyTracker2.Main.ExpenseDetail;
+using DLPMoneyTracker2.Main.ExpensePlanner;
 using DLPMoneyTracker2.Main.TransactionList;
 using DLPMoneyTracker2.Main.UpcomingReminders;
 using DLPMoneyTracker2.Main.YTD;
@@ -92,6 +94,7 @@ namespace DLPMoneyTracker2
             services.AddTransient<IGetPaymentAccountsUseCase, GetPaymentAccountsUseCase>();
             services.AddTransient<IGetBudgetTransactionBalanceForAccountUseCase, GetBudgetTransactionBalanceForAccountUseCase>();
             services.AddTransient<IGetBudgetAnalysisDataUseCase, GetBudgetAnalysisDataUseCase>();
+            services.AddTransient<IGetBudgetPlanListByType, GetBudgetPlanListByType>();
             
 
             // Factories
@@ -123,6 +126,9 @@ namespace DLPMoneyTracker2
             services.AddTransient<YearToDateUI>();
             services.AddTransient<YearToDateVM>();
             services.AddTransient<YTDAccountDetailVM>();
+
+            services.AddTransient<ExpensePlannerUI>();
+            services.AddTransient<ExpensePlannerVM>();
 
             // Ledger
             services.AddTransient<IncomeJournalEntryVM>();

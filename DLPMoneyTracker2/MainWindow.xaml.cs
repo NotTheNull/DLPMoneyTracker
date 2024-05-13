@@ -7,6 +7,7 @@ using DLPMoneyTracker2.LedgerEntry;
 using DLPMoneyTracker2.Main.AccountSummary;
 using DLPMoneyTracker2.Main.BankReconciliation;
 using DLPMoneyTracker2.Main.BudgetAnalysis;
+using DLPMoneyTracker2.Main.ExpensePlanner;
 using DLPMoneyTracker2.Main.TransactionList;
 using DLPMoneyTracker2.Main.UpcomingReminders;
 using DLPMoneyTracker2.Main.YTD;
@@ -25,11 +26,11 @@ namespace DLPMoneyTracker2
         private readonly MoneyAccountOverview _viewMoneyAccounts;
         private readonly TransactionDetail _viewTransactions;
         private readonly CurrentMonthBudget _viewBudgetAnalysis;
-        private readonly RemindersUI _viewBillReminders;
+        private readonly ExpensePlannerUI _viewBillReminders;
         private readonly YearToDateUI _viewYTD;
         private readonly BankReconciliationListingUI _viewBankRec;
 
-        public MainWindow(MoneyAccountOverview viewMain, CurrentMonthBudget viewBudget, TransactionDetail viewDetail, RemindersUI viewBills, YearToDateUI viewYTD, BankReconciliationListingUI viewBankRec)
+        public MainWindow(MoneyAccountOverview viewMain, CurrentMonthBudget viewBudget, TransactionDetail viewDetail, ExpensePlannerUI viewBills, YearToDateUI viewYTD, BankReconciliationListingUI viewBankRec)
         {
             InitializeComponent();
 
