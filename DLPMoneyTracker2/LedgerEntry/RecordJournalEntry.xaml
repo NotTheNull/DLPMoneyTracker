@@ -8,7 +8,7 @@
         xmlns:core="clr-namespace:DLPMoneyTracker2.Core"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="Enter Transaction"
+        Title="{Binding Path=Title, FallbackValue=Enter_Transaction}"
         WindowStartupLocation="CenterScreen"
         Icon="\Cash-64.ico"
         Height="290"

@@ -25,8 +25,9 @@ namespace DLPMoneyTracker2.LedgerEntry
 		{
 		}
 
+		public override string Title => "Enter Debt Adjustment";
 
-		public override bool IsValidTransaction
+        public override bool IsValidTransaction
 		{
 			get
 			{

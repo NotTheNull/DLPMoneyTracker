@@ -23,7 +23,8 @@ namespace DLPMoneyTracker2.LedgerEntry
 		{
 		}
 
-		public override string DebitHeader { get { return "Bank"; } }
+        public override string Title => "Enter Income";
+        public override string DebitHeader { get { return "Bank"; } }
 
 		public override string CreditHeader { get { return "Receivable"; } }
 

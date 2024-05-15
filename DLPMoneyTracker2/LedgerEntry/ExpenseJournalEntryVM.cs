@@ -23,6 +23,7 @@ namespace DLPMoneyTracker2.LedgerEntry
         {
         }
 
+        public override string Title => "Enter Expense";
         public override bool IsValidTransaction
         {
             get

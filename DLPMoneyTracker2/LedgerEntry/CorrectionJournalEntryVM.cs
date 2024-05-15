@@ -23,8 +23,10 @@ namespace DLPMoneyTracker2.LedgerEntry
 			this.SelectedCreditAccount = SpecialAccount.UnlistedAdjusment;
 		}
 
-		// One side will always be the Special Account "Unlisted Adjustment"
-		public override bool IsCreditEnabled { get { return false; } }
+		public override string Title => "Enter Journal Correction";
+
+        // One side will always be the Special Account "Unlisted Adjustment"
+        public override bool IsCreditEnabled { get { return false; } }
 
 		public override bool IsValidTransaction
 		{

@@ -39,7 +39,7 @@ namespace DLPMoneyTracker2.LedgerEntry
         bool CanUserEditCreditAccount { get; }
         bool CanUserEditDebitAccount { get; }
 
-
+        string Title { get; }
         string Description { get; }
         decimal Amount { get; }
 
@@ -222,7 +222,7 @@ namespace DLPMoneyTracker2.LedgerEntry
 
 
 
-
+        public abstract string Title { get; }
 
         protected string _desc;
 
