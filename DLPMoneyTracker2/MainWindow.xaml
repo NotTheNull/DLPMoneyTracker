@@ -7,8 +7,9 @@
         mc:Ignorable="d"
         Title="DLP Money Tracker"
         Width="1180"
-        Height="825"
+        Height="840"
         Icon="Cash-64.ico"
+        Background="{StaticResource DefaultUIBackgroundColor}"
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
@@ -20,7 +21,7 @@
     </Window.Resources>
 
     <Viewbox>
-        <DockPanel Background="{StaticResource DefaultUIBackgroundColor}">
+        <DockPanel >
             <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
 
                 <Menu>
