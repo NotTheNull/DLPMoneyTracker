@@ -138,6 +138,8 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         public void SavePlan(IBudgetPlan plan)
         {
             ArgumentNullException.ThrowIfNull(plan);
+            if (plan.PlanType == BudgetPlanType.NotSet) throw new InvalidOperationException("Budget Plans MUST have a set type");
+            if (plan.UID == Guid.Empty) throw new InvalidOperationException("Plan UID cannot be EMPTY");
 
             var existingPlan = this.BudgetPlanList.FirstOrDefault(x => x.UID == plan.UID);
             if(existingPlan is null)

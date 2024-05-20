@@ -21,6 +21,8 @@ namespace DLPMoneyTracker.BusinessLogic.Factories
 
         public IBudgetPlan Build(BudgetPlanType planType, Guid uid, string desc, IJournalAccount debit, IJournalAccount credit, decimal amount, IScheduleRecurrence recurrence)
         {
+            if (uid == Guid.Empty) uid = Guid.NewGuid();
+
             switch(planType)
             {
                 case BudgetPlanType.Receivable:
