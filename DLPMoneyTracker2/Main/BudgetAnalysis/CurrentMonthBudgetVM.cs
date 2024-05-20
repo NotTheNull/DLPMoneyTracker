@@ -51,18 +51,29 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
 
         public ObservableCollection<JournalAccountBudgetVM> FixedExpenses { get { return _listFixed; } }
 
-        public decimal FixedExpenseBudgetTotal { get { return this.FixedExpenses?.Sum(s => s.MonthlyBudget > s.CurrentMonthTotal ? s.MonthlyBudget : s.CurrentMonthTotal) ?? decimal.Zero; } }
+        public decimal FixedExpenseBudgetTotal { get { return this.FixedExpenses?.Sum(s => s.MonthlyBudget) ?? decimal.Zero; } }
+        public decimal FixedExpenseCurrent { get { return this.FixedExpenses?.Sum(s => s.CurrentMonthTotal) ?? decimal.Zero; } }
+
+
 
         // The remaining Payable accounts
         private ObservableCollection<JournalAccountBudgetVM> _listVariable = new ObservableCollection<JournalAccountBudgetVM>();
-
         public ObservableCollection<JournalAccountBudgetVM> VariableExpenses { get { return _listVariable; } }
 
-        public decimal VariableExpenseBudgetTotal { get { return this.VariableExpenses?.Sum(s => s.MonthlyBudget > s.CurrentMonthTotal ? s.MonthlyBudget : s.CurrentMonthTotal) ?? decimal.Zero; } }
+        public decimal VariableExpenseBudgetTotal { get { return this.VariableExpenses?.Sum(s => s.MonthlyBudget) ?? decimal.Zero; } }
+        public decimal VariableExpenseCurrent { get { return this.VariableExpenses?.Sum(s => s.CurrentMonthTotal) ?? decimal.Zero; } }
+
+
+
 
         public decimal TotalExpenseBudget { get { return this.FixedExpenseBudgetTotal + this.VariableExpenseBudgetTotal; } }
+        public decimal UnallocatedBudget { get { return this.TotalBudgetIncome - this.TotalExpenseBudget; } }
+        public decimal TotalCurrentExpense { get { return this.FixedExpenseCurrent + this.VariableExpenseCurrent; } }
 
-        public decimal MonthlyBalance { get { return this.TotalBudgetIncome - this.TotalExpenseBudget; } }
+
+
+
+        public decimal MonthlyBalance { get { return this.TotalBudgetIncome - this.TotalCurrentExpense; } }
 
         #region Commands
 
@@ -82,7 +93,8 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
                         {
                             Account = ja,
                             FilterDates = new DateRange(start, end),
-                            AreFilterControlsVisible = false
+                            AreFilterControlsVisible = false,
+                            UseBudgetLogic = true
                         };
                         AccountTransactionDetail window = new AccountTransactionDetail(filter);
                         window.Show();
@@ -172,9 +184,13 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
             NotifyPropertyChanged(nameof(VariableExpenses));
             NotifyPropertyChanged(nameof(MonthlyBalance));
             NotifyPropertyChanged(nameof(TotalExpenseBudget));
+            NotifyPropertyChanged(nameof(TotalCurrentExpense));
             NotifyPropertyChanged(nameof(VariableExpenseBudgetTotal));
             NotifyPropertyChanged(nameof(FixedExpenseBudgetTotal));
             NotifyPropertyChanged(nameof(TotalBudgetIncome));
+            NotifyPropertyChanged(nameof(UnallocatedBudget));
+            NotifyPropertyChanged(nameof(FixedExpenseCurrent));
+            NotifyPropertyChanged(nameof(VariableExpenseCurrent));
         }
     }
 }

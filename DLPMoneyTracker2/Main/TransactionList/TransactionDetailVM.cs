@@ -151,6 +151,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
 			this.FilterBeginDate = filter.FilterDates?.Begin ?? DateTime.MinValue;
 			this.FilterEndDate = filter.FilterDates?.End ?? DateTime.MaxValue;
 			this.FilterText = filter.SearchText?.Trim() ?? string.Empty;
+			_filter.UseBudgetLogic = filter.UseBudgetLogic;
 		}
 
 		
@@ -174,9 +175,14 @@ namespace DLPMoneyTracker2.Main.TransactionList
 
 			foreach (var rec in records.OrderBy(o => o.TransactionDate).ThenBy(o => o.Description))
 			{
+				if(_filter.UseBudgetLogic)
+				{
+					// If either account is set to "NotSet", this typically means it's using the Special Accounts and aren't reasonable to show on the budget list
+					if (rec.CreditAccount.JournalType == LedgerType.NotSet || rec.DebitAccount.JournalType == LedgerType.NotSet) continue;
+				}
+
 				if (rec is IMoneyTransaction je)
 				{
-
 					_listRecords.Add(new JournalEntryVM(je));
 				}
 			}
@@ -189,6 +195,7 @@ namespace DLPMoneyTracker2.Main.TransactionList
 		public DateRange FilterDates;
 		public string SearchText;
 		public bool AreFilterControlsVisible;
+		public bool UseBudgetLogic;
 
 		public bool IsFilterEnabled
 		{
@@ -206,15 +213,17 @@ namespace DLPMoneyTracker2.Main.TransactionList
 		{
 			this.FilterDates = new DateRange(DateTime.MinValue, DateTime.MaxValue);
 			this.SearchText = string.Empty;
-			AreFilterControlsVisible = true;
+			this.AreFilterControlsVisible = true;
+			this.UseBudgetLogic = false;
 		}
 
-		public TransDetailFilter(IJournalAccount account, DateRange dates, string search)
+		public TransDetailFilter(IJournalAccount account, DateRange dates, string search, bool useBudget = false)
 		{
 			this.Account = account;
 			this.FilterDates = dates ?? new DateRange(DateTime.MinValue, DateTime.MaxValue);
 			this.SearchText = search;
-			AreFilterControlsVisible = true;
+			this.AreFilterControlsVisible = true;
+			this.UseBudgetLogic = useBudget;
 		}
 
 		public void Clear()

@@ -51,6 +51,9 @@ namespace DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans
                 decimal total = decimal.Zero;
                 foreach (var money in records)
                 {
+                    // For loans, ignore Interest accruing and other adjustments as they are not part of the Monthly Budget
+                    if (money.CreditAccount.JournalType == LedgerType.NotSet || money.DebitAccount.JournalType == LedgerType.NotSet) continue;
+
                     if (money.DebitAccountId == accountUID)
                     {
                         total += money.TransactionAmount;

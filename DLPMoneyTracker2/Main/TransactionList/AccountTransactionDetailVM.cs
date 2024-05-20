@@ -171,6 +171,11 @@ namespace DLPMoneyTracker2.Main.TransactionList
 
 			foreach (var rec in records.OrderBy(o => o.TransactionDate).ThenBy(o => o.Description))
 			{
+				if(_filter.UseBudgetLogic)
+				{
+					if (rec.CreditAccount.JournalType == LedgerType.NotSet || rec.DebitAccount.JournalType == LedgerType.NotSet) continue;
+				}
+
 				SingleAccountDetailVM vm = new SingleAccountDetailVM(FilterAccount, rec, notifications);
 				_listRecords.Add(vm);
 			}

@@ -116,7 +116,7 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
         {
             get
             {
-                if (this.CurrentMonthTotal > this.MonthlyBudget)
+                if (Math.Abs(this.CurrentMonthTotal) > Math.Abs(this.MonthlyBudget))
                 {
                     return new SolidColorBrush(Colors.Red);
                 }
