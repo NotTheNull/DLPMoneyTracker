@@ -55,14 +55,30 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
 
         public string AccountDesc { get { return _account.Description; } }
 
-        public BudgetTrackingType BudgetType { get { return this.NominalAccount.BudgetType; } }
+        public BudgetTrackingType BudgetType 
+        { 
+            get 
+            {
+                if(this.Account.JournalType == LedgerType.LiabilityLoan)
+                {
+                    return BudgetTrackingType.Fixed;
+                }
+
+                return this.NominalAccount.BudgetType; 
+            }
+        }
         public decimal MonthlyBudgetAmount
         {
-            get { return this.NominalAccount.CurrentBudgetAmount; }
+            get 
+            {
+                if (this.IsFixedExpense) return decimal.Zero;
+
+                return this.NominalAccount.CurrentBudgetAmount; 
+            }
             set
             {
                 if (this.IsFixedExpense) return;
-                if(this.NominalAccount is PayableAccount payable)
+                if (this.NominalAccount is PayableAccount payable)
                 {
                     payable.CurrentBudgetAmount = value;
                     saveNominalAccountUseCase.Execute(_account);
@@ -74,7 +90,15 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
         {
             get
             {
-                return _listPlans.Sum(s => s.ExpectedAmount);
+                if (this.IsFixedExpense)
+                {
+                    return _listPlans.Sum(s => s.ExpectedAmount);
+                }
+                else
+                {
+                    return this.MonthlyBudgetAmount;
+                }
+
             }
         }
 
@@ -82,7 +106,7 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
         {
             get
             {
-                return this.BudgetType == BudgetTrackingType.Fixed;
+                return this.BudgetType == BudgetTrackingType.Fixed || this.Account.JournalType == LedgerType.LiabilityLoan;
             }
         }
 
@@ -161,7 +185,7 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
                         _listPlans.Add(plan);
                     }
                 }
-                
+
             }
 
 
