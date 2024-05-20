@@ -34,6 +34,9 @@ namespace DLPMoneyTracker2
         {
             InitializeComponent();
 
+            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            this.Title = $"DLP Money Tracker - {version.ToString()}";
+
             panelAccountSummary.Children.Add(viewMain);
             _viewMoneyAccounts = viewMain;
 
