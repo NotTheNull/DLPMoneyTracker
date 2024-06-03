@@ -15,6 +15,7 @@ namespace DLPMoneyTracker.Core.Models
         int StartingRow { get; }
         Dictionary<string, int> Mapping { get; }
 
+        bool IsValidMapping();
         int GetMapping(string columnName);
         void SetMapping(string columnName, int columnIndex);
         void Copy(ICSVMapping cpy);
@@ -30,6 +31,15 @@ namespace DLPMoneyTracker.Core.Models
 
 
         ~CSVMapping() { this.Dispose(); }
+
+
+
+
+        public bool IsValidMapping()
+        {
+            return this.StartingRow >= 0
+                && this.Mapping.Count > 0;
+        }
 
 
         public void Copy(ICSVMapping cpy)
