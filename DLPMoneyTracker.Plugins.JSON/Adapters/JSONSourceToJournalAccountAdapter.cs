@@ -1,4 +1,5 @@
 ﻿using DLPMoneyTracker.BusinessLogic.AdapterInterfaces;
+using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.JSON.Models;
 using System;
@@ -25,6 +26,8 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
         public decimal DefaultMonthlyBudgetAmount { get; set; } = decimal.Zero;
         public decimal CurrentBudgetAmount { get; set; } = decimal.Zero;
 
+        public ICSVMapping Mapping { get; set; } = null;
+
         public void Copy(IJournalAccount cpy)
         {
             ArgumentNullException.ThrowIfNull(cpy);
@@ -35,11 +38,22 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             this.OrderBy = cpy.OrderBy;
             this.DateClosedUTC = cpy.DateClosedUTC;
 
-            if(cpy is INominalAccount nominal)
+            if(this.Mapping != null)
+            {
+                this.Mapping.Dispose();
+                this.Mapping = null;
+            }
+            if (cpy is INominalAccount nominal)
             {
                 this.BudgetType = nominal.BudgetType;
                 this.DefaultMonthlyBudgetAmount = nominal.DefaultMonthlyBudgetAmount;
                 this.CurrentBudgetAmount = nominal.CurrentBudgetAmount;
+            }
+            else if (cpy is IMoneyAccount money)
+            {
+                if (this.Mapping is null) this.Mapping = new CSVMapping();
+
+                this.Mapping.Copy(money.Mapping);
             }
         }
 
@@ -54,9 +68,16 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             acct.DateClosedUTC = this.DateClosedUTC;
             acct.BudgetType = this.BudgetType;
             acct.DefaultMonthlyBudgetAmount = this.DefaultMonthlyBudgetAmount;
-            acct.CurrentBudgetAmount = this.CurrentBudgetAmount;            
+            acct.CurrentBudgetAmount = this.CurrentBudgetAmount;
+
+            acct.Mapping = null;
+            if(this.Mapping != null)
+            {
+                acct.Mapping = new CSVMapping();
+                acct.Mapping.Copy(this.Mapping);
+            }
         }
-                
+
 
         public void ImportSource(JournalAccountJSON acct)
         {
@@ -70,6 +91,18 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             this.BudgetType = acct.BudgetType;
             this.DefaultMonthlyBudgetAmount = acct.DefaultMonthlyBudgetAmount;
             this.CurrentBudgetAmount = acct.CurrentBudgetAmount;
+
+            if (this.Mapping != null)
+            {
+                this.Mapping.Dispose();
+                this.Mapping = null;
+            }
+
+            if (acct.Mapping != null)
+            {
+                this.Mapping = new CSVMapping();
+                this.Mapping.Copy(acct.Mapping);
+            }
         }
     }
 }

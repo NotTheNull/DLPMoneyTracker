@@ -39,7 +39,7 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
 
     public interface IMoneyAccount : IJournalAccount
     {
-
+        ICSVMapping Mapping { get; }
     }
 
     public interface ILiabilityAccount : IJournalAccount

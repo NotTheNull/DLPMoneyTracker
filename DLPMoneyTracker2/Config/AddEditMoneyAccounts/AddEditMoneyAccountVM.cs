@@ -72,8 +72,16 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
         #endregion
 
         public bool CanEdit { get { return _editAccount?.DateClosedUTC == null; } }
+        public bool CanEditMapping { get { return this.AccountType == LedgerType.Bank || this.AccountType == LedgerType.LiabilityCard; } }
 
         public List<SpecialDropListItem<LedgerType>> JournalTypeList { get; set; }
+
+
+
+
+
+
+
 
         #region Commands
 
@@ -128,8 +136,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             }
         }
 
-        public RelayCommand _cmdDel;
-
+        private RelayCommand _cmdDel;
 
         public RelayCommand CommandRemove
         {
@@ -150,6 +157,24 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             }
         }
 
+
+        private RelayCommand _cmdEditMap;
+        public RelayCommand CommandEditMapping
+        {
+            get
+            {
+                return _cmdEditMap ??= new RelayCommand((o) =>
+                {
+                    if (_editAccount is null) return;
+
+                    var mappingUI = UICore.DependencyHost.GetRequiredService<CSVMappingUI>();
+                    mappingUI.LoadMoneyAccount(_editAccount);
+                    mappingUI.Show();
+                });
+            }
+        }
+        
+
         #endregion Commands
 
         /// <summary>
@@ -165,6 +190,8 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
                 vm.Copy(act);
                 this.AccountList.Add(vm);
             }
+
+            this.NotifyAll();
         }
 
         private void NotifyAll()
@@ -173,6 +200,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             NotifyPropertyChanged(nameof(AccountType));
             NotifyPropertyChanged(nameof(DisplayOrder));
             NotifyPropertyChanged(nameof(CanEdit));
+            NotifyPropertyChanged(nameof(CanEditMapping));
         }
     }
 }

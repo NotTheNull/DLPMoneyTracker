@@ -19,6 +19,7 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
 
         public DateTime? DateClosedUTC { get; set; }
 
+        public ICSVMapping Mapping { get; } = new CSVMapping();
 
 
         public CreditCardAccount()
@@ -39,6 +40,11 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
             this.Description = cpy.Description;
             this.OrderBy = cpy.OrderBy;
             this.DateClosedUTC = cpy.DateClosedUTC;
+
+            if(cpy is IMoneyAccount money)
+            {
+                this.Mapping.Copy(money.Mapping);
+            }
         }
 
     }

@@ -130,6 +130,9 @@ namespace DLPMoneyTracker2
             services.AddTransient<ExpensePlannerUI>();
             services.AddTransient<ExpensePlannerVM>();
 
+            services.AddTransient<CSVMappingUI>();
+            services.AddTransient<CSVMappingVM>();
+
             // Ledger
             services.AddTransient<IncomeJournalEntryVM>();
             services.AddTransient<ExpenseJournalEntryVM>();
@@ -147,6 +150,7 @@ namespace DLPMoneyTracker2
             services.AddTransient<AddEditBudgetPlanVM>();
             services.AddTransient<RecurrenceEditor>();
             services.AddTransient<RecurrenceEditorVM>();
+            
 
             // Bank Reconciliation
             services.AddTransient<BankReconciliationVM>();

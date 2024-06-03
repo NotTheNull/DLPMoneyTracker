@@ -5,6 +5,8 @@ using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DLPMoneyTracker.Core.Models;
+using DLPMoneyTracker.BusinessLogic.Factories;
 
 namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
 {
@@ -90,12 +92,22 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
         public int OrderBy { get { return DisplayOrder; } }
 
 
+        public ICSVMapping Mapping { get; set; } = null;
+
+
+
+
+
+
+
+
         public void Clear()
         {
             Id = Guid.Empty;
             Description = string.Empty;
             JournalType = LedgerType.NotSet;
             this.DateClosedUTC = null;
+            this.Mapping = null;
         }
 
         public void Copy(IJournalAccount account)
@@ -108,6 +120,18 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             JournalType = account.JournalType;
             DateClosedUTC = account.DateClosedUTC;
             DisplayOrder = account.OrderBy;
+            
+            if (this.Mapping != null)
+            {
+                this.Mapping.Dispose();
+                this.Mapping = null;
+            }
+
+            if (account is IMoneyAccount money)
+            {
+                this.Mapping = new CSVMapping();
+                this.Mapping.Copy(money.Mapping);
+            }
         }
 
         public void SaveAccount()
@@ -115,8 +139,14 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             if (string.IsNullOrWhiteSpace(_desc)) return;
             if (JournalType == LedgerType.NotSet) return;
 
+            JournalAccountFactory factory = new JournalAccountFactory();
+            var account = factory.Build(this);
+            if(account is IMoneyAccount money && this.Mapping != null)
+            {
+                money.Mapping.Copy(this.Mapping);
+            }
 
-            saveAccountUseCase.Execute(this);
+            saveAccountUseCase.Execute(account);
             
         }
     }

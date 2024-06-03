@@ -1,4 +1,5 @@
 ﻿using DLPMoneyTracker.BusinessLogic.AdapterInterfaces;
+using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.SQL.Data;
 using System;
@@ -25,6 +26,8 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
         public decimal DefaultMonthlyBudgetAmount { get; set; } = decimal.Zero;
         public decimal CurrentBudgetAmount { get; set; } = decimal.Zero;
 
+        public ICSVMapping Mapping { get; set; } = null;
+
         public void Copy(IJournalAccount cpy)
         {
             ArgumentNullException.ThrowIfNull(cpy);
@@ -41,8 +44,15 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
                 this.DefaultMonthlyBudgetAmount = nominal.DefaultMonthlyBudgetAmount;
                 this.CurrentBudgetAmount = nominal.CurrentBudgetAmount;
             }
+            else if (cpy is IMoneyAccount money)
+            {
+                if (this.Mapping is null) this.Mapping = new CSVMapping();
+
+                this.Mapping.Copy(money.Mapping);
+            }
         }
 
+        // TODO: Finish integration of CSVMapping into SQL Database
         public void ExportSource(ref Account acct)
         {
             ArgumentNullException.ThrowIfNull(acct);
@@ -55,6 +65,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
             acct.BudgetType = this.BudgetType;
             acct.DefaultBudget = this.DefaultMonthlyBudgetAmount;
             acct.CurrentBudget = this.CurrentBudgetAmount;
+
         }
 
         public void ImportSource(Account acct)
@@ -70,5 +81,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
             this.DefaultMonthlyBudgetAmount = acct.DefaultBudget;
             this.CurrentBudgetAmount = acct.CurrentBudget;
         }
+
+
     }
 }
