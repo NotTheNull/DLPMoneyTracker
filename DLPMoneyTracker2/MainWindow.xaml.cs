@@ -134,5 +134,12 @@ namespace DLPMoneyTracker2
             JSONConversion window = UICore.DependencyHost.GetRequiredService<JSONConversion>();
             window.Show();
         }
+
+        private void MenuImportCSV_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Feature coming soon");
+            //CSVImport window = UICore.DependencyHost.GetRequiredService<CSVImport>();
+            //window.Show();
+        }
     }
 }

@@ -10,6 +10,23 @@ namespace DLPMoneyTracker.Core
 {
     public static class GeneralOverrides
     {
+        public static DateTime ToDateTime(this string date)
+        {
+            if (string.IsNullOrWhiteSpace(date)) return DateTime.MinValue;
+
+            DateTime.TryParse(date, out DateTime result);
+            return result;
+        }
+
+        public static decimal ToDecimal(this string val)
+        {
+            if (string.IsNullOrWhiteSpace(val)) return decimal.Zero;
+
+            decimal.TryParse(val, out decimal result);
+            return result;
+        }
+
+
         public static string ToDisplayText(this LedgerType journalType)
         {
             switch (journalType)

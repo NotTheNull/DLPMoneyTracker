@@ -21,163 +21,168 @@
 
     </Window.Resources>
 
-        <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
+    <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
 
-                <Menu>
-                    <MenuItem Header="_File">
+            <Menu>
+                <MenuItem Header="_File">
 
-                        <MenuItem x:Name="MenuConvertData"
-                                  Header="_Import/Export Data"
+                    <MenuItem x:Name="MenuConvertData"
+                                  Header="_Import/Export JSON"
                                   Click="MenuConvertData_Click"
                                    />
 
-                        <MenuItem x:Name="MenuExit"
+                    <MenuItem x:Name="MenuImnportCSV"
+                              Header="Load From CSV"
+                              Click="MenuImportCSV_Click"
+                              />
+                    
+                    <MenuItem x:Name="MenuExit"
                                   Header="_Exit"
                                   Click="MenuExit_Click">
-                            <MenuItem.Icon>
-                                <Image Source="/Icons/Leave-256.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/Leave-256.png" />
+                        </MenuItem.Icon>
                     </MenuItem>
+                </MenuItem>
 
-                    <MenuItem Header="_Ledger">
-                        <MenuItem x:Name="MenuRecordIncome"
+                <MenuItem Header="_Ledger">
+                    <MenuItem x:Name="MenuRecordIncome"
                                   Header="Add _Income"
                                   Click="MenuRecordIncome_Click">
-                            <MenuItem.Icon>
-                                <Image Source="/Icons/Dollar-256.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/Dollar-256.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
 
-                        <MenuItem x:Name="MenuRecordExpense"
+                    <MenuItem x:Name="MenuRecordExpense"
                                   Click="MenuRecordExpense_Click"
                                   Header="Add _Expense">
-                            <MenuItem.Icon>
-                                <Image Source="/Icons/Credit-Card-256.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem x:Name="MenuRecordLiabilityPayment"
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/Credit-Card-256.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="MenuRecordLiabilityPayment"
                                   Click="MenuRecordLiabilityPayment_Click"
                                   Header="Add _Debt Payment">
-                            <MenuItem.Icon>
-                                <Image Source="/Icons/Payment-256.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem x:Name="MenuRecordBankTransfer"
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/Payment-256.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="MenuRecordBankTransfer"
                                   Click="MenuRecordBankTransfer_Click"
                                   Header="_Transfer Money">
-                            <MenuItem.Icon>
-                                <Image Source="/Icons/Money-Transfer-256.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/Money-Transfer-256.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
 
-                        <MenuItem x:Name="MenuRecordDebtAdjustment"
+                    <MenuItem x:Name="MenuRecordDebtAdjustment"
                                   Click="MenuRecordDebtAdjustment_Click"
                                   Header="Debt Adjustment">
-                            <MenuItem.Icon>
-                                <Image Source="/Icons/Light-Bulb-256.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/Light-Bulb-256.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
 
-                        <MenuItem x:Name="MenuAccountCorrection"
+                    <MenuItem x:Name="MenuAccountCorrection"
                                   Header="Add _Correction"
                                   Click="MenuAccountCorrection_Click">
-                            <MenuItem.Icon>
-                                <Image Source="/Icons/Edit-Pencil-256.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <!--<MenuItem Click="MenuItemModifyBudget_Click" Header="Modify Fixed Expense/Income Budget">
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/Edit-Pencil-256.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <!--<MenuItem Click="MenuItemModifyBudget_Click" Header="Modify Fixed Expense/Income Budget">
                             <MenuItem.Icon>
                                 <Image Source="/Icons/Stock-Exchange-256.png" />
                             </MenuItem.Icon>
                         </MenuItem>-->
-                        <!--<MenuItem x:Name="MenuShowHistory" Header="Show History">
+                    <!--<MenuItem x:Name="MenuShowHistory" Header="Show History">
                             <MenuItem.Icon>
                                 <Image Source="/Icons/Library-Books-256.png" />
                             </MenuItem.Icon>
                         </MenuItem>-->
-                    </MenuItem>
+                </MenuItem>
 
-                    <MenuItem Header="_Config">
+                <MenuItem Header="_Config">
 
-                        <MenuItem x:Name="MenuEditMoneyAccounts"
+                    <MenuItem x:Name="MenuEditMoneyAccounts"
                                   Header="Edit _Money Accounts"
                                   Click="MenuEditMoneyAccounts_Click">
-                            <MenuItem.Icon>
-                                <Image Source="/Icons/Dollar-256.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/Dollar-256.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
 
-                        <MenuItem x:Name="MenuEditLedgerAccounts"
+                    <MenuItem x:Name="MenuEditLedgerAccounts"
                                   Header="Edit _Ledger Accounts"
                                   Click="MenuEditLedgerAccounts_Click">
-                            <MenuItem.Icon>
-                                <Image Source="/Icons/Library-Books-256.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/Library-Books-256.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
 
-                        <MenuItem x:Name="MenuEditBudgetPlans"
+                    <MenuItem x:Name="MenuEditBudgetPlans"
                                   Click="MenuEditBudgetPlans_Click"
                                   Header="Edit _Budget Plans">
-                            <MenuItem.Icon>
-                                <Image Source="/Icons/Edit-Pencil-256.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/Edit-Pencil-256.png" />
+                        </MenuItem.Icon>
                     </MenuItem>
-                </Menu>
+                </MenuItem>
+            </Menu>
 
-                <StackPanel
+            <StackPanel
                     Height="30"
                     Background="LightGray"
                     Orientation="Horizontal">
-                    <Button
+                <Button
                         x:Name="btnExit"
                         Margin="5,0,0,0"
                         Click="MenuExit_Click"
                         Style="{StaticResource MenuButton}"
                         ToolTip="Exit">
-                            <Button.Content>
-                                <Image Source="/Icons/Leave-256.png" />
-                            </Button.Content>
-                        </Button>
+                    <Button.Content>
+                        <Image Source="/Icons/Leave-256.png" />
+                    </Button.Content>
+                </Button>
 
-                    <Rectangle
+                <Rectangle
                         Width="2"
                         Height="30"
                         Margin="5"
                         Fill="Silver" />
 
-                    <Button x:Name="btnAddIncome"
+                <Button x:Name="btnAddIncome"
                             Click="MenuRecordIncome_Click"
                             Style="{StaticResource MenuButton}"
                             ToolTip="Add Income">
-                        <Button.Content>
-                            <Image Source="/Icons/Dollar-256.png" />
-                        </Button.Content>
-                    </Button>
+                    <Button.Content>
+                        <Image Source="/Icons/Dollar-256.png" />
+                    </Button.Content>
+                </Button>
 
-                    <Button
+                <Button
                         x:Name="btnAddExpense"
                         Click="MenuRecordExpense_Click"
                         Style="{StaticResource MenuButton}"
                         ToolTip="Add Expense">
-                        <Button.Content>
-                            <Image Source="/Icons/Credit-Card-256.png" />
-                        </Button.Content>
-                    </Button>
+                    <Button.Content>
+                        <Image Source="/Icons/Credit-Card-256.png" />
+                    </Button.Content>
+                </Button>
 
-                    <Button
+                <Button
                         x:Name="btnAddLiabilityPayment"
                     Click="MenuRecordLiabilityPayment_Click"
                         Style="{StaticResource MenuButton}"
                         ToolTip="Liability Payment">
-                        <Button.Content>
-                            <Image Source="/Icons/Payment-256.png" />
-                        </Button.Content>
-                    </Button>
+                    <Button.Content>
+                        <Image Source="/Icons/Payment-256.png" />
+                    </Button.Content>
+                </Button>
 
-                    <!--<Button
+                <!--<Button
                         x:Name="btnShowHistory"
 
                         Style="{StaticResource MenuButton}"
@@ -187,7 +192,7 @@
                         </Button.Content>
                     </Button>-->
 
-                    <!--<TextBlock
+                <!--<TextBlock
                         Margin="30,0,0,0"
                         VerticalAlignment="Center"
                         FontSize="18"
@@ -198,96 +203,96 @@
                         VerticalAlignment="Center"
                         FontSize="18"
                         Foreground="Blue" />-->
-                </StackPanel>
             </StackPanel>
+        </StackPanel>
 
-            <Grid x:Name="gridTabs" VerticalAlignment="Top">
-                <TabControl Background="Transparent">
-                    <TabItem>
-                        <TabItem.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock
+        <Grid x:Name="gridTabs" VerticalAlignment="Top">
+            <TabControl Background="Transparent">
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
                                 Foreground="Green"
                                 Style="{StaticResource TabHeaderLabel}"
                                 Text="~ Account Summary ~" />
-                            </StackPanel>
-                        </TabItem.Header>
-                        <StackPanel x:Name="panelAccountSummary" Orientation="Vertical" />
-                    </TabItem>
+                        </StackPanel>
+                    </TabItem.Header>
+                    <StackPanel x:Name="panelAccountSummary" Orientation="Vertical" />
+                </TabItem>
 
-                    <TabItem>
-                        <TabItem.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
                                 Foreground="OrangeRed"
                                 Style="{StaticResource TabHeaderLabel}"
                                 Text="~ Budget Planner ~" />
-                            </StackPanel>
-                        </TabItem.Header>
-                        <StackPanel x:Name="panelBudget" Orientation="Vertical" />
-                    </TabItem>
+                        </StackPanel>
+                    </TabItem.Header>
+                    <StackPanel x:Name="panelBudget" Orientation="Vertical" />
+                </TabItem>
 
-                    <TabItem>
-                        <TabItem.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
                                     Foreground="Blue"
                                     Style="{StaticResource TabHeaderLabel}"
                                     Text="~ Bill Reminders ~" />
-                            </StackPanel>
-                        </TabItem.Header>
-                        <StackPanel x:Name="panelBillReminers" Orientation="Vertical" />
-                    </TabItem>
+                        </StackPanel>
+                    </TabItem.Header>
+                    <StackPanel x:Name="panelBillReminers" Orientation="Vertical" />
+                </TabItem>
 
-                    <TabItem>
-                        <TabItem.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Style="{StaticResource TabHeaderLabel}" Text="~ Transactions ~" />
-                            </StackPanel>
-                        </TabItem.Header>
-                        <StackPanel
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Style="{StaticResource TabHeaderLabel}" Text="~ Transactions ~" />
+                        </StackPanel>
+                    </TabItem.Header>
+                    <StackPanel
                             x:Name="panelTransactions"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             Orientation="Vertical" />
-                    </TabItem>
+                </TabItem>
 
-                    <TabItem>
-                        <TabItem.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
                                     Foreground="Purple"
                                     Style="{StaticResource TabHeaderLabel}"
                                     Text="~ Year To Date ~" />
-                            </StackPanel>
-                        </TabItem.Header>
+                        </StackPanel>
+                    </TabItem.Header>
 
-                        <StackPanel
+                    <StackPanel
                             x:Name="panelYTD"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             Orientation="Vertical" />
-                    </TabItem>
+                </TabItem>
 
-                    <TabItem>
-                        <TabItem.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
                                     Foreground="DarkGoldenrod"
                                     Style="{StaticResource TabHeaderLabel}"
                                     Text="~ Bank Reconciliation ~"
                                     />
-                            </StackPanel>
-                        </TabItem.Header>
+                        </StackPanel>
+                    </TabItem.Header>
 
-                        <StackPanel
+                    <StackPanel
                             x:Name="panelBankRec"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             Orientation="Vertical"/>
-                    </TabItem>
-                </TabControl>
-            </Grid>
-    
-        </DockPanel>
+                </TabItem>
+            </TabControl>
+        </Grid>
+
+    </DockPanel>
 </Window>

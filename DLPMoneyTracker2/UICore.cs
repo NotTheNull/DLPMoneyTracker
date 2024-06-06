@@ -168,6 +168,9 @@ namespace DLPMoneyTracker2
             services.AddTransient<JSONConversionVM>();
             services.AddTransient<JSONConversion>();
 
+            services.AddTransient<CSVImport>();
+            services.AddTransient<CSVImportVM>();
+
             
 
             
