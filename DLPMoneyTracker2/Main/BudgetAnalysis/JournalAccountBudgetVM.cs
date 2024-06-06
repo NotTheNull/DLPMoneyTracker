@@ -82,6 +82,7 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
                 {
                     payable.CurrentBudgetAmount = value;
                     saveNominalAccountUseCase.Execute(_account);
+                    notifications.TriggerBudgetAmountChanged(this.NominalAccount.Id);
                 }
             }
         }

@@ -21,10 +21,14 @@ namespace DLPMoneyTracker.Core
         public delegate void BankReconciliationChangedHandler(Guid bankAccountUID);
         public event BankReconciliationChangedHandler BankReconciliationChanged;
 
+        public delegate void BudgetAmountChangedHandler(Guid accountUID);
+        public event BudgetAmountChangedHandler BudgetAmountChanged;
+
 
         public void TriggerTransactionModified(Guid debitAccountUID, Guid creditAccountUID) { TransactionsModified?.Invoke(debitAccountUID, creditAccountUID); }
         public void TriggerBankDateChanged(Guid moneyAccountUID) { BankDateChanged?.Invoke(moneyAccountUID); }
         public void TriggerBankReconciliationChanged(Guid bankAccountUID) { BankReconciliationChanged?.Invoke(bankAccountUID); }
+        public void TriggerBudgetAmountChanged(Guid accountUID) { BudgetAmountChanged?.Invoke(accountUID); }
 
 
     }

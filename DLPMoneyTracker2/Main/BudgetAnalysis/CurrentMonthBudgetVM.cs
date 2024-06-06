@@ -25,13 +25,19 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
             this.getAccountsByTypeUseCase = getAccountsByTypeUseCase;
             this.notifications = notifications;
             this.notifications.TransactionsModified += Notifications_TransactionsModified;
+            this.notifications.BudgetAmountChanged += Notifications_BudgetAmountChanged;
 
+            this.Load();
+        }
+
+        private void Notifications_BudgetAmountChanged(Guid accountUID)
+        {
             this.Load();
         }
 
         private void Notifications_TransactionsModified(Guid debitAccountId, Guid creditAccountId)
         {
-            this.NotifyAll();
+            this.Load();
         }
 
         // List of Receivable IJournalAccounts; NOT TO BE DISPLAYED

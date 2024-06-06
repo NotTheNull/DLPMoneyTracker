@@ -1,4 +1,5 @@
 ﻿using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
+using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker2.Core;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,13 +13,16 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
     {
         private readonly IGetNominalAccountsUseCase getLedgerAccountsUseCase;
         private readonly IDeleteJournalAccountUseCase deleteAcountUseCase;
+        private readonly NotificationSystem notifications;
 
         public AddEditLedgerAccountVM(
             IGetNominalAccountsUseCase getLedgerAccountsUseCase,
-            IDeleteJournalAccountUseCase deleteAcountUseCase) : base()
+            IDeleteJournalAccountUseCase deleteAcountUseCase,
+            NotificationSystem notifications) : base()
         {
             this.getLedgerAccountsUseCase = getLedgerAccountsUseCase;
             this.deleteAcountUseCase = deleteAcountUseCase;
+            this.notifications = notifications;
             _editAccount = UICore.DependencyHost.GetRequiredService<LedgerAccountVM>();
             
 
@@ -103,6 +107,10 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                 {
                     _editAccount.SaveAccount();
                     _editAccount.Clear();
+
+                    // Even if no changes were made, best to trigger any recalculations regarding budget
+                    notifications.TriggerBudgetAmountChanged(_editAccount.Id);
+
                     this.NotifyAll();
                     this.ReloadAccounts();
                 }));
