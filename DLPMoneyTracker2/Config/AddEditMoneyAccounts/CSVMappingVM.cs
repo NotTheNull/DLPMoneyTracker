@@ -78,6 +78,18 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
         }
 
 
+        private bool _isInverted;
+
+        public bool IsAmountInverted
+        {
+            get { return _isInverted; }
+            set 
+            { 
+                _isInverted = value;
+                NotifyPropertyChanged(nameof(this.IsAmountInverted));
+            }
+        }
+
 
 
         #endregion
@@ -120,6 +132,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             if (_mapOriginal is null) _mapOriginal = new CSVMapping();
 
             this.StartingRow = _mapOriginal.StartingRow;
+            this.IsAmountInverted = _mapOriginal.IsAmountInverted;
             this.TransDateColumn = _mapOriginal.GetMapping(ICSVMapping.TRANS_DATE);
             this.DescriptionColumn = _mapOriginal.GetMapping(ICSVMapping.DESCRIPTION);
             this.AmountColumn = _mapOriginal.GetMapping(ICSVMapping.AMOUNT);
@@ -130,7 +143,8 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
         {
             CSVMapping newMapping = new CSVMapping()
             {
-                StartingRow = this.StartingRow
+                StartingRow = this.StartingRow,
+                IsAmountInverted = this.IsAmountInverted
             };
 
             newMapping.SetMapping(ICSVMapping.TRANS_DATE, this.TransDateColumn);

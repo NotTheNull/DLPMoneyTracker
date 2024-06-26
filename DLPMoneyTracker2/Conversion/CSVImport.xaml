@@ -8,6 +8,17 @@
         Title="CSVImport" 
         Height="650" 
         Width="800">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <Style x:Key="localButton" TargetType="Button">
+                <Setter Property="Width" Value="80" />
+                <Setter Property="Height" Value="30" />
+                <Setter Property="Margin" Value="5, 0, 10, 0"/>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+    
     
     <Grid Style="{StaticResource MainGridStyle}">
         <Grid.RowDefinitions>
@@ -16,10 +27,9 @@
             <RowDefinition Height="30" />
             <RowDefinition Height="30" />
             <RowDefinition Height="*"/>
-            <RowDefinition Height="15" /> <!-- Buffer -->
+            <RowDefinition Height="40" /> <!-- Buttons -->
             <RowDefinition Height="30" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="40" />
             <RowDefinition Height="15" /> <!-- Buffer -->
         </Grid.RowDefinitions>
 
@@ -32,14 +42,38 @@
             Style="{StaticResource MenuButton}">
                 <Image Source="/Icons/Leave-256.png" />
             </Button>
+
+            <Button Grid.Column="2"
+                    ToolTip="Load CSV file"
+                    Style="{StaticResource MenuButton}"
+                    >
+                <Button.Content>
+                    <Image Style="{StaticResource MenuIcon}" Source="/Icons/open-file-50.png" />
+                </Button.Content>
+            </Button>
+
+            <TextBlock Margin="10, 0, 0, 0" 
+                       Foreground="Blue"
+                       Text="{Binding Path=CSVFilePath, UpdateSourceTrigger=PropertyChanged, FallbackValue=*NO FILE*}"
+                       Style="{StaticResource StandardHeaderLabel}"    
+                       />
+
+
         </StackPanel>
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
+
+                <ColumnDefinition Width="120" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="Money Account"
@@ -50,17 +84,38 @@
             <ComboBox Grid.Column="1" 
                       Width="200"
                       Margin="0, 5, 0, 5"
+                      ItemsSource="{Binding Path=AccountList}"
+                      SelectedValue="{Binding Path=SelectedMoneyAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      DisplayMemberPath="Display"
+                      SelectedValuePath="Value"
                       />
 
-            <Button Grid.Column="2"
-                    ToolTip="Load CSV file"
+            <TextBlock Text="CSV Date Range"
+                       Style="{StaticResource StandardHeaderLabel}"
+                       Grid.Column="3"
+                       />
+
+            <DatePicker Grid.Column="4"
+                        SelectedDate="{Binding Path=StartDate, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                        />
+
+            <TextBlock Text="To"
+                       Style="{StaticResource StandardHeaderLabel}"
+                       Foreground="Black"
+                       Grid.Column="5"
+                       />
+
+            <DatePicker Grid.Column="6"
+                        SelectedDate="{Binding Path=EndDate, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+            />
+
+            <Button ToolTip="Reload records"
                     Style="{StaticResource MenuButton}"
+                    Grid.Column="8"
+                    Command="{Binding Path=CommandRefresh}"
                     >
-                <Button.Content>
-                    <Image Style="{StaticResource MenuIcon}" Source="/Icons/open-file-50.png" />
-                </Button.Content>
+                <Image Source="/Icons/Refresh-256.png" />
             </Button>
-                    
 
         </Grid>
 
@@ -69,8 +124,48 @@
                    Style="{StaticResource StandardHeaderLabel}"
                    Text="CSV Records"
                    />
-        <DataGrid Grid.Row="4">
-            
+        <DataGrid Grid.Row="4"
+                  ItemsSource="{Binding Path=CSVRecordList}"
+                  >
+            <DataGrid.Columns>
+                
+                <!-- Checkbox -->
+                <DataGridTemplateColumn Width="40">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <RadioButton GroupName="CSVSelection" 
+                                         IsChecked="{Binding Path=IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                         />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Date -->
+                <DataGridTextColumn Header="Date" 
+                                    Binding="{Binding Path=TransactionDate, Converter={StaticResource convertDateToDisplay}}" 
+                                    Width="120"
+                                    SortDirection="Ascending"
+                                    />
+
+                <!-- Description -->
+                <DataGridTemplateColumn Header="Description" 
+                                        Width="450">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Description}"
+                                       TextWrapping="Wrap"
+                                       />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Amount -->
+                <DataGridTextColumn Header="Amount"
+                                    Binding="{Binding Path=Amount, Converter={StaticResource convertDecimalToDisplay}}"
+                                    Width="180"
+                                    />
+
+            </DataGrid.Columns>
         </DataGrid>
 
 
@@ -78,21 +173,71 @@
            Style="{StaticResource StandardHeaderLabel}"
            Text="Transactions"
            />
-        <DataGrid Grid.Row="7">
+        <DataGrid Grid.Row="7"
+                  ItemsSource="{Binding Path=TransactionList}"
+                  >
+            <DataGrid.Columns>
 
+                <!-- Checkbox -->
+                <DataGridTemplateColumn Width="40">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding Path=IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                <!-- Date -->
+                <DataGridTextColumn Header="Transaction Date"
+                                    Binding="{Binding Path=TransactionDate, Converter={StaticResource convertDateToDisplay}}"
+                                    Width="120"
+                                    />
+
+                <!-- Description -->
+                <DataGridTemplateColumn Header="Description" 
+                        Width="350">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Description}"
+                       TextWrapping="Wrap"
+                       />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+
+                <!-- Amount -->
+                <DataGridTextColumn Header="Amount"
+                    Binding="{Binding Path=Amount, Converter={StaticResource convertDecimalToDisplay}}"
+                    Width="180"
+                    />
+                
+                <!-- Bank Date -->
+                <DataGridTextColumn Header="Bank Date"
+                    Binding="{Binding Path=BankDate, Converter={StaticResource convertDateToDisplay}}"
+                    Width="120"
+                    />
+
+            </DataGrid.Columns>
         </DataGrid>
 
 
         <StackPanel HorizontalAlignment="Right"
                     Orientation="Horizontal"
-                    Grid.Row="8"
+                    Grid.Row="5"
                     >
-            <Button>
+            <Button Style="{StaticResource localButton}"
+                    Command="{Binding Path=CommandMatch}"
+                    >
                 Match
             </Button>
-            <Button>
+
+            <Button Style="{StaticResource localButton}"
+                    Command="{Binding Path=CommandAddNewTransaction}"
+                    >
                 Create New
             </Button>
+            
         </StackPanel>
         
         

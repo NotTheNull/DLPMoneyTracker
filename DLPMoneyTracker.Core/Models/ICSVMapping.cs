@@ -13,6 +13,7 @@ namespace DLPMoneyTracker.Core.Models
         public const string AMOUNT = "TransactionAmount";
 
         int StartingRow { get; }
+        bool IsAmountInverted { get; } // Normal: Negative amount = credit charge; Inverted: Negative amount = payment / income
         Dictionary<string, int> Mapping { get; }
 
         bool IsValidMapping();
@@ -24,7 +25,7 @@ namespace DLPMoneyTracker.Core.Models
     public class CSVMapping : ICSVMapping
     {
         public int StartingRow { get; set; } = 1;
-
+        public bool IsAmountInverted { get; set; } = false;
         private Dictionary<string, int> _map = new Dictionary<string, int>();
         public Dictionary<string, int> Mapping { get { return _map; } }
 
