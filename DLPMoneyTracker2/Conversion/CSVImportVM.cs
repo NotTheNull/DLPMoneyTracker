@@ -190,6 +190,18 @@ namespace DLPMoneyTracker2.Conversion
             }
         }
 
+        private RelayCommand _cmdClearSelTrans;
+        public RelayCommand CommandClearSelectedTransactions
+        {
+            get 
+            {
+                return _cmdClearSelTrans ??= new RelayCommand((o) =>
+                {
+                    this.TransactionList.Where(x => x.IsSelected).ToList().ForEach(x => x.IsSelected = false);
+                });
+             }
+        }
+
 
         #endregion
 
@@ -279,7 +291,9 @@ namespace DLPMoneyTracker2.Conversion
             var transactions = this.TransactionList.Where(s => s.IsSelected).ToList();
             if (transactions?.Any() != true) return;
 
-            if(Math.Abs(csv.Amount) != Math.Abs(transactions.Sum(s => s.Amount)))
+            decimal sumTransactions = Math.Round(transactions.Sum(s => s.Amount), 2);
+
+            if(Math.Abs(csv.Amount) != Math.Abs(sumTransactions))
             {
                 MessageBox.Show("Amounts do not match!");
                 return;

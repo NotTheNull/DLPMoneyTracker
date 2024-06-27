@@ -13,7 +13,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <Style x:Key="localButton" TargetType="Button">
-                <Setter Property="Width" Value="80" />
+                <Setter Property="Width" Value="100" />
                 <Setter Property="Height" Value="30" />
                 <Setter Property="Margin" Value="5, 0, 10, 0"/>
             </Style>
@@ -33,6 +33,7 @@
             <!-- Buttons -->
             <RowDefinition Height="30" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
             <RowDefinition Height="15" />
             <!-- Buffer -->
         </Grid.RowDefinitions>
@@ -127,11 +128,11 @@
 
         </Grid>
 
-
         <TextBlock Grid.Row="3"
                    Style="{StaticResource StandardHeaderLabel}"
                    Text="CSV Records"
                    />
+        
         <DataGrid Grid.Row="4"
                   ItemsSource="{Binding Path=CSVRecordList}"
                   >
@@ -176,11 +177,46 @@
             </DataGrid.Columns>
         </DataGrid>
 
+        <Grid Grid.Row="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="1"
+                    Style="{StaticResource localButton}"
+                    Command="{Binding Path=CommandAutoClear}"
+                    ToolTip="Compares Date and Amount to match records"
+                    >
+                Auto-Clear
+            </Button>
+
+            <StackPanel HorizontalAlignment="Right"
+                    Orientation="Horizontal"
+                    Grid.Column="3"
+                    >
+                <Button Style="{StaticResource localButton}"
+                    Command="{Binding Path=CommandMatch}"
+                    >
+                    Match
+                </Button>
+
+                <Button Style="{StaticResource localButton}"
+                    Command="{Binding Path=CommandAddNewTransaction}"
+                    >
+                    Create New
+                </Button>
+
+            </StackPanel>
+        </Grid>
 
         <TextBlock Grid.Row="6"
            Style="{StaticResource StandardHeaderLabel}"
            Text="Transactions"
            />
+        
         <DataGrid Grid.Row="7"
                   ItemsSource="{Binding Path=TransactionList}"
                   >
@@ -229,41 +265,13 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Grid Grid.Row="5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-
-            <Button Grid.Column="1"
-                    Style="{StaticResource localButton}"
-                    Command="{Binding Path=CommandAutoClear}"
-                    ToolTip="Compares Date and Amount to match records"
-                    >
-                Auto-Clear
-            </Button>
-            
-        <StackPanel HorizontalAlignment="Right"
-                    Orientation="Horizontal"
-                    Grid.Column="3"
-                    >
+        <StackPanel Grid.Row="8"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
             <Button Style="{StaticResource localButton}"
-                    Command="{Binding Path=CommandMatch}"
-                    >
-                Match
+                    Command="{Binding Path=CommandClearSelectedTransactions}">
+                Clear Selected
             </Button>
-
-            <Button Style="{StaticResource localButton}"
-                    Command="{Binding Path=CommandAddNewTransaction}"
-                    >
-                Create New
-            </Button>
-
         </StackPanel>
-        </Grid>
-
-
     </Grid>
 </Window>
