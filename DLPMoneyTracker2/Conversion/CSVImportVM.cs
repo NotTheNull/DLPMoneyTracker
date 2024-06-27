@@ -358,14 +358,47 @@ namespace DLPMoneyTracker2.Conversion
             {
                 splitThis = "\r\n";
             }
-            var listData = fileData
-                .Split(splitThis)
-                .Select(s => s.Split(","))
-                .ToList();
+            //var listData = fileData
+            //    .Split(splitThis)
+            //    .Select(s => s.Split(","))
+            //    .ToList();
+
+            // We have the weird situation where there COULD be commas in the Description
+            // Most bank CSVs so far wrap each field in QUOTES to help identify the break points
+            // May need regular expression for this
+            var fileLines = fileData.Split(splitThis);
+            List<string[]> listData = new List<string[]>();
+            foreach(string line in fileLines)
+            {
+                string sanitized = this.SanitizeCSVLine(line);
+                listData.Add(sanitized.Split(","));
+            }
 
 
             if (listData?.Any() == true) csvData.AddRange(listData);
             this.PrefillDateRange();
+        }
+
+        private string SanitizeCSVLine(string arg)
+        {
+            if (string.IsNullOrWhiteSpace(arg)) return string.Empty;
+
+            char[] lineArray = arg.Trim().ToCharArray();
+            bool isRemoveComma = false;
+            for(int i = 0; i < lineArray.Length; i++)
+            {
+                if (lineArray[i] == '\"')
+                {
+                    isRemoveComma = !isRemoveComma;
+                }
+                else if (lineArray[i] == ',' && isRemoveComma)
+                {
+                    lineArray[i] = ' ';
+                }
+                // else continue
+            }
+
+            return lineArray.ToString();
         }
 
         /// <summary>
