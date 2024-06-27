@@ -229,10 +229,25 @@
             </DataGrid.Columns>
         </DataGrid>
 
+        <Grid Grid.Row="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
+            <Button Grid.Column="1"
+                    Style="{StaticResource localButton}"
+                    Command="{Binding Path=CommandAutoClear}"
+                    ToolTip="Compares Date and Amount to clear already reconciled records"
+                    >
+                Auto-Clear
+            </Button>
+            
         <StackPanel HorizontalAlignment="Right"
                     Orientation="Horizontal"
-                    Grid.Row="5"
+                    Grid.Column="3"
                     >
             <Button Style="{StaticResource localButton}"
                     Command="{Binding Path=CommandMatch}"
@@ -247,6 +262,7 @@
             </Button>
 
         </StackPanel>
+        </Grid>
 
 
     </Grid>

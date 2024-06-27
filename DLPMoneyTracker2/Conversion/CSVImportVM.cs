@@ -85,7 +85,13 @@ namespace DLPMoneyTracker2.Conversion
             {
                 _account = value;
                 NotifyPropertyChanged(nameof(SelectedMoneyAccount));
-                this.PrefillDateRange();
+
+                if(!string.IsNullOrWhiteSpace(this.CSVFilePath))
+                {
+                    this.ImportCSV();
+                    this.PrefillDateRange();
+                    this.LoadTransactions();
+                }
             }
         }
 
@@ -172,8 +178,35 @@ namespace DLPMoneyTracker2.Conversion
             }
         }
 
+        private RelayCommand _cmdAutoClear;
+        public RelayCommand CommandAutoClear
+        {
+            get
+            {
+                return _cmdAutoClear ??= new RelayCommand((o) =>
+                {
+                    this.AutoClear();
+                });
+            }
+        }
+
 
         #endregion
+
+
+
+        private void AutoClear()
+        {
+            var loopList = this.CSVRecordList.ToList();
+            foreach(var csv in loopList)
+            {
+                var transaction = this.TransactionList.FirstOrDefault(x => x.BankDate == csv.TransactionDate && Math.Abs(x.Amount) == Math.Abs(csv.Amount));
+                if (transaction is null) continue;
+
+                this.CSVRecordList.Remove(csv);
+                this.TransactionList.Remove(transaction);
+            }
+        }
 
 
         private void PrefillDateRange()
