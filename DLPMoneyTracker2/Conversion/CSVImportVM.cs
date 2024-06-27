@@ -242,7 +242,7 @@ namespace DLPMoneyTracker2.Conversion
             var csv = this.CSVRecordList.FirstOrDefault(x => x.IsSelected);
             if (csv is null) return;
 
-            bool isCredit = (csv.Amount < 0 && !this.Mapping.IsAmountInverted);
+            bool isCredit = (csv.Amount * (this.Mapping.IsAmountInverted ? -1 : 1) < 0);
             MoneyTransaction record = new MoneyTransaction()
             {
                 TransactionDate = csv.TransactionDate,
@@ -358,11 +358,7 @@ namespace DLPMoneyTracker2.Conversion
             {
                 splitThis = "\r\n";
             }
-            //var listData = fileData
-            //    .Split(splitThis)
-            //    .Select(s => s.Split(","))
-            //    .ToList();
-
+            
             // We have the weird situation where there COULD be commas in the Description
             // Most bank CSVs so far wrap each field in QUOTES to help identify the break points
             // May need regular expression for this
@@ -398,7 +394,7 @@ namespace DLPMoneyTracker2.Conversion
                 // else continue
             }
 
-            return lineArray.ToString();
+            return new String(lineArray);
         }
 
         /// <summary>
@@ -409,7 +405,7 @@ namespace DLPMoneyTracker2.Conversion
             ArgumentNullException.ThrowIfNull(this.SelectedMoneyAccount);
 
             this.CSVRecordList.Clear();
-            if (Mapping is null) return;
+            if (Mapping?.Mapping is null) return;
             if (csvData.Count <= this.Mapping.StartingRow) return;
 
 
@@ -424,7 +420,7 @@ namespace DLPMoneyTracker2.Conversion
                 this.CSVRecordList.Add(new CSVRecordVM
                 {
                     TransactionDate = csvData[i][this.Mapping.GetMapping(ICSVMapping.TRANS_DATE)].RemoveQuotes().ToDateTime(),
-                    Description = csvData[i][this.Mapping.GetMapping(ICSVMapping.DESCRIPTION)].Trim(),
+                    Description = csvData[i][this.Mapping.GetMapping(ICSVMapping.DESCRIPTION)].RemoveQuotes().Trim(),
                     Amount = csvData[i][this.Mapping.GetMapping(ICSVMapping.AMOUNT)].RemoveQuotes().ToDecimal()
                 });
             }
