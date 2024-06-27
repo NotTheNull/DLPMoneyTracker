@@ -117,13 +117,14 @@ namespace DLPMoneyTracker2.Conversion
                         CheckPathExists = true,
                         CheckFileExists = true,
                         DefaultExt = "csv",
-                        InitialDirectory = System.IO.Path.Combine(Environment.GetEnvironmentVariable("HOMEPATH"), "Downloads"),
+                        InitialDirectory = "C:\\",
                         Filter = "Comma-Separated Values (*.csv)|*.csv",
-                        FilterIndex = 1
+                        FilterIndex = 1,
+                        Multiselect=false
                     };
 
-                    fileDialog.ShowDialog();
-                    if (string.IsNullOrWhiteSpace(fileDialog.FileName))
+                    bool? isFileSelected = fileDialog.ShowDialog();
+                    if (isFileSelected == true)
                     {
                         this.LoadCSV(fileDialog.FileName);
                     }
@@ -198,12 +199,29 @@ namespace DLPMoneyTracker2.Conversion
             bool isCredit = (csv.Amount < 0 && !this.Mapping.IsAmountInverted);
             MoneyTransaction record = new MoneyTransaction()
             {
+                TransactionDate = csv.TransactionDate,
                 Description = csv.Description,
-                TransactionAmount = Math.Abs(csv.Amount),
-                CreditAccount = isCredit ? this._account : null,
-                DebitAccount = !isCredit ? this._account : null,
-                JournalEntryType = isCredit ? TransactionType.Expense : TransactionType.Income
+                TransactionAmount = Math.Abs(csv.Amount)
             };
+            if(isCredit)
+            {
+                record.CreditAccount = _account;
+                record.CreditBankDate = csv.TransactionDate;
+                record.JournalEntryType = TransactionType.Expense;
+            } 
+            else if(this.SelectedMoneyAccount.JournalType == LedgerType.LiabilityCard)
+            {
+                record.DebitAccount = _account;
+                record.DebitBankDate = csv.TransactionDate;
+                record.JournalEntryType = TransactionType.DebtPayment;
+            } else
+            {
+                record.DebitAccount = _account;
+                record.DebitBankDate = csv.TransactionDate;
+                record.JournalEntryType = TransactionType.Income;
+            }
+
+
             var viewModel = JournalEntryVMFactory.BuildViewModel(record);
             RecordJournalEntry window = new RecordJournalEntry(viewModel);
             window.Show();
@@ -276,12 +294,22 @@ namespace DLPMoneyTracker2.Conversion
             this.CSVFilePath = pathCSV;
 
             csvData.Clear();
-            var fileData = System.IO.File.ReadAllText(pathCSV)
-                .Split(Environment.NewLine)
+            var fileData = System.IO.File.ReadAllText(pathCSV);
+            string splitThis = "\n";
+            if(fileData.Contains("\n\r"))
+            {
+                splitThis = "\n\r";
+            } else if(fileData.Contains("\r\n"))
+            {
+                splitThis = "\r\n";
+            }
+            var listData = fileData
+                .Split(splitThis)
                 .Select(s => s.Split(","))
                 .ToList();
 
-            if (fileData?.Any() == true) csvData.AddRange(fileData);
+
+            if (listData?.Any() == true) csvData.AddRange(listData);
             this.PrefillDateRange();
         }
 
@@ -299,6 +327,12 @@ namespace DLPMoneyTracker2.Conversion
 
             for (int i = this.Mapping.StartingRow - 1; i < csvData.Count; i++)
             {
+                if (csvData[i].Length <= 1)
+                {
+                    // This is a blank row; skip it
+                    continue;
+                }
+
                 this.CSVRecordList.Add(new CSVRecordVM
                 {
                     TransactionDate = csvData[i][this.Mapping.GetMapping(ICSVMapping.TRANS_DATE)].ToDateTime(),

@@ -133,9 +133,11 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
 
             this.StartingRow = _mapOriginal.StartingRow;
             this.IsAmountInverted = _mapOriginal.IsAmountInverted;
-            this.TransDateColumn = _mapOriginal.GetMapping(ICSVMapping.TRANS_DATE);
-            this.DescriptionColumn = _mapOriginal.GetMapping(ICSVMapping.DESCRIPTION);
-            this.AmountColumn = _mapOriginal.GetMapping(ICSVMapping.AMOUNT);
+
+            // Remember to add 1 since arrays are 0-index
+            this.TransDateColumn = _mapOriginal.GetMapping(ICSVMapping.TRANS_DATE)+1;
+            this.DescriptionColumn = _mapOriginal.GetMapping(ICSVMapping.DESCRIPTION)+1;
+            this.AmountColumn = _mapOriginal.GetMapping(ICSVMapping.AMOUNT)+1;
         }
 
 

@@ -8,8 +8,8 @@
     <StartupObject></StartupObject>
     <ApplicationIcon>Cash-64.ico</ApplicationIcon>
     <Title>DLP Money Tracker</Title>
-    <AssemblyVersion>2.8.2024.605</AssemblyVersion>
-    <FileVersion>2.8.2024.605</FileVersion>
+    <AssemblyVersion>2.9.2024.627</AssemblyVersion>
+    <FileVersion>2.9.2024.627</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,6 +30,7 @@
     <None Remove="Icons\Library-Books-256.png" />
     <None Remove="Icons\Light-Bulb-256.png" />
     <None Remove="Icons\Money-Transfer-256.png" />
+    <None Remove="Icons\open-file-50.png" />
     <None Remove="Icons\Payment-256.png" />
     <None Remove="Icons\Refresh-256.png" />
     <None Remove="Icons\Save-256.png" />
@@ -81,6 +82,7 @@
     <Resource Include="Icons\Library-Books-256.png" />
     <Resource Include="Icons\Light-Bulb-256.png" />
     <Resource Include="Icons\Money-Transfer-256.png" />
+    <Resource Include="Icons\open-file-50.png" />
     <Resource Include="Icons\Payment-256.png" />
     <Resource Include="Icons\Refresh-256.png" />
     <Resource Include="Icons\Save-256.png" />

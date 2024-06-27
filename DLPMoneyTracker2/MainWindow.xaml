@@ -34,8 +34,12 @@
 
                     <MenuItem x:Name="MenuImnportCSV"
                               Header="Load From CSV"
-                              Click="MenuImportCSV_Click"
-                              />
+                              Click="MenuImportCSV_Click">
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/open-file-50.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                              
                     
                     <MenuItem x:Name="MenuExit"
                                   Header="_Exit"

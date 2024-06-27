@@ -6,10 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.JSON.Adapters
 {
+    
+
     internal class JSONSourceToJournalAccountAdapter : ISourceToJournalAccountAdapter<JournalAccountJSON>
     {
         public Guid Id { get; set; }
@@ -27,6 +31,8 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
         public decimal CurrentBudgetAmount { get; set; } = decimal.Zero;
 
         public ICSVMapping Mapping { get; set; } = null;
+
+        
 
         public void Copy(IJournalAccount cpy)
         {

@@ -26,8 +26,8 @@ namespace DLPMoneyTracker.Core.Models
     {
         public int StartingRow { get; set; } = 1;
         public bool IsAmountInverted { get; set; } = false;
-        private Dictionary<string, int> _map = new Dictionary<string, int>();
-        public Dictionary<string, int> Mapping { get { return _map; } }
+
+        public Dictionary<string, int> Mapping { get; set; } = new Dictionary<string, int>();
 
 
 
@@ -48,6 +48,7 @@ namespace DLPMoneyTracker.Core.Models
             if (cpy is null) return;
 
             this.StartingRow = cpy.StartingRow;
+            this.IsAmountInverted = cpy.IsAmountInverted;
             this.Mapping.Clear();
             foreach (var item in cpy.Mapping)
             {
@@ -57,7 +58,8 @@ namespace DLPMoneyTracker.Core.Models
 
         public int GetMapping(string columnName)
         {
-            if (this.Mapping.ContainsKey(columnName)) return this.Mapping[columnName];
+            // Remember to deduct 1 since arrays are 0-index
+            if (this.Mapping.ContainsKey(columnName)) return this.Mapping[columnName] - 1;
 
             return -1;
         }
@@ -81,7 +83,7 @@ namespace DLPMoneyTracker.Core.Models
             if(this.Mapping != null)
             {
                 this.Mapping.Clear();
-                _map = null;
+                this.Mapping = null;
             }
         }
     }

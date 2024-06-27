@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:DLPMoneyTracker2.Conversion"
         mc:Ignorable="d"
         Title="CSVImport" 
+        WindowStartupLocation="CenterOwner"
         Height="650" 
         Width="800">
 
@@ -18,37 +19,44 @@
             </Style>
         </ResourceDictionary>
     </Window.Resources>
-    
-    
+
+
     <Grid Style="{StaticResource MainGridStyle}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="15" /> <!-- Buffer -->
+            <RowDefinition Height="15" />
+            <!-- Buffer -->
             <RowDefinition Height="30" />
             <RowDefinition Height="30" />
             <RowDefinition Height="*"/>
-            <RowDefinition Height="40" /> <!-- Buttons -->
+            <RowDefinition Height="40" />
+            <!-- Buttons -->
             <RowDefinition Height="30" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="15" /> <!-- Buffer -->
+            <RowDefinition Height="15" />
+            <!-- Buffer -->
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal"
             Background="LightGray"
             Grid.Row="0">
             <Button x:Name="btnCloseWindow"
-            ToolTip="Discard Unsaved Changes and Close Window"
-            Click="btnCloseWindow_Click"
-            Style="{StaticResource MenuButton}">
-                <Image Source="/Icons/Leave-256.png" />
+                    ToolTip="Discard Unsaved Changes and Close Window"
+                    Click="btnCloseWindow_Click"
+                    Margin="5"
+                    Style="{StaticResource MenuButton}">
+                <Button.Content>
+                    <Image Source="/Icons/Leave-256.png" />
+                </Button.Content>
             </Button>
 
             <Button Grid.Column="2"
                     ToolTip="Load CSV file"
+                    
                     Style="{StaticResource MenuButton}"
-                    >
+                    Command="{Binding Path=CommandLoadCSV}">
                 <Button.Content>
-                    <Image Style="{StaticResource MenuIcon}" Source="/Icons/open-file-50.png" />
+                    <Image Source="/Icons/open-file-50.png" />
                 </Button.Content>
             </Button>
 
@@ -128,7 +136,7 @@
                   ItemsSource="{Binding Path=CSVRecordList}"
                   >
             <DataGrid.Columns>
-                
+
                 <!-- Checkbox -->
                 <DataGridTemplateColumn Width="40">
                     <DataGridTemplateColumn.CellTemplate>
@@ -186,7 +194,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                
+
                 <!-- Date -->
                 <DataGridTextColumn Header="Transaction Date"
                                     Binding="{Binding Path=TransactionDate, Converter={StaticResource convertDateToDisplay}}"
@@ -211,7 +219,7 @@
                     Binding="{Binding Path=Amount, Converter={StaticResource convertDecimalToDisplay}}"
                     Width="180"
                     />
-                
+
                 <!-- Bank Date -->
                 <DataGridTextColumn Header="Bank Date"
                     Binding="{Binding Path=BankDate, Converter={StaticResource convertDateToDisplay}}"
@@ -237,9 +245,9 @@
                     >
                 Create New
             </Button>
-            
+
         </StackPanel>
-        
-        
+
+
     </Grid>
 </Window>

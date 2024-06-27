@@ -169,7 +169,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
 
                     var mappingUI = UICore.DependencyHost.GetRequiredService<CSVMappingUI>();
                     mappingUI.LoadMoneyAccount(_editAccount);
-                    mappingUI.Show();
+                    mappingUI.ShowDialog();
                 });
             }
         }

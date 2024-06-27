@@ -137,9 +137,9 @@ namespace DLPMoneyTracker2
 
         private void MenuImportCSV_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Feature coming soon");
-            //CSVImport window = UICore.DependencyHost.GetRequiredService<CSVImport>();
-            //window.Show();
+            //MessageBox.Show("Feature coming soon");
+            CSVImport window = UICore.DependencyHost.GetRequiredService<CSVImport>();
+            window.Show();
         }
     }
 }
