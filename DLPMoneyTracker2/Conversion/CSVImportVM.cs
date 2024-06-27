@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace DLPMoneyTracker2.Conversion
 {
@@ -244,6 +245,13 @@ namespace DLPMoneyTracker2.Conversion
             // Get matched transactions
             var transactions = this.TransactionList.Where(s => s.IsSelected).ToList();
             if (transactions?.Any() != true) return;
+
+            if(Math.Abs(csv.Amount) != Math.Abs(transactions.Sum(s => s.Amount)))
+            {
+                MessageBox.Show("Amounts do not match!");
+                return;
+            }
+
 
             // Update Bank Date on transactions
             foreach(var t in transactions)
