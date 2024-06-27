@@ -10,6 +10,18 @@ namespace DLPMoneyTracker.Core
 {
     public static class GeneralOverrides
     {
+        public static string RemoveQuotes(this string str)
+        {
+            if (string.IsNullOrWhiteSpace(str)) return string.Empty;
+
+            string data = str.Trim();
+            data = data.Replace("\"", "");
+            data = data.Replace("\'", "");
+            data = data.Replace("`", "");
+
+            return data;
+        }
+
         public static DateTime ToDateTime(this string date)
         {
             if (string.IsNullOrWhiteSpace(date)) return DateTime.MinValue;

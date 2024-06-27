@@ -240,7 +240,7 @@
             <Button Grid.Column="1"
                     Style="{StaticResource localButton}"
                     Command="{Binding Path=CommandAutoClear}"
-                    ToolTip="Compares Date and Amount to clear already reconciled records"
+                    ToolTip="Compares Date and Amount to match records"
                     >
                 Auto-Clear
             </Button>

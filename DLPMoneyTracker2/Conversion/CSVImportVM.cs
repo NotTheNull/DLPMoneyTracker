@@ -376,9 +376,9 @@ namespace DLPMoneyTracker2.Conversion
 
                 this.CSVRecordList.Add(new CSVRecordVM
                 {
-                    TransactionDate = csvData[i][this.Mapping.GetMapping(ICSVMapping.TRANS_DATE)].ToDateTime(),
+                    TransactionDate = csvData[i][this.Mapping.GetMapping(ICSVMapping.TRANS_DATE)].RemoveQuotes().ToDateTime(),
                     Description = csvData[i][this.Mapping.GetMapping(ICSVMapping.DESCRIPTION)].Trim(),
-                    Amount = csvData[i][this.Mapping.GetMapping(ICSVMapping.AMOUNT)].ToDecimal()
+                    Amount = csvData[i][this.Mapping.GetMapping(ICSVMapping.AMOUNT)].RemoveQuotes().ToDecimal()
                 });
             }
 
