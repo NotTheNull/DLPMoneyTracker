@@ -339,3 +339,4 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 /DLPMoneyTracker/DataEntry/AddTransaction
+/DLPMoneyTracker2/appsettings.json

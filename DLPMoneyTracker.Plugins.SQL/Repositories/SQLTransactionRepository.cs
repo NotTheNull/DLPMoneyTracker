@@ -13,6 +13,13 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 {    
     public class SQLTransactionRepository : ITransactionRepository
     {
+        private readonly IDLPConfig config;
+
+        public SQLTransactionRepository(IDLPConfig config)
+        {
+            this.config = config;
+        }
+
         public decimal GetAccountBalanceByMonth(Guid accountUID, int year, int month)
         {
             DateRange searchDate = new DateRange(year, month);
@@ -33,7 +40,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         private decimal GetAccountBalance(Guid accountUID, DateRange searchDate)
         {
-            using (DataContext context = new DataContext())
+            using (DataContext context = new DataContext(config))
             {
                 var account = context.Accounts.FirstOrDefault(x => x.AccountUID == accountUID);
                 if (account is null) return decimal.Zero;
@@ -57,7 +64,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         public void RemoveTransaction(IMoneyTransaction transaction)
         {
-            using (DataContext context = new DataContext())
+            using (DataContext context = new DataContext(config))
             {
                 var existingRecord = context.TransactionBatches.FirstOrDefault(x => x.BatchUID == transaction.UID);
                 if (existingRecord is null) return;
@@ -69,7 +76,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         public void SaveTransaction(IMoneyTransaction transaction)
         {
-            using (DataContext context = new DataContext())
+            using (DataContext context = new DataContext(config))
             {
                 SQLSourceToTransactionAdapter adapter = new SQLSourceToTransactionAdapter(context);
                 adapter.Copy(transaction);
@@ -89,7 +96,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
         public List<IMoneyTransaction> GetFullList()
         {
             List<IMoneyTransaction> listMoneyFinal = new List<IMoneyTransaction>();
-            using (DataContext context = new DataContext())
+            using (DataContext context = new DataContext(config))
             {
                 var listRecords = context.TransactionBatches.Include(x => x.Details).ToList();
                 if (listRecords?.Any() != true) return listMoneyFinal;
@@ -108,7 +115,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
         public List<IMoneyTransaction> Search(MoneyRecordSearch search)
         {
             List<IMoneyTransaction> listMoneyFinal = new List<IMoneyTransaction>();
-            using(DataContext context = new DataContext())
+            using(DataContext context = new DataContext(config))
             {
                 var listRecords = context.TransactionBatches.Where(x => x.TransactionDate >= search.DateRange.Begin && x.TransactionDate <= search.DateRange.End);
 
@@ -138,7 +145,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         public long GetRecordCount()
         {
-            using (DataContext context = new DataContext())
+            using (DataContext context = new DataContext(config))
             {
                 return context.TransactionBatches.LongCount();
             }

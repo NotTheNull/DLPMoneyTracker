@@ -1,5 +1,6 @@
 ﻿using DLPMoneyTracker.BusinessLogic.Factories;
 using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
+using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.SQL.Adapters;
 using System;
@@ -12,9 +13,16 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 {
     public class SQLLedgerAccountRepository : ILedgerAccountRepository
     {
+        private readonly IDLPConfig config;
+
+        public SQLLedgerAccountRepository(IDLPConfig config)
+        {
+            this.config = config;
+        }
+
         public IJournalAccount GetAccountByUID(Guid uid)
         {
-            using(DataContext context = new DataContext())
+            using(DataContext context = new DataContext(config))
             {
                 var account = context.Accounts.FirstOrDefault(x => x.AccountUID == uid);
                 if (account is null) return null;
@@ -30,7 +38,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
         public List<IJournalAccount> GetFullList()
         {
             List<IJournalAccount> listAccountsFinal = new List<IJournalAccount>();
-            using (DataContext context = new DataContext())
+            using (DataContext context = new DataContext(config))
             {
                 var listAccounts = context.Accounts.ToList();
                 if (listAccounts?.Any() != true) return listAccountsFinal;
@@ -52,7 +60,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
             List<IJournalAccount> listAccountsFinal = new List<IJournalAccount>();
             if (search.JournalTypes?.Any() != true) return listAccountsFinal;
 
-            using (DataContext context = new DataContext())
+            using (DataContext context = new DataContext(config))
             {
                 var listAccountsQuery = context.Accounts.Where(x => search.JournalTypes.Contains(x.AccountType));
 
@@ -83,7 +91,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         public int GetRecordCount()
         {
-            using (DataContext context = new DataContext())
+            using (DataContext context = new DataContext(config))
             {
                 return context.Accounts.Count();
             }
@@ -91,7 +99,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         public void SaveJournalAccount(IJournalAccount account)
         {
-            using (DataContext context = new DataContext())
+            using (DataContext context = new DataContext(config))
             {
                 SQLSourceToJournalAccountAdapter adapter = new SQLSourceToJournalAccountAdapter();
                 adapter.Copy(account);

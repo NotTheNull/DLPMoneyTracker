@@ -1,9 +1,11 @@
 ﻿
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,9 +17,14 @@ namespace DLPMoneyTracker2
     /// </summary>
     public partial class App : Application
     {
+        public static IConfiguration Config { get; private set; }
         public App()
         {
-            
+            Config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
         }
 
         private void Application_Startup(object sender, StartupEventArgs e)

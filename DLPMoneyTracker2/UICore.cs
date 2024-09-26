@@ -49,9 +49,11 @@ namespace DLPMoneyTracker2
 
         private static void ConfigureServices(ServiceCollection services)
         {
+            var source = App.Config["AppSettings:source"].ToDataSource();
+            if (source == DLPDataSource.NotSet) throw new InvalidOperationException("Unable to read configuration file");
 
-            
             // Repositories
+            services.AddSingleton<IDLPConfig, DLPAppConfig>();
             services.AddSingleton<SQLBankReconciliationRepository>();
             services.AddSingleton<SQLLedgerAccountRepository>();
             services.AddSingleton<SQLBudgetPlanRepository>();
@@ -63,10 +65,21 @@ namespace DLPMoneyTracker2
 
             // TODO: Create a JSON config file to hold WHICH repository the system should read from
             // TODO: Update this section based on the JSON config setting
-            services.AddSingleton<ILedgerAccountRepository, JSONLedgerAccountRepository>();
-            services.AddSingleton<IBudgetPlanRepository, JSONBudgetPlanRepository>();
-            services.AddSingleton<ITransactionRepository, JSONTransactionRepository>();
-            services.AddSingleton<IBankReconciliationRepository, JSONBankReconciliationRepository>();
+
+            if (source == DLPDataSource.SQL)
+            {
+                services.AddSingleton<ILedgerAccountRepository, SQLLedgerAccountRepository>();
+                services.AddSingleton<IBudgetPlanRepository, SQLBudgetPlanRepository>();
+                services.AddSingleton<ITransactionRepository, SQLTransactionRepository>();
+                services.AddSingleton<IBankReconciliationRepository, SQLBankReconciliationRepository>();
+            }
+            else if (source == DLPDataSource.JSON)
+            {
+                services.AddSingleton<ILedgerAccountRepository, JSONLedgerAccountRepository>();
+                services.AddSingleton<IBudgetPlanRepository, JSONBudgetPlanRepository>();
+                services.AddSingleton<ITransactionRepository, JSONTransactionRepository>();
+                services.AddSingleton<IBankReconciliationRepository, JSONBankReconciliationRepository>();
+            }
             services.AddSingleton<NotificationSystem>();
 
             // Use Cases
@@ -95,13 +108,13 @@ namespace DLPMoneyTracker2
             services.AddTransient<IGetBudgetTransactionBalanceForAccountUseCase, GetBudgetTransactionBalanceForAccountUseCase>();
             services.AddTransient<IGetBudgetAnalysisDataUseCase, GetBudgetAnalysisDataUseCase>();
             services.AddTransient<IGetBudgetPlanListByType, GetBudgetPlanListByType>();
-            
+
 
             // Factories
             services.AddTransient<JournalAccountFactory>();
             services.AddTransient<BudgetPlanFactory>();
             services.AddTransient<ScheduleRecurrenceFactory>();
-            
+
 
             // Main UI
             services.AddSingleton<MainWindow>();
@@ -150,7 +163,7 @@ namespace DLPMoneyTracker2
             services.AddTransient<AddEditBudgetPlanVM>();
             services.AddTransient<RecurrenceEditor>();
             services.AddTransient<RecurrenceEditorVM>();
-            
+
 
             // Bank Reconciliation
             services.AddTransient<BankReconciliationVM>();
@@ -171,9 +184,9 @@ namespace DLPMoneyTracker2
             services.AddTransient<CSVImport>();
             services.AddTransient<CSVImportVM>();
 
-            
 
-            
+
+
         }
     }
 }

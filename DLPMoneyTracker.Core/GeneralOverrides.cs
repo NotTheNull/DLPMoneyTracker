@@ -99,5 +99,16 @@ namespace DLPMoneyTracker.Core
                     return 0;
             }
         }
+
+
+        public static DLPDataSource ToDataSource(this string arg)
+        {
+            switch(arg)
+            {
+                case "json": return DLPDataSource.JSON;
+                case "sql": return DLPDataSource.SQL;
+                default: return DLPDataSource.NotSet;
+            }
+        }
     }
 }

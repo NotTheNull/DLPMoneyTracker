@@ -240,6 +240,8 @@ namespace DLPMoneyTracker2.Conversion
                 {
                     sqlReconciliationRepository.SaveReconciliation(reconciliation);
                 }
+
+                MessageBox.Show("Import complete");
             }
             catch(Exception ex)
             {

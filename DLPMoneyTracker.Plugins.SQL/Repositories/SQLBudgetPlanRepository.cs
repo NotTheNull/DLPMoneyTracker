@@ -1,9 +1,11 @@
 ﻿using DLPMoneyTracker.BusinessLogic.Factories;
 using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
+using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models.BudgetPlan;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.SQL.Adapters;
 using DLPMoneyTracker.Plugins.SQL.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +16,16 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 {
     public class SQLBudgetPlanRepository : IBudgetPlanRepository
     {
-        
+        private readonly IDLPConfig config;
+
+        public SQLBudgetPlanRepository(IDLPConfig config)
+        {
+            this.config = config;
+        }
+
         public void DeletePlan(Guid planUID)
         {
-            using (DataContext context = new DataContext())
+            using (DataContext context = new DataContext(config))
             {
                 var existingPlan = context.BudgetPlans.FirstOrDefault(x => x.PlanUID == planUID);
                 if (existingPlan is null) return;
@@ -30,7 +38,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
         public List<IBudgetPlan> GetFullList()
         {
             List<IBudgetPlan> listPlansFinal = new List<IBudgetPlan>();
-            using(DataContext context = new DataContext())
+            using(DataContext context = new DataContext(config))
             {
                 var listPlans = context.BudgetPlans.ToList();
                 if (listPlans?.Any() != true) return listPlansFinal;
@@ -56,9 +64,11 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
         public List<IBudgetPlan> GetUpcomingPlansForAccount(Guid accountUID)
         {
             List<IBudgetPlan> listPlans = new List<IBudgetPlan>();
-            using (DataContext context = new DataContext())
+            using (DataContext context = new DataContext(config))
             {
-                var listPlansLoop = context.BudgetPlans.Where(x => x.Credit.AccountUID == accountUID || x.Debit.AccountUID == accountUID);
+                var listPlansLoop = context.BudgetPlans
+                    .Where(x => x.Credit.AccountUID == accountUID || x.Debit.AccountUID == accountUID)
+                    .ToList();
                 foreach(var src in listPlansLoop)
                 {
                     IBudgetPlan plan = this.SourceToPlan(src, context);
@@ -74,7 +84,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         public void SavePlan(IBudgetPlan plan)
         {
-            using (DataContext context = new DataContext())
+            using (DataContext context = new DataContext(config))
             {
                 SQLSourceToBudgetPlanAdapter adapter = new SQLSourceToBudgetPlanAdapter(context);
                 adapter.Copy(plan);
@@ -93,7 +103,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
         public List<IBudgetPlan> Search(BudgetPlanSearch search)
         {
             List<IBudgetPlan> listPlanFinal = new List<IBudgetPlan>();
-            using(DataContext context = new DataContext())
+            using(DataContext context = new DataContext(config))
             {
                 var listPlanQuery = context.BudgetPlans.Where(x => x.ExpectedAmount != decimal.Zero);
                 if(search.AccountUID != null && search.AccountUID != Guid.Empty)
@@ -125,7 +135,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         public int GetRecordCount()
         {
-            using(DataContext context = new DataContext())
+            using(DataContext context = new DataContext(config))
             {
                 return context.BudgetPlans.Count();
             }
@@ -134,7 +144,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
         public List<IBudgetPlan> GetAllPlansForAccount(Guid accountUID)
         {
             List<IBudgetPlan> listPlanFinal = new List<IBudgetPlan>();
-            using (DataContext context = new DataContext())
+            using (DataContext context = new DataContext(config))
             {
                 var listPlanLoop = context.BudgetPlans.Where(x => x.Debit.AccountUID == accountUID || x.Credit.AccountUID == accountUID).ToList();
                 if (listPlanLoop?.Any() != true) return listPlanFinal;
@@ -152,7 +162,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
         public List<IBudgetPlan> GetPlanListByType(BudgetPlanType planType)
         {
             List<IBudgetPlan> listPlanFinal = new List<IBudgetPlan>();
-            using (DataContext context = new DataContext())
+            using (DataContext context = new DataContext(config))
             {
                 var listPlanLoop = context.BudgetPlans.Where(x => x.PlanType == planType).ToList();
                 if (listPlanLoop?.Any() != true) return listPlanFinal;

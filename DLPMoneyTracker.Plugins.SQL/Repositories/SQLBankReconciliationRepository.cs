@@ -19,16 +19,18 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
     public class SQLBankReconciliationRepository : IBankReconciliationRepository
     {
         private readonly NotificationSystem notification;
+        private readonly IDLPConfig config;
 
-        public SQLBankReconciliationRepository(NotificationSystem notification)
+        public SQLBankReconciliationRepository(NotificationSystem notification, IDLPConfig config)
         {
             this.notification = notification;
+            this.config = config;
         }
 
         public List<BankReconciliationOverviewDTO> GetFullList()
         {
             List<BankReconciliationOverviewDTO> listOverviews = new List<BankReconciliationOverviewDTO>();
-            using (DataContext context = new DataContext())
+            using (DataContext context = new DataContext(config))
             {
                 var listBankAccounts = context.Reconciliations.Select(s => s.BankAccount).Distinct();
                 if (listBankAccounts?.Any() != null) return listOverviews;
@@ -73,7 +75,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
         public List<IMoneyTransaction> GetReconciliationTransactions(Guid accountUID, DateRange statementDates)
         {
             List<IMoneyTransaction> listMoneyRecords = new List<IMoneyTransaction>();
-            using (DataContext context = new DataContext())
+            using (DataContext context = new DataContext(config))
             {
                 var listTransactions = context.TransactionBatches
                     .Where(x =>
@@ -108,7 +110,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         public void SaveReconciliation(BankReconciliationDTO dto)
         {
-            using (DataContext context = new DataContext())
+            using (DataContext context = new DataContext(config))
             {
                 var existingReconciliation = context.Reconciliations
                     .FirstOrDefault(x =>
@@ -159,7 +161,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         public int GetRecordCount()
         {
-            using (DataContext context = new DataContext())
+            using (DataContext context = new DataContext(config))
             {
                 return context.Reconciliations.Count();
             }

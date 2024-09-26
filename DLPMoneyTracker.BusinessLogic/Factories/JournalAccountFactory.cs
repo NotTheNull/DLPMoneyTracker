@@ -35,6 +35,11 @@ namespace DLPMoneyTracker.BusinessLogic.Factories
                     return new ReceivableAccount(acct);
                 default:
                     // Special accounts should be stored in the DB but don't need to be imported
+                    if (acct.Id == SpecialAccount.DebtInterest.Id) return SpecialAccount.DebtInterest;
+                    if (acct.Id == SpecialAccount.DebtReduction.Id) return SpecialAccount.DebtReduction;
+                    if (acct.Id == SpecialAccount.InitialBalance.Id) return SpecialAccount.InitialBalance;
+                    if (acct.Id == SpecialAccount.UnlistedAdjusment.Id) return SpecialAccount.UnlistedAdjusment;
+
                     throw new NotSupportedException(string.Format("Ledger Type [{0}] is not supported", acct.JournalType.ToString()));
             }
         }
