@@ -23,7 +23,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Data
         [Required, StringLength(200)]
         public string Description { get; set; } = string.Empty;
 
-        public List<TransactionDetail> Details { get; set; }
+        public List<TransactionDetail> Details { get; set; } = new List<TransactionDetail>();
 
     }
 }

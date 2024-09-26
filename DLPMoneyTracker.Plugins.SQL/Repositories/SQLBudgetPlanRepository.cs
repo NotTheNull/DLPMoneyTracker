@@ -77,6 +77,8 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
             using (DataContext context = new DataContext())
             {
                 SQLSourceToBudgetPlanAdapter adapter = new SQLSourceToBudgetPlanAdapter(context);
+                adapter.Copy(plan);
+
                 var existingPlan = context.BudgetPlans.FirstOrDefault(x => x.PlanUID == plan.UID);
                 if(existingPlan is null)
                 {
