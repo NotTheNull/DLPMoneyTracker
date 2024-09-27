@@ -32,8 +32,8 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
             List<BankReconciliationOverviewDTO> listOverviews = new List<BankReconciliationOverviewDTO>();
             using (DataContext context = new DataContext(config))
             {
-                var listBankAccounts = context.Reconciliations.Select(s => s.BankAccount).Distinct();
-                if (listBankAccounts?.Any() != null) return listOverviews;
+                var listBankAccounts = context.Reconciliations.Select(s => s.BankAccount).Distinct().ToList();
+                if (listBankAccounts?.Any() != true) return listOverviews;
 
                 foreach(Account bank in listBankAccounts)
                 {
