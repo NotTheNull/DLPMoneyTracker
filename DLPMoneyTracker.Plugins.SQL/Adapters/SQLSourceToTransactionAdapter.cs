@@ -1,5 +1,6 @@
 ﻿using DLPMoneyTracker.BusinessLogic.AdapterInterfaces;
 using DLPMoneyTracker.BusinessLogic.Factories;
+using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
 using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
@@ -15,10 +16,12 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
     public class SQLSourceToTransactionAdapter : ISourceToTransactionAdapter<TransactionBatch>
     {
         private readonly DataContext context;
+        private readonly ILedgerAccountRepository accountRepository;
 
-        public SQLSourceToTransactionAdapter(DataContext context)
+        public SQLSourceToTransactionAdapter(DataContext context, ILedgerAccountRepository accountRepository)
         {
             this.context = context;
+            this.accountRepository = accountRepository;
         }
 
         public Guid UID { get; set; }
@@ -111,24 +114,16 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
             {
                 if(detail.Amount < decimal.Zero)
                 {
-                    this.CreditAccount = SourceToAccount(detail.LedgerAccount);
+                    this.CreditAccount = accountRepository.GetAccountByUID(detail.LedgerAccount.AccountUID);
                     this.CreditBankDate = detail.BankReconciliationDate;
                 }
                 else
                 {
-                    this.DebitAccount = SourceToAccount(detail.LedgerAccount);
+                    this.DebitAccount = accountRepository.GetAccountByUID(detail.LedgerAccount.AccountUID);
                     this.DebitBankDate = detail.BankReconciliationDate;
                 }
             }           
         }
 
-        private IJournalAccount SourceToAccount(Account src)
-        {
-            SQLSourceToJournalAccountAdapter adapter = new SQLSourceToJournalAccountAdapter();
-            JournalAccountFactory factory = new JournalAccountFactory();
-
-            adapter.ImportSource(src);
-            return factory.Build(adapter);
-        }
     }
 }

@@ -17,10 +17,12 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
     public class SQLBudgetPlanRepository : IBudgetPlanRepository
     {
         private readonly IDLPConfig config;
+        private readonly ILedgerAccountRepository accountRepository;
 
-        public SQLBudgetPlanRepository(IDLPConfig config)
+        public SQLBudgetPlanRepository(IDLPConfig config, ILedgerAccountRepository accountRepository)
         {
             this.config = config;
+            this.accountRepository = accountRepository;
         }
 
         public void DeletePlan(Guid planUID)
@@ -54,7 +56,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         private IBudgetPlan SourceToPlan(BudgetPlan src, DataContext context)
         {
-            SQLSourceToBudgetPlanAdapter planAdapter = new SQLSourceToBudgetPlanAdapter(context);
+            SQLSourceToBudgetPlanAdapter planAdapter = new SQLSourceToBudgetPlanAdapter(context, accountRepository);
             BudgetPlanFactory planFactory = new BudgetPlanFactory();
 
             planAdapter.ImportSource(src);
@@ -86,7 +88,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
         {
             using (DataContext context = new DataContext(config))
             {
-                SQLSourceToBudgetPlanAdapter adapter = new SQLSourceToBudgetPlanAdapter(context);
+                SQLSourceToBudgetPlanAdapter adapter = new SQLSourceToBudgetPlanAdapter(context, accountRepository);
                 adapter.Copy(plan);
 
                 var existingPlan = context.BudgetPlans.FirstOrDefault(x => x.PlanUID == plan.UID);

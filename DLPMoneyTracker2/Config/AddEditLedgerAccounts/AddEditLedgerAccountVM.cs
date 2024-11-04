@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 {
@@ -13,15 +14,18 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
     {
         private readonly IGetNominalAccountsUseCase getLedgerAccountsUseCase;
         private readonly IDeleteJournalAccountUseCase deleteAcountUseCase;
+        private readonly IGetSummaryAccountListByType getSummaryListUseCase;
         private readonly NotificationSystem notifications;
 
         public AddEditLedgerAccountVM(
             IGetNominalAccountsUseCase getLedgerAccountsUseCase,
             IDeleteJournalAccountUseCase deleteAcountUseCase,
+            IGetSummaryAccountListByType getSummaryListUseCase,
             NotificationSystem notifications) : base()
         {
             this.getLedgerAccountsUseCase = getLedgerAccountsUseCase;
             this.deleteAcountUseCase = deleteAcountUseCase;
+            this.getSummaryListUseCase = getSummaryListUseCase;
             this.notifications = notifications;
             _editAccount = UICore.DependencyHost.GetRequiredService<LedgerAccountVM>();
             
@@ -46,6 +50,8 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             new SpecialDropListItem<BudgetTrackingType>("Variable Expense/Income", BudgetTrackingType.Variable)
         };
 
+        public ObservableCollection<SpecialDropListItem<IJournalAccount?>> SummaryAccountList { get; set; } = new ObservableCollection<SpecialDropListItem<IJournalAccount?>>();
+
 
         #region Editing Data Fields
 
@@ -68,6 +74,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             set
             {
                 _editAccount.JournalType = value;
+                this.LoadSummaryAccounts();
                 NotifyPropertyChanged(nameof(AccountType));
             }
         }
@@ -90,6 +97,12 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                 _editAccount.DefaultMonthlyBudgetAmount = value;
                 NotifyPropertyChanged(nameof(MonthlyBudget));
             }
+        }
+
+        public Guid SelectedSummaryAccount
+        {
+            get;
+            set;
         }
 
         #endregion
@@ -187,6 +200,20 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                 this.AccountList.Add(vm);
             }
 
+        }
+
+        private void LoadSummaryAccounts()
+        {
+            this.SummaryAccountList.Clear();
+            this.SummaryAccountList.Add(new SpecialDropListItem<IJournalAccount?>("SET AS SUMMARY ACCOUNT", null));
+
+            var listAccounts = getSummaryListUseCase.Execute(this.AccountType);
+            if (listAccounts?.Any() != true) return;
+
+            foreach(var account in listAccounts.OrderBy(o => o.Description))
+            {
+                this.SummaryAccountList.Add(new SpecialDropListItem<IJournalAccount?>(account.Description, account));
+            }
         }
 
         private void NotifyAll()

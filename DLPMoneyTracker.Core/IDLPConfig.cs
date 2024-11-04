@@ -11,12 +11,12 @@ namespace DLPMoneyTracker.Core
     {
         NotSet,
         JSON,
-        SQL
+        Database
     }
 
     public interface IDLPConfig
     {
         DLPDataSource DataSource { get; }
-        string SQLConnectionString { get; }
+        string DBConnectionString { get; }
     }
 }

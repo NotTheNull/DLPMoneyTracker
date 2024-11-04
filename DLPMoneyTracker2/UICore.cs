@@ -66,7 +66,7 @@ namespace DLPMoneyTracker2
             // TODO: Create a JSON config file to hold WHICH repository the system should read from
             // TODO: Update this section based on the JSON config setting
 
-            if (source == DLPDataSource.SQL)
+            if (source == DLPDataSource.Database)
             {
                 services.AddSingleton<ILedgerAccountRepository, SQLLedgerAccountRepository>();
                 services.AddSingleton<IBudgetPlanRepository, SQLBudgetPlanRepository>();
@@ -108,6 +108,7 @@ namespace DLPMoneyTracker2
             services.AddTransient<IGetBudgetTransactionBalanceForAccountUseCase, GetBudgetTransactionBalanceForAccountUseCase>();
             services.AddTransient<IGetBudgetAnalysisDataUseCase, GetBudgetAnalysisDataUseCase>();
             services.AddTransient<IGetBudgetPlanListByType, GetBudgetPlanListByType>();
+            services.AddTransient<IGetSummaryAccountListByType, GetSummaryAccountListByType>();
 
 
             // Factories

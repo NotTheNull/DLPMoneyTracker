@@ -54,6 +54,11 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
         decimal CurrentBudgetAmount { get; }
     }
 
+    public interface ISubLedgerAccount
+    {
+        IJournalAccount? SummaryAccount { get; }
+    }
+
 
     #region FUNDS IDEA
     /*

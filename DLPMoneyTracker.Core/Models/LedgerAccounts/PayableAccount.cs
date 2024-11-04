@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Core.Models.LedgerAccounts
 {
-    public class PayableAccount : INominalAccount
+    public class PayableAccount : INominalAccount, ISubLedgerAccount
     {
         public Guid Id { get; set; }
 
@@ -22,6 +22,8 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
         public BudgetTrackingType BudgetType { get; set; }
         public decimal DefaultMonthlyBudgetAmount { get; set; } = decimal.Zero;
         public decimal CurrentBudgetAmount { get; set; } = decimal.Zero;
+
+        public IJournalAccount? SummaryAccount { get; set; }
 
         public PayableAccount()
         {

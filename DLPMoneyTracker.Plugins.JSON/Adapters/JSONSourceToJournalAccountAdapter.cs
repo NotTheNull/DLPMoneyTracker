@@ -1,4 +1,5 @@
 ﻿using DLPMoneyTracker.BusinessLogic.AdapterInterfaces;
+using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
 using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.JSON.Models;
@@ -16,6 +17,14 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
 
     internal class JSONSourceToJournalAccountAdapter : ISourceToJournalAccountAdapter<JournalAccountJSON>
     {
+        private readonly ILedgerAccountRepository accountRepository;
+
+        public JSONSourceToJournalAccountAdapter(ILedgerAccountRepository accountRepository)
+        {
+            this.accountRepository = accountRepository;
+        }
+
+
         public Guid Id { get; set; }
 
         public string Description { get; set; }
@@ -29,6 +38,8 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
         public BudgetTrackingType BudgetType { get; set; } = BudgetTrackingType.DO_NOT_TRACK;
         public decimal DefaultMonthlyBudgetAmount { get; set; } = decimal.Zero;
         public decimal CurrentBudgetAmount { get; set; } = decimal.Zero;
+
+        public IJournalAccount? SummaryAccount { get; set; } = null;
 
         public ICSVMapping Mapping { get; set; } = null;
 
@@ -61,6 +72,11 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
 
                 this.Mapping.Copy(money.Mapping);
             }
+
+            if(cpy is ISubLedgerAccount sub)
+            {
+                this.SummaryAccount = sub.SummaryAccount;
+            }
         }
 
         public void ExportSource(ref JournalAccountJSON acct)
@@ -75,6 +91,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             acct.BudgetType = this.BudgetType;
             acct.DefaultMonthlyBudgetAmount = this.DefaultMonthlyBudgetAmount;
             acct.CurrentBudgetAmount = this.CurrentBudgetAmount;
+            acct.SummaryAccountUID = this.SummaryAccount?.Id;
 
             acct.Mapping = null;
             if(this.Mapping != null)
@@ -97,6 +114,9 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             this.BudgetType = acct.BudgetType;
             this.DefaultMonthlyBudgetAmount = acct.DefaultMonthlyBudgetAmount;
             this.CurrentBudgetAmount = acct.CurrentBudgetAmount;
+
+            this.SummaryAccount = acct.SummaryAccountUID == null ? null : accountRepository.GetAccountByUID(acct.SummaryAccountUID.Value);
+            
 
             if (this.Mapping != null)
             {

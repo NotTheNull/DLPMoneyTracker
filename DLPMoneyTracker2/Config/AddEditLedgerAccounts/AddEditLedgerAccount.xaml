@@ -129,6 +129,8 @@
                 <RowDefinition Height="30" />
                 <RowDefinition Height="30" />
                 <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
                 <RowDefinition Height="15" />
             </Grid.RowDefinitions>
 
@@ -194,6 +196,23 @@
                      IsEnabled="{Binding Path=CanEdit, UpdateSourceTrigger=PropertyChanged}"
                      Text="{Binding Path=MonthlyBudget, Mode=TwoWay, Converter={StaticResource convertDecimalToDisplay}, UpdateSourceTrigger=LostFocus}"
                      />
+            
+
+            <!-- SUMMARY ACCOUNTS -->
+            <TextBlock Text="Summary Account"
+                       Grid.Column="1"
+                       Grid.Row="5"
+                       Style="{StaticResource HeaderLabel}" />
+            <ComboBox x:Name="cboSummaryAcount"
+                      Grid.Column="2"
+                      Grid.Row="5"
+                      Style="{StaticResource LocalComboBox}"
+                      IsEnabled="{Binding Path=CanEdit, UpdateSourceTrigger=PropertyChanged}"
+                      DisplayMemberPath="Display"
+                      SelectedValuePath="Value"
+                      ItemsSource="{Binding Path=SummaryAccountList}"
+                      SelectedValue="{Binding Path=SummaryAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                      />
 
 
         </Grid>

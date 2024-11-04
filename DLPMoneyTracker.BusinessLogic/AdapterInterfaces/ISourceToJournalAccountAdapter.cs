@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DLPMoneyTracker.BusinessLogic.AdapterInterfaces
 {
     // T is the Source class
-    public interface ISourceToJournalAccountAdapter<T> : IMoneyAccount, INominalAccount, ILiabilityAccount, IDLPAdapter<T>
+    public interface ISourceToJournalAccountAdapter<T> : IMoneyAccount, INominalAccount, ILiabilityAccount, ISubLedgerAccount, IDLPAdapter<T>
     {
         
     }

@@ -64,7 +64,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             var dataList = (List<JournalAccountJSON>)JsonSerializer.Deserialize(json, typeof(List<JournalAccountJSON>));
             if (dataList?.Any() != true) return;
 
-            JSONSourceToJournalAccountAdapter adapter = new JSONSourceToJournalAccountAdapter();
+            JSONSourceToJournalAccountAdapter adapter = new JSONSourceToJournalAccountAdapter(this);
             JournalAccountFactory factory = new JournalAccountFactory();
 
             foreach (var data in dataList)
@@ -77,7 +77,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         public void SaveToFile()
         {
             List<JournalAccountJSON> listJSONData = new List<JournalAccountJSON>();
-            JSONSourceToJournalAccountAdapter adapter = new JSONSourceToJournalAccountAdapter();
+            JSONSourceToJournalAccountAdapter adapter = new JSONSourceToJournalAccountAdapter(this);
             foreach (var account in this.AccountList)
             {
                 if (account.JournalType == LedgerType.NotSet) continue;
@@ -146,6 +146,45 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         public int GetRecordCount()
         {
             return this.AccountList.Count;
+        }
+
+
+        public List<IJournalAccount> GetSummaryAccountListByType(LedgerType type)
+        {
+            var listData = this.AccountList.Where(x => x.JournalType == type).ToList();
+
+            List<IJournalAccount> listAccounts = new List<IJournalAccount>();
+            foreach(var data in listData)
+            {
+                if(data is ISubLedgerAccount sub)
+                {
+                    if(sub.SummaryAccount is null)
+                    {
+                        listAccounts.Add(data);
+                    }
+                }
+            }
+
+            return listAccounts;
+        }
+
+        public List<IJournalAccount> GetDetailAccountsForSummary(Guid uidSummaryAccount)
+        {
+            if (uidSummaryAccount == null || uidSummaryAccount == Guid.Empty) return null;
+
+            List<IJournalAccount> listAccounts = new List<IJournalAccount>();
+            foreach(var account in this.AccountList)
+            {
+                if(account is ISubLedgerAccount sub)
+                {
+                    if(sub.SummaryAccount?.Id == uidSummaryAccount)
+                    {
+                        listAccounts.Add(account);
+                    }
+                }
+            }
+
+            return listAccounts;
         }
     }
 }

@@ -3,6 +3,7 @@ using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
 using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.SQL.Adapters;
+using DLPMoneyTracker.Plugins.SQL.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,11 +28,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
                 var account = context.Accounts.FirstOrDefault(x => x.AccountUID == uid);
                 if (account is null) return null;
 
-                SQLSourceToJournalAccountAdapter adapter = new SQLSourceToJournalAccountAdapter();
-                adapter.ImportSource(account);
-
-                JournalAccountFactory factory = new JournalAccountFactory();
-                return factory.Build(adapter);
+                return this.SourceToAccount(account);
             }
         }
 
@@ -43,12 +40,9 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
                 var listAccounts = context.Accounts.ToList();
                 if (listAccounts?.Any() != true) return listAccountsFinal;
 
-                SQLSourceToJournalAccountAdapter adapter = new SQLSourceToJournalAccountAdapter();
-                JournalAccountFactory factory = new JournalAccountFactory();
                 foreach (var account in listAccounts)
                 {
-                    adapter.ImportSource(account);
-                    listAccountsFinal.Add(factory.Build(adapter));
+                    listAccountsFinal.Add(this.SourceToAccount(account));
                 }
             }
 
@@ -76,13 +70,10 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
                 var listAccountsLoop = listAccountsQuery.ToList();
                 if (listAccountsLoop?.Any() != true) return listAccountsFinal;
-                                
-                SQLSourceToJournalAccountAdapter adapter = new SQLSourceToJournalAccountAdapter();
-                JournalAccountFactory factory = new JournalAccountFactory();
-                foreach(var account in listAccountsLoop) 
+
+                foreach (var account in listAccountsLoop)
                 {
-                    adapter.ImportSource(account);
-                    listAccountsFinal.Add(factory.Build(adapter));
+                    listAccountsFinal.Add(this.SourceToAccount(account));
                 }
             }
 
@@ -101,7 +92,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
         {
             using (DataContext context = new DataContext(config))
             {
-                SQLSourceToJournalAccountAdapter adapter = new SQLSourceToJournalAccountAdapter();
+                SQLSourceToJournalAccountAdapter adapter = new SQLSourceToJournalAccountAdapter(this);
                 adapter.Copy(account);
 
                 var existingAccount = context.Accounts.FirstOrDefault(x => x.AccountUID == account.Id);
@@ -114,6 +105,51 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
                 adapter.ExportSource(ref existingAccount);
                 context.SaveChanges();
             }
+        }
+
+        public List<IJournalAccount> GetSummaryAccountListByType(LedgerType type)
+        {
+            if (type == LedgerType.NotSet) return null;
+
+            List<IJournalAccount> listAccountsFinal = new List<IJournalAccount>();
+            using (DataContext context = new DataContext(config))
+            {
+                var listAccountsLoop = context.Accounts.Where(x => x.AccountType == type && x.SummaryAccountId == null).ToList();
+                foreach (var account in listAccountsLoop)
+                {
+                    listAccountsFinal.Add(this.SourceToAccount(account));
+                }
+            }
+
+            return listAccountsFinal;
+        }
+
+        public List<IJournalAccount> GetDetailAccountsForSummary(Guid uidSummaryAccount)
+        {
+            if (uidSummaryAccount == null || uidSummaryAccount == Guid.Empty) return null;
+
+            List<IJournalAccount> listAccountsFinal = new List<IJournalAccount>();
+            using (DataContext context = new DataContext(config))
+            {
+                var listAccountsLoop = context.Accounts.Where(x => x.SummaryAccount != null && x.SummaryAccount.AccountUID == uidSummaryAccount).ToList();
+                foreach (var account in listAccountsLoop)
+                {
+                    listAccountsFinal.Add(this.SourceToAccount(account));
+                }
+            }
+
+            return listAccountsFinal;
+        }
+
+
+
+        private IJournalAccount SourceToAccount(Account a)
+        {
+            SQLSourceToJournalAccountAdapter adapter = new SQLSourceToJournalAccountAdapter(this);
+            adapter.ImportSource(a);
+
+            JournalAccountFactory factory = new JournalAccountFactory();
+            return factory.Build(adapter);
         }
     }
 }

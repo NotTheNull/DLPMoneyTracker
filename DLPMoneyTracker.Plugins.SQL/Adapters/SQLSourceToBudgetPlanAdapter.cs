@@ -1,5 +1,6 @@
 ﻿using DLPMoneyTracker.BusinessLogic.AdapterInterfaces;
 using DLPMoneyTracker.BusinessLogic.Factories;
+using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
 using DLPMoneyTracker.Core.Models.BudgetPlan;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Core.Models.ScheduleRecurrence;
@@ -15,10 +16,12 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
     public class SQLSourceToBudgetPlanAdapter : ISourceToBudgetPlanAdapter<BudgetPlan>
     {
         private readonly DataContext context;
+        private readonly ILedgerAccountRepository accountRepository;
 
-        public SQLSourceToBudgetPlanAdapter(DataContext context)
+        public SQLSourceToBudgetPlanAdapter(DataContext context, ILedgerAccountRepository accountRepository)
         {
             this.context = context;
+            this.accountRepository = accountRepository;
         }
         public SQLSourceToBudgetPlanAdapter()
         {
@@ -98,19 +101,11 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
             ScheduleRecurrenceFactory recurrenceFactory = new ScheduleRecurrenceFactory();
             this.Recurrence = recurrenceFactory.Build(plan.Frequency, plan.StartDate);
 
-            this.DebitAccount = SourceToAccount(plan.Debit);
-            this.CreditAccount = SourceToAccount(plan.Credit);
+            this.DebitAccount = accountRepository.GetAccountByUID(plan.Debit.AccountUID);
+            this.CreditAccount = accountRepository.GetAccountByUID(plan.Credit.AccountUID);
         }
 
 
-        private IJournalAccount SourceToAccount(Account a)
-        {
-            SQLSourceToJournalAccountAdapter adapter = new SQLSourceToJournalAccountAdapter();
-            adapter.ImportSource(a);
-
-            JournalAccountFactory factory = new JournalAccountFactory();
-            return factory.Build(adapter);
-        }
 
         public bool IsValid()
         {

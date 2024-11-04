@@ -19,6 +19,7 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
 
         public ICSVMapping Mapping { get; } = new CSVMapping();
 
+
         public BankAccount()
         {
             Id = Guid.NewGuid();

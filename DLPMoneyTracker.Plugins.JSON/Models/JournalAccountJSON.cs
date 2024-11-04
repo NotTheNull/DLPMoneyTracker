@@ -25,6 +25,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Models
 
         public DateTime? DateClosedUTC { get; set; }
         public DateTime? PreviousBankReconciliationStatementDate { get; set; }
+        public Guid? SummaryAccountUID { get; set; }
 
         public CSVMapping Mapping { get; set; } = null;
 

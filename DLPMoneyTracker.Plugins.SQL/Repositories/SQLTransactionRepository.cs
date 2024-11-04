@@ -14,10 +14,12 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
     public class SQLTransactionRepository : ITransactionRepository
     {
         private readonly IDLPConfig config;
+        private readonly ILedgerAccountRepository accountRepository;
 
-        public SQLTransactionRepository(IDLPConfig config)
+        public SQLTransactionRepository(IDLPConfig config, ILedgerAccountRepository accountRepository)
         {
             this.config = config;
+            this.accountRepository = accountRepository;
         }
 
         public decimal GetAccountBalanceByMonth(Guid accountUID, int year, int month)
@@ -78,7 +80,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
         {
             using (DataContext context = new DataContext(config))
             {
-                SQLSourceToTransactionAdapter adapter = new SQLSourceToTransactionAdapter(context);
+                SQLSourceToTransactionAdapter adapter = new SQLSourceToTransactionAdapter(context, accountRepository);
                 adapter.Copy(transaction);
 
                 var existingRecord = context.TransactionBatches.FirstOrDefault(x => x.BatchUID == transaction.UID);
@@ -101,7 +103,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
                 var listRecords = context.TransactionBatches.Include(x => x.Details).ToList();
                 if (listRecords?.Any() != true) return listMoneyFinal;
 
-                SQLSourceToTransactionAdapter adapter = new SQLSourceToTransactionAdapter(context);
+                SQLSourceToTransactionAdapter adapter = new SQLSourceToTransactionAdapter(context, accountRepository);
                 foreach (var record in listRecords)
                 {
                     adapter.ImportSource(record);
@@ -132,7 +134,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
                 var listRecordsLoop = listRecords.Include(x => x.Details).ToList();
                 if (listRecordsLoop?.Any() != true) return listMoneyFinal;
 
-                SQLSourceToTransactionAdapter adapter = new SQLSourceToTransactionAdapter(context);
+                SQLSourceToTransactionAdapter adapter = new SQLSourceToTransactionAdapter(context, accountRepository);
                 foreach(var record in listRecordsLoop)
                 {
                     adapter.ImportSource(record);

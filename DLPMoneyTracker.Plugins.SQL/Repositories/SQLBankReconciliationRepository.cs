@@ -20,11 +20,13 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
     {
         private readonly NotificationSystem notification;
         private readonly IDLPConfig config;
+        private readonly ILedgerAccountRepository accountRepository;
 
-        public SQLBankReconciliationRepository(NotificationSystem notification, IDLPConfig config)
+        public SQLBankReconciliationRepository(NotificationSystem notification, IDLPConfig config, ILedgerAccountRepository accountRepository)
         {
             this.notification = notification;
             this.config = config;
+            this.accountRepository = accountRepository;
         }
 
         public List<BankReconciliationOverviewDTO> GetFullList()
@@ -39,7 +41,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
                 {
                     BankReconciliationOverviewDTO overview = new BankReconciliationOverviewDTO()
                     {
-                        BankAccount = SourceToAccount(bank)
+                        BankAccount = accountRepository.GetAccountByUID(bank.AccountUID)
                     };
                     listOverviews.Add(overview); 
 
@@ -63,14 +65,6 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
             return listOverviews;
         }
 
-        private IJournalAccount SourceToAccount(Account src)
-        {
-            SQLSourceToJournalAccountAdapter adapter = new SQLSourceToJournalAccountAdapter();
-            adapter.ImportSource(src);
-
-            JournalAccountFactory factory = new JournalAccountFactory();
-            return factory.Build(adapter);
-        }
 
         public List<IMoneyTransaction> GetReconciliationTransactions(Guid accountUID, DateRange statementDates)
         {
@@ -95,7 +89,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
                     .ToList();
                 if (listTransactions?.Any() != true) return listMoneyRecords;
 
-                SQLSourceToTransactionAdapter adapter = new SQLSourceToTransactionAdapter(context);
+                SQLSourceToTransactionAdapter adapter = new SQLSourceToTransactionAdapter(context, accountRepository);
                 foreach(var record in listTransactions)
                 {
                     adapter.ImportSource(record);

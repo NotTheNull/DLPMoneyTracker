@@ -10,7 +10,7 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 {
-    public class LedgerAccountVM : BaseViewModel, INominalAccount
+    public class LedgerAccountVM : BaseViewModel, INominalAccount, ISubLedgerAccount
     {
 
         private readonly List<LedgerType> _listValidTypes = new List<LedgerType>() { LedgerType.Payable, LedgerType.Receivable };
@@ -85,17 +85,17 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 
 
 
-        private IMoneyAccount _bank;
+        //private IMoneyAccount _bank;
 
-        public IMoneyAccount BankAccount
-        {
-            get { return _bank; }
-            set
-            {
-                _bank = value;
-                NotifyPropertyChanged(nameof(BankAccount));
-            }
-        }
+        //public IMoneyAccount BankAccount
+        //{
+        //    get { return _bank; }
+        //    set
+        //    {
+        //        _bank = value;
+        //        NotifyPropertyChanged(nameof(BankAccount));
+        //    }
+        //}
 
         private BudgetTrackingType _budgetType;
 
@@ -126,9 +126,21 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             }
         }
 
-        public decimal CurrentBudgetAmount { get; set; } 
+
+        private IJournalAccount? _summary;
+
+        public IJournalAccount? SummaryAccount
+        {
+            get { return _summary; }
+            set 
+            {
+                _summary = value;
+                NotifyPropertyChanged(nameof(SummaryAccount));
+            }
+        }
 
 
+        public decimal CurrentBudgetAmount { get; set; }
 
 
 

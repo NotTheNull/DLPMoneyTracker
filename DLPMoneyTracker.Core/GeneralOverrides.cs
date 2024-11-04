@@ -106,7 +106,7 @@ namespace DLPMoneyTracker.Core
             switch(arg)
             {
                 case "json": return DLPDataSource.JSON;
-                case "sql": return DLPDataSource.SQL;
+                case "db": return DLPDataSource.Database;
                 default: return DLPDataSource.NotSet;
             }
         }

@@ -1,4 +1,5 @@
 ﻿using DLPMoneyTracker.BusinessLogic.AdapterInterfaces;
+using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
 using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.SQL.Data;
@@ -12,6 +13,13 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
 {
     public class SQLSourceToJournalAccountAdapter : ISourceToJournalAccountAdapter<Account>
     {
+        private readonly ILedgerAccountRepository accountRepository;
+
+        public SQLSourceToJournalAccountAdapter(ILedgerAccountRepository accountRepository)
+        {
+            this.accountRepository = accountRepository;
+        }
+
         public Guid Id { get; set; }
 
         public string Description { get; set; }
@@ -25,6 +33,8 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
         public BudgetTrackingType BudgetType { get; set; } = BudgetTrackingType.DO_NOT_TRACK;
         public decimal DefaultMonthlyBudgetAmount { get; set; } = decimal.Zero;
         public decimal CurrentBudgetAmount { get; set; } = decimal.Zero;
+
+        public IJournalAccount SummaryAccount { get; set; }
 
         public ICSVMapping Mapping { get; set; } = null;
 

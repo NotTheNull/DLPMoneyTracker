@@ -18,11 +18,13 @@ namespace DLPMoneyTracker2
             }
         }
 
-        public string SQLConnectionString
+        public string DBConnectionString
         {
             get
             {
-                return App.Config.GetConnectionString("sql") ?? string.Empty;
+                string connName = App.Config["AppSettings:connName"]?.ToString() ?? string.Empty;
+                
+                return App.Config.GetConnectionString(connName) ?? string.Empty;
             }
         }
     }
