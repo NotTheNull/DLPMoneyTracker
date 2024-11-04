@@ -27,6 +27,8 @@ namespace DLPMoneyTracker.Plugins.SQL.Data
         [Key]
         public int Id { get; set; }
         public int MainId { get; set; }
+
+        [Required, StringLength(200)]
         public string ColumnName { get; set; } = string.Empty;
         public int ColumnIndex { get; set; } = 1;
 

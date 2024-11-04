@@ -6,7 +6,6 @@ namespace DLPMoneyTracker.Plugins.SQL
 {
     public class DataContext : DbContext
     {
-        //private const string CONNECTION = @"server=DLP-HOME-PC\SQLEXPRESS; database=MoneyTracker; Trusted_Connection=True; TrustServerCertificate=True";
         private readonly IDLPConfig _config;
 
         public DataContext(IDLPConfig config) : base() 
