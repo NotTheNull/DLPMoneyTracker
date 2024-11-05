@@ -215,8 +215,9 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             var listAccounts = getSummaryListUseCase.Execute(this.AccountType);
             if (listAccounts?.Any() != true) return;
 
-            foreach(var account in listAccounts.OrderBy(o => o.Description))
+            foreach(IJournalAccount account in listAccounts.OrderBy(o => o.Description))
             {
+                if (account.Id == _editAccount.Id) continue;
                 this.SummaryAccountList.Add(new SpecialDropListItem<IJournalAccount?>(account.Description, account));
             }
         }
