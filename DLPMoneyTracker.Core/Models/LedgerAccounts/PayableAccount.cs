@@ -50,6 +50,11 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
                 this.DefaultMonthlyBudgetAmount = nominal.DefaultMonthlyBudgetAmount;
                 this.CurrentBudgetAmount = nominal.CurrentBudgetAmount;
             }
+
+            if(cpy is ISubLedgerAccount sub)
+            {
+                this.SummaryAccount = sub.SummaryAccount;
+            }
         }
     }
 }

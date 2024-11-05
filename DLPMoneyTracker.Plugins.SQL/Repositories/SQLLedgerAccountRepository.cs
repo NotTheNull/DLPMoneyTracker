@@ -23,7 +23,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         public IJournalAccount GetAccountByUID(Guid uid)
         {
-            using(DataContext context = new DataContext(config))
+            using (DataContext context = new DataContext(config))
             {
                 var account = context.Accounts.FirstOrDefault(x => x.AccountUID == uid);
                 if (account is null) return null;
@@ -58,12 +58,12 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
             {
                 var listAccountsQuery = context.Accounts.Where(x => search.JournalTypes.Contains(x.AccountType));
 
-                if(!string.IsNullOrWhiteSpace(search.NameFilterText))
+                if (!string.IsNullOrWhiteSpace(search.NameFilterText))
                 {
                     listAccountsQuery = listAccountsQuery.Where(x => x.Description.Contains(search.NameFilterText));
                 }
 
-                if(!search.IncludeDeleted)
+                if (!search.IncludeDeleted)
                 {
                     listAccountsQuery = listAccountsQuery.Where(x => !x.DateClosedUTC.HasValue);
                 }
@@ -96,7 +96,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
                 adapter.Copy(account);
 
                 var existingAccount = context.Accounts.FirstOrDefault(x => x.AccountUID == account.Id);
-                if(existingAccount is null)
+                if (existingAccount is null)
                 {
                     existingAccount = new Data.Account();
                     context.Accounts.Add(existingAccount);
@@ -150,6 +150,30 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
             JournalAccountFactory factory = new JournalAccountFactory();
             return factory.Build(adapter);
+        }
+
+        public Guid GetNextUID()
+        {
+            Guid next;
+            using (DataContext context = new DataContext(config))
+            {
+                do
+                {
+                    next = Guid.NewGuid();
+                } while (DoesUIDExist(next, context));
+            }
+            return next;
+        }
+
+        private bool DoesUIDExist(Guid uid, DataContext context)
+        {
+            if (uid == Guid.Empty) return true; // Technically it shouldn't exist but we don't want a UID of all zeros
+            // Shouldn't need to check for Special Accounts as they should be stored in the database already to not break Foreign Keys
+
+            var id = context.Accounts.FirstOrDefault(x => x.AccountUID == uid)?.Id;
+            if (id.HasValue) return true;
+
+            return false;
         }
     }
 }

@@ -65,5 +65,6 @@ namespace DLPMoneyTracker.BusinessLogic.PluginInterfaces
         List<IJournalAccount> GetDetailAccountsForSummary(Guid uidSummaryAccount);
         void SaveJournalAccount(IJournalAccount account);
         int GetRecordCount();
+        Guid GetNextUID();
     }
 }

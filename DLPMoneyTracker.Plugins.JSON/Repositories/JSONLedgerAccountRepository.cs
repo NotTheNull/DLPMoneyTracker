@@ -186,5 +186,26 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
 
             return listAccounts;
         }
+
+        private readonly Guid[] SPECIAL_UIDS = [SpecialAccount.DebtInterest.Id, SpecialAccount.DebtReduction.Id, SpecialAccount.InitialBalance.Id, SpecialAccount.UnlistedAdjusment.Id, Guid.Empty];
+        public Guid GetNextUID()
+        {
+            Guid next;
+            do
+            {
+                next = Guid.NewGuid();
+
+            } while (DoesUIDExist(next));
+
+            return next;
+        }
+
+        private bool DoesUIDExist(Guid uid)
+        {
+            if (SPECIAL_UIDS.Contains(uid)) return true;
+            if (this.AccountList.Select(s => s.Id).Contains(uid)) return true;
+
+            return false;
+        }
     }
 }

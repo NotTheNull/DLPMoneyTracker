@@ -14,12 +14,15 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
     {
 
         private readonly List<LedgerType> _listValidTypes = new List<LedgerType>() { LedgerType.Payable, LedgerType.Receivable };
+        private readonly IGetNextUIDUseCase getNextUIDUseCase;
         private readonly ISaveJournalAccountUseCase saveUseCase;
 
 
         public LedgerAccountVM(
+            IGetNextUIDUseCase getNextUIDUseCase,
             ISaveJournalAccountUseCase saveUseCase) : base()
         {
+            this.getNextUIDUseCase = getNextUIDUseCase;
             this.saveUseCase = saveUseCase;
         }
 
@@ -84,19 +87,6 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
         public int OrderBy { get { return 9999; } }
 
 
-
-        //private IMoneyAccount _bank;
-
-        //public IMoneyAccount BankAccount
-        //{
-        //    get { return _bank; }
-        //    set
-        //    {
-        //        _bank = value;
-        //        NotifyPropertyChanged(nameof(BankAccount));
-        //    }
-        //}
-
         private BudgetTrackingType _budgetType;
 
         public BudgetTrackingType BudgetType
@@ -147,13 +137,14 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 
         public void Clear()
         {
-            Id = Guid.Empty;
+            Id = getNextUIDUseCase.Execute();
             Description = string.Empty;
             JournalType = LedgerType.NotSet;
             BudgetType = BudgetTrackingType.DO_NOT_TRACK;
             this.DefaultMonthlyBudgetAmount = decimal.Zero;
             this.CurrentBudgetAmount = decimal.Zero;
             this.DateClosedUTC = null;
+            this.SummaryAccount = null;
         }
 
         public void Copy(IJournalAccount cpy)
@@ -169,6 +160,11 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                 DateClosedUTC = account.DateClosedUTC;
                 BudgetType = account.BudgetType;
                 this.DefaultMonthlyBudgetAmount = account.DefaultMonthlyBudgetAmount;
+            }
+
+            if(cpy is ISubLedgerAccount sub)
+            {
+                this.SummaryAccount = sub.SummaryAccount;
             }
         }
 

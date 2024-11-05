@@ -109,6 +109,7 @@ namespace DLPMoneyTracker2
             services.AddTransient<IGetBudgetAnalysisDataUseCase, GetBudgetAnalysisDataUseCase>();
             services.AddTransient<IGetBudgetPlanListByType, GetBudgetPlanListByType>();
             services.AddTransient<IGetSummaryAccountListByType, GetSummaryAccountListByType>();
+            services.AddTransient<IGetNextUIDUseCase, GetNextUIDUseCase>();
 
 
             // Factories

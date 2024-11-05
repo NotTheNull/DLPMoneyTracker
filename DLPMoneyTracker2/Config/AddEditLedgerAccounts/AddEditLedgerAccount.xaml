@@ -211,7 +211,7 @@
                       DisplayMemberPath="Display"
                       SelectedValuePath="Value"
                       ItemsSource="{Binding Path=SummaryAccountList}"
-                      SelectedValue="{Binding Path=SummaryAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                      SelectedValue="{Binding Path=SelectedSummaryAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                       />
 
 

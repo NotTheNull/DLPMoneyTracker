@@ -99,10 +99,13 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             }
         }
 
-        public Guid SelectedSummaryAccount
+        public IJournalAccount? SelectedSummaryAccount
         {
-            get;
-            set;
+            get { return _editAccount.SummaryAccount; }
+            set {
+                _editAccount.SummaryAccount = value;
+                NotifyPropertyChanged(nameof(SelectedSummaryAccount));
+            }
         }
 
         #endregion
@@ -120,6 +123,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                 {
                     _editAccount.SaveAccount();
                     _editAccount.Clear();
+                    this.SummaryAccountList.Clear();
 
                     // Even if no changes were made, best to trigger any recalculations regarding budget
                     notifications.TriggerBudgetAmountChanged(_editAccount.Id);
@@ -139,6 +143,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                 return _cmdClear ?? (_cmdClear = new RelayCommand((o) =>
                 {
                     _editAccount.Clear();
+                    this.SummaryAccountList.Clear();
                     this.NotifyAll();
                 }));
             }
@@ -155,7 +160,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                     if (act is LedgerAccountVM vm)
                     {
                         _editAccount.Copy(vm);
-
+                        this.LoadSummaryAccounts();
                         this.NotifyAll();
                     }
                 }));
@@ -193,7 +198,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
         {
             this.AccountList.Clear();
             var listAccounts = getLedgerAccountsUseCase.Execute(true); //_config.GetJournalAccountList(new JournalAccountSearch(LedgerAccountVM.ValidTypes));
-            foreach (var act in listAccounts)
+            foreach (var act in listAccounts.OrderBy(o => o.Description))
             {
                 LedgerAccountVM vm = UICore.DependencyHost.GetRequiredService<LedgerAccountVM>();
                 vm.Copy(act);
@@ -222,6 +227,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             NotifyPropertyChanged(nameof(AccountType));
             NotifyPropertyChanged(nameof(BudgetType));
             NotifyPropertyChanged(nameof(MonthlyBudget));
+            NotifyPropertyChanged(nameof(SelectedSummaryAccount));
         }
     }
 }
