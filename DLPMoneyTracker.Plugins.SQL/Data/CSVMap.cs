@@ -18,7 +18,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Data
         public bool IsAmountInverted { get; set; } = false;
 
         public virtual Account Account { get; set; }
-        public virtual ICollection<CSVColumn> Columns { get; set; }
+        public virtual ICollection<CSVColumn> Columns { get; set; } = new List<CSVColumn>();
     }
 
     public class CSVColumn

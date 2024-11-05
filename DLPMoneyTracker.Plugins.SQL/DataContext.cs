@@ -32,7 +32,7 @@ namespace DLPMoneyTracker.Plugins.SQL
             modelBuilder.Entity<BankReconciliation>()
                 .HasOne(x => x.BankAccount)
                 .WithMany(x => x.Reconciliations)
-                .HasForeignKey(x => x.AccountId)
+                .HasForeignKey(x => x.BankAccountId)
                 .IsRequired();
 
             modelBuilder.Entity<BankReconciliation>().Navigation(br => br.BankAccount).AutoInclude();

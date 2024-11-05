@@ -7,6 +7,7 @@ using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.SQL.Data;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,7 +57,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
             ArgumentNullException.ThrowIfNull(transaction);
 
             this.UID = transaction.UID;
-            this.TransactionDate = transaction.TransactionDate < Common.MINIMUM_DATE ? Common.MINIMUM_DATE : transaction.TransactionDate; 
+            this.TransactionDate = transaction.TransactionDate < Common.MINIMUM_DATE ? Common.MINIMUM_DATE : transaction.TransactionDate;
             this.JournalEntryType = transaction.JournalEntryType;
             this.DebitAccount = transaction.DebitAccount;
             this.DebitBankDate = transaction.DebitBankDate;
@@ -74,8 +75,8 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
             src.BatchType = this.JournalEntryType;
             src.TransactionDate = this.TransactionDate;
             src.Description = this.Description;
-            
-            if(src.Details.Any() != true)
+
+            if (src.Details.Any() != true)
             {
                 src.Details.Add(new TransactionDetail()
                 {
@@ -88,6 +89,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
                     Amount = this.TransactionAmount * -1,
                     LedgerAccount = context.Accounts.FirstOrDefault(x => x.AccountUID == this.CreditAccountId)
                 });
+
             }
             else
             {
@@ -98,6 +100,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
                 var credit = src.Details.FirstOrDefault(x => x.Amount < decimal.Zero);
                 credit.Amount = this.TransactionAmount * -1;
                 credit.LedgerAccount = context.Accounts.FirstOrDefault(x => x.AccountUID == this.CreditAccountId);
+
             }
         }
 
@@ -109,10 +112,10 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
             this.TransactionDate = src.TransactionDate;
             this.JournalEntryType = src.BatchType;
             this.Description = src.Description;
-            
-            foreach(var detail in src.Details)
+
+            foreach (var detail in src.Details)
             {
-                if(detail.Amount < decimal.Zero)
+                if (detail.Amount < decimal.Zero)
                 {
                     this.CreditAccount = accountRepository.GetAccountByUID(detail.LedgerAccount.AccountUID);
                     this.CreditBankDate = detail.BankReconciliationDate;
@@ -122,7 +125,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
                     this.DebitAccount = accountRepository.GetAccountByUID(detail.LedgerAccount.AccountUID);
                     this.DebitBankDate = detail.BankReconciliationDate;
                 }
-            }           
+            }
         }
 
     }
