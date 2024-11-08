@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Title>Money Tracker</Title>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="bootstrap" Version="5.3.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DLPMoneyTracker.BusinessLogic\DLPMoneyTracker.BusinessLogic.csproj" />
+    <ProjectReference Include="..\DLPMoneyTracker.Core\DLPMoneyTracker.Core.csproj" />
+    <ProjectReference Include="..\DLPMoneyTracker.Plugins.JSON\DLPMoneyTracker.Plugins.JSON.csproj" />
+    <ProjectReference Include="..\DLPMoneyTracker.Plugins.SQL\DLPMoneyTracker.Plugins.SQL.csproj" />
+  </ItemGroup>
+
+</Project>
