@@ -18,5 +18,6 @@ namespace DLPMoneyTracker.Core
     {
         DLPDataSource DataSource { get; }
         string DBConnectionString { get; }
+        string JSONFilePath { get; }
     }
 }
