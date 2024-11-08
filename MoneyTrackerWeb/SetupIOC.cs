@@ -25,6 +25,7 @@ namespace MoneyTrackerWeb
         {
             // Repositories
             builder.Services.AddSingleton<IDLPConfig, DLPWebConfig>();
+            builder.Services.AddSingleton<NotificationSystem>();
             builder.Services.AddSingleton<ILedgerAccountRepository, SQLLedgerAccountRepository>();
             builder.Services.AddSingleton<IBudgetPlanRepository, SQLBudgetPlanRepository>();
             builder.Services.AddSingleton<ITransactionRepository, SQLTransactionRepository>();
