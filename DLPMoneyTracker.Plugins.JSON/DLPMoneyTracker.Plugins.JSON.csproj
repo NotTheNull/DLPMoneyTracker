@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="AppSettings.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DLPMoneyTracker.BusinessLogic\DLPMoneyTracker.BusinessLogic.csproj" />
     <ProjectReference Include="..\DLPMoneyTracker.Core\DLPMoneyTracker.Core.csproj" />
   </ItemGroup>

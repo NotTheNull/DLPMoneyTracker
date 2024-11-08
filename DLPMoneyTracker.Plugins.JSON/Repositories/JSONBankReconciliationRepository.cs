@@ -17,30 +17,25 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
     {
         private readonly ILedgerAccountRepository accountRepository;
         private readonly ITransactionRepository moneyRepository;
+        private readonly IDLPConfig config;
         private readonly NotificationSystem notification;
 
         public JSONBankReconciliationRepository(
             ILedgerAccountRepository accountRepository, 
             ITransactionRepository moneyRepository,
+            IDLPConfig config,
             NotificationSystem notification)
         {
             this.accountRepository = accountRepository;
             this.moneyRepository = moneyRepository;
+            this.config = config;
             this.notification = notification;
             this.LoadFromFile();
         }
 
         public List<BankReconciliationOverviewDTO> BankReconciliationList { get; set; } = new List<BankReconciliationOverviewDTO>();
 
-
-        private string ReconcileFolderPath
-        {
-            get
-            {
-                return AppSettings.OLD_RECONCILE_FOLDER_PATH.Replace(AppSettings.YEAR_FOLDER_PLACEHOLDER, DateTime.Today.Year.ToString());
-            }
-        }
-        public string FilePath => AppSettings.NEW_RECONCILE_FOLDER_PATH;
+        public string FilePath { get { return Path.Combine(config.JSONFilePath, "Reconciliation"); } }
 
 
 
@@ -56,22 +51,13 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             {
                 string fileName = string.Format("{0}.json", bank.Id);
                 string newPath = Path.Combine(this.FilePath, fileName);
-                string oldPath = Path.Combine(this.ReconcileFolderPath, fileName);
+
                 string json = string.Empty;
                 if (File.Exists(newPath))
                 {
                     json = File.ReadAllText(newPath);
                 }
-                else if (File.Exists(oldPath))
-                {
-                    if(!Directory.Exists(AppSettings.NEW_RECONCILE_FOLDER_PATH))
-                    {
-                        Directory.CreateDirectory(AppSettings.NEW_RECONCILE_FOLDER_PATH);
-                    }
 
-                    json = File.ReadAllText(oldPath);
-                    File.WriteAllText(newPath, json);
-                }
 
                 if (string.IsNullOrWhiteSpace(json)) continue;
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace MoneyTrackerBlazor
 {
@@ -14,12 +15,26 @@ namespace MoneyTrackerBlazor
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
 
+            builder.Configuration.AddJsonFile("appsettings.json");
+
+            builder.Services.AddLogging(logging =>
+            {
+                logging.AddFilter("Microsoft.AspNetCore.Components.WebView", LogLevel.Trace);
+#if DEBUG
+                logging.AddDebug();
+#endif
+            });
+
             builder.Services.AddMauiBlazorWebView();
 
 #if DEBUG
     		builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
 #endif
+
+            SetupIOC.Configure(builder);
+
+
 
             return builder.Build();
         }

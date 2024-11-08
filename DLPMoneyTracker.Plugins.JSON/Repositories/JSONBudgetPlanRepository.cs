@@ -1,5 +1,6 @@
 ﻿using DLPMoneyTracker.BusinessLogic.Factories;
 using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
+using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models.BudgetPlan;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.JSON.Adapters;
@@ -17,21 +18,19 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
     {
         private int _year;
         private readonly ILedgerAccountRepository accountRepository;
+        private readonly IDLPConfig config;
 
-        public JSONBudgetPlanRepository(ILedgerAccountRepository ledgerRepository)
+        public JSONBudgetPlanRepository(ILedgerAccountRepository ledgerRepository, IDLPConfig config)
         {
             _year = DateTime.Today.Year;
             this.accountRepository = ledgerRepository;
-
+            this.config = config;
             this.LoadFromFile();
         }
 
         public List<IBudgetPlan> BudgetPlanList { get; set; } = new List<IBudgetPlan>();
 
-        // TODO: Once conversions are complete, remove the OLD paths
-        private string OldFolderPath { get { return AppSettings.OLD_DATA_FOLDER_PATH.Replace(AppSettings.YEAR_FOLDER_PLACEHOLDER, _year.ToString()); } }
-        public string OldFilePath { get { return Path.Combine(this.OldFolderPath, "JournalPlan.json"); } }
-        public string FilePath { get { return Path.Combine(AppSettings.NEW_DATA_FOLDER_PATH, "JournalPlan.json"); } }
+        public string FilePath { get { return Path.Combine(config.JSONFilePath, "Data", "JournalPlan.json"); } }
 
 
         public void LoadFromFile()
@@ -41,11 +40,6 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             if (File.Exists(this.FilePath))
             {
                 json = File.ReadAllText(FilePath);
-            }
-            else if(File.Exists(this.OldFilePath))
-            {
-                json = File.ReadAllText(OldFilePath);
-                File.WriteAllText(FilePath, json);
             }
             else
             {

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace DLPMoneyTracker2
 {
@@ -27,5 +28,7 @@ namespace DLPMoneyTracker2
                 return App.Config.GetConnectionString(connName) ?? string.Empty;
             }
         }
+
+        public string JSONFilePath { get { return Directory.GetCurrentDirectory(); } }
     }
 }

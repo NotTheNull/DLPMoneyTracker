@@ -1,4 +1,5 @@
 ﻿using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
+using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.JSON.Adapters;
@@ -15,21 +16,20 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
     public class JSONTransactionRepository : ITransactionRepository, IJSONRepository
     {
         private readonly ILedgerAccountRepository accountRepository;
+        private readonly IDLPConfig config;
         private int _year;
 
-        public JSONTransactionRepository(ILedgerAccountRepository accountRepository)
+        public JSONTransactionRepository(ILedgerAccountRepository accountRepository, IDLPConfig config)
         {
             _year = DateTime.Today.Year;
             this.accountRepository = accountRepository;
-
+            this.config = config;
             this.LoadFromFile();
         }
 
         public List<IMoneyTransaction> TransactionList { get; set; } = new List<IMoneyTransaction>();
 
-        private string OldFolderPath { get { return AppSettings.OLD_DATA_FOLDER_PATH.Replace(AppSettings.YEAR_FOLDER_PLACEHOLDER, _year.ToString()); } }
-        public string OldFilePath { get { return Path.Combine(this.OldFolderPath, "Journal.json"); } }
-        public string FilePath { get { return Path.Combine(AppSettings.NEW_DATA_FOLDER_PATH, "Journal.json"); } }
+        public string FilePath { get { return Path.Combine(config.JSONFilePath, "Data", "Journal.json"); } }
 
 
         public void LoadFromFile()
@@ -39,16 +39,6 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             if(File.Exists(this.FilePath))
             {
                 json = File.ReadAllText(this.FilePath);
-            }
-            else if(File.Exists(this.OldFilePath)) 
-            {
-                if(!Directory.Exists(AppSettings.NEW_DATA_FOLDER_PATH))
-                {
-                    Directory.CreateDirectory(AppSettings.NEW_DATA_FOLDER_PATH);
-                }
-
-                json = File.ReadAllText(this.OldFilePath);
-                File.WriteAllText(this.FilePath, json);
             }
             else
             {
@@ -66,12 +56,6 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
                 adapter.ImportSource(data);
                 reSaveFile = reSaveFile || ( adapter.CreditAccountId != data.CreditAccountId || adapter.DebitAccountId != data.DebitAccountId);
                 this.TransactionList.Add(new MoneyTransaction(adapter));
-            }
-
-            // TODO: Remove this after updating accounts accordingly
-            if(reSaveFile)
-            {
-                this.SaveToFile();
             }
         }
 

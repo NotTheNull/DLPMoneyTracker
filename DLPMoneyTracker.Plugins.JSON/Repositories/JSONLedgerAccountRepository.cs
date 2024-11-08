@@ -1,5 +1,6 @@
 ﻿using DLPMoneyTracker.BusinessLogic.Factories;
 using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
+using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.JSON.Adapters;
 using DLPMoneyTracker.Plugins.JSON.Models;
@@ -15,20 +16,19 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
     public class JSONLedgerAccountRepository : ILedgerAccountRepository, IJSONRepository
     {
         private int _year;
+        private readonly IDLPConfig config;
 
-        public JSONLedgerAccountRepository()
+        public JSONLedgerAccountRepository(IDLPConfig config)
         {
             _year = DateTime.Today.Year;
             this.LoadFromFile();
+            this.config = config;
         }
 
         public List<IJournalAccount> AccountList { get; set; } = new List<IJournalAccount>();
 
 
-        // TODO: Once conversions are complete, remove the OLD paths
-        private string OldFolderPath { get { return AppSettings.OLD_CONFIG_FOLDER_PATH.Replace(AppSettings.YEAR_FOLDER_PLACEHOLDER, _year.ToString()); } }
-        public string OldFilePath { get { return Path.Combine(this.OldFolderPath, "LedgerAccounts.json"); } }
-        public string FilePath { get { return Path.Combine(AppSettings.NEW_CONFIG_FOLDER_PATH, "LedgerAccounts.json"); } }
+        public string FilePath { get { return Path.Combine(config.JSONFilePath, "Config", "LedgerAccounts.json"); } }
 
 
 
@@ -44,16 +44,6 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             if (File.Exists(FilePath))
             {
                 json = File.ReadAllText(FilePath);
-            }
-            else if(File.Exists(OldFilePath))
-            {
-                if(!Directory.Exists(AppSettings.NEW_CONFIG_FOLDER_PATH))
-                {
-                    Directory.CreateDirectory(AppSettings.NEW_CONFIG_FOLDER_PATH);
-                }
-
-                json = File.ReadAllText(OldFilePath);
-                File.WriteAllText(FilePath, json);
             }
             else
             {
@@ -188,6 +178,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         }
 
         private readonly Guid[] SPECIAL_UIDS = [SpecialAccount.DebtInterest.Id, SpecialAccount.DebtReduction.Id, SpecialAccount.InitialBalance.Id, SpecialAccount.UnlistedAdjusment.Id, Guid.Empty];
+
         public Guid GetNextUID()
         {
             Guid next;
