@@ -79,4 +79,9 @@
       <ProjectReference Include="..\DLPMoneyTracker.Plugins.SQL\DLPMoneyTracker.Plugins.SQL.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Components\Pages\" />
+      <Folder Include="wwwroot\images\icons\" />
+    </ItemGroup>
+
 </Project>
