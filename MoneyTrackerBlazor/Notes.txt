@@ -1,0 +1,6 @@
+
+
+NEED TO USE BOOTSTRAP SINCE SO MANY COMPANIES ARE USING IT
+Tailwind would be nice >.>
+
+May as well learn SASS while we're at it

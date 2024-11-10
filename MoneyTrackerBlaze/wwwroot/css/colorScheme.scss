@@ -1,0 +1,29 @@
+
+$color_debtpay: #F79808;
+$color_expense: #ff0000;
+$color_income: #3CBC49;
+$color_xfer: #0F44F2;
+
+
+//$listKeys: ["debtpay", "expense", "income", "xfer"];
+//$listKeyBGColors: ("debtpay", $color_debtpay), ("expense", $color_expense), ("income", $color_income), ("xfer", $color_xfer);
+$listColors: (
+    debtpay: $color_debtpay,
+    expense: $color_expense,
+    income: $color_income,
+    xfer: $color_xfer
+);
+
+@each $key, $color in $listColors {
+    .bg_#{$key} {
+        background-color: $color;
+    }
+}
+
+
+$color_mainbg: #90A5E9;
+body {
+    background-color: $color_mainbg;
+}
+
+

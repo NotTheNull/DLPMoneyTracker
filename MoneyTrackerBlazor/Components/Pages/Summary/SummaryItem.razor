@@ -1,0 +1,60 @@
+
+<div class="card" id="A_@Account.AccountId">
+    <!-- Do I really need the Account Type displayed? -->
+    @* <div class="row justify-content-start">
+    <div class="col">
+    @Account.AccountType.ToDisplayText()
+    </div>
+    </div> *@
+    <div class="card-body">
+        <div class="card-title">
+            <div class="row">
+                <h3>
+                    <div class="col-6">
+                        @Account.AccountDesc
+                    </div>
+
+                    <div class="col-2 offset-2 align-content-end">
+                        Balance:
+                    </div>
+
+                    <div class="col-2">
+                        @Account.Balance
+                    </div>
+                </h3>
+            </div>
+        </div>
+
+            @if (Account.PlanList.Count > 0)
+            {
+                <!-- Table of Budget Plans here; Maybe a list group? -->
+
+
+
+
+
+
+                <div class="row">
+                    <h3>
+                        <div class="col-2 offset-8 align-content-end">
+                            Balance:
+                        </div>
+
+                        <div class="col-2">
+                            @Account.Balance
+                        </div>
+                    </h3>
+                </div>
+            }
+            else
+            {
+                <!-- Still need some blank space to pad it out -->
+                <br />
+            }
+    </div>
+</div>
+
+
+@code {
+    [Parameter] public SummaryItemVM Account { get; set; }
+}

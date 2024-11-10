@@ -1,4 +1,5 @@
-﻿using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
+﻿using DLPMoneyTracker.BusinessLogic.Factories;
+using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
 using DLPMoneyTracker.BusinessLogic.UseCases.BankReconciliation.Interfaces;
 using DLPMoneyTracker.BusinessLogic.UseCases.BankReconciliation;
 using DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans.Interfaces;
@@ -12,11 +13,16 @@ using DLPMoneyTracker.BusinessLogic.UseCases.Transactions;
 using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Plugins.JSON.Repositories;
 using DLPMoneyTracker.Plugins.SQL.Repositories;
-using DLPMoneyTracker.BusinessLogic.Factories;
 using Microsoft.Extensions.Configuration;
-using MoneyTrackerBlazor.Models.Summary;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using MoneyTrackerBlaze.Models;
+using MoneyTrackerBlaze.Models.Summary;
 
-namespace MoneyTrackerBlazor
+namespace MoneyTrackerBlaze
 {
     internal static class SetupIOC
     {
@@ -33,6 +39,7 @@ namespace MoneyTrackerBlazor
         {
             builder.Services.AddTransient<SummaryListingVM>();
             builder.Services.AddTransient<SummaryItemVM>();
+            builder.Services.AddTransient<SummaryItemPlanVM>();
         }
 
         private static void ConfigureRepositories(MauiAppBuilder builder)
@@ -106,4 +113,5 @@ namespace MoneyTrackerBlazor
 
 
     }
+
 }

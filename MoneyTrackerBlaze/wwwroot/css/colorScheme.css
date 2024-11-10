@@ -1,0 +1,19 @@
+﻿.bg_debtpay {
+  background-color: #F79808;
+}
+
+.bg_expense {
+  background-color: #ff0000;
+}
+
+.bg_income {
+  background-color: #3CBC49;
+}
+
+.bg_xfer {
+  background-color: #0F44F2;
+}
+
+body {
+  background-color: #90A5E9;
+}
