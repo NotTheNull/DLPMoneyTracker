@@ -8,6 +8,21 @@ main {
     flex: 1;
 }
 
+.content {
+    flex: 1; /* This makes the content take up the remaining space */
+    overflow-y: auto; /* Allows scrolling if content is too tall */
+}
+
+.footer {
+    text-align: center; /* Center the image */
+    margin-top: auto; /* Push the footer to the bottom */
+}
+
+.footer img {
+    max-width: 100%; /* Ensure the image fits within the sidebar width */
+    height: auto; /* Maintain the aspect ratio */
+}
+
 .sidebar {
     background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
 }

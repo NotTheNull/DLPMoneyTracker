@@ -29,6 +29,7 @@ namespace MoneyTrackerBlaze
         public static void Configure(MauiAppBuilder builder)
         {
             builder.Services.AddSingleton<NotificationSystem>();
+            builder.Services.AddSingleton<MessageHelper>();
             ConfigureRepositories(builder);
             ConfigureFactories(builder);
             ConfigureUseCases(builder);

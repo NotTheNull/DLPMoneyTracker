@@ -1,0 +1,20 @@
+﻿<!-- PageHeader.razor -->
+@inject MessageHelper messageThis
+
+<PageTitle>@title</PageTitle>
+<h1>@title</h1>
+
+@code {
+    private string title;
+
+    protected override void OnInitialized()
+    {
+        messageThis.Subscribe_SetPageTitle(PageTitleChanged);
+    }
+
+    private void PageTitleChanged(object msg)
+    {
+        title = msg.ToString();
+    }
+
+}

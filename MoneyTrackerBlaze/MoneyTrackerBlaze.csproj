@@ -80,6 +80,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Components\Pages\Config\LedgerAccounts\" />
+      <Folder Include="Components\Pages\Config\BudgetPlans\" />
       <Folder Include="wwwroot\images\icons\" />
     </ItemGroup>
 

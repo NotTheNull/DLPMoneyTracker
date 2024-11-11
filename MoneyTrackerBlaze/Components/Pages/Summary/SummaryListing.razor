@@ -1,5 +1,6 @@
 @page "/"
 @inject SummaryListingVM model
+@inject MessageHelper messageThis
 
 
 <section id="summary_list" class="container">
@@ -8,12 +9,12 @@
 
         <!-- Summary List goes here -->
         <ul class="list-group list-group-flush">
-        @foreach(var item in model.SummaryItemList)
-        {
-            <li class="list-group-item">
-                <SummaryItem Account="@item" />
-            </li>
-        }
+            @foreach(var item in model.SummaryItemList)
+            {
+                <li class="list-group-item">
+                    <SummaryItem Account="@item" />
+                </li>
+            }
         </ul>
 
     </div>
@@ -21,5 +22,8 @@
 </section>
 
 @code {
-
+    protected override void OnInitialized()
+    {
+        messageThis.SetPageTitle("Summary");
+    }
 }
