@@ -8,13 +8,13 @@
             </div>
             <div class="col-6 d-inline-flex">
                 <div style="width: 15px; height: 15px; margin-right: 5px;" class="@PlanTypeColorClass"> </div>
-                @Plan.Description
+                <span>@Plan.Description</span>
             </div>
             <div class="col-2">
-                @Plan.NextDueDate.ToDisplayText()
+                <span>@Plan.NextDueDate.ToDisplayText()</span>
             </div>
             <div class="col-3">
-                @Plan.Amount.ToDisplayText()
+                <span>@Plan.Amount.ToDisplayText()</span>
             </div>
         </div>
     </section>
