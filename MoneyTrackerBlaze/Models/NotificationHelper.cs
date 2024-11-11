@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace MoneyTrackerBlaze.Models
 {
-    public class MessageHelper
+    public class NotificationHelper
     {
         public const string MSG_PAGETITLE = "PageTitleChanged";
         private readonly NotificationSystem notifyThis;
 
-        public MessageHelper(NotificationSystem notifyThis)
+        public NotificationHelper(NotificationSystem notifyThis)
         {
             this.notifyThis = notifyThis;
         }
