@@ -1,0 +1,54 @@
+﻿@page "/config/moneyaccounts"
+
+@inject IGetMoneyAccountsUseCase getAccountsUseCase
+@inject NotificationHelper messageThis
+
+
+<section id="MoneyAccountListing">
+
+
+    <AddNewRecord OnClick="AddNewRecord" />
+    <br />
+
+
+    <!-- List of Accounts -->
+    <ul class="list-group">
+
+        @foreach(var account in AccountList)
+        {
+            <li class="list-group-item">
+                <MoneyAccountItem Account="account" />
+            </li>
+        }
+
+    </ul>
+
+
+    <br />
+    <AddNewRecord OnClick="AddNewRecord" />
+</section>
+
+
+@code {
+    List<IJournalAccount> AccountList { get; set; } = new List<IJournalAccount>();
+
+    protected override void OnInitialized()
+    {
+        messageThis.SetPageTitle("Money Accounts List");
+
+        this.AccountList.Clear();
+        var listData = getAccountsUseCase.Execute(true);
+        if (listData?.Any() != true) return;
+
+        this.AccountList.AddRange(listData);
+
+    }
+
+
+    private void AddNewRecord()
+    {
+        // TODO: Open editor for new Money Account
+    }
+
+
+}
