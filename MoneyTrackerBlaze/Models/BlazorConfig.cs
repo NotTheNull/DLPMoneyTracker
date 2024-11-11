@@ -8,22 +8,18 @@ using System.Threading.Tasks;
 
 namespace MoneyTrackerBlaze.Models
 {
+    // NOTE: Blazor MAUI apps cannot access external files so any changes here would require a recompile
     public class BlazorConfig : IDLPConfig
     {
-        public BlazorConfig(IConfiguration config)
-        {
-            this.JSONFilePath = config.GetValue<string>("ConnectionStrings:json_path");
+        const string SQL_SERVER = "server=DLP-HOME-PC\\SQLEXPRESS; database=MoneyTracker; Trusted_Connection=True; TrustServerCertificate=True";
+        const string MYSQL = "server=localhost;database=fuzzyfu_dev;user=dlpeery;password=SS6HJT8m9zXccBtjyEbS";
+        const string JSON_PATH = "D:\\Programs\\DLP Money Tracker";       
 
-            string connName = config.GetValue<string>("AppSettings:connName");
-            this.DBConnectionString = config.GetValue<string>($"ConnectionStrings:{connName}");
-            this.DataSource = config.GetValue<string>("AppSettings:source").ToDataSource();
-        }
+        public DLPDataSource DataSource { get { return DLPDataSource.Database; } }
 
-        public DLPDataSource DataSource { get; set; }
+        public string DBConnectionString { get { return SQL_SERVER; } }
 
-        public string DBConnectionString { get; set; }
-
-        public string JSONFilePath { get; set; }
+        public string JSONFilePath { get { return JSON_PATH; } }
     }
 }
-}
+

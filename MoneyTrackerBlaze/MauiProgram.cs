@@ -14,7 +14,6 @@ namespace MoneyTrackerBlaze
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
-            builder.Configuration.AddJsonFile("appsettings.json");
 
             builder.Services.AddLogging(logging =>
             {
@@ -32,7 +31,6 @@ namespace MoneyTrackerBlaze
 #endif
 
             SetupIOC.Configure(builder);
-
 
 
             return builder.Build();

@@ -1,4 +1,5 @@
 ﻿
+using DLPMoneyTracker.Core.Models.BudgetPlan;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using System;
 using System.Collections.Generic;
@@ -30,12 +31,22 @@ namespace DLPMoneyTracker.Core
             return result;
         }
 
+        public static string ToDisplayText(this DateTime date)
+        {
+            return string.Format("{0:yyyy/MM/dd}", date);
+        }
+
         public static decimal ToDecimal(this string val)
         {
             if (string.IsNullOrWhiteSpace(val)) return decimal.Zero;
 
             decimal.TryParse(val, out decimal result);
             return result;
+        }
+
+        public static string ToDisplayText(this decimal val)
+        {
+            return string.Format("{0:c}", val);
         }
 
 
@@ -73,6 +84,23 @@ namespace DLPMoneyTracker.Core
                     return "FIXED";
                 case BudgetTrackingType.Variable:
                     return "VARIABLE";
+                default:
+                    return string.Empty;
+            }
+        }
+
+        public static string ToDisplayText(this BudgetPlanType planType)
+        {
+            switch(planType)
+            {
+                case BudgetPlanType.DebtPayment:
+                    return "Debt Payment";
+                case BudgetPlanType.Payable:
+                    return "Expense";
+                case BudgetPlanType.Receivable:
+                    return "Income";
+                case BudgetPlanType.Transfer:
+                    return "Xfer";
                 default:
                     return string.Empty;
             }

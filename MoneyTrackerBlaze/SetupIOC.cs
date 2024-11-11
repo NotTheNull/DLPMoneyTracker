@@ -44,8 +44,6 @@ namespace MoneyTrackerBlaze
 
         private static void ConfigureRepositories(MauiAppBuilder builder)
         {
-            DLPDataSource source = builder.Configuration.GetValue<string>("AppSettings:Source").ToDataSource();
-
             builder.Services.AddSingleton<IDLPConfig, BlazorConfig>();
             builder.Services.AddSingleton<SQLBankReconciliationRepository>();
             builder.Services.AddSingleton<SQLLedgerAccountRepository>();
@@ -56,15 +54,15 @@ namespace MoneyTrackerBlaze
             builder.Services.AddSingleton<JSONTransactionRepository>();
             builder.Services.AddSingleton<JSONBankReconciliationRepository>();
 
-
-            if (source == DLPDataSource.Database)
+            BlazorConfig config = new BlazorConfig();
+            if (config.DataSource == DLPDataSource.Database)
             {
                 builder.Services.AddSingleton<ILedgerAccountRepository, SQLLedgerAccountRepository>();
                 builder.Services.AddSingleton<IBudgetPlanRepository, SQLBudgetPlanRepository>();
                 builder.Services.AddSingleton<ITransactionRepository, SQLTransactionRepository>();
                 builder.Services.AddSingleton<IBankReconciliationRepository, SQLBankReconciliationRepository>();
             }
-            else if (source == DLPDataSource.JSON)
+            else if (config.DataSource == DLPDataSource.JSON)
             {
                 builder.Services.AddSingleton<ILedgerAccountRepository, JSONLedgerAccountRepository>();
                 builder.Services.AddSingleton<IBudgetPlanRepository, JSONBudgetPlanRepository>();

@@ -1,0 +1,25 @@
+@page "/"
+@inject SummaryListingVM model
+
+
+<section id="summary_list" class="container">
+
+    <div class="row justify-content-center">
+
+        <!-- Summary List goes here -->
+        <ul class="list-group">
+        @foreach(var item in model.SummaryItemList)
+        {
+            <li class="list-group-item">
+                <SummaryItem Account="@item" />
+            </li>
+        }
+        </ul>
+
+    </div>
+
+</section>
+
+@code {
+
+}

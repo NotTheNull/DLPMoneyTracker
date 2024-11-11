@@ -1,17 +1,25 @@
 
+$color_bank: #9bf09b;
+$color_creditcard: #ffff82;
+$color_loan: #F79808;
+
 $color_debtpay: #F79808;
 $color_expense: #ff0000;
-$color_income: #3CBC49;
-$color_xfer: #0F44F2;
+$color_income: #008000;
+$color_xfer: #0000ff;
+
+$color_mainbg: #aaccff;
+$color_altrow: #ffffe0;
 
 
-//$listKeys: ["debtpay", "expense", "income", "xfer"];
-//$listKeyBGColors: ("debtpay", $color_debtpay), ("expense", $color_expense), ("income", $color_income), ("xfer", $color_xfer);
-$listColors: (
-    debtpay: $color_debtpay,
-    expense: $color_expense,
-    income: $color_income,
-    xfer: $color_xfer
+$listColors: ( 
+    debtpay: $color_debtpay, 
+    expense: $color_expense, 
+    income: $color_income, 
+    xfer: $color_xfer, 
+    bank: $color_bank,
+    creditcard: $color_creditcard,
+    loan: $color_loan
 );
 
 @each $key, $color in $listColors {
@@ -20,8 +28,10 @@ $listColors: (
     }
 }
 
+.altrow {
+    background-color: $color_altrow;
+}
 
-$color_mainbg: #90A5E9;
 body {
     background-color: $color_mainbg;
 }
