@@ -69,5 +69,4 @@ namespace DLPMoneyTracker.Core
         public InvalidMessageException(string msg, Exception inner) : base(msg, inner) { }
     }
 
-    }
 }
