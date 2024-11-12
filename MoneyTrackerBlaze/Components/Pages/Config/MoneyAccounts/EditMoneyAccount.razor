@@ -1,0 +1,111 @@
+﻿@page "/config/moneyaccounts/edit/"
+@inject StorageService<IJournalAccount> storage
+@inject NavigationManager navigation
+
+<section id="edit_account">
+    <div class="row">
+        <a href="/config/moneyaccounts">&lt;-- RETURN TO LISTING</a><br/>
+    </div>
+
+
+    <EditForm Model="account">
+        <InputHidden Name="Id" Value="@account.Id.ToString()" />
+
+        <InputSelect 
+        TValue="LedgerType" 
+        DisplayName="Account Type" 
+        class="form-select form-select-md mb-3" 
+        @bind-Value="account.JournalType" 
+        @onchange="OnLedgerTypeChanged">
+
+            @foreach (var key in listLedgerTypes)
+            {
+                    <option value="@key">@key.ToDisplayText()</option>
+            }
+
+        </InputSelect>
+
+        <InputText 
+        DisplayName="Description" 
+        class="form-control" 
+        @bind-Value="account.Description"
+                   @onchange="OnDescriptionChanged" />
+
+        <InputNumber 
+        DisplayName="Display Order" 
+        class="form-control"
+        @bind-Value="account.OrderBy" 
+        @onchange="OnDisplayOrderChanged" />
+
+        <div class="d-inline-flex">
+            <button type="submit" class="btn btn-success">
+                <ActionIcon IconOption="IconOpt.Save" />
+                <span>Save Changes</span>
+            </button>
+
+            <button type="button" class="btn btn-secondary">
+                <ActionIcon IconOption="IconOpt.Cancel" />
+                <span>Discard</span>
+            </button>
+        </div>
+    </EditForm>
+
+
+
+</section>
+
+
+
+
+
+@code {
+
+    private EditMoneyAccountVM account = new EditMoneyAccountVM();
+
+    private LedgerType[] listLedgerTypes = [LedgerType.Bank, LedgerType.LiabilityCard, LedgerType.LiabilityLoan];
+
+
+    protected override void OnInitialized()
+    {
+        if (storage.Data != null)
+        {
+            account.Copy(storage.Data);
+        }
+    }
+
+    private void OnLedgerTypeChanged(ChangeEventArgs e)
+    {
+        account.JournalType = (LedgerType)e.Value;
+    }
+
+    private void OnDescriptionChanged(ChangeEventArgs e)
+    {
+        account.Description = e.Value.ToString();
+    }
+
+    private void OnDisplayOrderChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int newOrder))
+        {
+            account.OrderBy = newOrder;
+        }
+    }
+
+    private void SaveChanges()
+    {
+        // TODO: Submit the changes
+    }
+
+    private void Reset()
+    {
+        if (storage.Data != null)
+        {
+            account.Copy(storage.Data);
+        }
+        else
+        {
+            // If this is a NEW record, discarding means going back to the listing
+            navigation.NavigateTo("/config/moneyaccounts");
+        }
+    }
+}

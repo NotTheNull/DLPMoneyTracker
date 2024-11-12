@@ -1,4 +1,7 @@
 ﻿
+@inject NavigationManager navigation
+@inject StorageService<IJournalAccount> storage
+
 
 <section id="A_@Account.Id">
     <div class="row">
@@ -41,7 +44,9 @@
 
     private void EditAccountClicked()
     {
-        // TODO: Open editing page 
+        storage.Data = Account;
+        storage.ReturnURL = "/config/moneyaccounts/";
+        navigation.NavigateTo("/config/moneyaccounts/edit/"); 
     }
 
     private void DeleteAccountClicked()

@@ -19,8 +19,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MoneyTrackerBlaze.Models;
 using MoneyTrackerBlaze.Models.Summary;
+using MoneyTrackerBlaze.Models.Shared;
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
+using DLPMoneyTracker.Core.Models.BudgetPlan;
+using MoneyTrackerBlaze.Components.Pages.Config.MoneyAccounts;
+using MoneyTrackerBlaze.Models.Config.MoneyAccounts;
 
 namespace MoneyTrackerBlaze
 {
@@ -28,12 +32,20 @@ namespace MoneyTrackerBlaze
     {
         public static void Configure(MauiAppBuilder builder)
         {
-            builder.Services.AddSingleton<NotificationSystem>();
-            builder.Services.AddSingleton<NotificationHelper>();
+            ConfigureHelpers(builder);
             ConfigureRepositories(builder);
             ConfigureFactories(builder);
             ConfigureUseCases(builder);
             ConfigureUI(builder);
+        }
+
+
+        private static void ConfigureHelpers(MauiAppBuilder builder)
+        {
+            builder.Services.AddSingleton<NotificationSystem>();
+            builder.Services.AddSingleton<NotificationHelper>();
+            builder.Services.AddSingleton<StorageService<IJournalAccount>>();
+            builder.Services.AddSingleton<StorageService<IBudgetPlan>>();
         }
 
         private static void ConfigureUI(MauiAppBuilder builder)
@@ -41,6 +53,11 @@ namespace MoneyTrackerBlaze
             builder.Services.AddTransient<SummaryListingVM>();
             builder.Services.AddTransient<SummaryItemVM>();
             builder.Services.AddTransient<SummaryItemPlanVM>();
+
+            builder.Services.AddTransient<MoneyAccountListing>();
+            builder.Services.AddTransient<MoneyAccountItem>();
+            builder.Services.AddTransient<EditMoneyAccount>();
+            builder.Services.AddTransient<EditMoneyAccountVM>();
         }
 
         private static void ConfigureRepositories(MauiAppBuilder builder)
