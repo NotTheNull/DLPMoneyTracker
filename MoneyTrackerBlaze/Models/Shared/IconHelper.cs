@@ -32,6 +32,30 @@ namespace MoneyTrackerBlaze.Models.Shared
     {
         const string BASE_URL = @"images\icons\";
 
+        public static IconOpt ToIconOption(this string val)
+        {
+            switch(val.ToLower())
+            {
+                case "addnew": return IconOpt.AddNew;
+                case "cancel": return IconOpt.Cancel;
+                case "card": return IconOpt.Card;
+                case "dollar": return IconOpt.Dollar;
+                case "editpencil": return IconOpt.EditPencil;
+                case "garbage": return IconOpt.Garbage;
+                case "exit": return IconOpt.Exit;
+                case "books": return IconOpt.Books;
+                case "lightbulb": return IconOpt.LightBulb;
+                case "transfer": return IconOpt.Transfer;
+                case "openfile": return IconOpt.OpenFile;
+                case "payment": return IconOpt.Payment;
+                case "refresh": return IconOpt.Refresh;
+                case "save": return IconOpt.Save;
+                case "settings": return IconOpt.Settings;
+                case "stockexchange": return IconOpt.StockExchange;
+                default: throw new InvalidDataException($"[{val}] is not a valid Icon Option");
+            }
+        }
+
         public static string GetURL(IconOpt opt)
         {
             string iconName = IconOptToImageName(opt);

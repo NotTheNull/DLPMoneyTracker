@@ -1,4 +1,5 @@
-﻿namespace MoneyTrackerBlaze
+﻿
+namespace MoneyTrackerBlaze
 {
     public partial class App : Application
     {

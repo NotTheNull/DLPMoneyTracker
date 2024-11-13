@@ -1,22 +1,30 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <div class="content">
+<main>
+    <img src="images/Ninja.png" class="ninja" alt="mascot logo" />
+    <div class="container-fluid justify-content-center" id="top_row">
+        <NavMenu />
+    </div>
+    <div class="row">
+        <article class="justify-content-center">
+            @Body
+        </article>
+    </div>
+</main>
+
+
+
+    @* <main>        
+        <div class="sidebar d-flex flex-column">
+            <img src="images/Ninja.png" width="140" height="140" alt="mascot logo" />
+            <PageHeader />
+            <hr />
             <NavMenu />
         </div>
-        <div class="footer">
-            <img src="images/Ninja.png"/>
-        </div>
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-            <PageHeader />
-        </div> 
 
         <article class="content px-4">
             @Body
         </article>
     </main>
-</div>
+
+ *@

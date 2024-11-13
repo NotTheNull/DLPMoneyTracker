@@ -59,6 +59,11 @@
 
     <ItemGroup>
       <Content Remove="compilerconfig.json" />
+      <Content Remove="Models\NavMenuLinks.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Models\NavMenuLinks.json" />
     </ItemGroup>
 
     <ItemGroup>

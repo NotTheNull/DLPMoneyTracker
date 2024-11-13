@@ -1,27 +1,166 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@page "/sidebar"
+@inject NavMenuVM model
+
+
+<nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">MoneyTrackerBlaze</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                @if (model.NavLinks != null)
+                {
+                    foreach (var nav in model.NavLinks)
+                    {
+                        <li class="@GetNavItemClass(nav)">
+                            @if (nav.Links?.Any() == true)
+                            {
+                                <NavLink class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    @if (nav.Icon != null)
+                                    {
+                                        <ActionIcon IconOption="nav.Icon.ToIconOption()" />
+                                    } <span>@nav.Name</span>
+                                </NavLink>
+                                <ul class="dropdown-menu">
+                                    @foreach (var nLink in nav.Links)
+                                    {
+                                        <li>
+                                            <NavLink class="dropdown-item" href="@nLink.Url">
+                                                @if (nLink.Icon != null)
+                                                {
+                                                    <ActionIcon IconOption="nLink.Icon.ToIconOption()" />
+                                                } <span>@nLink.Name</span>
+                                            </NavLink>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <NavLink class="nav-link" href="@nav.Url">
+                                    <span>@nav.Name</span>
+                                </NavLink>
+                            }
+
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
     </div>
-</div>
+</nav>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
+@code {
+    private string GetNavItemClass(NavMenuItemVM vm)
+    {
+        return vm.Links?.Any() == true ? "nav-item dropdown" : "nav-item";
+    }
+}
+
+@*
+
+
+<nav>
+    <ul class="nav nav-pills">
+        @if (model.NavLinks != null)
+        {
+            foreach (var nav in model.NavLinks)
+            {
+                <li class="nav-item">
+                    @if(nav.Links?.Any() == true)
+                    {
+                        <a class="nav-link link-dark collapsed" data-bs-toggle="collapse" href="#collapse-@nav.Name" role="button" aria-expanded="false" aria-controls="collapse-@nav.Name">
+                            @if (nav.Icon != null)
+                            {
+                                <ActionIcon IconOption="nav.Icon.ToIconOption()" />
+                            } <span>@nav.Name</span>
+                        </a>
+                        <div class="collapse" id="collapse-@nav.Name">
+                            <ul class="btn-toggle-nav fw-normal pb-1 small">
+                                @foreach(var child in nav.Links)
+                                {
+                                    <li>
+                                        <NavLink href="@child.Url" class="link-dark rounded">
+                                            @if(child.Icon != null)
+                                            {
+                                                <ActionIcon IconOption="child.Icon.ToIconOption()" />
+                                            } <span>@child.Name</span>
+                                        </NavLink>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    } else
+                    {
+                        <NavLink href="@nav.Url" class="nav-link link-dark">
+                            @if(nav.Icon != null)
+                            {
+                                <ActionIcon IconOption="nav.Icon.ToIconOption()" />
+                            } <span>@nav.Name</span>
+                        </NavLink>
+                    }
+                </li>
+            }
+        }
+
+    </ul>
+</nav>
+
+
+
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                @if (model.NavLinks != null)
+                {
+                    foreach (var nav in model.NavLinks)
+                    {
+                        <li class="@GetNavItemClass(nav)">
+                            @if (nav.Links?.Any() == true)
+                            {
+                                <NavLink class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    @if (nav.Icon != null)
+                                    {
+                                        <ActionIcon IconOption="nav.Icon.ToIconOption()" />
+                                    } <span>@nav.Name</span>
+                                </NavLink>
+                                <ul class="dropdown-menu">
+                                    @foreach (var nLink in nav.Links)
+                                    {
+                                        <li>
+                                            <NavLink class="dropdown-item" href="@nLink.Url">
+                                                @if (nLink.Icon != null)
+                                                {
+                                                    <ActionIcon IconOption="nLink.Icon.ToIconOption()" />
+                                                } <span>@nLink.Name</span>
+                                            </NavLink>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <NavLink class="nav-link" href="@nav.Url">
+                                    <span>@nav.Name</span>
+                                </NavLink>
+                            }
+
+                        </li>
+                    }
+                }
+            </ul>
         </div>
-        @* <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div> *@
-    </nav>
-</div>
+    </div>
+</nav>
+*@

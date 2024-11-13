@@ -1,0 +1,33 @@
+[
+  {
+    "Name": "Home",
+    "Url": "/",
+    "Icon": "exit",
+    "Links": []
+  },
+  {
+    "Name": "Config",
+    "Url":  "",
+    "Icon": "settings",
+    "Links": [
+      {
+        "Name": "Money Accounts",
+        "Url": "/config/moneyaccounts",
+        "Icon": "dollar",
+        "Links": []
+      },
+      {
+        "Name": "Ledger Accounts",
+        "Url": "/config/ledgeraccounts",
+        "Icon": "books",
+        "Links": []
+      },
+      {
+        "Name": "Budget Plans",
+        "Url": "/config/budgets",
+        "Icon": "editpencil",
+        "Links": []
+      }
+    ]
+  }
+]

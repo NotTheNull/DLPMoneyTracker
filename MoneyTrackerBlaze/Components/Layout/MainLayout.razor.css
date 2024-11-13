@@ -1,55 +1,68 @@
-.page {
+/*.page {
     position: relative;
     display: flex;
     flex-direction: column;
-}
+}*/
 
 main {
+    position: relative;
+    display: flex;
+    flex-direction: column;
     flex: 1;
 }
 
-.content {
-    flex: 1; /* This makes the content take up the remaining space */
-    overflow-y: auto; /* Allows scrolling if content is too tall */
+
+.ninja {
+    width: 140px;
+    height: auto;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
 }
 
-.footer {
-    text-align: center; /* Center the image */
-    margin-top: auto; /* Push the footer to the bottom */
+#top_row {
+    background-color: lightgray;
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
+
+article {
+    padding-left: 160px;
+    padding-right: 20px;
+}
+
+/*.content {
+    flex: 1;*/ /* This makes the content take up the remaining space */
+    /*overflow-y: auto;*/ /* Allows scrolling if content is too tall */
+/*}*/
+
+/*.footer {
+    text-align: center;*/ /* Center the image */
+    /*margin-top: auto;*/ /* Push the footer to the bottom */
+/*}
 
 .footer img {
-    max-width: 100%; /* Ensure the image fits within the sidebar width */
-    height: auto; /* Maintain the aspect ratio */
-}
+    max-width: 100%;*/ /* Ensure the image fits within the sidebar width */
+    /*height: auto;*/ /* Maintain the aspect ratio */
+/*}*/
 
-.sidebar {
+/*.sidebar {
     background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
 }
+
 
 .top-row {
     background-color: #f7f7f7;
     border-bottom: 1px solid #d6d5d5;
-    justify-content: flex-end;
-    height: 3.5rem;
+    justify-content: center;
+    vertical-align: bottom;
     display: flex;
-    align-items: center;
+    align-items: baseline;
+    padding-top: 80px;
 }
-
-    .top-row ::deep a, .top-row ::deep .btn-link {
-        white-space: nowrap;
-        margin-left: 1.5rem;
-        text-decoration: none;
-    }
-
-        .top-row ::deep a:hover, .top-row ::deep .btn-link:hover {
-            text-decoration: underline;
-        }
-
-        .top-row ::deep a:first-child {
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
 
 @media (max-width: 640.98px) {
     .top-row {
@@ -89,4 +102,4 @@ main {
         padding-left: 2rem !important;
         padding-right: 1.5rem !important;
     }
-}
+}*/

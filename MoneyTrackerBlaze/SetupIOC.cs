@@ -25,6 +25,7 @@ using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Core.Models.BudgetPlan;
 using MoneyTrackerBlaze.Components.Pages.Config.MoneyAccounts;
 using MoneyTrackerBlaze.Models.Config.MoneyAccounts;
+using MoneyTrackerBlaze.Models;
 
 namespace MoneyTrackerBlaze
 {
@@ -50,6 +51,8 @@ namespace MoneyTrackerBlaze
 
         private static void ConfigureUI(MauiAppBuilder builder)
         {
+            builder.Services.AddSingleton<NavMenuVM>();
+
             builder.Services.AddTransient<SummaryListingVM>();
             builder.Services.AddTransient<SummaryItemVM>();
             builder.Services.AddTransient<SummaryItemPlanVM>();
