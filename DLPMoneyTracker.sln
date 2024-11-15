@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{E0E563
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyTrackerBlaze", "MoneyTrackerBlaze\MoneyTrackerBlaze.csproj", "{054C00AB-95A0-468A-B29C-AD9B75F74FE6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyTrackerWebApp", "MoneyTrackerWebApp\MoneyTrackerWebApp.csproj", "{CA470381-D76A-4A66-A1A8-3CDF27EDB766}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{054C00AB-95A0-468A-B29C-AD9B75F74FE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{054C00AB-95A0-468A-B29C-AD9B75F74FE6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{054C00AB-95A0-468A-B29C-AD9B75F74FE6}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{CA470381-D76A-4A66-A1A8-3CDF27EDB766}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA470381-D76A-4A66-A1A8-3CDF27EDB766}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA470381-D76A-4A66-A1A8-3CDF27EDB766}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA470381-D76A-4A66-A1A8-3CDF27EDB766}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

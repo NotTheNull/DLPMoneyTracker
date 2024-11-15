@@ -1,13 +1,8 @@
-﻿using DLPMoneyTracker.Core.Models;
-using DLPMoneyTracker.Core.Models.LedgerAccounts;
-using System;
-using System.Collections.Generic;
+﻿using DLPMoneyTracker.Core.Models.LedgerAccounts;
+using DLPMoneyTracker.Core.Models;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MoneyTrackerBlaze.Models.Config.MoneyAccounts
+namespace MoneyTrackerWebApp.Models.Config.MoneyAccounts
 {
     internal class EditMoneyAccountVM : IMoneyAccount
     {
@@ -37,8 +32,8 @@ namespace MoneyTrackerBlaze.Models.Config.MoneyAccounts
             this.JournalType = cpy.JournalType;
             this.OrderBy = cpy.OrderBy;
             this.DateClosedUTC = cpy.DateClosedUTC;
-            
-            if(cpy is IMoneyAccount money)
+
+            if (cpy is IMoneyAccount money)
             {
                 this.Mapping.Copy(money.Mapping);
             }

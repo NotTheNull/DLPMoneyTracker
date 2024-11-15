@@ -4,8 +4,7 @@
 @inject NotificationHelper messageThis
 
 
-<section id="MoneyAccountListing">
-
+<section class="justify-content-center" id="MoneyAccountListing">
 
     <AddNewRecord OnClick="AddNewRecord" />
     <br />
@@ -14,18 +13,22 @@
     <!-- List of Accounts -->
     <ul class="list-group">
 
-        @foreach(var account in AccountList)
-        {
-            <li class="list-group-item">
+        @{
+            int counter = 0;
+            foreach(var account in AccountList)
+            {
+                counter++;
+                <li class="list-group-item @(counter % 2 == 0 ? "altrow" : "")">
                 <MoneyAccountItem Account="account" />
-            </li>
-        }
+                </li>
+        }}
 
     </ul>
 
 
     <br />
     <AddNewRecord OnClick="AddNewRecord" />
+    
 </section>
 
 

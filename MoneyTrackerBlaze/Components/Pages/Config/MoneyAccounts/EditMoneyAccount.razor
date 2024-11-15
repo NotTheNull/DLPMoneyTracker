@@ -4,38 +4,53 @@
 
 <section id="edit_account">
     <div class="row">
-        <a href="/config/moneyaccounts">&lt;-- RETURN TO LISTING</a><br/>
+        <a href="/config/moneyaccounts">&lt;-- RETURN TO LISTING</a><br />
     </div>
 
 
     <EditForm Model="account">
+        <DataAnnotationsValidator />
         <InputHidden Name="Id" Value="@account.Id.ToString()" />
 
-        <InputSelect 
-        TValue="LedgerType" 
-        DisplayName="Account Type" 
-        class="form-select form-select-md mb-3" 
-        @bind-Value="account.JournalType" 
-        @onchange="OnLedgerTypeChanged">
+        <FormGroup InputId="idAccountType" DisplayName="Account Type">
+            <InputSelect id="idAccountType"
+                         TValue="LedgerType"
+                         DisplayName="Account Type"
+                         class="form-select form-select-md mb-3"
+                         @bind-Value="account.JournalType"
+                         @onchange="OnLedgerTypeChanged">
 
-            @foreach (var key in listLedgerTypes)
-            {
+                @foreach (var key in listLedgerTypes)
+                {
                     <option value="@key">@key.ToDisplayText()</option>
-            }
+                }
 
-        </InputSelect>
+            </InputSelect>
+        </FormGroup>
 
-        <InputText 
-        DisplayName="Description" 
-        class="form-control" 
-        @bind-Value="account.Description"
-                   @onchange="OnDescriptionChanged" />
+        <FormGroup InputId="idDesc" DisplayName="Description">
 
-        <InputNumber 
-        DisplayName="Display Order" 
-        class="form-control"
-        @bind-Value="account.OrderBy" 
-        @onchange="OnDisplayOrderChanged" />
+            <InputText id="idDesc"
+                       DisplayName="Description"
+                       class="form-control"
+                       maxlength="200"
+                       @bind-Value="account.Description"
+                       @onchange="OnDescriptionChanged" />
+            <ValidationMessage For="(() => account.Description)" />
+        </FormGroup>
+
+        <FormGroup InputId="idOrderBy" DisplayName="Display Order">
+            <InputNumber id="idOrderBy"
+                         DisplayName="Display Order"
+                         class="form-control"
+                         maxlength="2"
+                         @bind-Value="account.OrderBy"
+                         @onchange="OnDisplayOrderChanged" />
+            <ValidationMessage For="(() => account.OrderBy)" />
+        </FormGroup>
+
+
+        <ValidationSummary />
 
         <div class="d-inline-flex">
             <button type="submit" class="btn btn-success">

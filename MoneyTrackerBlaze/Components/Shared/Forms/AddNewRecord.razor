@@ -1,0 +1,37 @@
+﻿
+<div class="row my-2">
+    <div class="d-inline-flex">
+        <button type="button" class="btn btn-outline-success btn-light px-5" @onclick="ClickHandler">
+            <img src="images/icons/Add-New-256.png" class="action-icon mx-2" />
+            <span>Add New</span>
+            <img src="images/icons/Add-New-256.png" class="action-icon mx-2" />
+        </button>
+    </div>
+</div>
+
+
+@code {
+    [Parameter] public EventCallback OnClick { get; set; }
+
+    private async Task ClickHandler(MouseEventArgs e)
+    {
+        if (OnClick.HasDelegate)
+        {
+            await OnClick.InvokeAsync();
+        }
+    }
+}
+
+@*
+    <div class="row">
+    <div class="d-inline-flex">
+        <a href="#" @onclick="ClickHandler">
+            <img src="images/icons/Add-New-256.png" class="action-icon" />
+            <span>Add New</span>
+            <img src="images/icons/Add-New-256.png" class="action-icon" />
+        </a>
+    </div>
+</div>
+
+
+*@
