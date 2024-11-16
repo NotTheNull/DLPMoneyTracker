@@ -29,6 +29,6 @@ namespace DLPMoneyTracker2
             }
         }
 
-        public string JSONFilePath { get { return Directory.GetCurrentDirectory(); } }
+        public string JSONFilePath { get { return App.Config.GetConnectionString("json_path") ?? Directory.GetCurrentDirectory(); } }
     }
 }
