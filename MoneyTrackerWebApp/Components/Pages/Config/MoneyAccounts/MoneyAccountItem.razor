@@ -1,0 +1,56 @@
+﻿
+@inject NavigationManager navigation
+@inject StorageService<IJournalAccount> storage
+
+
+<section id="A_@Account.Id">
+    <div class="row">
+        <div class="col-2 d-flex flex-row">
+            <ActionIconButton IconOption="IconOpt.EditPencil" OnClickHandler="EditAccountClicked" />
+            <ActionIconButton IconOption="IconOpt.Garbage" OnClickHandler="DeleteAccountClicked" ClassOverride="btn-light btn-outline-warning" />
+        </div>
+        <div class="col-8">
+            <span>@Account.Description</span>
+        </div>
+        <div class="col-2 d-inline-flex">
+            <div style="width: 15px; height: 15px; margin-right: 5px;" class="@ColorClass"> </div>
+            <span>@Account.JournalType.ToDisplayText()</span>
+        </div>
+    </div>
+
+</section>
+
+
+@code {
+    [Parameter] public IJournalAccount Account { get; set; }
+
+    private string ColorClass
+    {
+        get
+        {
+            switch(Account.JournalType)
+            {
+                case LedgerType.Bank:
+                    return "bg_bank";
+                case LedgerType.LiabilityCard:
+                    return "bg_creditcard";
+                case LedgerType.LiabilityLoan:
+                    return "bg_loan";
+                default:
+                    return "";
+            }
+        }
+    }
+
+    private void EditAccountClicked()
+    {
+        storage.Data = Account;
+        storage.ReturnURL = "/config/moneyaccounts/";
+        navigation.NavigateTo("/config/moneyaccounts/edit/"); 
+    }
+
+    private void DeleteAccountClicked()
+    {
+        // TODO: Inject the Delete use case and execute it
+    }
+}

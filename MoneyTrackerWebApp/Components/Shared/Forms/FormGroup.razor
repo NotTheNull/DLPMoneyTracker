@@ -1,0 +1,17 @@
+﻿
+<div class="row mb-3">
+    <div class="col-1"><!-- Buffer --></div>
+
+    <div class="col">
+        <label for="@InputId">@DisplayName</label>
+        @ChildContent
+    </div>
+
+    <div class="col-1"><!-- Buffer --></div>
+</div>
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public string InputId { get; set; }
+    [Parameter] public string DisplayName { get; set; }
+}

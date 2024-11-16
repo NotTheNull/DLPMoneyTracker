@@ -1,0 +1,54 @@
+﻿@if (this.Plan != null)
+{
+    <section id="P_@Plan.PlanUID" class="">
+        <div class="row">
+            <div class="col-1">
+                <!-- Let's put the action icon button here -->
+                <ActionIconButton IconOption="IconOpt.StockExchange" OnClickHandler="CreateTransactionClicked" />
+            </div>
+            <div class="col-6 d-inline-flex">
+                <div style="width: 15px; height: 15px; margin-right: 5px;" class="@PlanTypeColorClass"> </div>
+                <span>@Plan.Description</span>
+            </div>
+            <div class="col-2">
+                <span>@Plan.NextDueDate.ToDisplayText()</span>
+            </div>
+            <div class="col-3">
+                <span>@Plan.Amount.ToDisplayText()</span>
+            </div>
+        </div>
+    </section>
+}
+
+@code {
+    // TODO: Create action button to Create Transaction from a plan
+
+    [Parameter] public SummaryItemPlanVM Plan { get; set; }
+
+    private string PlanTypeColorClass
+    {
+        get
+        {
+            switch (this.Plan.PlanType)
+            {
+                case BudgetPlanType.DebtPayment:
+                    return "bg_debtpay";
+                case BudgetPlanType.Payable:
+                    return "bg_expense";
+                case BudgetPlanType.Receivable:
+                    return "bg_income";
+                case BudgetPlanType.Transfer:
+                    return "bg_xfer";
+                default:
+                    return "";
+            }
+
+        }
+    }
+
+    private async Task CreateTransactionClicked()
+    {
+        // TODO: Redirect to Transaction creation and prefill with the Plan
+    }
+
+}
