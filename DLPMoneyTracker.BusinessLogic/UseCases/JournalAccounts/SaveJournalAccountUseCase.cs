@@ -22,6 +22,7 @@ namespace DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts
         {
             if (account is null) return;
             if (account.JournalType == LedgerType.NotSet) throw new InvalidOperationException("Journal type is NOT set");
+            if (account.Id == Guid.Empty) throw new InvalidOperationException("GUID is not set");
 
             accountRepository.SaveJournalAccount(account);
         }
