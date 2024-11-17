@@ -24,6 +24,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
         {
             this.getNextUIDUseCase = getNextUIDUseCase;
             this.saveUseCase = saveUseCase;
+            this.Clear();
         }
 
         private IJournalAccount _mainAccount;
