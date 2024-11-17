@@ -340,3 +340,4 @@ ASALocalRun/
 healthchecksdb
 /DLPMoneyTracker/DataEntry/AddTransaction
 /DLPMoneyTracker2/appsettings.json
+/DLPMoneyTracker2/appsettings.test.json
