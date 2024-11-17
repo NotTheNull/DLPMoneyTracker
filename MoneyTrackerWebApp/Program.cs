@@ -1,3 +1,4 @@
+using MoneyTrackerWebApp;
 using MoneyTrackerWebApp.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +10,7 @@ builder.Services.AddRazorComponents()
 builder.Logging.AddConfiguration(builder.Configuration.GetSection("Logging"));
 
 
-
+SetupIOC.Configure(builder);
 
 
 

@@ -16,6 +16,9 @@ using MoneyTrackerWebApp.Models.Core;
 using DLPMoneyTracker.BusinessLogic.Factories;
 using DLPMoneyTracker.Core.Models.BudgetPlan;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
+using MoneyTrackerWebApp.Models.Config.MoneyAccounts;
+using MoneyTrackerWebApp.Models.Core.NavMenu;
+using MoneyTrackerWebApp.Models.Summary;
 
 namespace MoneyTrackerWebApp
 {
@@ -40,7 +43,13 @@ namespace MoneyTrackerWebApp
 
         private static void ConfigureUI(WebApplicationBuilder builder)
         {
+            builder.Services.AddSingleton<NavMenuVM>();
+            builder.Services.AddTransient<NavMenuItemVM>();
+            builder.Services.AddTransient<EditMoneyAccountVM>();
 
+            builder.Services.AddTransient<SummaryListingVM>();
+            builder.Services.AddTransient<SummaryItemVM>();
+            //builder.Services.AddTransient<SummaryItemPlanVM>();
         }
 
         private static void ConfigureRepositories(WebApplicationBuilder builder)
@@ -55,7 +64,7 @@ namespace MoneyTrackerWebApp
             builder.Services.AddSingleton<JSONTransactionRepository>();
             builder.Services.AddSingleton<JSONBankReconciliationRepository>();
 
-            BlazorConfig config = new BlazorConfig();
+            BlazorConfig config = new BlazorConfig(builder.Configuration);
             if (config.DataSource == DLPDataSource.Database)
             {
                 builder.Services.AddSingleton<ILedgerAccountRepository, SQLLedgerAccountRepository>();

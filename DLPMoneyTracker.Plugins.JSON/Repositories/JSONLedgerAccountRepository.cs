@@ -21,8 +21,8 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         public JSONLedgerAccountRepository(IDLPConfig config)
         {
             _year = DateTime.Today.Year;
-            this.LoadFromFile();
             this.config = config;
+            this.LoadFromFile();
         }
 
         public List<IJournalAccount> AccountList { get; set; } = new List<IJournalAccount>();
