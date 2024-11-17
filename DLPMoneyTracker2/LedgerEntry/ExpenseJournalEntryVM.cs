@@ -30,7 +30,7 @@ namespace DLPMoneyTracker2.LedgerEntry
             {
                 return this.SelectedDebitAccount.JournalType == LedgerType.Payable
                     && !string.IsNullOrWhiteSpace(this.Description)
-                    && this.Amount > decimal.Zero;
+                    && this.Amount != decimal.Zero; // Allow negative values for Cancellations / Returns / Refunds
             }
         }
 
