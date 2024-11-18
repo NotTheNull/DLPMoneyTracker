@@ -1,11 +1,12 @@
 ﻿
 @inject NavigationManager navigation
 @inject StorageService<IJournalAccount> storage
+@inject ILogger logger
 
 
 <section id="A_@Account.Id">
     <div class="row">
-        <div class="col-2 d-flex flex-row">
+        <div class="col-2 d-flex flex-row gx-5">
             <ActionIconButton IconOption="IconOpt.EditPencil" OnClickHandler="EditAccountClicked" />
             <ActionIconButton IconOption="IconOpt.Garbage" OnClickHandler="DeleteAccountClicked" ClassOverride="btn-light btn-outline-warning" />
         </div>
@@ -44,6 +45,7 @@
 
     private void EditAccountClicked()
     {
+        Console.WriteLine($"Edit button clicked for {Account.Description}, should be redirecting to edit");
         storage.Data = Account;
         storage.ReturnURL = "/config/moneyaccounts/";
         navigation.NavigateTo("/config/moneyaccounts/edit/"); 
