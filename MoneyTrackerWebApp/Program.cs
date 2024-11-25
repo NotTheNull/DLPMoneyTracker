@@ -1,5 +1,6 @@
 using MoneyTrackerWebApp;
 using MoneyTrackerWebApp.Components;
+using MoneyTrackerWebApp.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Logging.AddConfiguration(builder.Configuration.GetSection("Logging"));
+builder.Logging.AddMyConsoleLogger();
 
 
 SetupIOC.Configure(builder);
