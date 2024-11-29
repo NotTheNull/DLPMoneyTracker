@@ -1,21 +1,35 @@
-﻿
-<div class="g-2">
-    <button type="button" class="btn @ClassOverride" @onclick="OnClick">
+﻿@inject ILoggerFactory logFactory
+
+<div class="">
+    <button id="@ButtonId" type="button" role="button" class="btn @ClassOverride" @onclick="OnClick">
         <ActionIcon IconOption="@this.IconOption" />
     </button>
 </div>
 
 @code {
     // [Parameter] public string URL { get; set; }
+    [Parameter] public string ButtonId { get; set; } = "*N/A*";
     [Parameter] public IconOpt IconOption { get; set; }
     [Parameter] public EventCallback OnClickHandler { get; set; }
     [Parameter] public string ClassOverride { get; set; } = "btn-light btn-outline-primary";
 
+    private ILogger<ActionIconButton> _logger;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _logger = logFactory.CreateLogger<ActionIconButton>();
+    }
+
+
     private async Task OnClick(MouseEventArgs eventArgs)
     {
+        _logger.LogInformation($"Action Button {ButtonId} clicked");
         if (OnClickHandler.HasDelegate)
         {
             await OnClickHandler.InvokeAsync(null);
+        }
+        else {
+            _logger.LogInformation($"Click Handler not set for {ButtonId}");
         }
     }
 }

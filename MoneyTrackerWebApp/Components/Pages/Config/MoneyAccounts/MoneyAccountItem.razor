@@ -1,14 +1,14 @@
 ﻿
 @inject NavigationManager navigation
 @inject StorageService<IJournalAccount> storage
-@inject ILogger logger
+@inject ILoggerFactory logFactory
 
 
 <section id="A_@Account.Id">
     <div class="row">
-        <div class="col-2 d-flex flex-row gx-5">
-            <ActionIconButton IconOption="IconOpt.EditPencil" OnClickHandler="EditAccountClicked" />
-            <ActionIconButton IconOption="IconOpt.Garbage" OnClickHandler="DeleteAccountClicked" ClassOverride="btn-light btn-outline-warning" />
+        <div class="col-2 d-flex flex-row">
+            <ActionIconButton ButtonId="@EditButtonId" IconOption="IconOpt.EditPencil" OnClickHandler="EditAccountClicked" />
+            <ActionIconButton ButtonId="@DeleteButtonId" IconOption="IconOpt.Garbage" OnClickHandler="DeleteAccountClicked" ClassOverride="btn-light btn-outline-warning mx-1" />
         </div>
         <div class="col-8">
             <span>@Account.Description</span>
@@ -24,6 +24,23 @@
 
 @code {
     [Parameter] public IJournalAccount Account { get; set; }
+
+
+    private string ButtonId {
+        get {
+            return string.Concat("id_", Account.Id, "_");
+        }
+    }
+    private string EditButtonId {get { return string.Concat(ButtonId, "edit"); }}
+    private string DeleteButtonId {get { return string.Concat(ButtonId, "delete"); }}
+
+    private ILogger<MoneyAccountItem> _logger;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _logger = logFactory.CreateLogger<MoneyAccountItem>();
+    }
+
 
     private string ColorClass
     {
@@ -45,6 +62,7 @@
 
     private void EditAccountClicked()
     {
+        _logger.LogInformation($"Edit button clicked for {Account.Description}, should be redirecting to edit");
         Console.WriteLine($"Edit button clicked for {Account.Description}, should be redirecting to edit");
         storage.Data = Account;
         storage.ReturnURL = "/config/moneyaccounts/";
@@ -53,6 +71,7 @@
 
     private void DeleteAccountClicked()
     {
+        _logger.LogInformation($"Delete button clicked for {Account.Description}");
         // TODO: Inject the Delete use case and execute it
     }
 }

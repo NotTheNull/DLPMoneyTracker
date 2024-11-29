@@ -1,6 +1,7 @@
 ﻿@page "/"
 @inject SummaryListingVM model
 @inject NotificationHelper messageThis
+@inject ILogger<SummaryListing> logger
 
 
 <section id="summary_list" class="container">
@@ -22,8 +23,12 @@
 </section>
 
 @code {
+    
     protected override void OnInitialized()
     {
         messageThis.SetPageTitle("Summary");
+
+        logger.LogWarning("Warning Test");
+        logger.LogInformation("Information Test");
     }
 }

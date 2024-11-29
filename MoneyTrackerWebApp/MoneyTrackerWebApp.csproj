@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Utils\MyConsoleLogger.cs" />
+    <Compile Remove="Utils\MyConsoleLoggerProvider.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="compilerconfig.json" />
     <Content Remove="Models\Core\NavMenu\NavMenuLinks.json" />
   </ItemGroup>

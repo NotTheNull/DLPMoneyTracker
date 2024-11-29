@@ -2,6 +2,46 @@
 
 namespace MoneyTrackerWebApp.Utils
 {
+    internal sealed class MyConsoleLogger<T> : MyConsoleLogger, ILogger<T>
+    {
+        public MyConsoleLogger(MyConsoleConfiguration config) : base(typeof(T).FullName, config) { }
+    }
+
+    internal class MyConsoleLogger : ILogger
+    {
+        private readonly string name;
+        private readonly MyConsoleConfiguration config;
+
+        public MyConsoleLogger(string name, MyConsoleConfiguration config)
+        {
+            ArgumentNullException.ThrowIfNullOrWhiteSpace(name);
+            ArgumentNullException.ThrowIfNull(config);
+
+            this.name = name;
+            this.config = config;
+        }
+
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => default;
+
+        public bool IsEnabled(LogLevel logLevel)
+        {
+            return logLevel >= config.Default;
+        }
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+        {
+            if (!this.IsEnabled(logLevel)) return;
+
+            string message = formatter != null ? formatter(state, exception) : state.ToString();
+            Console.WriteLine($"[{name}]: {message}");
+            if (exception != null)
+            {
+                Console.Error.WriteLine(exception.ToString());
+            }
+        }
+    }
+
+    /*
     internal class MyConsoleLogger<T> : MyConsoleLogger, ILogger<T>
     {
         public MyConsoleLogger() : base(typeof(T).FullName, null) { }
@@ -40,4 +80,5 @@ namespace MoneyTrackerWebApp.Utils
 
         }
     }
+    */
 }
