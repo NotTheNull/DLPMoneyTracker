@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging.Configuration;
 using Microsoft.Extensions.Options;
 using System.Collections.Concurrent;
 
-namespace MoneyTrackerWebApp.Utils
+namespace MoneyTrackerWebApp.Utils.MyConsoleLogger
 {
     // NOTE: Code copied from [https://github.com/dotnet/aspnetcore/issues/20504]
 
@@ -57,20 +57,6 @@ namespace MoneyTrackerWebApp.Utils
             builder.Services.Configure(configure);
 
             return builder;
-        }
-
-        public static LogLevel ToLogLevel(this string level)
-        {
-            switch(level.ToLower())
-            {
-                case "critical": return LogLevel.Critical;
-                case "error": return LogLevel.Error;
-                case "warning": return LogLevel.Warning;
-                case "information": return LogLevel.Information;
-                case "debug":  return LogLevel.Debug;
-                case "trace": return LogLevel.Trace;
-                default: return LogLevel.None;
-            }
         }
 
     }

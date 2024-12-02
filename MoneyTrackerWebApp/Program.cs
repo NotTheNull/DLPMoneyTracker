@@ -1,5 +1,6 @@
 using MoneyTrackerWebApp;
 using MoneyTrackerWebApp.Components;
+using MoneyTrackerWebApp.Utils.MyConsoleLogger;
 using MoneyTrackerWebApp.Utils.SQLLogger;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,8 +17,8 @@ builder.Logging.AddSQLLogger(configuration =>
     configuration.ConnectionString = builder.Configuration.GetConnectionString(logConnName);
     configuration.Default = builder.Configuration.GetSection("Logging:Database").GetValue<string>("Default").ToLogLevel();
 });
-/*
- * STILL NOT LOGGING TO CONSOLE
+
+
 builder.Logging.AddMyConsoleLogger(configuration =>
 {
 #if DEBUG
@@ -26,7 +27,7 @@ builder.Logging.AddMyConsoleLogger(configuration =>
     configuration.Default = builder.Configuration.GetSection("Logging:MyConsole").GetValue<string>("Default").ToLogLevel();
 #endif
 });
-*/
+
 
 SetupIOC.Configure(builder);
 

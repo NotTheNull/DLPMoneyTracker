@@ -23,12 +23,13 @@
 </section>
 
 @code {
-    
+    //private ILogger logger;
     protected override void OnInitialized()
     {
-        messageThis.SetPageTitle("Summary");
-
+        //logger = logProvider.CreateLogger(nameof(SummaryListing));
         logger.LogWarning("Warning Test");
         logger.LogInformation("Information Test");
+
+        messageThis.SetPageTitle("Summary");
     }
 }

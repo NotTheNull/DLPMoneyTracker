@@ -1,4 +1,4 @@
-﻿@inject ILoggerFactory logFactory
+﻿@inject ILoggerProvider logProvider
 
 <div class="">
     <button id="@ButtonId" type="button" role="button" class="btn @ClassOverride" @onclick="OnClick">
@@ -13,11 +13,11 @@
     [Parameter] public EventCallback OnClickHandler { get; set; }
     [Parameter] public string ClassOverride { get; set; } = "btn-light btn-outline-primary";
 
-    private ILogger<ActionIconButton> _logger;
+    private ILogger _logger;
 
     protected override async Task OnInitializedAsync()
     {
-        _logger = logFactory.CreateLogger<ActionIconButton>();
+        _logger = logProvider.CreateLogger(nameof(ActionIconButton)); //logFactory.CreateLogger<ActionIconButton>();
     }
 
 

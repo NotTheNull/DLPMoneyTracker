@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace MoneyTrackerWebApp.Utils
+namespace MoneyTrackerWebApp.Utils.MyConsoleLogger
 {
     internal sealed class MyConsoleLogger<T> : MyConsoleLogger, ILogger<T>
     {
@@ -14,7 +14,7 @@ namespace MoneyTrackerWebApp.Utils
 
         public MyConsoleLogger(string name, MyConsoleConfiguration config)
         {
-            ArgumentNullException.ThrowIfNullOrWhiteSpace(name);
+            ArgumentException.ThrowIfNullOrWhiteSpace(name);
             ArgumentNullException.ThrowIfNull(config);
 
             this.name = name;
@@ -30,7 +30,7 @@ namespace MoneyTrackerWebApp.Utils
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
         {
-            if (!this.IsEnabled(logLevel)) return;
+            if (!IsEnabled(logLevel)) return;
 
             string message = formatter != null ? formatter(state, exception) : state.ToString();
             Console.WriteLine($"[{name}]: {message}");

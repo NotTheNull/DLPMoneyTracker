@@ -25,6 +25,21 @@ namespace MoneyTrackerWebApp
 {
     internal static class SetupIOC
     {
+
+        public static LogLevel ToLogLevel(this string level)
+        {
+
+            switch (level?.ToLower())
+            {
+                case "critical": return LogLevel.Critical;
+                case "error": return LogLevel.Error;
+                case "warning": return LogLevel.Warning;
+                case "information": return LogLevel.Information;
+                case "debug": return LogLevel.Debug;
+                case "trace": return LogLevel.Trace;
+                default: return LogLevel.None;
+            }
+        }
         public static void Configure(WebApplicationBuilder builder)
         {
             ConfigureHelpers(builder);
