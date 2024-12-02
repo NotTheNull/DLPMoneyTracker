@@ -27,7 +27,6 @@ using DLPMoneyTracker2.Main.ExpensePlanner;
 using DLPMoneyTracker2.Main.TransactionList;
 using DLPMoneyTracker2.Main.UpcomingReminders;
 using DLPMoneyTracker2.Main.YTD;
-using DLPMoneyTracker2.Reports;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -173,9 +172,7 @@ namespace DLPMoneyTracker2
             services.AddTransient<BankReconciliationListingVM>();
             services.AddTransient<BankReconciliationListingUI>();
 
-            // Reports
-            services.AddTransient<ReportBudgetAnalysis>();
-
+            
             // Other models
             services.AddTransient<LedgerAccountVM>();
             services.AddTransient<MoneyAccountVM>();
