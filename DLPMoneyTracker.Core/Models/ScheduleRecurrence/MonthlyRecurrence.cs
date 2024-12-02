@@ -44,6 +44,8 @@ namespace DLPMoneyTracker.Core.Models.ScheduleRecurrence
         /// </returns>
         private DateTime GetNextDate(int month)
         {
+            if (month > 12) month = 1;
+
             int year = DateTime.Today.Year;
             if(DateTime.Today.Month == 12 && month < DateTime.Today.Month)
             {

@@ -18,11 +18,23 @@ namespace DLPMoneyTracker2
     public partial class App : Application
     {
         public static IConfiguration Config { get; private set; }
+
+        public static string ConfigFileName
+        {
+            get
+            {
+#if DEBUG
+                return "appsettings.test.json";
+#else
+                return "appsettings.json";
+#endif
+            }
+        }
         public App()
         {
             Config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile(ConfigFileName, optional: false, reloadOnChange: true)
                 .Build();
 
         }

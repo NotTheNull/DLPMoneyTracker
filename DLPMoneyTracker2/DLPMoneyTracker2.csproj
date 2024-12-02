@@ -8,9 +8,16 @@
     <StartupObject></StartupObject>
     <ApplicationIcon>Cash-64.ico</ApplicationIcon>
     <Title>DLP Money Tracker</Title>
-    <AssemblyVersion>2.11.2024.1105</AssemblyVersion>
-    <FileVersion>2.11.2024.1105</FileVersion>
+    <AssemblyVersion>2.11.2024.1117</AssemblyVersion>
+    <FileVersion>2.11.2024.1117</FileVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Reports\**" />
+    <EmbeddedResource Remove="Reports\**" />
+    <None Remove="Reports\**" />
+    <Page Remove="Reports\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Core\Behaviors\WebViewHTMLStringBehavior.cs" />
@@ -43,16 +50,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FastReport.Data.Json" Version="2025.1.2" />
-    <PackageReference Include="FastReport.OpenSource" Version="2025.1.0" />
-    <PackageReference Include="FastReport.ReportBuilder" Version="2021.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.11">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.11">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -97,6 +101,9 @@
   <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.test.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

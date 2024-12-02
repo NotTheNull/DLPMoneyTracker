@@ -13,6 +13,7 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
         LiabilityLoan,
         Receivable,
         Payable,
+        Special,
         NotSet
     }
 

@@ -27,7 +27,6 @@ using DLPMoneyTracker2.Main.ExpensePlanner;
 using DLPMoneyTracker2.Main.TransactionList;
 using DLPMoneyTracker2.Main.UpcomingReminders;
 using DLPMoneyTracker2.Main.YTD;
-using DLPMoneyTracker2.Reports;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -39,7 +38,7 @@ namespace DLPMoneyTracker2
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public static IServiceProvider DependencyHost { get; set; }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-
+                
         public static void Init()
         {
             ServiceCollection services = new ServiceCollection();
@@ -173,9 +172,7 @@ namespace DLPMoneyTracker2
             services.AddTransient<BankReconciliationListingVM>();
             services.AddTransient<BankReconciliationListingUI>();
 
-            // Reports
-            services.AddTransient<ReportBudgetAnalysis>();
-
+            
             // Other models
             services.AddTransient<LedgerAccountVM>();
             services.AddTransient<MoneyAccountVM>();
