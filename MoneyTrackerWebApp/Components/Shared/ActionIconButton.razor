@@ -12,12 +12,13 @@
     [Parameter] public IconOpt IconOption { get; set; }
     [Parameter] public EventCallback OnClickHandler { get; set; }
     [Parameter] public string ClassOverride { get; set; } = "btn-light btn-outline-primary";
+    [Parameter] public string ParentName { get; set; } = "UNKNOWN";
 
     private ILogger _logger;
 
     protected override async Task OnInitializedAsync()
     {
-        _logger = logProvider.CreateLogger(nameof(ActionIconButton)); //logFactory.CreateLogger<ActionIconButton>();
+        _logger = logProvider.CreateLogger($"{nameof(ActionIconButton)} - {ParentName}"); //logFactory.CreateLogger<ActionIconButton>();
     }
 
 

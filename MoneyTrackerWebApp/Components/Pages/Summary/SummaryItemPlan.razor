@@ -1,10 +1,13 @@
-﻿@if (this.Plan != null)
+﻿
+@inject ILogger<SummaryItemPlan> logger
+
+@if (this.Plan != null)
 {
     <section id="P_@Plan.PlanUID" class="">
         <div class="row">
             <div class="col-1">
                 <!-- Let's put the action icon button here -->
-                <ActionIconButton IconOption="IconOpt.StockExchange" OnClickHandler="CreateTransactionClicked" />
+                <ActionIconButton IconOption="IconOpt.StockExchange" OnClickHandler="CreateTransactionClicked" ParentName="Name" />
             </div>
             <div class="col-6 d-inline-flex">
                 <div style="width: 15px; height: 15px; margin-right: 5px;" class="@PlanTypeColorClass"> </div>
@@ -24,6 +27,12 @@
     // TODO: Create action button to Create Transaction from a plan
 
     [Parameter] public SummaryItemPlanVM Plan { get; set; }
+
+    private string Name {
+        get {
+            return $"{Plan?.Description}";
+        }
+    }
 
     private string PlanTypeColorClass
     {
@@ -46,9 +55,16 @@
         }
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        logger.LogInformation($"Item Plan loaded for {Name}");
+    }
+
     private async Task CreateTransactionClicked()
     {
         // TODO: Redirect to Transaction creation and prefill with the Plan
+        logger.LogInformation($"Create transaction clicked for <{Name}>");
+
     }
 
 }

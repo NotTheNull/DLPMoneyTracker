@@ -40,7 +40,8 @@ namespace MoneyTrackerWebApp.Utils.SQLLogger
             string jsonError = "";
             if (exception != null)
             {
-                jsonError = JsonSerializer.Serialize(exception);
+                JSONExceptionWrapper exWrap = new JSONExceptionWrapper(exception);
+                jsonError = JsonSerializer.Serialize(exWrap);
             }
 
             try

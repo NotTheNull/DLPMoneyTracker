@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Text.Json;
 
 namespace MoneyTrackerWebApp.Utils.MyConsoleLogger
 {
@@ -36,7 +37,8 @@ namespace MoneyTrackerWebApp.Utils.MyConsoleLogger
             Console.WriteLine($"[{name}]: {message}");
             if (exception != null)
             {
-                Console.Error.WriteLine(exception.ToString());
+                JSONExceptionWrapper exWrap = new JSONExceptionWrapper(exception);
+                Console.Error.WriteLine(JsonSerializer.Serialize(exWrap));
             }
         }
     }
