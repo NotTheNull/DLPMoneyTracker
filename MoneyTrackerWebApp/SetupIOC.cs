@@ -20,6 +20,7 @@ using MoneyTrackerWebApp.Models.Config.MoneyAccounts;
 using MoneyTrackerWebApp.Models.Core.NavMenu;
 using MoneyTrackerWebApp.Models.Summary;
 using MoneyTrackerWebApp.Utils;
+using MoneyTrackerWebApp.Services;
 
 namespace MoneyTrackerWebApp
 {
@@ -46,6 +47,7 @@ namespace MoneyTrackerWebApp
             ConfigureRepositories(builder);
             ConfigureFactories(builder);
             ConfigureUseCases(builder);
+            ConfigureRazorServices(builder);
             ConfigureUI(builder);
         }
 
@@ -133,6 +135,12 @@ namespace MoneyTrackerWebApp
             builder.Services.AddTransient<JournalAccountFactory>();
             builder.Services.AddTransient<BudgetPlanFactory>();
             builder.Services.AddTransient<ScheduleRecurrenceFactory>();
+        }
+
+        private static void ConfigureRazorServices(WebApplicationBuilder builder)
+        {
+            builder.Services.AddSingleton<INavigationHistoryService, NavigationHistoryService>();
+            builder.Services.AddTransient<IJournalAccountService, JournalAccountService>();
         }
     }
 }

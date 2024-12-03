@@ -1,23 +1,24 @@
 ﻿@page "/config/moneyaccounts/edit/"
-@inject StorageService<IJournalAccount> storage
-@inject NavigationManager navigation
+
+@inherits EditMoneyAccountBase
 
 <section id="edit_account">
     <div class="row">
-        <a href="/config/moneyaccounts">&lt;-- RETURN TO LISTING</a><br />
+        <a href="/config/moneyaccounts" class="btn btn-primary" >&lt;-- RETURN TO LISTING</a><br />
     </div>
+    <br/>
 
 
-    <EditForm Model="account">
+    <EditForm Model="Account" OnValidSubmit="SaveChanges">
         <DataAnnotationsValidator />
-        <InputHidden Name="Id" Value="@account.Id.ToString()" />
+        <InputHidden Name="Id" Value="@Account.Id.ToString()" />
 
         <FormGroup InputId="idAccountType" DisplayName="Account Type">
             <InputSelect id="idAccountType"
                          TValue="LedgerType"
                          DisplayName="Account Type"
-                         class="form-select form-select-md mb-3"
-                         @bind-Value="account.JournalType"
+                         class="form-select form-select-md"
+                         @bind-Value="Account.JournalType"
                          @onchange="OnLedgerTypeChanged">
 
                 @foreach (var key in listLedgerTypes)
@@ -34,9 +35,9 @@
                        DisplayName="Description"
                        class="form-control"
                        maxlength="200"
-                       @bind-Value="account.Description"
+                       @bind-Value="Account.Description"
                        @onchange="OnDescriptionChanged" />
-            <ValidationMessage For="(() => account.Description)" />
+            <ValidationMessage For="(() => Account.Description)" />
         </FormGroup>
 
         <FormGroup InputId="idOrderBy" DisplayName="Display Order">
@@ -44,83 +45,36 @@
                          DisplayName="Display Order"
                          class="form-control"
                          maxlength="2"
-                         @bind-Value="account.OrderBy"
+                         @bind-Value="Account.OrderBy"
                          @onchange="OnDisplayOrderChanged" />
-            <ValidationMessage For="(() => account.OrderBy)" />
+            <ValidationMessage For="(() => Account.OrderBy)" />
         </FormGroup>
 
 
-        <ValidationSummary />
 
-        <div class="d-inline-flex">
+        
+        <ValidationSummary />
+        <br/>
+
+        <FormGroup InputId="idActionButtons" DisplayName="">
+        <div class="d-flex">
             <button type="submit" class="btn btn-success">
                 <ActionIcon IconOption="IconOpt.Save" />
                 <span>Save Changes</span>
             </button>
 
-            <button type="button" class="btn btn-secondary">
+            <button type="button" class="btn btn-secondary mx-5" @onclick="Reset">
                 <ActionIcon IconOption="IconOpt.Cancel" />
                 <span>Discard</span>
             </button>
         </div>
+        </FormGroup>
     </EditForm>
+
+
+
 
 
 
 </section>
 
-
-
-
-
-@code {
-
-    private EditMoneyAccountVM account = new EditMoneyAccountVM();
-
-    private LedgerType[] listLedgerTypes = [LedgerType.Bank, LedgerType.LiabilityCard, LedgerType.LiabilityLoan];
-
-
-    protected override void OnInitialized()
-    {
-        if (storage.Data != null)
-        {
-            account.Copy(storage.Data);
-        }
-    }
-
-    private void OnLedgerTypeChanged(ChangeEventArgs e)
-    {
-        account.JournalType = (LedgerType)e.Value;
-    }
-
-    private void OnDescriptionChanged(ChangeEventArgs e)
-    {
-        account.Description = e.Value.ToString();
-    }
-
-    private void OnDisplayOrderChanged(ChangeEventArgs e)
-    {
-        if (int.TryParse(e.Value.ToString(), out int newOrder))
-        {
-            account.OrderBy = newOrder;
-        }
-    }
-
-    private void SaveChanges()
-    {
-        // TODO: Submit the changes
-    }
-
-    private void Reset()
-    {
-        if (storage.Data != null)
-        {
-            account.Copy(storage.Data);
-        }
-        else
-        {
-            // If this is a NEW record, discarding means going back to the listing
-            navigation.NavigateTo("/config/moneyaccounts");
-        }
-    }
-}

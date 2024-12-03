@@ -1,13 +1,15 @@
 ﻿
-<div class="row mb-3">
-    <div class="col-1"><!-- Buffer --></div>
+<div class="row mb-3 column-gap-2">
+    
 
-    <div class="col">
-        <label for="@InputId">@DisplayName</label>
-        @ChildContent
+    <div class="col-2">
+        <label for="@InputId"><h5>@DisplayName</h5></label>
     </div>
 
-    <div class="col-1"><!-- Buffer --></div>
+    <div class="col-6">
+        @ChildContent
+    </div>
+    
 </div>
 
 @code {

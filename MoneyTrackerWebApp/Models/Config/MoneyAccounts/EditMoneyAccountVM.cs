@@ -4,9 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MoneyTrackerWebApp.Models.Config.MoneyAccounts
 {
-    internal class EditMoneyAccountVM : IMoneyAccount
+    public class EditMoneyAccountVM : IMoneyAccount
     {
-
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
