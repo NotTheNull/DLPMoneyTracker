@@ -1,8 +1,6 @@
 ﻿using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.SQL.Data;
 using Microsoft.AspNetCore.Components;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Identity.Client.Extensions.Msal;
 using MoneyTrackerWebApp.Models.Config.MoneyAccounts;
 using MoneyTrackerWebApp.Models.Core;
 using MoneyTrackerWebApp.Services;
