@@ -50,7 +50,62 @@
             <ValidationMessage For="(() => Account.OrderBy)" />
         </FormGroup>
 
+        @if(Account.JournalType != LedgerType.LiabilityLoan) {
+            <!-- CSV Mapping -->
+            <div id="idCSVMappingSection">
+                <hr/>
+                <h3 class="justify-content-center">CSV Mapping</h3>
 
+                <FormGroup InputId="idStartingRow" DisplayName="Starting Row">
+                    <InputNumber 
+                        id="idStartingRow" 
+                        DisplayName="Starting Row"
+                        class="form-control"
+                        maxlength="5"
+                        @bind-Value="Account.StartingRow"
+                        @onchange="OnStartingRowChanged"
+                        />
+                        <ValidationMessage For="(() => Account.StartingRow)" />
+                </FormGroup>
+
+                <FormGroup InputId="idTransDateCol" DisplayName="Transaction Date Column">
+                    <InputNumber
+                        id="idTransDateCol"
+                        class="form-control"
+                        maxlength="5"
+                        @bind-Value="Account.TransDateColumn"
+                        @onchange="OnTransDateColumnChanged"
+                        />
+                </FormGroup>
+
+                <FormGroup InputId="idDescCol" DisplayName="Description Column">
+                    <InputNumber id="idDescCol"
+                                 class="form-control"
+                                 maxlength="5"
+                                 @bind-Value="Account.DescriptionColumn"
+                                 @onchange="OnDescriptionColumnChanged" />
+                </FormGroup>
+
+                <FormGroup InputId="idAmountCol" DisplayName="Amount Column">
+                    <InputNumber id="idAmountCol"
+                                 class="form-control"
+                                 maxlength="5"
+                                 @bind-Value="Account.AmountColumn"
+                                 @onchange="OnAmountColumnChanged" />
+                </FormGroup>
+
+                <FormGroup InputId="idIsInverted" DisplayName="Is Amount Inverted">
+                    <InputCheckbox 
+                        id="idIsInverted"
+                        class="form-control"
+                        @bind-Value="Account.IsAmountInverted"
+                        @onchange="OnIsAmountInvertedChanged"
+                        />
+                </FormGroup>
+
+                <hr/>
+            </div>
+        }
 
         
         <ValidationSummary />
@@ -58,15 +113,33 @@
 
         <FormGroup InputId="idActionButtons" DisplayName="">
         <div class="d-flex">
-            <button type="submit" class="btn btn-success">
+            <ActionIconButton 
+                ButtonId="idSaveChanges" 
+                IconOption="IconOpt.Save" 
+                ClassOverride="btn-success"
+                ButtonType="submit">
+                Save Changes
+            </ActionIconButton>
+
+            @* <button type="submit" class="btn btn-success">
                 <ActionIcon IconOption="IconOpt.Save" />
                 <span>Save Changes</span>
-            </button>
+            </button> *@
 
-            <button type="button" class="btn btn-secondary mx-5" @onclick="Reset">
+            <ActionIconButton 
+                ButtonId="idDiscardChanges" 
+                IconOption="IconOpt.Cancel"
+                ClassOverride="btn-secondary mx-5" 
+                ParentName="Money Account Discard"
+                OnClickHandler="Reset" >
+                Discard
+            </ActionIconButton>
+
+
+            @* <button type="button" class="btn btn-secondary mx-5" @onclick="Reset">
                 <ActionIcon IconOption="IconOpt.Cancel" />
                 <span>Discard</span>
-            </button>
+            </button> *@
         </div>
         </FormGroup>
     </EditForm>

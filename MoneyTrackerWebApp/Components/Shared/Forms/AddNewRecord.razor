@@ -1,0 +1,17 @@
+﻿
+<div class="row">
+    <ActionIconButton 
+        ButtonId="@ButtonId" 
+        ClassOverride="btn-primary"
+        IconOption="IconOpt.AddNew" 
+        OnClickHandler="OnClickHandler">
+        Add New Record
+    </ActionIconButton>
+</div>
+
+
+@code {
+    [Parameter] public EventCallback OnClickHandler { get; set; }
+    [Parameter] public string ButtonId { get; set; }
+    
+}
