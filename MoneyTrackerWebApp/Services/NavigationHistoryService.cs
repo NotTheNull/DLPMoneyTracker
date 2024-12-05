@@ -4,8 +4,6 @@ namespace MoneyTrackerWebApp.Services
 {
     public interface INavigationHistoryService
     {
-        NavigationManager Navigation { get; set; }
-
         void Dispose();
         void NavigateBack(string urlFailsafe);
         void NavigateTo(string url);
@@ -13,18 +11,23 @@ namespace MoneyTrackerWebApp.Services
 
     public class NavigationHistoryService : IDisposable, INavigationHistoryService
     {
+        private readonly NavigationManager navigation;
 
-        [Inject]
-        public NavigationManager Navigation { get; set; } = default!;
+        public NavigationHistoryService(NavigationManager navigation)
+        {
+            this.navigation = navigation;
+        }
+
+
 
         private Stack<string> URLHistoryList { get; set; } = new Stack<string>();
 
         public void NavigateTo(string url)
         {
-            string current = Navigation.ToBaseRelativePath(Navigation.Uri);
+            string current = navigation.ToBaseRelativePath(navigation.Uri);
             this.URLHistoryList.Push(current);
 
-            Navigation.NavigateTo(url);
+            navigation.NavigateTo(url);
         }
 
         public void NavigateBack(string urlFailsafe)
@@ -35,7 +38,7 @@ namespace MoneyTrackerWebApp.Services
                 url = URLHistoryList.Pop();
             }
 
-            Navigation.NavigateTo(url);
+            navigation.NavigateTo(url);
         }
 
         public void Dispose()

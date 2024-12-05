@@ -14,7 +14,7 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts
     {
 
         [Inject]
-        public JournalAccountService  AccountService { get; set; }
+        public IJournalAccountService  AccountService { get; set; }
 
         [Inject]
         public StorageService<IJournalAccount> Storage { get; set; }

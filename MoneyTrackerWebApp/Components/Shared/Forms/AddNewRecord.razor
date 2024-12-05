@@ -2,16 +2,15 @@
 <div class="row">
     <ActionIconButton 
         ButtonId="@ButtonId" 
-        ClassOverride="btn-primary"
+        ClassOverride="btn-primary d-flex"
         IconOption="IconOpt.AddNew" 
         OnClickHandler="OnClickHandler">
-        Add New Record
+        <div class="mx-3">Add New Record</div>
     </ActionIconButton>
 </div>
 
 
 @code {
     [Parameter] public EventCallback OnClickHandler { get; set; }
-    [Parameter] public string ButtonId { get; set; }
-    
+    [Parameter] public string ButtonId { get; set; }    
 }
