@@ -21,6 +21,7 @@ using MoneyTrackerWebApp.Models.Core.NavMenu;
 using MoneyTrackerWebApp.Models.Summary;
 using MoneyTrackerWebApp.Utils;
 using MoneyTrackerWebApp.Services;
+using Microsoft.AspNetCore.Components;
 
 namespace MoneyTrackerWebApp
 {
@@ -139,7 +140,7 @@ namespace MoneyTrackerWebApp
 
         private static void ConfigureRazorServices(WebApplicationBuilder builder)
         {
-            builder.Services.AddSingleton<INavigationHistoryService, NavigationHistoryService>();
+            builder.Services.AddScoped<INavigationHistoryService, NavigationHistoryService>();
             builder.Services.AddTransient<IJournalAccountService, JournalAccountService>();
         }
     }

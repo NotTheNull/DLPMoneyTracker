@@ -20,7 +20,45 @@ namespace MoneyTrackerWebApp.Models.Config.MoneyAccounts
         public int OrderBy { get; set; } = 0;
 
         public DateTime? DateClosedUTC { get; set; } = null;
+
+        #region CSV Mapping
         public ICSVMapping Mapping { get; set; } = new CSVMapping();
+        private CSVMapping WriteMapping { get { return Mapping as CSVMapping; } }
+
+        public int StartingRow
+        {
+            get { return Mapping.StartingRow; }
+            set { WriteMapping.StartingRow = value; }
+        }
+        public bool IsAmountInverted
+        {
+            get { return Mapping.IsAmountInverted; }
+            set { WriteMapping.IsAmountInverted = value; }
+        }
+        public int TransDateColumn
+        {
+            get { return Mapping.GetMapping(ICSVMapping.TRANS_DATE); }
+            set { Mapping.SetMapping(ICSVMapping.TRANS_DATE, value); }
+        }
+        public int DescriptionColumn
+        {
+            get { return Mapping.GetMapping(ICSVMapping.DESCRIPTION); }
+            set { Mapping.SetMapping(ICSVMapping.DESCRIPTION, value); }
+        }
+        public int AmountColumn
+        {
+            get { return Mapping.GetMapping(ICSVMapping.AMOUNT); }
+            set { Mapping.SetMapping(ICSVMapping.AMOUNT, value); }
+        }
+
+        #endregion
+
+
+
+
+
+
+
 
         public void Copy(IJournalAccount cpy)
         {

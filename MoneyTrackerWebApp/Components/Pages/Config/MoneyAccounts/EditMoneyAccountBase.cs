@@ -1,4 +1,5 @@
-﻿using DLPMoneyTracker.Core.Models.LedgerAccounts;
+﻿using DLPMoneyTracker.Core.Models;
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.SQL.Data;
 using Microsoft.AspNetCore.Components;
 using MoneyTrackerWebApp.Models.Config.MoneyAccounts;
@@ -11,7 +12,7 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts
     {
 
         [Inject]
-        public JournalAccountService  AccountService { get; set; }
+        public IJournalAccountService  AccountService { get; set; }
 
         [Inject]
         public StorageService<IJournalAccount> Storage { get; set; }
@@ -22,7 +23,7 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts
 
         protected readonly LedgerType[] listLedgerTypes = [LedgerType.Bank, LedgerType.LiabilityCard, LedgerType.LiabilityLoan];
         protected EditMoneyAccountVM Account { get; set; } = new EditMoneyAccountVM();
-
+        protected ICSVMapping Mapping => Account.Mapping;
 
 
         private readonly string URL_MONEYLIST = "/config/moneyaccounts";
@@ -44,6 +45,46 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts
                 Account.OrderBy = newOrder;
             }
         }
+
+        protected void OnStartingRowChanged(ChangeEventArgs e)
+        {
+            if(int.TryParse(e.Value.ToString(), out int newRow))
+            {
+                Account.StartingRow = newRow;
+            }
+        }
+
+        protected void OnTransDateColumnChanged(ChangeEventArgs e)
+        {
+            if(int.TryParse(e.Value.ToString(), out int newCol))
+            {
+                Account.TransDateColumn = newCol;
+            }
+        }
+
+        protected void OnDescriptionColumnChanged(ChangeEventArgs e)
+        {
+            if(int.TryParse(e.Value.ToString(), out int newCol))
+            {
+                Account.DescriptionColumn = newCol;
+            }
+        }
+        protected void OnAmountColumnChanged(ChangeEventArgs e)
+        {
+            if (int.TryParse(e.Value.ToString(), out int newCol))
+            {
+                Account.AmountColumn = newCol;
+            }
+        }
+
+        protected void OnIsAmountInvertedChanged(ChangeEventArgs e)
+        {
+            if(bool.TryParse(e.Value.ToString(), out bool isChecked))
+            {
+                Account.IsAmountInverted = isChecked;
+            }
+        }
+
 
         protected void SaveChanges()
         {

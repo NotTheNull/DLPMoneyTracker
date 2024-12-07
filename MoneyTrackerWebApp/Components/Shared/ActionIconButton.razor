@@ -1,18 +1,25 @@
 ﻿@inject ILoggerProvider logProvider
 
-<div class="">
-    <button id="@ButtonId" type="button" role="button" class="btn @ClassOverride" @onclick="OnClick">
-        <ActionIcon IconOption="@this.IconOption" />
+<div>
+    <button 
+        id="@ButtonId" 
+        type="@ButtonType" 
+        role="button" 
+        class="btn @ClassOverride" 
+        @onclick="OnClick">
+        <ActionIcon IconOption="@this.IconOption" /> @ChildContent
     </button>
 </div>
 
 @code {
     // [Parameter] public string URL { get; set; }
     [Parameter] public string ButtonId { get; set; } = "*N/A*";
+    [Parameter] public string ButtonType { get; set; } = "button";
     [Parameter] public IconOpt IconOption { get; set; }
     [Parameter] public EventCallback OnClickHandler { get; set; }
     [Parameter] public string ClassOverride { get; set; } = "btn-light btn-outline-primary";
     [Parameter] public string ParentName { get; set; } = "UNKNOWN";
+    [Parameter] public RenderFragment? ChildContent{ get; set; }
 
     private ILogger _logger;
 
