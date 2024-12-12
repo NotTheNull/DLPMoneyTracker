@@ -2,11 +2,11 @@
 
 <div>
     <button 
-        id="@ButtonId" 
-        type="@ButtonType" 
-        role="button" 
-        class="btn @ClassOverride" 
-        @onclick="OnClick">
+    id="@ButtonId" 
+    type="@ButtonType" 
+    role="button" 
+    class="btn @ClassOverride" 
+    @onclick="OnClick">
         <ActionIcon IconOption="@this.IconOption" /> @ChildContent
     </button>
 </div>
@@ -23,11 +23,10 @@
 
     private ILogger _logger;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnParametersSet()
     {
         _logger = logProvider.CreateLogger($"{nameof(ActionIconButton)} - {ParentName}"); //logFactory.CreateLogger<ActionIconButton>();
     }
-
 
     private async Task OnClick(MouseEventArgs eventArgs)
     {

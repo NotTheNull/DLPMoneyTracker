@@ -10,6 +10,8 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts
 {
     public class EditMoneyAccountBase : ComponentBase
     {
+        [Parameter]
+        public Guid? AccountUID { get; set; }
 
         [Inject]
         public IJournalAccountService  AccountService { get; set; }
@@ -20,6 +22,9 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts
         [Inject]
         public INavigationHistoryService Navigation { get; set; }
 
+        [Inject]
+        public ILogger<EditMoneyAccountBase> Logger { get; set; }
+
 
         protected readonly LedgerType[] listLedgerTypes = [LedgerType.Bank, LedgerType.LiabilityCard, LedgerType.LiabilityLoan];
         protected EditMoneyAccountVM Account { get; set; } = new EditMoneyAccountVM();
@@ -27,6 +32,29 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts
 
 
         private readonly string URL_MONEYLIST = "/config/moneyaccounts";
+
+        protected override void OnParametersSet()
+        {
+            Logger.LogInformation("Setting parameters");
+            if (AccountUID is null || AccountUID == Guid.Empty) return;
+
+            Logger.LogInformation($"Loading account with UID {this.AccountUID}");
+            var acct = AccountService.GetAccount(this.AccountUID.Value);
+            this.Account.Copy(acct);
+        }
+
+        protected override void OnInitialized()
+        {
+            Logger.LogInformation("Initializing");
+            if (this.Storage.Data == null) return;
+
+            Logger.LogInformation("Copying account information from storage");
+            this.Account.Copy(this.Storage.Data);
+        }
+        
+
+        #region Form Events
+
 
         protected void OnLedgerTypeChanged(ChangeEventArgs e)
         {
@@ -84,7 +112,7 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts
                 Account.IsAmountInverted = isChecked;
             }
         }
-
+        #endregion
 
         protected void SaveChanges()
         {

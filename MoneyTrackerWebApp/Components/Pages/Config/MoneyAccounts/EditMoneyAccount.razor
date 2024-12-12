@@ -1,4 +1,5 @@
-﻿@page "/config/moneyaccounts/edit/"
+﻿@page "/config/moneyaccounts/edit/{AccountUID}"
+@page "/config/moneyaccounts/edit"
 
 @inherits EditMoneyAccountBase
 
@@ -97,7 +98,7 @@
                 <FormGroup InputId="idIsInverted" DisplayName="Is Amount Inverted">
                     <InputCheckbox 
                         id="idIsInverted"
-                        class="form-control"
+                        class="form-check-input"
                         @bind-Value="Account.IsAmountInverted"
                         @onchange="OnIsAmountInvertedChanged"
                         />
