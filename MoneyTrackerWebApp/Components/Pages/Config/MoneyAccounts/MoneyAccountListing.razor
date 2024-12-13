@@ -1,6 +1,7 @@
 ﻿@page "/config/moneyaccounts"
 
 @inject IGetMoneyAccountsUseCase getAccountsUseCase
+@inject INavigationHistoryService navigation
 @inject NotificationHelper messageThis
 
 
@@ -19,16 +20,16 @@
             {
                 counter++;
                 <li class="list-group-item @(counter % 2 == 0 ? "altrow" : "")">
-                <MoneyAccountItem Account="account" />
+                    <MoneyAccountItem Account="account" />
                 </li>
-        }}
+            }}
 
     </ul>
 
 
     <br />
     <AddNewRecord OnClickHandler="AddNewMoneyAccount" ButtonId="btnAddNew2" />
-    
+
 </section>
 
 
@@ -50,7 +51,7 @@
 
     private void AddNewMoneyAccount()
     {
-        // TODO: Open editor for new Money Account
+        navigation.NavigateTo("/config/moneyaccounts/add");
     }
 
 
