@@ -27,6 +27,7 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts
 
 
         protected readonly LedgerType[] listLedgerTypes = [LedgerType.Bank, LedgerType.LiabilityCard, LedgerType.LiabilityLoan];
+        protected readonly LedgerType[] listCSVMapTypes = [LedgerType.Bank, LedgerType.LiabilityCard];
         protected EditMoneyAccountVM Account { get; set; } = new EditMoneyAccountVM();
         protected ICSVMapping Mapping => Account.Mapping;
 

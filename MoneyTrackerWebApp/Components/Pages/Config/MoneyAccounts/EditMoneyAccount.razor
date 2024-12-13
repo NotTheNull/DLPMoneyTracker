@@ -1,5 +1,6 @@
 ﻿@page "/config/moneyaccounts/edit/{AccountUID}"
 @page "/config/moneyaccounts/edit"
+@page "/config/moneyaccounts/add"
 
 @inherits EditMoneyAccountBase
 
@@ -51,7 +52,7 @@
             <ValidationMessage For="(() => Account.OrderBy)" />
         </FormGroup>
 
-        @if(Account.JournalType != LedgerType.LiabilityLoan) {
+        @if(listCSVMapTypes.Contains(Account.JournalType)) {
             <!-- CSV Mapping -->
             <div id="idCSVMappingSection">
                 <hr/>
