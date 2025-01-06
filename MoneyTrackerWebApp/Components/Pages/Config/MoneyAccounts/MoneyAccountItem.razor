@@ -63,8 +63,9 @@
 
     private void EditAccountClicked()
     {
-        _logger.LogInformation($"Edit button clicked for {Account.Description}, should be redirecting to edit");
-        Console.WriteLine($"Edit button clicked for {Account.Description}, should be redirecting to edit");
+        string msg = "Edit button clicked, should be redirecting to edit";
+        _logger.LogInformation(msg);
+        Console.WriteLine(msg);
         storage.Data = Account;
         storage.ReturnURL = "/config/moneyaccounts/";
         navigation.NavigateTo("/config/moneyaccounts/edit/");
@@ -72,7 +73,7 @@
 
     private void DeleteAccountClicked()
     {
-        _logger.LogInformation($"Delete button clicked for {Account.Description}");
+        _logger.LogInformation($"Delete button clicked");
         // TODO: Inject the Delete use case and execute it
     }
 }
