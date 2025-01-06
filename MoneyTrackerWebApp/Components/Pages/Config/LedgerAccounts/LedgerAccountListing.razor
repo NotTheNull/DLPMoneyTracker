@@ -1,0 +1,56 @@
+﻿@page "/config/ledgeraccounts"
+
+@inject IGetNominalAccountsUseCase getAccountsUseCase
+@inject INavigationHistoryService navigation
+@inject NotificationHelper messageThis
+
+<section class="justify-content-center" id="LedgerAccountListing">
+
+    <AddNewRecord OnClickHandler="AddNewAccount" ButtonId="btnAddNew1" />
+    <br/>
+
+    <ul class="list-group">
+
+        @{
+            int counter = 0;
+            foreach(var account in AccountList)
+            {
+                counter++;
+                <li class="list-group-item @(counter % 2 == 0 ? "altrow" : "")">
+                    <LedgerAccountItem Account="account" />
+                </li>
+            }
+        }
+
+    </ul>
+
+    <br/>
+    <AddNewRecord OnClickHandler="AddNewAccount" ButtonId="btnAddNew2" />
+
+</section>
+
+
+
+
+@code {
+    List<IJournalAccount> AccountList { get; set; } = new List<IJournalAccount>();
+
+    protected override void OnInitialized()
+    {
+        messageThis.SetPageTitle("Ledger Accounts List");
+
+        this.AccountList.Clear();
+        var listData = getAccountsUseCase.Execute(true);
+        if (listData?.Any() != true) return;
+
+        this.AccountList.AddRange(listData);
+
+    }
+
+
+    private void AddNewAccount()
+    {
+        navigation.NavigateTo("/config/ledgeraccounts/add");
+    }
+
+}

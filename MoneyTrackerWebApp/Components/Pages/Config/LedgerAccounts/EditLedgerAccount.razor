@@ -1,0 +1,99 @@
+﻿@page "/config/ledgeraccounts/edit/{AccountUID}"
+@page "/config/ledgeraccounts/edit"
+@page "/config/ledgeraccounts/add"
+
+@inherits EditLedgerAccountBase
+
+<section id="edit_account">
+    <div class="row">
+        <ActionIconButton ButtonId="btnReturn"
+                          ButtonType="button"
+                          IconOption="IconOpt.Exit"
+                          OnClickHandler="ReturnToList">&lt;-- RETURN TO LISTING</ActionIconButton>
+    </div>
+    <br/>
+
+    <EditForm Model="Account" OnValidSubmit="SaveChanges">
+        <DataAnnotationsValidator />
+        <InputHidden Name="Id" Value="@Account.Id.ToString()" />
+
+        <FormGroup InputId="idAccountType" DisplayName="Account Type">
+            <InputSelect id="idAccountType"
+                         TValue="LedgerType"
+                         DisplayName="Account Type"
+                         class="form-select form-select-md"
+                         @bind-Value="Account.JournalType"
+                         @onchange="OnLedgerTypeChanged">
+
+                @foreach (var key in listLedgerTypes)
+                {
+                    <option value="@key">@key.ToDisplayText()</option>
+                }
+
+            </InputSelect>
+        </FormGroup>
+
+        <FormGroup InputId="idDesc" DisplayName="Description">
+
+            <InputText id="idDesc"
+                       DisplayName="Description"
+                       class="form-control"
+                       maxlength="200"
+                       @bind-Value="Account.Description"
+                       @onchange="OnDescriptionChanged" />
+            <ValidationMessage For="(() => Account.Description)" />
+        </FormGroup>
+
+        <FormGroup InputId="idBudgetType" DisplayName="Budget Type">
+            <InputSelect id="idBudgetType"
+                TValue="BudgetTrackingType"
+                DisplayName="Budget Type"
+                class="form-select form-select-md"
+                @bind-Value="Account.BudgetType"
+                @onchange="OnBudgetTypeChanged"
+                >
+                @foreach(var key in listBudgetTypes) {
+                    <option value="@key">@key.ToDisplayText()</option>
+                }
+            </InputSelect>
+        </FormGroup>
+
+        <FormGroup InputId="idMonthlyBudget" DisplayName="Monthly Budget">
+            <InputNumber id="idMonthlyBudget"
+                DisplayName="Monthly Budget"
+                class="form-control"
+                @bind-Value="Account.DefaultMonthlyBudgetAmount"
+                @onchange="OnDefaultBudgetAmountChanged"
+                />
+        </FormGroup>
+
+        <ValidationSummary />
+        <br />
+
+
+        <FormGroup InputId="idActionButtons" DisplayName="">
+            <div class="d-flex">
+                <ActionIconButton ButtonId="idSaveChanges"
+                                  IconOption="IconOpt.Save"
+                                  ClassOverride="btn-success"
+                                  ButtonType="submit">
+                    Save Changes
+                </ActionIconButton>
+
+                
+                <ActionIconButton ButtonId="idDiscardChanges"
+                                  IconOption="IconOpt.Cancel"
+                                  ClassOverride="btn-secondary mx-5"
+                                  ParentName="Money Account Discard"
+                                  OnClickHandler="Reset">
+                    Discard
+                </ActionIconButton>
+
+            </div>
+        </FormGroup>
+
+    </EditForm>
+
+</section>
+
+

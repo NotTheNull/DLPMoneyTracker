@@ -1,0 +1,91 @@
+﻿
+@inject INavigationHistoryService navigation
+@inject StorageService<IJournalAccount> storage
+@inject ILoggerProvider logProvider
+
+
+<section id="A_@Account.Id">
+    <div class="row">
+        <div class="col-2 d-flex flex-row">
+            <ActionIconButton ButtonId="@EditButtonId" IconOption="IconOpt.EditPencil" OnClickHandler="EditAccountClicked" />
+            <ActionIconButton ButtonId="@DeleteButtonId" IconOption="IconOpt.Garbage" OnClickHandler="DeleteAccountClicked" ClassOverride="btn-light btn-outline-warning mx-1" />
+        </div>
+        <div class="col-8">
+            <span>@Account.Description</span>
+        </div>
+        <div class="col-2 d-inline-flex">
+            <div style="width: 15px; height: 15px; margin-right: 5px;" class="@ColorClass"> </div>
+            <span>@AccountType</span>
+        </div>
+    </div>
+</section>
+
+
+
+@code {
+    [Parameter] public IJournalAccount Account { get; set; }
+
+    private string ButtonId
+    {
+        get
+        {
+            return string.Concat("id_", Account.Id, "_");
+        }
+    }
+    private string EditButtonId { get { return string.Concat(ButtonId, "edit"); } }
+    private string DeleteButtonId { get { return string.Concat(ButtonId, "delete"); } }
+
+    private string AccountType {
+        get {
+
+            if(Account is INominalAccount nominal) {
+                return string.Concat(nominal.BudgetType.ToDisplayText(), " ", Account.JournalType.ToDisplayText());
+            }
+
+            return Account.JournalType.ToDisplayText();
+        }
+    }
+
+    private ILogger _logger;
+
+    protected override void OnParametersSet()
+    {
+        _logger = logProvider.CreateLogger(string.Concat(nameof(LedgerAccountItem), " - ", Account.Description));
+    }
+
+
+    private string ColorClass
+    {
+        get
+        {
+            switch (Account.JournalType)
+            {
+                case LedgerType.Payable:
+                    return "bg-success";
+                case LedgerType.Receivable:
+                    return "bg-warning";
+                default:
+                    return "";
+            }
+        }
+    }
+
+    private void EditAccountClicked()
+    {
+        string msg = "Edit button clicked, should be redirecting to edit";
+        _logger.LogInformation(msg);
+        Console.WriteLine(msg);
+        storage.Data = Account;
+        storage.ReturnURL = "/config/ledgeraccounts/";
+        navigation.NavigateTo("/config/ledgeraccounts/edit/");
+    }
+
+    private void DeleteAccountClicked()
+    {
+        _logger.LogInformation($"Delete button clicked");
+        // TODO: Inject the Delete use case and execute it
+    }
+
+
+
+}
