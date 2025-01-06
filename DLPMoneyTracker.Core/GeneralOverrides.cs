@@ -55,7 +55,7 @@ namespace DLPMoneyTracker.Core
             switch (journalType)
             {
                 case LedgerType.Payable:
-                    return "Accounts Payable";
+                    return "Expense";
 
                 case LedgerType.LiabilityLoan:
                     return "Loan";
@@ -64,7 +64,7 @@ namespace DLPMoneyTracker.Core
                     return "Credit Card";
 
                 case LedgerType.Receivable:
-                    return "Accounts Receivable";
+                    return "Income";
 
                 case LedgerType.Bank:
                     return "Bank";
@@ -79,11 +79,11 @@ namespace DLPMoneyTracker.Core
             switch(budgetType)
             {
                 case BudgetTrackingType.DO_NOT_TRACK:
-                    return "DO NOT TRACK";
+                    return "Untracked";
                 case BudgetTrackingType.Fixed:
-                    return "FIXED";
+                    return "Fixed";
                 case BudgetTrackingType.Variable:
-                    return "VARIABLE";
+                    return "Variable";
                 default:
                     return string.Empty;
             }
