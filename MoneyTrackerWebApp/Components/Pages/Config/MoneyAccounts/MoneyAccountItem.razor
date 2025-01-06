@@ -2,6 +2,8 @@
 @inject StorageService<IJournalAccount> storage
 @inject ILoggerProvider logProvider
 
+@inject IDeleteJournalAccountUseCase actionDeleteAccount
+
 
 <section id="A_@Account.Id">
     <div class="row">
@@ -74,6 +76,9 @@
     private void DeleteAccountClicked()
     {
         _logger.LogInformation($"Delete button clicked");
-        // TODO: Inject the Delete use case and execute it
+
+        if(Account?.Id != null && Account?.Id != Guid.Empty) {
+            actionDeleteAccount.Execute(Account.Id);
+        }        
     }
 }
