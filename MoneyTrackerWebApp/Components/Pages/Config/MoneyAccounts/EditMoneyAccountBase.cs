@@ -41,6 +41,7 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts
 
             Logger.LogInformation($"Loading account with UID {this.AccountUID}");
             var acct = AccountService.GetAccount(this.AccountUID.Value);
+            this.Storage.Data = acct;
             this.Account.Copy(acct);
         }
 
@@ -118,7 +119,7 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts
         protected void SaveChanges()
         {
             AccountService.SaveAccount(Account);
-            Navigation.NavigateBack(URL_MONEYLIST);
+            this.ReturnToList();
         }
 
         protected void Reset()
@@ -130,8 +131,14 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts
             else
             {
                 // If this is a NEW record, discarding means going back to the listing
-                Navigation.NavigateBack(URL_MONEYLIST);
+                this.ReturnToList();
             }
+        }
+
+        protected void ReturnToList()
+        {
+            this.Storage.Data = null;
+            Navigation.NavigateBack(URL_MONEYLIST);
         }
     }
 
