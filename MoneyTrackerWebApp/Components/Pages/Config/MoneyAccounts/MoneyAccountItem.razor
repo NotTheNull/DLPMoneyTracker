@@ -1,7 +1,6 @@
-﻿
-@inject INavigationHistoryService navigation
+﻿@inject INavigationHistoryService navigation
 @inject StorageService<IJournalAccount> storage
-@inject ILoggerFactory logFactory
+@inject ILoggerProvider logProvider
 
 
 <section id="A_@Account.Id">
@@ -26,19 +25,21 @@
     [Parameter] public IJournalAccount Account { get; set; }
 
 
-    private string ButtonId {
-        get {
+    private string ButtonId
+    {
+        get
+        {
             return string.Concat("id_", Account.Id, "_");
         }
     }
-    private string EditButtonId {get { return string.Concat(ButtonId, "edit"); }}
-    private string DeleteButtonId {get { return string.Concat(ButtonId, "delete"); }}
+    private string EditButtonId { get { return string.Concat(ButtonId, "edit"); } }
+    private string DeleteButtonId { get { return string.Concat(ButtonId, "delete"); } }
 
-    private ILogger<MoneyAccountItem> _logger;
+    private ILogger _logger;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnParametersSet()
     {
-        _logger = logFactory.CreateLogger<MoneyAccountItem>();
+        _logger = logProvider.CreateLogger(string.Concat(nameof(MoneyAccountItem), " - ", Account.Description));
     }
 
 
@@ -46,7 +47,7 @@
     {
         get
         {
-            switch(Account.JournalType)
+            switch (Account.JournalType)
             {
                 case LedgerType.Bank:
                     return "bg_bank";
@@ -66,7 +67,7 @@
         Console.WriteLine($"Edit button clicked for {Account.Description}, should be redirecting to edit");
         storage.Data = Account;
         storage.ReturnURL = "/config/moneyaccounts/";
-        navigation.NavigateTo("/config/moneyaccounts/edit/"); 
+        navigation.NavigateTo("/config/moneyaccounts/edit/");
     }
 
     private void DeleteAccountClicked()
