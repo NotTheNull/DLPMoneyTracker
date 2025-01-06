@@ -67,6 +67,22 @@
                 />
         </FormGroup>
 
+        <FormGroup>
+            <InputSelect id="idSummaryAccountId"
+                TValue="Guid?"
+                DisplayName="Summary Account"
+                class="form-select form-select-md"
+                @bind-Value="Account.SummaryAccountId"
+                @onchange="OnSummaryAccountIdChanged"
+            >
+                <option value="@Guid.Empty">*SET AS SUMMARY ACCOUNT*</option>
+                @foreach(var key in listSummaryAccounts.OrderBy(o => o.Description)) {
+                    <option value="@key.Id">@key.Description</option>
+                }
+            </InputSelect>
+        </FormGroup>
+
+
         <ValidationSummary />
         <br />
 

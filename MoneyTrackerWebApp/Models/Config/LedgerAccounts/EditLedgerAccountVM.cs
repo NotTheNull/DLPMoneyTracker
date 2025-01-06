@@ -28,9 +28,7 @@ namespace MoneyTrackerWebApp.Models.Config.LedgerAccounts
 
         public DateTime? DateClosedUTC { get; set; } = null;
 
-        
-
-
+        public Guid? SummaryAccountId { get; set; }
 
 
 
@@ -50,6 +48,11 @@ namespace MoneyTrackerWebApp.Models.Config.LedgerAccounts
                 this.BudgetType = acc.BudgetType;
                 this.DefaultMonthlyBudgetAmount = acc.DefaultMonthlyBudgetAmount;
                 
+            }
+
+            if(cpy is ISubLedgerAccount sub)
+            {
+                this.SummaryAccountId = sub.SummaryAccount?.Id;
             }
         }
     }

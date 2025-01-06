@@ -1,4 +1,5 @@
-﻿using DLPMoneyTracker.Core;
+﻿using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
+using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using Microsoft.AspNetCore.Components;
 using MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts;
@@ -17,6 +18,9 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.LedgerAccounts
         public IJournalAccountService AccountService { get; set; }
 
         [Inject]
+        public IGetSummaryAccountListByType GetSummaryAccounts { get; set; }
+
+        [Inject]
         public StorageService<IJournalAccount>  Storage { get; set; }
 
         [Inject]
@@ -25,7 +29,7 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.LedgerAccounts
         [Inject]
         public ILogger<EditMoneyAccountBase> Logger { get; set; }
 
-
+        protected List<IJournalAccount> listSummaryAccounts = new List<IJournalAccount>();
         protected readonly BudgetTrackingType[] listBudgetTypes = [BudgetTrackingType.DO_NOT_TRACK, BudgetTrackingType.Fixed, BudgetTrackingType.Variable];
         protected readonly LedgerType[] listLedgerTypes = [LedgerType.Payable, LedgerType.Receivable];
         protected EditLedgerAccountVM Account { get; set; } = new EditLedgerAccountVM();
@@ -50,6 +54,7 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.LedgerAccounts
 
             Logger.LogInformation("Copying account information from storage");
             this.Account.Copy(this.Storage.Data);
+
         }
 
         #region Form Events
@@ -58,6 +63,14 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.LedgerAccounts
         protected void OnLedgerTypeChanged(ChangeEventArgs e)
         {
             Account.JournalType = (LedgerType)e.Value;
+
+            var list = GetSummaryAccounts.Execute(Account.JournalType);
+            listSummaryAccounts.Clear();
+            
+            if(list?.Any() == true)
+            {
+                listSummaryAccounts.AddRange(list);
+            }
         }
 
         protected void OnDescriptionChanged(ChangeEventArgs e)
@@ -75,7 +88,12 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.LedgerAccounts
             Account.DefaultMonthlyBudgetAmount = e.Value?.ToString().ToDecimal() ?? decimal.Zero;
         }
 
-
+        protected void OnSummaryAccountIdChanged(ChangeEventArgs e)
+        {
+            Guid uid = Guid.Parse(e.Value.ToString());
+            Account.SummaryAccountId = uid == Guid.Empty ? null : uid;
+            
+        }
 
         #endregion
 
