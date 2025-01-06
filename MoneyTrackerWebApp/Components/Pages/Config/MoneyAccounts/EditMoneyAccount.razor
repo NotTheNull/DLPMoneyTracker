@@ -6,9 +6,13 @@
 
 <section id="edit_account">
     <div class="row">
-        <a href="/config/moneyaccounts" class="btn btn-primary" >&lt;-- RETURN TO LISTING</a><br />
+        @* <a href="/config/moneyaccounts" class="btn btn-primary" >&lt;-- RETURN TO LISTING</a><br /> *@
+        <ActionIconButton ButtonId="btnReturn"
+                          ButtonType="button"
+                          IconOption="IconOpt.Exit"
+                          OnClickHandler="ReturnToList">&lt;-- RETURN TO LISTING</ActionIconButton>
     </div>
-    <br/>
+    <br />
 
 
     <EditForm Model="Account" OnValidSubmit="SaveChanges">
@@ -52,32 +56,29 @@
             <ValidationMessage For="(() => Account.OrderBy)" />
         </FormGroup>
 
-        @if(listCSVMapTypes.Contains(Account.JournalType)) {
+        @if (listCSVMapTypes.Contains(Account.JournalType))
+        {
             <!-- CSV Mapping -->
             <div id="idCSVMappingSection">
-                <hr/>
+                <hr />
                 <h3 class="justify-content-center">CSV Mapping</h3>
 
                 <FormGroup InputId="idStartingRow" DisplayName="Starting Row">
-                    <InputNumber 
-                        id="idStartingRow" 
-                        DisplayName="Starting Row"
-                        class="form-control"
-                        maxlength="5"
-                        @bind-Value="Account.StartingRow"
-                        @onchange="OnStartingRowChanged"
-                        />
-                        <ValidationMessage For="(() => Account.StartingRow)" />
+                    <InputNumber id="idStartingRow"
+                                 DisplayName="Starting Row"
+                                 class="form-control"
+                                 maxlength="5"
+                                 @bind-Value="Account.StartingRow"
+                                 @onchange="OnStartingRowChanged" />
+                    <ValidationMessage For="(() => Account.StartingRow)" />
                 </FormGroup>
 
                 <FormGroup InputId="idTransDateCol" DisplayName="Transaction Date Column">
-                    <InputNumber
-                        id="idTransDateCol"
-                        class="form-control"
-                        maxlength="5"
-                        @bind-Value="Account.TransDateColumn"
-                        @onchange="OnTransDateColumnChanged"
-                        />
+                    <InputNumber id="idTransDateCol"
+                                 class="form-control"
+                                 maxlength="5"
+                                 @bind-Value="Account.TransDateColumn"
+                                 @onchange="OnTransDateColumnChanged" />
                 </FormGroup>
 
                 <FormGroup InputId="idDescCol" DisplayName="Description Column">
@@ -97,52 +98,38 @@
                 </FormGroup>
 
                 <FormGroup InputId="idIsInverted" DisplayName="Is Amount Inverted">
-                    <InputCheckbox 
-                        id="idIsInverted"
-                        class="form-check-input"
-                        @bind-Value="Account.IsAmountInverted"
-                        @onchange="OnIsAmountInvertedChanged"
-                        />
+                    <InputCheckbox id="idIsInverted"
+                                   class="form-check-input"
+                                   @bind-Value="Account.IsAmountInverted"
+                                   @onchange="OnIsAmountInvertedChanged" />
                 </FormGroup>
 
-                <hr/>
+                <hr />
             </div>
         }
 
-        
+
         <ValidationSummary />
-        <br/>
+        <br />
 
         <FormGroup InputId="idActionButtons" DisplayName="">
-        <div class="d-flex">
-            <ActionIconButton 
-                ButtonId="idSaveChanges" 
-                IconOption="IconOpt.Save" 
-                ClassOverride="btn-success"
-                ButtonType="submit">
-                Save Changes
-            </ActionIconButton>
+            <div class="d-flex">
+                <ActionIconButton ButtonId="idSaveChanges"
+                                  IconOption="IconOpt.Save"
+                                  ClassOverride="btn-success"
+                                  ButtonType="submit">
+                    Save Changes
+                </ActionIconButton>
 
-            @* <button type="submit" class="btn btn-success">
-                <ActionIcon IconOption="IconOpt.Save" />
-                <span>Save Changes</span>
-            </button> *@
+                <ActionIconButton ButtonId="idDiscardChanges"
+                                  IconOption="IconOpt.Cancel"
+                                  ClassOverride="btn-secondary mx-5"
+                                  ParentName="Money Account Discard"
+                                  OnClickHandler="Reset">
+                    Discard
+                </ActionIconButton>
 
-            <ActionIconButton 
-                ButtonId="idDiscardChanges" 
-                IconOption="IconOpt.Cancel"
-                ClassOverride="btn-secondary mx-5" 
-                ParentName="Money Account Discard"
-                OnClickHandler="Reset" >
-                Discard
-            </ActionIconButton>
-
-
-            @* <button type="button" class="btn btn-secondary mx-5" @onclick="Reset">
-                <ActionIcon IconOption="IconOpt.Cancel" />
-                <span>Discard</span>
-            </button> *@
-        </div>
+            </div>
         </FormGroup>
     </EditForm>
 
