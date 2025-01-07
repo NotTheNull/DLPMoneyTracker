@@ -1,0 +1,60 @@
+﻿@inject INavigationHistoryService navigation
+@inject StorageService<IBudgetPlan> storage
+@inject ILoggerProvider logProvider
+
+@inject IDeleteBudgetPlanUseCase actionDeletePlan
+
+<section id="P_@Plan.UID">
+    <div class="row">
+        <div class="col-2 d-flex flex-row">
+            <ActionIconButton ButtonId="@EditButtonId" IconOption="IconOpt.EditPencil" OnClickHandler="EditPlanClicked" />
+            <ActionIconButton ButtonId="@DeleteButtonId" IconOption="IconOpt.Garbage" OnClickHandler="DeletePlanClicked" ClassOverride="btn-light btn-outline-warning mx-1" />
+        </div>
+
+        <div class="col-6">
+            <span>@Plan.Description</span>
+        </div>
+
+        <div class="col-4">
+            <span>@string.Format("{0:c}", Plan.ExpectedAmount)</span>
+        </div>
+    </div>
+</section>
+
+
+@code {
+    [Parameter] public IBudgetPlan Plan { get; set; }
+
+    private string ButtonId {get { return string.Concat("id_", Plan.UID, "_"); }}
+    private string EditButtonId {get { return string.Concat(ButtonId, "edit"); }}
+    private string DeleteButtonId {get { return string.Concat(ButtonId, "delete"); }}
+
+    private string PlanType {
+        get {
+            return Plan.PlanType.ToDisplayText();
+        }
+    }
+
+    private ILogger _logger;
+    protected override void OnParametersSet()
+    {
+        _logger = logProvider.CreateLogger(string.Concat(nameof(BudgetPlanItem), " - ", Plan.Description));
+    }
+
+
+    private void EditPlanClicked() {
+        string msg = "Edit button clicked, should be redirecting";
+        _logger.LogInformation(msg);
+        Console.WriteLine(msg);
+        storage.Data = Plan;
+        storage.ReturnURL = "/config/budgetplans";
+        navigation.NavigateTo("/config/budgetplans/edit/");
+    }
+
+    private void DeletePlanClicked() {
+        _logger.LogInformation("Delete button clicked");
+        if(Plan?.UID != null && Plan?.UID != Guid.Empty) {
+            actionDeletePlan.Execute(Plan.UID);
+        }
+    }
+}

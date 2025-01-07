@@ -1,0 +1,49 @@
+﻿@page "/config/budgetplans"
+
+
+@inject IGetBudgetPlanListUseCase actionGetPlanList
+@inject INavigationHistoryService navigation
+@inject NotificationHelper messageThis
+
+
+<section class="justify-content-center" id="BudgetPlanListing">
+    <AddNewRecord OnClickHandler="AddNewAccount" ButtonId="btnAddNew1" />
+    <br />
+
+    <ul class="list-group">
+        @{
+            int counter = 0;
+            foreach(var plan in PlanList) {
+                counter++;
+                <li class="list-group-item @(counter % 2 == 0 ? "altrow" : "")">
+                    <BudgetPlanItem Plan="plan" />
+                </li>
+            }
+        }
+    </ul>
+
+    <br />
+    <AddNewRecord OnClickHandler="AddNewAccount" ButtonId="btnAddNew2" />
+</section>
+
+
+@code {
+    List<IBudgetPlan> PlanList { get; set; } = new List<IBudgetPlan>();
+
+    protected override void OnInitialized()
+    {
+        messageThis.SetPageTitle("Budget Plans List");
+
+        this.PlanList.Clear();
+        var listData = actionGetPlanList.Execute();
+        if (listData?.Any() != true) return;
+
+        this.PlanList.AddRange(listData);
+    }
+
+
+
+    private void AddNewAccount() {
+        navigation.NavigateTo("/config/budgetplans/add");
+    }
+}
