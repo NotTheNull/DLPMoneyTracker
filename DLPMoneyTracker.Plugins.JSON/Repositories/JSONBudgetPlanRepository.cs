@@ -162,5 +162,10 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         {
             return this.BudgetPlanList.Where(x => x.PlanType == planType).ToList();
         }
+
+        public IBudgetPlan GetPlan(Guid uid)
+        {
+            return this.BudgetPlanList.FirstOrDefault(x => x.UID == uid);
+        }
     }
 }

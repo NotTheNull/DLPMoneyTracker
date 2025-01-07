@@ -178,5 +178,16 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
             return listPlanFinal;
         }
+
+        public IBudgetPlan GetPlan(Guid uid)
+        {
+            using (DataContext context = new DataContext(config))
+            {
+                var plan = context.BudgetPlans.FirstOrDefault(x => x.PlanUID == uid);
+                if (plan == null) return null;
+
+                return SourceToPlan(plan, context);
+            }
+        }
     }
 }

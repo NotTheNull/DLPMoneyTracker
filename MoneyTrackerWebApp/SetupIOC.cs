@@ -129,6 +129,7 @@ namespace MoneyTrackerWebApp
             builder.Services.AddTransient<IGetBudgetPlanListByType, GetBudgetPlanListByType>();
             builder.Services.AddTransient<IGetSummaryAccountListByType, GetSummaryAccountListByType>();
             builder.Services.AddTransient<IGetNextUIDUseCase, GetNextUIDUseCase>();
+            builder.Services.AddTransient<IGetBudgetPlanByIdUseCase, GetBudgetPlanByIdUseCase>();
         }
 
         private static void ConfigureFactories(WebApplicationBuilder builder)

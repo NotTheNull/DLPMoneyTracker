@@ -26,5 +26,6 @@ namespace DLPMoneyTracker.BusinessLogic.PluginInterfaces
         void SavePlan(IBudgetPlan plan);
         int GetRecordCount();
         List<IBudgetPlan> GetAllPlansForAccount(Guid accountUID);
+        IBudgetPlan GetPlan(Guid uid);
     }
 }
