@@ -2,12 +2,11 @@
 using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using Microsoft.AspNetCore.Components;
-using MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts;
-using MoneyTrackerWebApp.Models.Config.LedgerAccounts;
+using MoneyTrackerWebApp.Models.Config.MoneyAccounts;
 using MoneyTrackerWebApp.Models.Core;
 using MoneyTrackerWebApp.Services;
 
-namespace MoneyTrackerWebApp.Components.Pages.Config.LedgerAccounts
+namespace MoneyTrackerWebApp.Models.Config.LedgerAccounts
 {
     public class EditLedgerAccountBase : ComponentBase
     {
@@ -21,7 +20,7 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.LedgerAccounts
         public IGetSummaryAccountListByType GetSummaryAccounts { get; set; }
 
         [Inject]
-        public StorageService<IJournalAccount>  Storage { get; set; }
+        public StorageService<IJournalAccount> Storage { get; set; }
 
         [Inject]
         public INavigationHistoryService Navigation { get; set; }
@@ -41,19 +40,19 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.LedgerAccounts
             Logger.LogInformation("Setting parameters");
             if (AccountUID is null || AccountUID == Guid.Empty) return;
 
-            Logger.LogInformation($"Loading account with UID {this.AccountUID}");
-            var acct = AccountService.GetAccount(this.AccountUID.Value);
-            this.Storage.Data = acct;
-            this.Account.Copy(acct);
+            Logger.LogInformation($"Loading account with UID {AccountUID}");
+            var acct = AccountService.GetAccount(AccountUID.Value);
+            Storage.Data = acct;
+            Account.Copy(acct);
         }
 
         protected override void OnInitialized()
         {
             Logger.LogInformation("Initializing");
-            if (this.Storage.Data == null) return;
+            if (Storage.Data == null) return;
 
             Logger.LogInformation("Copying account information from storage");
-            this.Account.Copy(this.Storage.Data);
+            Account.Copy(Storage.Data);
 
         }
 
@@ -66,8 +65,8 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.LedgerAccounts
 
             var list = GetSummaryAccounts.Execute(Account.JournalType);
             listSummaryAccounts.Clear();
-            
-            if(list?.Any() == true)
+
+            if (list?.Any() == true)
             {
                 listSummaryAccounts.AddRange(list);
             }
@@ -92,7 +91,7 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.LedgerAccounts
         {
             Guid uid = Guid.Parse(e.Value.ToString());
             Account.SummaryAccountId = uid == Guid.Empty ? null : uid;
-            
+
         }
 
         #endregion
@@ -101,23 +100,24 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.LedgerAccounts
         protected void SaveChanges()
         {
             AccountService.SaveAccount(Account);
-            this.ReturnToList();
+            ReturnToList();
         }
 
         protected void Reset()
         {
-            if(Storage.Data != null)
+            if (Storage.Data != null)
             {
                 Account.Copy(Storage.Data);
-            } else
+            }
+            else
             {
-                this.ReturnToList();
+                ReturnToList();
             }
         }
 
         protected void ReturnToList()
         {
-            this.Storage.Data = null;
+            Storage.Data = null;
             Navigation.NavigateBack(URL_ACCOUNTLIST);
         }
 

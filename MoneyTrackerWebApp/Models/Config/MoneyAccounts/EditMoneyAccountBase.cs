@@ -2,11 +2,10 @@
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.SQL.Data;
 using Microsoft.AspNetCore.Components;
-using MoneyTrackerWebApp.Models.Config.MoneyAccounts;
 using MoneyTrackerWebApp.Models.Core;
 using MoneyTrackerWebApp.Services;
 
-namespace MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts
+namespace MoneyTrackerWebApp.Models.Config.MoneyAccounts
 {
     public class EditMoneyAccountBase : ComponentBase
     {
@@ -14,7 +13,7 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts
         public Guid? AccountUID { get; set; }
 
         [Inject]
-        public IJournalAccountService  AccountService { get; set; }
+        public IJournalAccountService AccountService { get; set; }
 
         [Inject]
         public StorageService<IJournalAccount> Storage { get; set; }
@@ -39,21 +38,21 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts
             Logger.LogInformation("Setting parameters");
             if (AccountUID is null || AccountUID == Guid.Empty) return;
 
-            Logger.LogInformation($"Loading account with UID {this.AccountUID}");
-            var acct = AccountService.GetAccount(this.AccountUID.Value);
-            this.Storage.Data = acct;
-            this.Account.Copy(acct);
+            Logger.LogInformation($"Loading account with UID {AccountUID}");
+            var acct = AccountService.GetAccount(AccountUID.Value);
+            Storage.Data = acct;
+            Account.Copy(acct);
         }
 
         protected override void OnInitialized()
         {
             Logger.LogInformation("Initializing");
-            if (this.Storage.Data == null) return;
+            if (Storage.Data == null) return;
 
             Logger.LogInformation("Copying account information from storage");
-            this.Account.Copy(this.Storage.Data);
+            Account.Copy(Storage.Data);
         }
-        
+
 
         #region Form Events
 
@@ -78,7 +77,7 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts
 
         protected void OnStartingRowChanged(ChangeEventArgs e)
         {
-            if(int.TryParse(e.Value.ToString(), out int newRow))
+            if (int.TryParse(e.Value.ToString(), out int newRow))
             {
                 Account.StartingRow = newRow;
             }
@@ -86,7 +85,7 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts
 
         protected void OnTransDateColumnChanged(ChangeEventArgs e)
         {
-            if(int.TryParse(e.Value.ToString(), out int newCol))
+            if (int.TryParse(e.Value.ToString(), out int newCol))
             {
                 Account.TransDateColumn = newCol;
             }
@@ -94,7 +93,7 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts
 
         protected void OnDescriptionColumnChanged(ChangeEventArgs e)
         {
-            if(int.TryParse(e.Value.ToString(), out int newCol))
+            if (int.TryParse(e.Value.ToString(), out int newCol))
             {
                 Account.DescriptionColumn = newCol;
             }
@@ -109,7 +108,7 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts
 
         protected void OnIsAmountInvertedChanged(ChangeEventArgs e)
         {
-            if(bool.TryParse(e.Value.ToString(), out bool isChecked))
+            if (bool.TryParse(e.Value.ToString(), out bool isChecked))
             {
                 Account.IsAmountInverted = isChecked;
             }
@@ -119,7 +118,7 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts
         protected void SaveChanges()
         {
             AccountService.SaveAccount(Account);
-            this.ReturnToList();
+            ReturnToList();
         }
 
         protected void Reset()
@@ -131,13 +130,13 @@ namespace MoneyTrackerWebApp.Components.Pages.Config.MoneyAccounts
             else
             {
                 // If this is a NEW record, discarding means going back to the listing
-                this.ReturnToList();
+                ReturnToList();
             }
         }
 
         protected void ReturnToList()
         {
-            this.Storage.Data = null;
+            Storage.Data = null;
             Navigation.NavigateBack(URL_MONEYLIST);
         }
     }
