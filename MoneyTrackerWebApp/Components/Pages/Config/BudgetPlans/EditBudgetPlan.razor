@@ -1,0 +1,138 @@
+﻿@page "/config/budgetplans/edit/{PlanUID}"
+@page "/config/budgetplans/edit"
+@page "/config/budgetplans/add"
+
+@inherits EditBudgetPlanBase
+
+<section id="edit_plan">
+    <div class="row">
+        <ActionIconButton ButtonId="btnReturn"
+                          ButtonType="button"
+                          IconOption="IconOpt.Exit"
+                          OnClickHandler="ReturnToList">&lt;-- RETURN TO LISTING</ActionIconButton>
+    </div>
+    <br />
+
+    <EditForm Model="BudgetPlan" OnValidSubmit="SaveChanges">
+        <DataAnnotationsValidator />
+        <InputHidden Name="UID" Value="@BudgetPlan.UID.ToString()" />
+
+        <FormGroup InputId="idPlanType" DisplayName="Plan Type">
+            <InputSelect id="idPlanType"
+                TValue="BudgetPlanType"
+                DisplayName="Plan Type"
+                class="form-select form-select-md"
+                @bind-Value="BudgetPlan.PlanType"
+                >
+                @foreach(var key in listPlanTypes) {
+                    <option value="@key">@key.ToDisplayText()</option>
+                }
+            </InputSelect>
+        </FormGroup>
+
+        <FormGroup InputId="idDesc" DisplayName="Description">
+
+            <InputText id="idDesc"
+                       DisplayName="Description"
+                       class="form-control"
+                       maxlength="200"
+                       @bind-Value="BudgetPlan.Description"
+                       @onchange="OnDescriptionChanged" />
+            <ValidationMessage For="(() => BudgetPlan.Description)" />
+        </FormGroup>
+
+        <FormGroup InputId="idDebitAccount" DisplayName="Debit Account">
+            <InputSelect id="idDebitAccount"
+                TValue="Guid"
+                DisplayName="Debit Account"
+                class="form-select form-select-md"
+                @bind-Value="BudgetPlan.DebitAccountId"
+                @onchange="OnDebitAccountChanged"
+            >
+            @foreach(var acct in listDebitAccounts.OrderBy(o => o.Description)) {
+                <option value="@acct.Id">@acct.Description</option>
+            }
+            </InputSelect>
+        </FormGroup>
+
+        <FormGroup InputId="idCreditAccount" DisplayName="Credit Account">
+            <InputSelect id="idCreditAccount"
+                         TValue="Guid"
+                         DisplayName="Credit Account"
+                         class="form-select form-select-md"
+                         @bind-Value="BudgetPlan.CreditAccountId"
+                         @onchange="OnCreditAccountChanged">
+                @foreach (var acct in listCreditAccounts.OrderBy(o => o.Description))
+                {
+                    <option value="@acct.Id">@acct.Description</option>
+                }
+            </InputSelect>
+        </FormGroup>
+
+        <!-- Expected Amount -->
+        <FormGroup InputId="idAmount" DisplayName="Expected Amount">
+            <InputNumber id="idAmount"
+                DisplayName="Expected Amount"
+                class="form-control"
+                @bind-Value="BudgetPlan.ExpectedAmount"
+                @onchange="OnExpectedAmountChanged"
+                />
+                <ValidationMessage For="(() => BudgetPlan.ExpectedAmount)" />
+        </FormGroup>
+
+        <!-- Frequency -->
+        <FormGroup InputId="idFrequency" DisplayName="Frequency">
+            <InputSelect id="idFrequency"
+                         TValue="RecurrenceFrequency"
+                         class="form-select form-select-md"
+                         @bind-Value="BudgetPlan.Frequency"
+                         @onchange="OnFrequencyChanged"
+            >
+                @foreach (var key in listFrequency)
+                {
+                    <option value="@key">@key.ToDisplayText()</option>
+                }
+            </InputSelect>
+        </FormGroup>
+
+
+        <!-- Start Date -->
+        <FormGroup InputId="idStartDate" DisplayName="Start Date">
+            <InputDate id="idStartDate"
+                class="form-control"
+                @bind-Value="BudgetPlan.StartDate"
+                @onchange="OnStartDateChanged"
+                />
+            
+        </FormGroup>
+
+
+        <ValidationSummary />
+        <br />
+
+
+        <FormGroup InputId="idActionButtons" DisplayName="">
+            <div class="d-flex">
+                <ActionIconButton ButtonId="idSaveChanges"
+                                  IconOption="IconOpt.Save"
+                                  ClassOverride="btn-success"
+                                  ButtonType="submit">
+                    Save Changes
+                </ActionIconButton>
+
+
+                <ActionIconButton ButtonId="idDiscardChanges"
+                                  IconOption="IconOpt.Cancel"
+                                  ClassOverride="btn-secondary mx-5"
+                                  ParentName="Money Account Discard"
+                                  OnClickHandler="Reset">
+                    Discard
+                </ActionIconButton>
+
+            </div>
+        </FormGroup>
+
+    </EditForm>
+
+
+</section>

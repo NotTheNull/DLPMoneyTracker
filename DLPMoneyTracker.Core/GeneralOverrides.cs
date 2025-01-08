@@ -1,6 +1,7 @@
 ﻿
 using DLPMoneyTracker.Core.Models.BudgetPlan;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
+using DLPMoneyTracker.Core.Models.ScheduleRecurrence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -106,6 +107,20 @@ namespace DLPMoneyTracker.Core
             }
         }
 
+        public static string ToDisplayText(this RecurrenceFrequency freq)
+        {
+            switch(freq)
+            {
+                case RecurrenceFrequency.Annual:
+                    return "Annual";
+                case RecurrenceFrequency.Monthly:
+                    return "Monthly";
+                case RecurrenceFrequency.SemiAnnual:
+                    return "Semi-Annual";
+                default:
+                    return string.Empty;
+            }
+        }
 
         public static int ToLedgerNumber(this LedgerType journalType)
         {
