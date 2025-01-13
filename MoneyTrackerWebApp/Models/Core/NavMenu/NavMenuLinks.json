@@ -24,7 +24,7 @@
       },
       {
         "Name": "Budget Plans",
-        "Url": "/config/budgets",
+        "Url": "/config/budgetplans",
         "Icon": "editpencil",
         "Links": []
       }
