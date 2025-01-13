@@ -1,5 +1,61 @@
-﻿<h3>TransactionItem</h3>
+﻿@inject INavigationHistoryService navigation
+@inject StorageService<IMoneyTransaction> storage
+@inject ILoggerProvider logProvider
+
+<section id="T_@Money.UID">
+    <div class="row">
+        <div class="col-1 d-flex flex-row">
+            <ActionIconButton ButtonId="@EditButtonId" IconOption="IconOpt.EditPencil" OnClickHandler="EditTransactionClicked" />
+        </div>
+
+        <div class="col-1">
+            <span>@string.Format("{0:yyyy/MM/dd}", Money.TransactionDate)</span>
+        </div>
+
+        <div class="col-2">
+            <span>@Money.DebitAccountName</span>
+        </div>
+
+        <div class="col-2">
+            <span>@Money.CreditAccountName</span>
+        </div>
+
+        <div class="col-5">
+            <span>@Money.Description</span>
+        </div>
+
+        <div class="col-1">
+            <span>@string.Format("{0:c}", Money.TransactionAmount)</span>
+        </div>
+    </div>
+</section>
+
+
 
 @code {
+    [Parameter] public IMoneyTransaction Money { get; set; }
 
+    private string ButtonId { get { return string.Concat("id_", Money.UID, "_"); } }
+    private string EditButtonId { get { return string.Concat(ButtonId, "edit"); } }
+    // Not sure I want a delete button yet
+
+
+    private ILogger _logger;
+    protected override void OnParametersSet()
+    {
+        _logger = logProvider.CreateLogger(string.Concat(nameof(TransactionItem), " - ", Money.UID));
+    }
+
+
+
+    private void EditTransactionClicked()
+    {
+        string msg = "Edit button clicked, should be redirecting";
+        _logger.LogInformation(msg);
+        Console.WriteLine(msg);
+
+        storage.Data = Money;
+        storage.ReturnURL = "/transactions";
+        navigation.NavigateTo($"/transactions/edit/{Money.UID}");
+    }
 }

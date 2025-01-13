@@ -22,6 +22,7 @@ using MoneyTrackerWebApp.Models.Summary;
 using MoneyTrackerWebApp.Utils;
 using MoneyTrackerWebApp.Services;
 using Microsoft.AspNetCore.Components;
+using DLPMoneyTracker.Core.Models;
 
 namespace MoneyTrackerWebApp
 {
@@ -58,6 +59,7 @@ namespace MoneyTrackerWebApp
             builder.Services.AddSingleton<NotificationHelper>();
             builder.Services.AddSingleton<StorageService<IJournalAccount>>();
             builder.Services.AddSingleton<StorageService<IBudgetPlan>>();
+            builder.Services.AddSingleton<StorageService<IMoneyTransaction>>();
         }
 
         private static void ConfigureUI(WebApplicationBuilder builder)

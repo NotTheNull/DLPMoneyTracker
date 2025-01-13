@@ -1,5 +1,68 @@
-﻿<h3>TransactionListing</h3>
+﻿@page "/transactions"
+
+@inject IGetTransactionsBySearchUseCase actionGetTransactionsBySearch
+@inject INavigationHistoryService navigation
+@inject NotificationHelper messageThis
+
+<section class="justify-content-center" id="idTransactionListing">
+    <br />
+    <ul class="list-group">
+        <li class="list-group-item">
+            <div class="row header">
+
+                <div class="col-1">
+                    <!-- Action Buttons -->
+                </div>
+
+                <div class="col-1">
+                    <h5>Date</h5>
+                </div>
+
+                <div class="col-2">
+                    <h5>Debit</h5>
+                </div>
+
+                <div class="col-2">
+                    <h5>Credit</h5>
+                </div>
+
+                <div class="col-5">
+                    <h5>Description</h5>
+                </div>
+
+                <div class="col-1">
+                    <h5>Amount</h5>
+                </div>
+            </div>
+        </li>
+
+        @{
+            int counter = 0;
+            foreach (var money in MoneyList.OrderBy(o => o.TransactionDate).ThenBy(o => o.Description))
+            {
+                counter++;
+                <li class="list-group-item @(counter % 2 == 0 ? "altrow" : "")">
+                    <TransactionItem Money="money" />
+                </li>
+            }
+        }
+    </ul>
+    <br />
+</section>
+
+
 
 @code {
+    List<IMoneyTransaction> MoneyList { get; set; } = new List<IMoneyTransaction>();
 
+    protected override void OnInitialized()
+    {
+        MoneyList.Clear();
+
+        DateRange range = new DateRange(DateTime.MinValue, DateTime.MaxValue);
+        var listData = actionGetTransactionsBySearch.Execute(range, null, null);
+        if (listData?.Any() != true) return;
+
+        MoneyList.AddRange(listData);
+    }
 }

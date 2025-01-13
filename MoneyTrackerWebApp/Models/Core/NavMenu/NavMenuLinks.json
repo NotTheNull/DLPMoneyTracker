@@ -6,6 +6,12 @@
     "Links": []
   },
   {
+    "Name": "Transactions",
+    "Url":  "/transactions",
+    "Icon": "stockexchange",
+    "Links": []
+  },
+  {
     "Name": "Config",
     "Url": "",
     "Icon": "settings",
