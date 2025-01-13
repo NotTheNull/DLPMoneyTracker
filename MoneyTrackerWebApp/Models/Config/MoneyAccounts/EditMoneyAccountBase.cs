@@ -7,7 +7,7 @@ using MoneyTrackerWebApp.Services;
 
 namespace MoneyTrackerWebApp.Models.Config.MoneyAccounts
 {
-    public class EditMoneyAccountBase : ComponentBase
+    public class EditMoneyAccountBase : ComponentBase, IEditComponentBase
     {
         [Parameter]
         public Guid? AccountUID { get; set; }
@@ -115,13 +115,13 @@ namespace MoneyTrackerWebApp.Models.Config.MoneyAccounts
         }
         #endregion
 
-        protected void SaveChanges()
+        public void SaveChanges()
         {
             AccountService.SaveAccount(Account);
             ReturnToList();
         }
 
-        protected void Reset()
+        public void Reset()
         {
             if (Storage.Data != null)
             {
@@ -134,7 +134,7 @@ namespace MoneyTrackerWebApp.Models.Config.MoneyAccounts
             }
         }
 
-        protected void ReturnToList()
+        public void ReturnToList()
         {
             Storage.Data = null;
             Navigation.NavigateBack(URL_MONEYLIST);

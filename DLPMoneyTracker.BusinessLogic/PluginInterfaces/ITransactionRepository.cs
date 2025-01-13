@@ -35,5 +35,6 @@ namespace DLPMoneyTracker.BusinessLogic.PluginInterfaces
         void RemoveTransaction(IMoneyTransaction transaction);
         void SaveTransaction(IMoneyTransaction transaction);
         long GetRecordCount();
+        IMoneyTransaction GetTransactionById(Guid uid);
     }
 }

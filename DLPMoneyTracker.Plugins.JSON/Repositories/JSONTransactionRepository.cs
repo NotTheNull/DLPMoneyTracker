@@ -198,5 +198,10 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         {
             return this.TransactionList.Count;
         }
+
+        public IMoneyTransaction GetTransactionById(Guid uid)
+        {
+            return this.TransactionList.FirstOrDefault(x => x.UID == uid);
+        }
     }
 }

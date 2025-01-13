@@ -1,0 +1,116 @@
+﻿@page "/transactions/edit/{TransactionId}"
+@page "/transactions/{TransType}/add"
+
+@inherits EditTransactionBase
+
+
+<section id="idCreateTransaction">
+    <div class="row">
+        <ActionIconButton ButtonId="btnReturn"
+                          ButtonType="button"
+                          IconOption="IconOpt.Exit"
+                          OnClickHandler="ReturnToList">&lt;-- RETURN TO LISTING</ActionIconButton>
+    </div>
+    <br />
+
+    <EditForm Model="viewModel" OnValidSubmit="SaveChanges">
+        <DataAnnotationsValidator />
+        <InputHidden Name="UID" Value="@viewModel.UID.ToString()" />
+
+        <FormGroup InputId="idTransDate" DisplayName="Transaction Date">
+            <InputDate id="idTransDate" 
+                class="form-control"
+                @bind-Value="viewModel.TransactionDate"
+                @onchange="OnTransactionDateChanged"
+                />
+        </FormGroup>
+
+        <FormGroup InputId="idDebitAccount" DisplayName="">
+            <InputSelect id="idDebitAccount"
+                TValue="Guid"
+                class="form-select form-select-md"
+                @bind-Value="viewModel.DebitAccountId"
+                @onchange="OnDebitAccountChanged"
+            >
+                @foreach(var acct in listValidDebits.OrderBy(o => o.Description)) {
+                    <option value="@acct.Id">@acct.Description</option>
+                }
+            </InputSelect>
+        </FormGroup>
+
+        <FormGroup InputId="idDebitBankDate" DisplayName="Bank Date">
+            <InputDate
+                id="idDebitBankDate"
+                class="form-control"
+                @bind-Value="viewModel.DebitBankDate"
+                @onchange="OnDebitBankDateChanged"
+                />
+        </FormGroup>
+
+        <FormGroup InputId="idCreditAccount" DisplayName="">
+            <InputSelect id="idCreditAccount"
+                         TValue="Guid"
+                         class="form-select form-select-md"
+                         @bind-Value="viewModel.CreditAccountId"
+                         @onchange="OnCreditAccountChanged">
+                @foreach (var acct in listValidCredits.OrderBy(o => o.Description))
+                {
+                    <option value="@acct.Id">@acct.Description</option>
+                }
+            </InputSelect>
+        </FormGroup>
+
+        <FormGroup InputId="idCreditBankDate" DisplayName="Bank Date">
+            <InputDate id="idCreditBankDate"
+                       class="form-control"
+                       @bind-Value="viewModel.CreditBankDate"
+                       @onchange="OnCreditBankDateChanged" />
+        </FormGroup>
+
+        <FormGroup InputId="idDesc" DisplayName="Description">
+            <InputText id="idDesc"
+                       DisplayName="Description"
+                       class="form-control"
+                       maxlength="200"
+                       @bind-Value="viewModel.Description"
+                       @onchange="OnDescriptionChanged" />
+            <ValidationMessage For="(() => viewModel.Description)" />
+        </FormGroup>
+
+        <FormGroup InputId="idAmount" DisplayName="Amount">
+            <InputNumber id="idAmount"
+                         DisplayName="Amount"
+                         class="form-control"
+                         @bind-Value="viewModel.TransactionAmount"
+                         @onchange="OnAmountChanged" />
+            <ValidationMessage For="(() => viewModel.TransactionAmount)" />
+        </FormGroup>
+
+
+        <ValidationSummary />
+        <br />
+
+
+        <FormGroup InputId="idActionButtons" DisplayName="">
+            <div class="d-flex">
+                <ActionIconButton ButtonId="idSaveChanges"
+                                  IconOption="IconOpt.Save"
+                                  ClassOverride="btn-success"
+                                  ButtonType="submit">
+                    Save Changes
+                </ActionIconButton>
+
+
+                <ActionIconButton ButtonId="idDiscardChanges"
+                                  IconOption="IconOpt.Cancel"
+                                  ClassOverride="btn-secondary mx-5"
+                                  ParentName="Transaction Discard"
+                                  OnClickHandler="Reset">
+                    Discard
+                </ActionIconButton>
+
+            </div>
+        </FormGroup>
+
+    </EditForm>
+</section>

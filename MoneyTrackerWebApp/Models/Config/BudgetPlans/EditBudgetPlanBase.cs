@@ -11,7 +11,7 @@ using MoneyTrackerWebApp.Services;
 
 namespace MoneyTrackerWebApp.Models.Config.BudgetPlans
 {
-    public class EditBudgetPlanBase : ComponentBase
+    public class EditBudgetPlanBase : ComponentBase, IEditComponentBase
     {
         [Parameter]
         public Guid? PlanUID { get; set; }
@@ -139,7 +139,7 @@ namespace MoneyTrackerWebApp.Models.Config.BudgetPlans
 
 
 
-        protected void SaveChanges()
+        public void SaveChanges()
         {
             BudgetPlan.Recurrence = RecurrenceFactory.Build(BudgetPlan.Frequency, BudgetPlan.StartDate);
 
@@ -148,7 +148,7 @@ namespace MoneyTrackerWebApp.Models.Config.BudgetPlans
             ReturnToList();
         }
 
-        protected void Reset()
+        public void Reset()
         {
             if(Storage.Data != null)
             {
@@ -159,7 +159,7 @@ namespace MoneyTrackerWebApp.Models.Config.BudgetPlans
             }
         }
 
-        protected void ReturnToList()
+        public void ReturnToList()
         {
             Storage.Data = null;
             Navigation.NavigateBack(URL_PLANLIST);

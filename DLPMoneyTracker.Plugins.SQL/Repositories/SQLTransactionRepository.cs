@@ -152,5 +152,20 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
                 return context.TransactionBatches.LongCount();
             }
         }
+
+        public IMoneyTransaction GetTransactionById(Guid uid)
+        {
+            using (DataContext context = new DataContext(config))
+            {
+                var data = context.TransactionBatches
+                    .Include(x => x.Details)
+                    .FirstOrDefault(x => x.BatchUID == uid);
+
+                SQLSourceToTransactionAdapter adapter = new SQLSourceToTransactionAdapter(context, accountRepository);
+                adapter.ImportSource(data);
+
+                return new MoneyTransaction(adapter);
+            }
+        }
     }
 }
