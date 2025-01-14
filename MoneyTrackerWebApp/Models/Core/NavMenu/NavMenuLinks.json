@@ -7,9 +7,52 @@
   },
   {
     "Name": "Transactions",
-    "Url":  "/transactions",
+    "Url": "",
     "Icon": "stockexchange",
-    "Links": []
+    "Links": [
+      {
+        "Name": "Listing",
+        "Icon": "stockexchange",
+        "Url": "/transactions",
+        "Links": []
+      },
+      {
+        "Name": "Add Income",
+        "Icon": "dollar",
+        "Url": "/transactions/1/add",
+        "Links": []
+      },
+      {
+        "Name": "Add Expense",
+        "Icon": "card",
+        "Url": "/transactions/2/add",
+        "Links": []
+      },
+      {
+        "Name": "Add Debt Payment",
+        "Icon": "payment",
+        "Url": "/transactions/3/add",
+        "Links": []
+      },
+      {
+        "Name": "Bank to Bank Transfer",
+        "Icon": "transfer",
+        "Url": "/transactions/5/add",
+        "Links": []
+      },
+      {
+        "Name": "Debt Adjustment",
+        "Icon": "lightbulb",
+        "Url": "/transactions/4/add",
+        "Links": []
+      },
+      {
+        "Name": "Correction",
+        "Icon": "editpencil",
+        "Url": "/transactions/6/add",
+        "Links": []
+      }
+    ]
   },
   {
     "Name": "Config",
