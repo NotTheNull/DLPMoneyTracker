@@ -15,7 +15,7 @@ namespace MoneyTrackerWebApp.Models.Transactions
         public Guid? TransactionId { get; set; }
 
         [Parameter]
-        public int? TransType { get; set; }
+        public string? TransType { get; set; }
 
         [Inject]
         public INavigationHistoryService Navigation { get; set; }
@@ -49,9 +49,9 @@ namespace MoneyTrackerWebApp.Models.Transactions
 
         protected override void OnParametersSet()
         {
-            if (!TransactionId.HasValue && !TransType.HasValue) throw new InvalidOperationException("Transaction editor cannot be configured");
+            if (!TransactionId.HasValue && string.IsNullOrWhiteSpace(TransType)) throw new InvalidOperationException("Transaction editor cannot be configured");
                         
-            if (TransactionId == null || TransactionId == Guid.Empty)
+            if (TransactionId != null && TransactionId != Guid.Empty)
             {
                 var trans = ActionGetTransaction.Execute(this.TransactionId.Value);
                 Storage.Data = trans;
@@ -59,7 +59,7 @@ namespace MoneyTrackerWebApp.Models.Transactions
             }
             else
             {
-                viewModel.JournalEntryType = TransType.Value.ToTransType();
+                viewModel.JournalEntryType = TransType.ToTransType();
             }
 
             this.LoadDebitsAndCredits();
@@ -239,6 +239,20 @@ namespace MoneyTrackerWebApp.Models.Transactions
                 case 4: return TransactionType.DebtAdjustment;
                 case 5: return TransactionType.Transfer;
                 case 6: return TransactionType.Correction;
+                default: return TransactionType.NotSet;
+            }
+        }
+
+        internal static TransactionType ToTransType(this string n)
+        {
+            switch (n)
+            {
+                case "1": return TransactionType.Income;
+                case "2": return TransactionType.Expense;
+                case "3": return TransactionType.DebtPayment;
+                case "4": return TransactionType.DebtAdjustment;
+                case "5": return TransactionType.Transfer;
+                case "6": return TransactionType.Correction;
                 default: return TransactionType.NotSet;
             }
         }
