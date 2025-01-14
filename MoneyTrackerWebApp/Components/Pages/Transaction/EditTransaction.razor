@@ -18,36 +18,41 @@
         <InputHidden Name="UID" Value="@viewModel.UID.ToString()" />
 
         <FormGroup InputId="idTransDate" DisplayName="Transaction Date">
-            <InputDate id="idTransDate" 
-                class="form-control"
-                @bind-Value="viewModel.TransactionDate"
-                @onchange="OnTransactionDateChanged"
-                />
+            <InputDate id="idTransDate"
+                       class="form-control"
+                       @bind-Value="viewModel.TransactionDate"
+                       @onchange="OnTransactionDateChanged" />
         </FormGroup>
 
-        <FormGroup InputId="idDebitAccount" DisplayName="">
+        <FormGroup InputId="idDebitAccount" DisplayName="@DebitLabel">
             <InputSelect id="idDebitAccount"
-                TValue="Guid"
-                class="form-select form-select-md"
-                @bind-Value="viewModel.DebitAccountId"
-                @onchange="OnDebitAccountChanged"
-            >
-                @foreach(var acct in listValidDebits.OrderBy(o => o.Description)) {
+                         TValue="Guid"
+                         class="form-select form-select-md"
+                         @bind-Value="viewModel.DebitAccountId"
+                         @onchange="OnDebitAccountChanged">
+                @foreach (var acct in listValidDebits.OrderBy(o => o.Description))
+                {
                     <option value="@acct.Id">@acct.Description</option>
                 }
             </InputSelect>
         </FormGroup>
 
-        <FormGroup InputId="idDebitBankDate" DisplayName="Bank Date">
-            <InputDate
-                id="idDebitBankDate"
-                class="form-control"
-                @bind-Value="viewModel.DebitBankDate"
-                @onchange="OnDebitBankDateChanged"
-                />
-        </FormGroup>
+        @if (EnableDebitBankDate)
+        {
 
-        <FormGroup InputId="idCreditAccount" DisplayName="">
+            <FormGroup InputId="idDebitBankDate" DisplayName="Bank Date">
+                <InputDate id="idDebitBankDate"
+                           class="form-control"
+                           @bind-Value="viewModel.DebitBankDate"
+                           @onchange="OnDebitBankDateChanged" />
+            </FormGroup>
+        }
+        else
+        {
+            <br />
+        }
+
+        <FormGroup InputId="idCreditAccount" DisplayName="@CreditLabel">
             <InputSelect id="idCreditAccount"
                          TValue="Guid"
                          class="form-select form-select-md"
@@ -60,12 +65,20 @@
             </InputSelect>
         </FormGroup>
 
-        <FormGroup InputId="idCreditBankDate" DisplayName="Bank Date">
-            <InputDate id="idCreditBankDate"
-                       class="form-control"
-                       @bind-Value="viewModel.CreditBankDate"
-                       @onchange="OnCreditBankDateChanged" />
-        </FormGroup>
+        @if (EnableCreditBankDate)
+        {
+
+            <FormGroup InputId="idCreditBankDate" DisplayName="Bank Date">
+                <InputDate id="idCreditBankDate"
+                           class="form-control"
+                           @bind-Value="viewModel.CreditBankDate"
+                           @onchange="OnCreditBankDateChanged" />
+            </FormGroup>
+        }
+        else
+        {
+            <br />
+        }
 
         <FormGroup InputId="idDesc" DisplayName="Description">
             <InputText id="idDesc"

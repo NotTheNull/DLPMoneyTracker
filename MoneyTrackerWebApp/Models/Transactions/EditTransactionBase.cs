@@ -36,6 +36,10 @@ namespace MoneyTrackerWebApp.Models.Transactions
         public ISaveTransactionUseCase ActionSave { get; set; }
 
 
+        public string DebitLabel { get; set; } = "Debit";
+        public string CreditLabel { get; set; } = "Credit";
+        public bool EnableDebitBankDate { get; set; } = false;
+        public bool EnableCreditBankDate { get; set; } = false;
 
 
 
@@ -156,28 +160,48 @@ namespace MoneyTrackerWebApp.Models.Transactions
                 case TransactionType.Income:
                     listDebitTypes = [LedgerType.Bank];
                     listCreditTypes = [LedgerType.Receivable];
+                    this.EnableDebitBankDate = true;
+                    this.DebitLabel = "Bank";
+                    this.CreditLabel = "Receivable";
                     break;
                 case TransactionType.Expense:
                     listDebitTypes = [LedgerType.Payable];
-                    listCreditTypes = [LedgerType.Bank, LedgerType.LiabilityCard];                   
+                    listCreditTypes = [LedgerType.Bank, LedgerType.LiabilityCard];
+                    this.EnableCreditBankDate = true;
+                    this.DebitLabel = "Payable";
+                    this.CreditLabel = "Money";
                     break;
                 case TransactionType.DebtPayment:
                     listDebitTypes = [LedgerType.LiabilityCard, LedgerType.LiabilityLoan];
                     listCreditTypes = [LedgerType.Bank];
+                    this.EnableCreditBankDate = true;
+                    this.EnableDebitBankDate = true;
+                    this.DebitLabel = "Liabiility";
+                    this.CreditLabel = "Bank";
                     break;
                 case TransactionType.DebtAdjustment:
                     listDebitTypes = [LedgerType.LiabilityCard, LedgerType.LiabilityLoan];
                     listCreditTypes = [];
                     listValidCredits.AddRange([SpecialAccount.DebtInterest, SpecialAccount.DebtReduction]);
+                    this.EnableDebitBankDate = true;
+                    this.DebitLabel = "Liability";
+                    this.CreditLabel = "Action";
                     break;
                 case TransactionType.Transfer:
                     listDebitTypes = [LedgerType.Bank];
                     listCreditTypes = [LedgerType.Bank];
+                    this.EnableCreditBankDate = true;
+                    this.EnableDebitBankDate = true;
+                    this.DebitLabel = "Bank";
+                    this.CreditLabel = "Bank";
                     break;
                 case TransactionType.Correction:
                     listDebitTypes = [LedgerType.Bank, LedgerType.LiabilityCard, LedgerType.LiabilityLoan, LedgerType.Payable, LedgerType.Receivable];
                     listCreditTypes = [];
                     listValidCredits.Add(SpecialAccount.UnlistedAdjusment);
+                    this.EnableDebitBankDate = true;
+                    this.DebitLabel = "Account";
+                    this.CreditLabel = "Action";
                     break;
                 default: // Not Set
                     throw new InvalidOperationException("Transaction type has not been declared");
