@@ -5,6 +5,34 @@
 @inject NotificationHelper messageThis
 
 <section class="justify-content-center" id="idTransactionListing">
+    <!-- filter controls -->
+    <div class="d-flex flex-row gap-3 p-2">
+        <!-- Date Range -->
+        <label>Dates</label>
+        <InputDateRange InputId="idFilterDate"
+                        BeginDate="filterDate.Begin"
+                        EndDate="filterDate.End"
+                        BeginDateChanged="OnBeginDateChanged"
+                        EndDateChanged="OnEndDateChanged" />
+
+        <!-- Text Search -->
+        <label>Search</label>
+        <InputText id="idFilterText"
+                   class="form-control"
+                   @bind-Value="filterText"
+                   @onchange="OnSearchTextChanged" />
+
+        <ActionIconButton ButtonId="btnSearch"
+                          ButtonType="button"
+                          IconOption="IconOpt.LightBulb"
+                          OnClickHandler="ProcessFilter" />
+        <ActionIconButton ButtonId="btnClearFilters"
+                          ButtonType="reset"
+                          IconOption="IconOpt.Refresh"
+                          OnClickHandler="ClearFilters" />
+
+    </div>
+
     <br />
     <ul class="list-group">
         <li class="list-group-item">
@@ -55,14 +83,50 @@
 @code {
     List<IMoneyTransaction> MoneyList { get; set; } = new List<IMoneyTransaction>();
 
+    private DateRange filterDate = new DLPMoneyTracker.Core.DateRange();
+    private string filterText = string.Empty;
+
     protected override void OnInitialized()
+    {
+        filterDate = new DateRange(DateTime.MinValue, DateTime.MaxValue);
+        this.ProcessFilter();
+    }
+
+    private void OnBeginDateChanged(ChangeEventArgs e)
+    {
+        if (DateTime.TryParse(e.Value.ToString(), out DateTime begin))
+        {
+            filterDate.Begin = begin;
+        }
+    }
+
+    private void OnEndDateChanged(ChangeEventArgs e)
+    {
+        if (DateTime.TryParse(e.Value.ToString(), out DateTime end))
+        {
+            filterDate.End = end;
+        }
+    }
+
+    private void OnSearchTextChanged(ChangeEventArgs e)
+    {
+        filterText = e.Value.ToString();
+    }
+
+    private void ProcessFilter()
     {
         MoneyList.Clear();
 
-        DateRange range = new DateRange(DateTime.MinValue, DateTime.MaxValue);
-        var listData = actionGetTransactionsBySearch.Execute(range, null, null);
+        var listData = actionGetTransactionsBySearch.Execute(filterDate, filterText, null);
         if (listData?.Any() != true) return;
 
         MoneyList.AddRange(listData);
+    }
+
+    private void ClearFilters()
+    {
+        filterDate.Begin = DateTime.MinValue;
+        filterDate.End = DateTime.MaxValue;
+        filterText = string.Empty;
     }
 }

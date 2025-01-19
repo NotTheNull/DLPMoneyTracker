@@ -1,0 +1,28 @@
+﻿
+<div class="d-inline-flex gap-3" id="@InputId">
+    <InputDate 
+        id="@string.Concat(InputId, "_begin")"
+        class="form-control"
+        @bind-Value="BeginDate"
+        @onchange="BeginDateChanged"
+        />
+
+    <span>To</span>
+
+    <InputDate id="@string.Concat(InputId, "_end")"
+        class="form-control"
+        @bind-Value="EndDate"
+        @onchange="EndDateChanged"
+        />
+</div>
+
+@code {
+
+    [Parameter] public string InputId { get; set; }
+    [Parameter] public DateTime BeginDate { get; set; }
+    [Parameter] public DateTime EndDate { get; set; }
+
+    [Parameter] public EventCallback<ChangeEventArgs> BeginDateChanged { get; set; }
+    [Parameter] public EventCallback<ChangeEventArgs> EndDateChanged { get; set; }
+    
+}
