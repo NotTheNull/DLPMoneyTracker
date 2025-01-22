@@ -73,7 +73,6 @@
     {
         if (this.UID == Guid.Empty) return;
 
-        // TODO: Redirect to Transaction creation and prefill with the Plan
         string url = $"/transactions/plan/{UID}";
 
         navigation.NavigateTo(url);
