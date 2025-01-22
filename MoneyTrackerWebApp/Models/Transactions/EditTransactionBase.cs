@@ -1,10 +1,12 @@
-﻿using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
+﻿using DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans.Interfaces;
+using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
 using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
 using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using Microsoft.AspNetCore.Components;
 using MoneyTrackerWebApp.Models.Core;
 using MoneyTrackerWebApp.Services;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 
 namespace MoneyTrackerWebApp.Models.Transactions
@@ -16,6 +18,9 @@ namespace MoneyTrackerWebApp.Models.Transactions
 
         [Parameter]
         public string? TransType { get; set; }
+
+        [Parameter]
+        public Guid? PlanUID { get; set; }
 
         [Inject]
         public INavigationHistoryService Navigation { get; set; }
@@ -31,6 +36,9 @@ namespace MoneyTrackerWebApp.Models.Transactions
 
         [Inject]
         public IGetJournalAccountByUIDUseCase ActionGetAccountById { get; set; }
+
+        [Inject]
+        public IGetBudgetPlanByIdUseCase ActionGetBudgetPlan { get; set; }
 
         [Inject]
         public ISaveTransactionUseCase ActionSave { get; set; }
@@ -55,11 +63,15 @@ namespace MoneyTrackerWebApp.Models.Transactions
         {
             if (!TransactionId.HasValue && string.IsNullOrWhiteSpace(TransType)) throw new InvalidOperationException("Transaction editor cannot be configured");
                         
-            if (TransactionId != null && TransactionId != Guid.Empty)
+            if (TransactionId.HasValue && TransactionId != Guid.Empty)
             {
                 var trans = ActionGetTransaction.Execute(this.TransactionId.Value);
                 Storage.Data = trans;
                 viewModel.Copy(trans);
+            } else if(PlanUID.HasValue && PlanUID != Guid.Empty)
+            {
+                var plan = ActionGetBudgetPlan.Execute(PlanUID.Value);
+                viewModel.BuildFromPlan(plan);
             }
             else
             {

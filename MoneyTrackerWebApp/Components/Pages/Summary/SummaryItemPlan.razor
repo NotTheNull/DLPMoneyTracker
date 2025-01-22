@@ -1,5 +1,6 @@
 ﻿
-@inject ILogger<SummaryItemPlan> logger
+@inject INavigationHistoryService navigation
+@inject ILoggerProvider logProvider
 
 @if (this.Plan != null)
 {
@@ -34,6 +35,12 @@
         }
     }
 
+    private Guid UID {
+        get {
+            return Plan?.PlanUID ?? Guid.Empty;
+        }
+    }
+
     private string PlanTypeColorClass
     {
         get
@@ -55,16 +62,22 @@
         }
     }
 
-    protected override async Task OnInitializedAsync()
+    private ILogger logger;
+
+    protected override void OnParametersSet()
     {
-        logger.LogInformation($"Item Plan loaded for {Name}");
+        logger = logProvider.CreateLogger(string.Concat(nameof(SummaryItemPlan), " - ", Plan?.Description ?? "*N/A*"));
+
     }
 
-    private async Task CreateTransactionClicked()
+    private void CreateTransactionClicked()
     {
-        // TODO: Redirect to Transaction creation and prefill with the Plan
-        logger.LogInformation($"Create transaction clicked for <{Name}>");
+        if (this.UID == Guid.Empty) return;
 
+        // TODO: Redirect to Transaction creation and prefill with the Plan
+        string url = $"/transactions/plan/{UID}";
+
+        navigation.NavigateTo(url);
     }
 
 }

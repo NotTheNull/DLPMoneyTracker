@@ -19,37 +19,37 @@
       {
         "Name": "Add Income",
         "Icon": "dollar",
-        "Url": "/transactions/1/add",
+        "Url": "/transactions/add/1",
         "Links": []
       },
       {
         "Name": "Add Expense",
         "Icon": "card",
-        "Url": "/transactions/2/add",
+        "Url": "/transactions/add/2",
         "Links": []
       },
       {
         "Name": "Add Debt Payment",
         "Icon": "payment",
-        "Url": "/transactions/3/add",
+        "Url": "/transactions/add/3",
         "Links": []
       },
       {
         "Name": "Bank to Bank Transfer",
         "Icon": "transfer",
-        "Url": "/transactions/5/add",
+        "Url": "/transactions/add/5",
         "Links": []
       },
       {
         "Name": "Debt Adjustment",
         "Icon": "lightbulb",
-        "Url": "/transactions/4/add",
+        "Url": "/transactions/add/4",
         "Links": []
       },
       {
         "Name": "Correction",
         "Icon": "editpencil",
-        "Url": "/transactions/6/add",
+        "Url": "/transactions/add/6",
         "Links": []
       }
     ]

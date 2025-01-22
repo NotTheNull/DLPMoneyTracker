@@ -1,4 +1,5 @@
 ﻿using DLPMoneyTracker.Core.Models;
+using DLPMoneyTracker.Core.Models.BudgetPlan;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using System.ComponentModel.DataAnnotations;
 
@@ -56,6 +57,35 @@ namespace MoneyTrackerWebApp.Models.Transactions
             this.CreditBankDate = cpy.CreditBankDate;
             this.Description = cpy.Description;
             this.TransactionAmount = cpy.TransactionAmount;
+        }
+
+        public void BuildFromPlan(IBudgetPlan plan)
+        {
+            if (plan is null) return;
+
+            switch(plan.PlanType)
+            {
+                case BudgetPlanType.DebtPayment:
+                    this.JournalEntryType = TransactionType.DebtPayment;
+                    break;
+                case BudgetPlanType.Payable:
+                    this.JournalEntryType = TransactionType.Expense;
+                    break;
+                case BudgetPlanType.Receivable:
+                    this.JournalEntryType = TransactionType.Income;
+                    break;
+                case BudgetPlanType.Transfer:
+                    this.JournalEntryType = TransactionType.Transfer;
+                    break;
+                default:
+                    throw new InvalidOperationException($"Budget Plan type {plan.PlanType.ToString()} is not supported");
+
+            }
+
+            this.Description = plan.Description;
+            this.DebitAccount = plan.DebitAccount;
+            this.CreditAccount = plan.CreditAccount;
+            this.TransactionAmount = plan.ExpectedAmount;
         }
     }
 }
