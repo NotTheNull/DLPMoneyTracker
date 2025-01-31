@@ -55,6 +55,19 @@
     ]
   },
   {
+    "Name": "Reports",
+    "Url": "",
+    "Icon": "books",
+    "Links": [
+      {
+        "Name": "Year to Date",
+        "Url": "/ytd",
+        "Icon": "",
+        "Links": []
+      }
+    ]
+  },
+  {
     "Name": "Config",
     "Url": "",
     "Icon": "settings",

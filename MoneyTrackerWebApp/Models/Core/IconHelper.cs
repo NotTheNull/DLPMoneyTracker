@@ -17,7 +17,8 @@
         Refresh,
         Save,
         Settings,
-        StockExchange
+        StockExchange,
+        NONE
     }
 
 
@@ -28,6 +29,7 @@
 
         public static IconOpt ToIconOption(this string val)
         {
+            if (string.IsNullOrWhiteSpace(val)) return IconOpt.NONE;
             switch (val.ToLower())
             {
                 case "addnew": return IconOpt.AddNew;
@@ -94,6 +96,8 @@
                     return "Stock-Exchange-256.png";
                 case IconOpt.Transfer:
                     return "Money-Transfer-256.png";
+                case IconOpt.NONE:
+                    return "";
                 default:
                     throw new InvalidOperationException($"Option {opt} is not defined");
             }

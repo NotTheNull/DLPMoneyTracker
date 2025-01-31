@@ -1,0 +1,13 @@
+﻿
+@inherits YTDRecordBase
+
+
+
+<tr id="A_@Account.Id" class="@ClassOverride">
+    <td>@Account.Description</td>
+    <td>@YTDBalance.ToDisplayText()</td>
+
+    @foreach(var month in Months) {
+        <td id="@month.Id">@month.Balance.ToDisplayText()</td>
+    }
+</tr>

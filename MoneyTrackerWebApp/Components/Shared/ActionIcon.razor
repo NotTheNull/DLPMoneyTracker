@@ -1,4 +1,9 @@
-﻿<img class="@ClassOverride" src="@(IconHelper.GetURL(this.IconOption))" aria-hidden="true" role="img" />
+﻿@if(IconOption != IconOpt.NONE) {
+    <img class="@ClassOverride" 
+        src="@(IconHelper.GetURL(this.IconOption))" 
+        aria-hidden="true" 
+        role="img" />
+}
 
 @code {
     [Parameter] public IconOpt IconOption { get; set; }

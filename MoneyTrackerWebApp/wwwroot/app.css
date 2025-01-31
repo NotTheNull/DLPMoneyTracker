@@ -49,3 +49,19 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+
+.width-desc {
+    width: 600px;
+}
+
+.width-date {
+    width: 120px;
+}
+
+.width-money {
+    width: 200px;
+}
+
+
+

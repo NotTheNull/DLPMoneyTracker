@@ -1,0 +1,92 @@
+﻿@page "/ytd"
+
+@inject IGetJournalAccountListByTypesUseCase actionGetAccounts
+
+<section id="year-to-date">
+    
+    <div class="table-responsive">
+
+        <table class="table table-light table-striped">
+            <thead>
+                <tr class="table-dark">
+                    <th scope="col">Account</th>
+                    <th scope="col">Year To Date</th>
+
+                    @foreach (var month_head in this.PreviousMonths)
+                    {
+                        <th scope="col">@month_head</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int count = 0;
+                    foreach (var account in AccountList.OrderBy(o => o.Description))
+                    {
+                        <YTDRecord Account="account" ClassOverride="@(count % 2 == 1 ? "table-warning" : "")" />
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
+@code {
+    List<string> PreviousMonths { get; set; } = new List<string>();
+    List<INominalAccount> AccountList { get; set; } = new List<INominalAccount>();
+
+    LedgerType[] validTypes = [LedgerType.Payable];
+    protected override void OnInitialized()
+    {
+        this.LoadAccounts();
+        this.LoadMonths();
+    }
+
+    private void LoadAccounts()
+    {
+        this.AccountList.Clear();
+        var data = actionGetAccounts.Execute(validTypes.ToList());
+        if (data?.Any() != true) return;
+
+        foreach (var account in data)
+        {
+            if (account is INominalAccount nominal)
+            {
+                this.AccountList.Add(nominal);
+            }
+        }
+    }
+
+    private void LoadMonths()
+    {
+        this.PreviousMonths.Clear();
+
+        for (int i = 0; i < 12; i++)
+        {
+            DateTime date = DateTime.Today.AddMonths(i * -1);
+            PreviousMonths.Add(string.Format("{0} {1}", GetMonthName(date.Month), date.Year));
+        }
+    }
+
+    private string GetMonthName(int month)
+    {
+        switch (month)
+        {
+            case 1: return "January";
+            case 2: return "February";
+            case 3: return "March";
+            case 4: return "April";
+            case 5: return "May";
+            case 6: return "June";
+            case 7: return "July";
+            case 8: return "August";
+            case 9: return "September";
+            case 10: return "October";
+            case 11: return "November";
+            case 12: return "December";
+            default:
+                throw new InvalidOperationException($"Month #{month} does not exist");
+        }
+    }
+}
