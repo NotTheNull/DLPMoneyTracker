@@ -1,5 +1,7 @@
 ﻿
-<div class="card" id="A_@Account.AccountId">
+@inject INavigationHistoryService navigation
+
+<div class="card" id="@SectionId">
     <!-- Do I really need the Account Type displayed? -->
     @* <div class="row justify-content-start">
     <div class="col">
@@ -20,7 +22,15 @@
 
                 <div class="col-2">
                     <h3>@Account.Balance.ToDisplayText()</h3>
+                    <ActionIconButton ButtonId="btnShowDetail"
+                    ButtonType="button"
+                    IconOption="IconOpt.StockExchange"
+                    ParentName="@SectionId"
+                    OnClickHandler="ShowDetailClicked"
+                    />
                 </div>
+
+
 
             </div>
         </div>
@@ -67,6 +77,8 @@
 @code {
     [Parameter] public SummaryItemVM Account { get; set; }
 
+    private string SectionId {get { return string.Format("A_{0}", Account.AccountId); }}
+
     private string BGColor
     {
         get
@@ -83,5 +95,10 @@
                     return "";
             }
         }
+    }
+
+    private void ShowDetailClicked() {
+        string url = string.Format("/detail/{0}", Account.AccountId);
+        navigation.NavigateTo(url);
     }
 }

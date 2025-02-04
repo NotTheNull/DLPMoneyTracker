@@ -1,0 +1,57 @@
+﻿
+@inject IGetTransactionsBySearchUseCase actionGetTransactions
+
+<section id="@SectionId" class="mt-3">
+    <div class="table-responsive">
+        <table class="table table-light table-striped">
+            <thead>
+                <tr class="table-dark">
+                    <th scope="col">Transaction Date</th>
+                    <th scope="col">Account</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var tr in TransactionList.OrderBy(o => o.TransactionDate).ThenBy(o => o.Description)) {
+                    <TransactionRecord AccountId="@Account.Id" Transaction="tr" />
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
+
+@code {
+    [Parameter] public IMoneyAccount Account { get; set; }
+    [Parameter] public DateTime BegDate {
+        get { return dates.Begin; }
+        set { dates.Begin = value; }
+    }
+
+    [Parameter] public DateTime EndDate {
+        get { return dates.End; }
+        set { dates.End = value; }
+    }
+
+    private DateRange dates = new DateRange();
+    private string SectionId {get { return string.Format("A_{0}_Transactions", Account.Id); }}
+
+    private List<IMoneyTransaction> TransactionList { get; set; } = new List<IMoneyTransaction>();
+
+
+    protected override void OnParametersSet()
+    {
+        this.GetRecords();
+    }
+
+    private void GetRecords() {
+        this.TransactionList.Clear();
+
+        var records = actionGetTransactions.Execute(dates, null, Account);
+        if (records?.Any() != true) return;
+
+        TransactionList.AddRange(records);
+    }
+}

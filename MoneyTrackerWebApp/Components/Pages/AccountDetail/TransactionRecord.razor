@@ -1,0 +1,50 @@
+﻿<h3>TransactionRecord</h3>
+
+<tr id="@RowId">
+    <td><span>@string.Format("{0:yyyy/MM/dd}", Transaction.TransactionDate)</span></td>
+    <td><span>@OffsettingAccountName</span></td>
+    <td><span>@Transaction.Description</span></td>
+    <td><span>@string.Format("{0:c}", Amount)</span></td>
+</tr>
+
+
+@code {
+    [Parameter] public IMoneyTransaction Transaction { get; set; }
+    [Parameter] public Guid AccountId { get; set; }
+
+    private string RowId {
+        get {
+            return string.Format("T_{0}", Transaction.UID);
+        }
+    }
+
+    private bool IsCreditTransaction
+    {
+        get
+        {
+            if (Transaction is null) return false;
+            return AccountId == Transaction.CreditAccountId;
+        }
+    }
+
+    private string OffsettingAccountName
+    {
+        get
+        {
+            if (Transaction is null) return string.Empty;
+            if (this.IsCreditTransaction) return Transaction.DebitAccountName;
+
+            return Transaction.CreditAccountName;
+        }
+    }
+
+    private decimal Amount
+    {
+        get
+        {
+            if (Transaction is null) return decimal.Zero;
+            if (this.IsCreditTransaction) return Transaction.TransactionAmount * -1;
+            return Transaction.TransactionAmount;
+        }
+    }
+}

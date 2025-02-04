@@ -1,0 +1,64 @@
+﻿@page "/detail/{AccountId:guid}"
+
+@inject IGetJournalAccountByUIDUseCase actionGetAccount
+
+<PageTitle>@account.Description</PageTitle>
+
+<section id="account_detail_@AccountId">
+    <div class="row">
+        <h1>@account.Description</h1>
+    </div>
+
+
+    <div class="d-flex flex-row gap-3 p-2">
+        <label>Date Range</label>
+        <InputDateRange InputId="idFilterDate"
+                        BeginDate="filterDate.Begin"
+                        EndDate="filterDate.End"
+                        BeginDateChanged="OnFilterDateBeginChanged"
+                        EndDateChanged="OnFilterDateEndChanged" />
+
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <TransactionListing Account="account"
+                                BegDate="filterDate.Begin"
+                                EndDate="filterDate.End" />
+        </div>
+    </div>
+
+</section>
+
+
+@code {
+    [Parameter] public Guid AccountId { get; set; }
+
+
+    private IMoneyAccount account;
+    private DateRange filterDate = new DateRange(DateTime.Today.Year, DateTime.Today.Month);
+
+    protected override void OnParametersSet()
+    {
+        var a = actionGetAccount.Execute(this.AccountId);
+        if (a is IMoneyAccount money)
+        {
+            account = money;
+        }
+    }
+
+    private void OnFilterDateBeginChanged(ChangeEventArgs e)
+    {
+        if (DateTime.TryParse(e.Value.ToString(), out DateTime begin))
+        {
+            filterDate.Begin = begin;
+        }
+    }
+
+    private void OnFilterDateEndChanged(ChangeEventArgs e)
+    {
+        if (DateTime.TryParse(e.Value.ToString(), out DateTime end))
+        {
+            filterDate.End = end;
+        }
+    }
+}
