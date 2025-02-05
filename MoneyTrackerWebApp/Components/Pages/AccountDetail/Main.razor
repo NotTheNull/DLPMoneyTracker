@@ -1,12 +1,23 @@
 ﻿@page "/detail/{AccountId:guid}"
 
 @inject IGetJournalAccountByUIDUseCase actionGetAccount
+@inject IGetJournalAccountCurrentMonthBalanceUseCase actionGetBalance
 
 <PageTitle>@account.Description</PageTitle>
 
 <section id="account_detail_@AccountId">
     <div class="row">
-        <h1>@account.Description</h1>
+        <div class="col-7">
+            <h1>@account.Description</h1>
+            <h3>@string.Format("{0:c}", currBalance)</h3>
+        </div>
+
+        <div class="col-5">
+            <!-- 
+                Put circle chart here
+                Should be % breakdown of top 5 accounts
+            -->
+        </div>
     </div>
 
 
@@ -33,8 +44,10 @@
 @code {
     [Parameter] public Guid AccountId { get; set; }
 
-
     private IMoneyAccount account;
+    private decimal currBalance;
+
+
     private DateRange filterDate = new DateRange(DateTime.Today.Year, DateTime.Today.Month);
 
     protected override void OnParametersSet()
