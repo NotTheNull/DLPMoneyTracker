@@ -25,6 +25,20 @@ namespace DLPMoneyTracker.BusinessLogic.PluginInterfaces
         }
     }
 
+    public struct AccountBalanceSearch
+    {
+        public DateRange Dates;
+        public IJournalAccount[] Accounts;
+        public LedgerType[] AccountTypes;
+
+        public AccountBalanceSearch()
+        {
+            Dates = new DateRange(DateTime.MinValue, DateTime.MaxValue);
+            Accounts = default!;
+            AccountTypes = default!;
+        }
+    }
+
     public interface ITransactionRepository
     {
         List<IMoneyTransaction> GetFullList();
@@ -32,6 +46,7 @@ namespace DLPMoneyTracker.BusinessLogic.PluginInterfaces
         decimal GetCurrentAccountBalance(Guid accountUID);
         decimal GetAccountBalanceByMonth(Guid accountUID, int year, int month);
         decimal GetAccountBalanceYTD(Guid accountUID, int year);
+        Dictionary<IJournalAccount, decimal> GetAccountBalancesBySearch(AccountBalanceSearch search);
         void RemoveTransaction(IMoneyTransaction transaction);
         void SaveTransaction(IMoneyTransaction transaction);
         long GetRecordCount();
