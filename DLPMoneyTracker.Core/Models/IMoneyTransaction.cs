@@ -25,6 +25,8 @@ namespace DLPMoneyTracker.Core.Models
         TransactionType JournalEntryType { get; }
 
         // For now, I'll keep the one to one relationship going; I may change this once I add subledger Funds accounts
+        SingleAccountTransaction[] Records { get; }
+
         IJournalAccount DebitAccount { get; }
         Guid DebitAccountId { get; }
         string DebitAccountName { get; }
@@ -54,65 +56,65 @@ namespace DLPMoneyTracker.Core.Models
 
         public Guid UID
         {
-            get { return records[0].TransactionUID; }
+            get { return _records[0].TransactionUID; }
             set
             {
-                records[0].TransactionUID = value;
-                records[1].TransactionUID = value;
+                _records[0].TransactionUID = value;
+                _records[1].TransactionUID = value;
             }
         }
         public DateTime TransactionDate
         {
-            get { return records[0].TransactionDate; }
+            get { return _records[0].TransactionDate; }
             set
             {
-                records[0].TransactionDate = value;
-                records[1].TransactionDate = value;
+                _records[0].TransactionDate = value;
+                _records[1].TransactionDate = value;
             }
         }
         public TransactionType JournalEntryType
         {
-            get { return records[0].JournalEntryType; }
+            get { return _records[0].JournalEntryType; }
             set
             {
-                records[0].JournalEntryType = value;
-                records[1].JournalEntryType = value;
+                _records[0].JournalEntryType = value;
+                _records[1].JournalEntryType = value;
             }
         }
         public string Description
         {
-            get { return records[0].Description; }
+            get { return _records[0].Description; }
             set
             {
-                records[0].Description = value;
-                records[1].Description = value;
+                _records[0].Description = value;
+                _records[1].Description = value;
             }
         }
         public decimal TransactionAmount
         {
-            get { return records[0].TransactionAmount; }
+            get { return _records[0].TransactionAmount; }
             set
             {
-                records[0].TransactionAmount = value;
-                records[1].TransactionAmount = value * -1;
+                _records[0].TransactionAmount = value;
+                _records[1].TransactionAmount = value * -1;
             }
         }
 
 
 
-        private SingleAccountTransaction[] records = { new SingleAccountTransaction(), new SingleAccountTransaction() };
-        public SingleAccountTransaction[] SingleRecords { get { return records; } }
+        private SingleAccountTransaction[] _records = { new SingleAccountTransaction(), new SingleAccountTransaction() };
+        public SingleAccountTransaction[] Records { get { return _records; } }
 
-        public IJournalAccount DebitAccount { get { return records[0].Account; } set { records[0].Account = value; } }
+        public IJournalAccount DebitAccount { get { return _records[0].Account; } set { _records[0].Account = value; } }
         public Guid DebitAccountId { get { return DebitAccount?.Id ?? Guid.Empty; } }
         public string DebitAccountName { get { return DebitAccount?.Description ?? string.Empty; } }
-        public DateTime? DebitBankDate { get { return records[0].BankDate; } set { records[0].BankDate = value; } }
+        public DateTime? DebitBankDate { get { return _records[0].BankDate; } set { _records[0].BankDate = value; } }
 
 
-        public IJournalAccount CreditAccount { get { return records[1].Account; } set { records[1].Account = value; } }
+        public IJournalAccount CreditAccount { get { return _records[1].Account; } set { _records[1].Account = value; } }
         public Guid CreditAccountId { get { return CreditAccount?.Id ?? Guid.Empty; } }
         public string CreditAccountName { get { return CreditAccount?.Description ?? string.Empty; } }
-        public DateTime? CreditBankDate { get { return records[1].BankDate; } set { records[1].BankDate = value; } }
+        public DateTime? CreditBankDate { get { return _records[1].BankDate; } set { _records[1].BankDate = value; } }
 
 
         public void Copy(IMoneyTransaction transaction)
