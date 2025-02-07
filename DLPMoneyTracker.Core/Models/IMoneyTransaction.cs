@@ -45,29 +45,74 @@ namespace DLPMoneyTracker.Core.Models
     {
         public MoneyTransaction()
         {
-            
+
         }
         public MoneyTransaction(IMoneyTransaction transaction)
         {
             this.Copy(transaction);
         }
 
-        public Guid UID { get; set; } = Guid.NewGuid();
-        public DateTime TransactionDate { get; set; } = DateTime.Today;
-        public TransactionType JournalEntryType { get; set; } = TransactionType.NotSet;
-        public string Description { get; set; } = string.Empty;
-        public decimal TransactionAmount { get; set; } = decimal.Zero;
+        public Guid UID
+        {
+            get { return records[0].TransactionUID; }
+            set
+            {
+                records[0].TransactionUID = value;
+                records[1].TransactionUID = value;
+            }
+        }
+        public DateTime TransactionDate
+        {
+            get { return records[0].TransactionDate; }
+            set
+            {
+                records[0].TransactionDate = value;
+                records[1].TransactionDate = value;
+            }
+        }
+        public TransactionType JournalEntryType
+        {
+            get { return records[0].JournalEntryType; }
+            set
+            {
+                records[0].JournalEntryType = value;
+                records[1].JournalEntryType = value;
+            }
+        }
+        public string Description
+        {
+            get { return records[0].Description; }
+            set
+            {
+                records[0].Description = value;
+                records[1].Description = value;
+            }
+        }
+        public decimal TransactionAmount
+        {
+            get { return records[0].TransactionAmount; }
+            set
+            {
+                records[0].TransactionAmount = value;
+                records[1].TransactionAmount = value * -1;
+            }
+        }
 
-        public IJournalAccount DebitAccount { get; set; }
+
+
+        private SingleAccountTransaction[] records = { new SingleAccountTransaction(), new SingleAccountTransaction() };
+        public SingleAccountTransaction[] SingleRecords { get { return records; } }
+
+        public IJournalAccount DebitAccount { get { return records[0].Account; } set { records[0].Account = value; } }
         public Guid DebitAccountId { get { return DebitAccount?.Id ?? Guid.Empty; } }
         public string DebitAccountName { get { return DebitAccount?.Description ?? string.Empty; } }
-        public DateTime? DebitBankDate { get; set; }
+        public DateTime? DebitBankDate { get { return records[0].BankDate; } set { records[0].BankDate = value; } }
 
 
-        public IJournalAccount CreditAccount { get; set; }
+        public IJournalAccount CreditAccount { get { return records[1].Account; } set { records[1].Account = value; } }
         public Guid CreditAccountId { get { return CreditAccount?.Id ?? Guid.Empty; } }
         public string CreditAccountName { get { return CreditAccount?.Description ?? string.Empty; } }
-        public DateTime? CreditBankDate { get; set; }
+        public DateTime? CreditBankDate { get { return records[1].BankDate; } set { records[1].BankDate = value; } }
 
 
         public void Copy(IMoneyTransaction transaction)
@@ -84,5 +129,18 @@ namespace DLPMoneyTracker.Core.Models
             this.CreditAccount = transaction.CreditAccount;
             this.CreditBankDate = transaction.CreditBankDate;
         }
+    }
+
+    public class SingleAccountTransaction
+    {
+        public Guid TransactionUID { get; set; } = Guid.NewGuid();
+        public DateTime TransactionDate { get; set; } = DateTime.Today;
+        public TransactionType JournalEntryType { get; set; } = TransactionType.NotSet;
+        public string Description { get; set; } = string.Empty;
+
+        public IJournalAccount Account { get; set; }
+        public decimal TransactionAmount { get; set; }
+        public DateTime? BankDate { get; set; }
+
     }
 }
