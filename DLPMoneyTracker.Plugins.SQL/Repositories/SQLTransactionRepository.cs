@@ -205,25 +205,11 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
                 if (data?.Any() != true) return null;
             }
 
-            int take = 5;
-            if (data.Count() < take) take = data.Count();
-
             List<Tuple<IJournalAccount, decimal>> listData = new List<Tuple<IJournalAccount, decimal>>();
-            foreach (var xyz in data.OrderByDescending(o => o.Item2).Take(take))
+            foreach (var xyz in data.OrderByDescending(o => o.Item2))
             {
                 var account = accountRepository.GetAccountByUID(xyz.Item1);
                 listData.Add(new Tuple<IJournalAccount, decimal>(account, xyz.Item2));
-            }
-
-            if (data.Count() > take)
-            {
-                decimal remaining = data.OrderByDescending(o => o.Item2).Skip(take).Sum(s => s.Item2);
-                //listData.Add(null, remaining);
-                SpecialAccount special = new SpecialAccount()
-                {
-                    Description = "Remaining Accounts"
-                };
-                listData.Add(new Tuple<IJournalAccount, decimal>(special, remaining));
             }
 
             return listData;

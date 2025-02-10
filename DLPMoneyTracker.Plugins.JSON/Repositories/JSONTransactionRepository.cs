@@ -233,27 +233,13 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
                     Total = g.Sum(x => x.TransactionAmount)
                 });
             
-
-            int take = 5;
-            if (data.Count() < take) take = data.Count();
-
             List<Tuple<IJournalAccount, decimal>> listData = new List<Tuple<IJournalAccount, decimal>>();
-            foreach(var xyz in data.OrderByDescending(o => o.Total).Take(take))
+            foreach(var xyz in data.OrderByDescending(o => o.Total))
             {
                 //listData.Add(xyz.Account, xyz.Total);
                 listData.Add(new Tuple<IJournalAccount, decimal>(xyz.Account, xyz.Total));
             }
-            if(data.Count() > take)
-            {
-                decimal remaining = data.OrderByDescending(o => o.Total).Skip(take).Sum(s => s.Total);
-                //listData.Add(null, remaining);
-                SpecialAccount special = new SpecialAccount()
-                {
-                    Description = "Remaining Accounts"
-                };
-                listData.Add(new Tuple<IJournalAccount, decimal>(special, remaining));
-            }
-
+            
             return listData;
         }
     }
