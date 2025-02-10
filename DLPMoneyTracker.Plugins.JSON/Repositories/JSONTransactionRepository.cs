@@ -6,6 +6,7 @@ using DLPMoneyTracker.Plugins.JSON.Adapters;
 using DLPMoneyTracker.Plugins.JSON.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -202,6 +203,58 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         public IMoneyTransaction GetTransactionById(Guid uid)
         {
             return this.TransactionList.FirstOrDefault(x => x.UID == uid);
+        }
+
+        public List<Tuple<IJournalAccount, decimal>> GetAccountBalancesBySearch(AccountBalanceSearch search)
+        {
+            var query = this.TransactionList.Where(x => search.Dates.IsWithinRange(x.TransactionDate));
+            if(search.AccountTypes.Count() > 0)
+            {
+                query = query.Where(x => 
+                    search.AccountTypes.Contains(x.DebitAccount.JournalType) || 
+                    search.AccountTypes.Contains(x.CreditAccount.JournalType));
+            }
+
+            if(search.Accounts.Count() > 0)
+            {
+                query = query.Where(x =>
+                    search.Accounts.Contains(x.DebitAccount) ||
+                    search.Accounts.Contains(x.CreditAccount));
+            }
+            var fullExpenseList = query.ToList();
+            if (fullExpenseList?.Any() != true) return null;
+
+            var data = fullExpenseList
+                .SelectMany(s => s.Records)
+                .GroupBy(g => g.Account)
+                .Select(g => new
+                {
+                    Account = g.Key,
+                    Total = g.Sum(x => x.TransactionAmount)
+                });
+            
+
+            int take = 5;
+            if (data.Count() < take) take = data.Count();
+
+            List<Tuple<IJournalAccount, decimal>> listData = new List<Tuple<IJournalAccount, decimal>>();
+            foreach(var xyz in data.OrderByDescending(o => o.Total).Take(take))
+            {
+                //listData.Add(xyz.Account, xyz.Total);
+                listData.Add(new Tuple<IJournalAccount, decimal>(xyz.Account, xyz.Total));
+            }
+            if(data.Count() > take)
+            {
+                decimal remaining = data.OrderByDescending(o => o.Total).Skip(take).Sum(s => s.Total);
+                //listData.Add(null, remaining);
+                SpecialAccount special = new SpecialAccount()
+                {
+                    Description = "Remaining Accounts"
+                };
+                listData.Add(new Tuple<IJournalAccount, decimal>(special, remaining));
+            }
+
+            return listData;
         }
     }
 }

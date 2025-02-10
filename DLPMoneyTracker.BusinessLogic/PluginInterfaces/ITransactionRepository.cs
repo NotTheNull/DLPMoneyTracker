@@ -46,7 +46,7 @@ namespace DLPMoneyTracker.BusinessLogic.PluginInterfaces
         decimal GetCurrentAccountBalance(Guid accountUID);
         decimal GetAccountBalanceByMonth(Guid accountUID, int year, int month);
         decimal GetAccountBalanceYTD(Guid accountUID, int year);
-        Dictionary<IJournalAccount, decimal> GetAccountBalancesBySearch(AccountBalanceSearch search);
+        List<Tuple<IJournalAccount, decimal>> GetAccountBalancesBySearch(AccountBalanceSearch search);
         void RemoveTransaction(IMoneyTransaction transaction);
         void SaveTransaction(IMoneyTransaction transaction);
         long GetRecordCount();

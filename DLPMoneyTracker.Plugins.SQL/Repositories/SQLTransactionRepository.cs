@@ -1,6 +1,7 @@
 ﻿using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
 using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models;
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.SQL.Adapters;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.SQL.Repositories
-{    
+{
     public class SQLTransactionRepository : ITransactionRepository
     {
         private readonly IDLPConfig config;
@@ -84,7 +85,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
                 adapter.Copy(transaction);
 
                 var existingRecord = context.TransactionBatches.FirstOrDefault(x => x.BatchUID == transaction.UID);
-                if(existingRecord is null)
+                if (existingRecord is null)
                 {
                     existingRecord = new Data.TransactionBatch();
                     context.TransactionBatches.Add(existingRecord);
@@ -117,16 +118,16 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
         public List<IMoneyTransaction> Search(MoneyRecordSearch search)
         {
             List<IMoneyTransaction> listMoneyFinal = new List<IMoneyTransaction>();
-            using(DataContext context = new DataContext(config))
+            using (DataContext context = new DataContext(config))
             {
                 var listRecords = context.TransactionBatches.Where(x => x.TransactionDate >= search.DateRange.Begin && x.TransactionDate <= search.DateRange.End);
 
-                if(search.Account != null)
+                if (search.Account != null)
                 {
                     listRecords = listRecords.Where(x => x.Details.Any(x => x.LedgerAccount.AccountUID == search.Account.Id));
                 }
 
-                if(!string.IsNullOrWhiteSpace(search.SearchText))
+                if (!string.IsNullOrWhiteSpace(search.SearchText))
                 {
                     listRecords = listRecords.Where(x => x.Description.Contains(search.SearchText));
                 }
@@ -135,7 +136,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
                 if (listRecordsLoop?.Any() != true) return listMoneyFinal;
 
                 SQLSourceToTransactionAdapter adapter = new SQLSourceToTransactionAdapter(context, accountRepository);
-                foreach(var record in listRecordsLoop)
+                foreach (var record in listRecordsLoop)
                 {
                     adapter.ImportSource(record);
                     listMoneyFinal.Add(new MoneyTransaction(adapter));
@@ -166,6 +167,66 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
                 return new MoneyTransaction(adapter);
             }
+        }
+
+        public List<Tuple<IJournalAccount, decimal>> GetAccountBalancesBySearch(AccountBalanceSearch search)
+        {
+            List<Tuple<Guid, decimal>> data = new List<Tuple<Guid, decimal>>();
+            using (DataContext context = new DataContext(config))
+            {
+                var listBatchIds = context.TransactionBatches
+                    .Where(x => x.TransactionDate >= search.Dates.Begin && x.TransactionDate <= search.Dates.End)
+                    .Select(s => s.Id)
+                    .ToList();
+
+                var queryDetail = context.TransactionDetails
+                    .Include(x => x.LedgerAccount)
+                    .Where(x =>
+                        listBatchIds.Contains(x.BatchId)
+                    );
+                if (search.AccountTypes.Count() > 0)
+                {
+                    queryDetail = queryDetail.Where(x => search.AccountTypes.Contains(x.LedgerAccount.AccountType));
+                }
+
+                if (search.Accounts.Count() > 0)
+                {
+                    queryDetail = queryDetail.Where(x => search.Accounts.Select(s => s.Id).Contains(x.LedgerAccount.AccountUID));
+                }
+
+                data = queryDetail
+                    .GroupBy(g => g.LedgerAccount.AccountUID)
+                    .Select(g => new Tuple<Guid, decimal>(
+                        g.Key,
+                        g.Sum(x => x.Amount)
+                        )
+                    )
+                    .ToList();
+                if (data?.Any() != true) return null;
+            }
+
+            int take = 5;
+            if (data.Count() < take) take = data.Count();
+
+            List<Tuple<IJournalAccount, decimal>> listData = new List<Tuple<IJournalAccount, decimal>>();
+            foreach (var xyz in data.OrderByDescending(o => o.Item2).Take(take))
+            {
+                var account = accountRepository.GetAccountByUID(xyz.Item1);
+                listData.Add(new Tuple<IJournalAccount, decimal>(account, xyz.Item2));
+            }
+
+            if (data.Count() > take)
+            {
+                decimal remaining = data.OrderByDescending(o => o.Item2).Skip(take).Sum(s => s.Item2);
+                //listData.Add(null, remaining);
+                SpecialAccount special = new SpecialAccount()
+                {
+                    Description = "Remaining Accounts"
+                };
+                listData.Add(new Tuple<IJournalAccount, decimal>(special, remaining));
+            }
+
+            return listData;
         }
     }
 }
