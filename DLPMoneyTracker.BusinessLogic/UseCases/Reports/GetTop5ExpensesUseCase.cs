@@ -31,21 +31,21 @@ namespace DLPMoneyTracker.BusinessLogic.UseCases.Reports
 
             TopExpenseDTO dto = new();
             dto.Dates = dates;
-            dto.TotalExpenseBalance = result.Sum(s => s.Value);
-            decimal otherExpenseTotal = result.OrderByDescending(o => o.Value).Skip(5).Sum(s => s.Value);
-            foreach(var r in result.OrderByDescending(o => o.Value).Take(5))
+            dto.TotalExpenseBalance = result.Sum(s => s.Item2);
+            decimal otherExpenseTotal = result.OrderByDescending(o => o.Item2).Skip(5).Sum(s => s.Item2);
+            foreach(var r in result.OrderByDescending(o => o.Item2).Take(5))
             {
                 ExpenseReportRecord record = new(dates)
                 {
-                    Account = r.Key,
-                    Balance = r.Value,
-                    ExpensePct = (r.Value / dto.TotalExpenseBalance) * 100
+                    Account = r.Item1,
+                    Balance = r.Item2,
+                    ExpensePct = (r.Item2 / dto.TotalExpenseBalance) * 100
                 };
                 dto.DataSet.Add(record);
             }
             dto.DataSet.Add(new ExpenseReportRecord(dates)
             {
-                Account = null,
+                Account = new SpecialAccount() { Description = "Remaining Account"},
                 Balance = otherExpenseTotal,
                 ExpensePct = (otherExpenseTotal / dto.TotalExpenseBalance) * 100
             });

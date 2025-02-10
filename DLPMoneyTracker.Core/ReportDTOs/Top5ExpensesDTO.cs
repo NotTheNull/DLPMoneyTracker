@@ -13,9 +13,6 @@ namespace DLPMoneyTracker.Core.ReportDTOs
         public decimal TotalExpenseBalance { get; set; } = default;
 
         public List<ExpenseReportRecord> DataSet { get; set; } = new();
-
-
-
     }
 
     public class ExpenseReportRecord
