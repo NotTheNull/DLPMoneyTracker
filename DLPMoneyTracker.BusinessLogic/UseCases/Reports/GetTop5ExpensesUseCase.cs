@@ -1,4 +1,5 @@
 ﻿using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
+using DLPMoneyTracker.BusinessLogic.UseCases.Reports.Interfaces;
 using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Core.ReportDTOs;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.BusinessLogic.UseCases.Reports
 {
-    public class GetTop5ExpensesUseCase
+    public class GetTop5ExpensesUseCase : IGetTop5ExpensesUseCase
     {
         private readonly ITransactionRepository repoTransactions;
 
@@ -33,7 +34,7 @@ namespace DLPMoneyTracker.BusinessLogic.UseCases.Reports
             dto.Dates = dates;
             dto.TotalExpenseBalance = result.Sum(s => s.Item2);
             decimal otherExpenseTotal = result.OrderByDescending(o => o.Item2).Skip(5).Sum(s => s.Item2);
-            foreach(var r in result.OrderByDescending(o => o.Item2).Take(5))
+            foreach (var r in result.OrderByDescending(o => o.Item2).Take(5))
             {
                 ExpenseReportRecord record = new(dates)
                 {
@@ -45,7 +46,7 @@ namespace DLPMoneyTracker.BusinessLogic.UseCases.Reports
             }
             dto.DataSet.Add(new ExpenseReportRecord(dates)
             {
-                Account = new SpecialAccount() { Description = "Remaining Account"},
+                Account = new SpecialAccount() { Description = "Remaining Account" },
                 Balance = otherExpenseTotal,
                 ExpensePct = (otherExpenseTotal / dto.TotalExpenseBalance) * 100
             });
@@ -53,6 +54,6 @@ namespace DLPMoneyTracker.BusinessLogic.UseCases.Reports
 
             return dto;
         }
-        
+
     }
 }
