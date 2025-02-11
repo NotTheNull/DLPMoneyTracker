@@ -23,6 +23,7 @@ namespace DLPMoneyTracker.BusinessLogic.UseCases.Reports
         public TopExpenseDTO Execute(DateRange dates, Guid moneyAccountId)
         {
             AccountBalanceSearch search = new();
+            search.MoneyAccountId = moneyAccountId;
             search.AccountTypes = [LedgerType.Payable];
             search.Dates = dates;
 
