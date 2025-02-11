@@ -5,6 +5,6 @@ namespace DLPMoneyTracker.BusinessLogic.UseCases.Reports.Interfaces
 {
     public interface IGetTop5ExpensesUseCase
     {
-        TopExpenseDTO Execute(DateRange dates);
+        TopExpenseDTO Execute(DateRange dates, Guid moneyAccountId);
     }
 }

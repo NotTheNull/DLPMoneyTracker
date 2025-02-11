@@ -207,7 +207,18 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
 
         public List<Tuple<IJournalAccount, decimal>> GetAccountBalancesBySearch(AccountBalanceSearch search)
         {
-            var query = this.TransactionList.Where(x => search.Dates.IsWithinRange(x.TransactionDate));
+            var query = this.TransactionList
+                .Where(x => 
+                    search.Dates.IsWithinRange(x.TransactionDate) &&
+                    (
+                        (
+                            x.DebitAccountId == search.MoneyAccountId ||
+                            x.CreditAccountId == search.MoneyAccountId
+                        ) ||
+                        search.MoneyAccountId == null ||
+                        search.MoneyAccountId == Guid.Empty
+                    )
+                );
             if(search.AccountTypes.Count() > 0)
             {
                 query = query.Where(x => 

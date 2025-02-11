@@ -175,7 +175,17 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
             using (DataContext context = new DataContext(config))
             {
                 var listBatchIds = context.TransactionBatches
-                    .Where(x => x.TransactionDate >= search.Dates.Begin && x.TransactionDate <= search.Dates.End)
+                    .Include(x => x.Details)
+                    .ThenInclude(d => d.LedgerAccount)
+                    .Where(x => 
+                        x.TransactionDate >= search.Dates.Begin && 
+                        x.TransactionDate <= search.Dates.End && 
+                        (
+                            search.MoneyAccountId == null ||
+                            search.MoneyAccountId == Guid.Empty ||
+                            x.Details.Any(d => d.LedgerAccount.AccountUID == search.MoneyAccountId)
+                        )
+                    )
                     .Select(s => s.Id)
                     .ToList();
 

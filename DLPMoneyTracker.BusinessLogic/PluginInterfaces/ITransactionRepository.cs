@@ -27,6 +27,7 @@ namespace DLPMoneyTracker.BusinessLogic.PluginInterfaces
 
     public struct AccountBalanceSearch
     {
+        public Guid MoneyAccountId;
         public DateRange Dates;
         public IJournalAccount[] Accounts;
         public LedgerType[] AccountTypes;
