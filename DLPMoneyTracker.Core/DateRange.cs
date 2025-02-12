@@ -1,4 +1,6 @@
-﻿namespace DLPMoneyTracker.Core
+﻿using System.Diagnostics;
+
+namespace DLPMoneyTracker.Core
 {
     public class DateRange
     {
@@ -43,6 +45,11 @@
             if (date.HasValue) return IsWithinRange(date.Value);
 
             return false;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0:yyyy/MM/dd} to {1:yyyy/MM/dd}", Begin, End);
         }
     }
 }
