@@ -29,10 +29,13 @@ namespace DLPMoneyTracker.BusinessLogic.UseCases.Reports
 
 
             var result = repoTransactions.GetAccountBalancesBySearch(search);
-            if (result?.Any() != true) return null;
+            TopExpenseDTO dto = new()
+            {
+                Dates = dates,
+                TotalExpenseBalance = decimal.Zero
+            };
+            if (result?.Any() != true) return dto;
 
-            TopExpenseDTO dto = new();
-            dto.Dates = dates;
             dto.TotalExpenseBalance = result.Sum(s => s.Item2);
             decimal otherExpenseTotal = result.OrderByDescending(o => o.Item2).Skip(5).Sum(s => s.Item2);
             foreach (var r in result.OrderByDescending(o => o.Item2).Take(5))
