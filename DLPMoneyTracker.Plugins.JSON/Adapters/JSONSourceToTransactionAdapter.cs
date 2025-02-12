@@ -23,23 +23,67 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
         }
 
 
-        public Guid UID { get; set; }
-        public DateTime TransactionDate { get; set; }
-        public TransactionType JournalEntryType { get; set; } = TransactionType.NotSet;
-        public string Description { get; set; } = string.Empty;
-        public decimal TransactionAmount { get; set; }
+        private SingleAccountTransaction[] _records = { new SingleAccountTransaction(), new SingleAccountTransaction() };
+        public SingleAccountTransaction[] Records { get { return _records; } }
 
 
-        public IJournalAccount DebitAccount { get; set; }
+        public Guid UID
+        {
+            get { return _records[0].TransactionUID; }
+            set
+            {
+                _records[0].TransactionUID = value;
+                _records[1].TransactionUID = value;
+            }
+        }
+        public DateTime TransactionDate
+        {
+            get { return _records[0].TransactionDate; }
+            set
+            {
+                _records[0].TransactionDate = value;
+                _records[1].TransactionDate = value;
+            }
+        }
+        public TransactionType JournalEntryType
+        {
+            get { return _records[0].JournalEntryType; }
+            set
+            {
+                _records[0].JournalEntryType = value;
+                _records[1].JournalEntryType = value;
+            }
+        }
+        public string Description
+        {
+            get { return _records[0].Description; }
+            set
+            {
+                _records[0].Description = value;
+                _records[1].Description = value;
+            }
+        }
+        public decimal TransactionAmount
+        {
+            get { return _records[0].TransactionAmount; }
+            set
+            {
+                _records[0].TransactionAmount = value;
+                _records[1].TransactionAmount = value * -1;
+            }
+        }
+
+
+        public IJournalAccount DebitAccount { get { return _records[0].Account; } set { _records[0].Account = value; } }
         public Guid DebitAccountId { get { return DebitAccount?.Id ?? Guid.Empty; } }
         public string DebitAccountName { get { return DebitAccount?.Description ?? string.Empty; } }
-        public DateTime? DebitBankDate { get; set; }
+        public DateTime? DebitBankDate { get { return _records[0].BankDate; } set { _records[0].BankDate = value; } }
 
 
-        public IJournalAccount CreditAccount { get; set; }
+        public IJournalAccount CreditAccount { get { return _records[1].Account; } set { _records[1].Account = value; } }
         public Guid CreditAccountId { get { return CreditAccount?.Id ?? Guid.Empty; } }
         public string CreditAccountName { get { return CreditAccount?.Description ?? string.Empty; } }
-        public DateTime? CreditBankDate { get; set; }
+        public DateTime? CreditBankDate { get { return _records[1].BankDate; } set { _records[1].BankDate = value; } }
 
 
         public void ExportSource(ref JournalEntryJSON acct)
