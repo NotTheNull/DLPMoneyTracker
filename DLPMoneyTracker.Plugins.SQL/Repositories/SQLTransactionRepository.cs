@@ -171,7 +171,8 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         public List<Tuple<IJournalAccount, decimal>> GetAccountBalancesBySearch(AccountBalanceSearch search)
         {
-            List<Tuple<Guid, decimal>> data = new List<Tuple<Guid, decimal>>();
+            List<Tuple<IJournalAccount, decimal>> listData = new List<Tuple<IJournalAccount, decimal>>();
+            List<Tuple<Guid, LedgerType, decimal>> data = new List<Tuple<Guid, LedgerType, decimal>>();
             using (DataContext context = new DataContext(config))
             {
                 var listBatchIds = context.TransactionBatches
@@ -188,38 +189,43 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
                     )
                     .Select(s => s.Id)
                     .ToList();
+                if (listBatchIds?.Any() != true) return listData;
 
                 var queryDetail = context.TransactionDetails
                     .Include(x => x.LedgerAccount)
                     .Where(x =>
                         listBatchIds.Contains(x.BatchId)
                     );
-                if (search.AccountTypes.Count() > 0)
-                {
-                    queryDetail = queryDetail.Where(x => search.AccountTypes.Contains(x.LedgerAccount.AccountType));
-                }
-
-                if (search.Accounts.Count() > 0)
-                {
-                    queryDetail = queryDetail.Where(x => search.Accounts.Select(s => s.Id).Contains(x.LedgerAccount.AccountUID));
-                }
-
+                
+                
                 data = queryDetail
-                    .GroupBy(g => g.LedgerAccount.AccountUID)
-                    .Select(g => new Tuple<Guid, decimal>(
-                        g.Key,
+                    .GroupBy(g => g.LedgerAccount)
+                    .Select(g => new Tuple<Guid, LedgerType, decimal>(
+                        g.Key.AccountUID,
+                        g.Key.AccountType,
                         g.Sum(x => x.Amount)
                         )
                     )
                     .ToList();
-                if (data?.Any() != true) return null;
+                if (data?.Any() != true) return listData;
+
+                if(search.AccountTypes?.Any() == true)
+                {
+                    data = data.Where(x => search.AccountTypes.Contains(x.Item2)).ToList();
+                }
+
+                if(search.Accounts?.Any() == true)
+                {
+                    data = data.Where(x => search.Accounts.Select(s => s.Id).Contains(x.Item1)).ToList();
+                }
+
+
             }
 
-            List<Tuple<IJournalAccount, decimal>> listData = new List<Tuple<IJournalAccount, decimal>>();
-            foreach (var xyz in data.OrderByDescending(o => o.Item2))
+            foreach (var xyz in data.OrderByDescending(o => o.Item3))
             {
                 var account = accountRepository.GetAccountByUID(xyz.Item1);
-                listData.Add(new Tuple<IJournalAccount, decimal>(account, xyz.Item2));
+                listData.Add(new Tuple<IJournalAccount, decimal>(account, xyz.Item3));
             }
 
             return listData;

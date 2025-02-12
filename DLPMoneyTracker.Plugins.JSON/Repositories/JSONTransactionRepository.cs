@@ -37,7 +37,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         {
             this.TransactionList.Clear();
             string json = string.Empty;
-            if(File.Exists(this.FilePath))
+            if (File.Exists(this.FilePath))
             {
                 json = File.ReadAllText(this.FilePath);
             }
@@ -52,10 +52,10 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
 
             JSONSourceToTransactionAdapter adapter = new JSONSourceToTransactionAdapter(accountRepository);
             bool reSaveFile = false; // Mainly here to help correct the change for Initial Balance accounts
-            foreach(var data in dataList)
+            foreach (var data in dataList)
             {
                 adapter.ImportSource(data);
-                reSaveFile = reSaveFile || ( adapter.CreditAccountId != data.CreditAccountId || adapter.DebitAccountId != data.DebitAccountId);
+                reSaveFile = reSaveFile || (adapter.CreditAccountId != data.CreditAccountId || adapter.DebitAccountId != data.DebitAccountId);
                 this.TransactionList.Add(new MoneyTransaction(adapter));
             }
         }
@@ -66,7 +66,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
 
             JSONSourceToTransactionAdapter adapter = new JSONSourceToTransactionAdapter(accountRepository);
             List<JournalEntryJSON> listJSONRecords = new List<JournalEntryJSON>();
-            foreach(var t in this.TransactionList)
+            foreach (var t in this.TransactionList)
             {
                 adapter.Copy(t);
                 JournalEntryJSON jsonRecord = new JournalEntryJSON();
@@ -88,12 +88,12 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         {
             var listRecords = this.TransactionList.Where(x => search.DateRange.IsWithinRange(x.TransactionDate));
 
-            if(search.Account != null)
+            if (search.Account != null)
             {
                 listRecords = listRecords.Where(x => x.DebitAccountId == search.Account.Id || x.CreditAccountId == search.Account.Id);
             }
 
-            if(!string.IsNullOrWhiteSpace(search.SearchText))
+            if (!string.IsNullOrWhiteSpace(search.SearchText))
             {
                 listRecords = listRecords.Where(x => x.Description.Contains(search.SearchText));
             }
@@ -122,7 +122,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             decimal balance = decimal.Zero;
             foreach (var record in listRecords)
             {
-                if(record.DebitAccountId == accountUID)
+                if (record.DebitAccountId == accountUID)
                 {
                     balance += record.TransactionAmount;
                 }
@@ -183,7 +183,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             ArgumentNullException.ThrowIfNull(transaction);
 
             var existingRecord = this.TransactionList.FirstOrDefault(x => x.UID == transaction.UID);
-            if(existingRecord is null)
+            if (existingRecord is null)
             {
                 this.TransactionList.Add(transaction);
             }
@@ -207,35 +207,19 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
 
         public List<Tuple<IJournalAccount, decimal>> GetAccountBalancesBySearch(AccountBalanceSearch search)
         {
-            var query = this.TransactionList
-                .Where(x => 
-                    search.Dates.IsWithinRange(x.TransactionDate) &&
-                    (
-                        (
-                            x.DebitAccountId == search.MoneyAccountId ||
-                            x.CreditAccountId == search.MoneyAccountId
-                        ) ||
-                        search.MoneyAccountId == null ||
-                        search.MoneyAccountId == Guid.Empty
-                    )
-                );
-            if(search.AccountTypes.Count() > 0)
+            var query = this.TransactionList.Where(x => search.Dates.IsWithinRange(x.TransactionDate));
+
+            if (search.MoneyAccountId != null && search.MoneyAccountId != Guid.Empty)
             {
-                query = query.Where(x => 
-                    search.AccountTypes.Contains(x.DebitAccount.JournalType) || 
-                    search.AccountTypes.Contains(x.CreditAccount.JournalType));
+                query = query.
+                    Where(x => x.DebitAccountId == search.MoneyAccountId ||
+                            x.CreditAccountId == search.MoneyAccountId);
             }
 
-            if(search.Accounts.Count() > 0)
-            {
-                query = query.Where(x =>
-                    search.Accounts.Contains(x.DebitAccount) ||
-                    search.Accounts.Contains(x.CreditAccount));
-            }
-            var fullExpenseList = query.ToList();
-            if (fullExpenseList?.Any() != true) return null;
+            var fullList = query.ToList();
+            if (fullList?.Any() != true) return new List<Tuple<IJournalAccount, decimal>>();
 
-            var data = fullExpenseList
+            var groupFullList = fullList
                 .SelectMany(s => s.Records)
                 .GroupBy(g => g.Account)
                 .Select(g => new
@@ -243,14 +227,24 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
                     Account = g.Key,
                     Total = g.Sum(x => x.TransactionAmount)
                 });
-            
-            List<Tuple<IJournalAccount, decimal>> listData = new List<Tuple<IJournalAccount, decimal>>();
-            foreach(var xyz in data.OrderByDescending(o => o.Total))
+
+            if(search.AccountTypes?.Any() == true)
             {
-                //listData.Add(xyz.Account, xyz.Total);
+                groupFullList = groupFullList.Where(x => search.AccountTypes.Contains(x.Account.JournalType));
+            }
+
+            if(search.Accounts?.Any() == true)
+            {
+                groupFullList = groupFullList.Where(x => search.Accounts.Contains(x.Account));
+            }
+
+
+            List<Tuple<IJournalAccount, decimal>> listData = new List<Tuple<IJournalAccount, decimal>>();
+            foreach (var xyz in groupFullList.OrderByDescending(o => o.Total))
+            {
                 listData.Add(new Tuple<IJournalAccount, decimal>(xyz.Account, xyz.Total));
             }
-            
+
             return listData;
         }
     }
