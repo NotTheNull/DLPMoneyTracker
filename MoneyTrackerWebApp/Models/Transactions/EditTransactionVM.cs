@@ -41,8 +41,7 @@ namespace MoneyTrackerWebApp.Models.Transactions
         [Range(0.01d, 99999.99d, ErrorMessage = "Please enter a reasonable dollar amount")]
         public decimal TransactionAmount { get; set; } = decimal.Zero;
 
-
-
+        public SingleAccountTransaction[] Records => throw new NotImplementedException();
 
         public void Copy(IMoneyTransaction cpy)
         {
