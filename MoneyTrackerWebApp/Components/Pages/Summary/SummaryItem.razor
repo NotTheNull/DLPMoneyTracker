@@ -12,8 +12,13 @@
         <div class="card-title">
             <div class="row ">
 
-                <div class="col-6">
-                    <h3>@Account.AccountDesc</h3>
+                <div class="col-6 d-flex">
+                    <ActionIconButton ButtonId="btnShowDetail"
+                                      ButtonType="button"
+                                      IconOption="IconOpt.StockExchange"
+                                      ParentName="@SectionId"
+                                      OnClickHandler="ShowDetailClicked" />
+                    <h1>@Account.AccountDesc</h1>
                 </div>
 
                 <div class="col-2 offset-2 align-content-end">
@@ -22,14 +27,7 @@
 
                 <div class="col-2">
                     <h3>@Account.Balance.ToDisplayText()</h3>
-                    <ActionIconButton ButtonId="btnShowDetail"
-                    ButtonType="button"
-                    IconOption="IconOpt.StockExchange"
-                    ParentName="@SectionId"
-                    OnClickHandler="ShowDetailClicked"
-                    />
                 </div>
-
 
 
             </div>
