@@ -1,0 +1,78 @@
+﻿@inject IGetTop5ExpensesUseCase ActionGetTop5Expense
+
+
+<section id="Top5Expenses">
+    <DoughnutChart @ref="chart" Width="500" />
+</section>
+
+
+@code {
+
+    [Parameter] public Guid AccountId { get; set; }
+    [Parameter] public DateRange Dates { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        chartOptions = new DoughnutChartOptions() { Responsive = false };
+        chartOptions.Plugins.Title.Text = "Top 5 YTD Expenses";
+        chartOptions.Plugins.Title.Font = new ChartFont()
+            {
+                Family = "Arial",
+                Size = 18
+            };
+        chartOptions.Plugins.Title.Display = true;
+
+
+        var data = ActionGetTop5Expense.Execute(Dates, AccountId);
+        chartData = new ChartData
+        {
+            Labels = GetChartDataLabels(data),
+            Datasets = GetChartDataSets(data)
+        };
+
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender) {
+            await chart.InitializeAsync(chartData, chartOptions);
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+
+    #region Doughnut Chart
+    protected DoughnutChart chart = default!;
+    private DoughnutChartOptions chartOptions = default!;
+    private ChartData chartData = default!;
+
+    private int datasetsCount = 0;
+    private int dataLabelsCount = 0;
+
+    private List<string> GetChartDataLabels(TopExpenseDTO dto)
+    {
+        return dto.DataSet
+            .OrderByDescending(o => o.Balance)
+            .Select(s => s.Account.Description).ToList();
+    }
+
+    private List<IChartDataset> GetChartDataSets(TopExpenseDTO dto)
+    {
+        List<IChartDataset> datasets = new List<IChartDataset>();
+
+        datasets.Add(BuildDataSet(dto.DataSet));
+
+        return datasets;
+    }
+
+    private DoughnutChartDataset BuildDataSet(IEnumerable<ExpenseReportRecord> data) {
+        return new DoughnutChartDataset()
+        {
+            BackgroundColor = ColorUtility.CategoricalSixColors.ToList(), 
+            Data = data.Select(s => (double?)s.Balance).ToList()
+        };
+    }
+   
+
+    #endregion
+}

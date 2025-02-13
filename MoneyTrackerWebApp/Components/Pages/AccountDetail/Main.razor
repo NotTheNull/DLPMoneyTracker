@@ -1,9 +1,6 @@
 ﻿@page "/detail/{AccountId:guid}"
 
-@inject IGetJournalAccountByUIDUseCase actionGetAccount
-@inject IGetJournalAccountCurrentMonthBalanceUseCase actionGetBalance
-
-<PageTitle>@account.Description</PageTitle>
+@inherits DetailBase
 
 <section id="account_detail_@AccountId">
     <div class="row">
@@ -13,65 +10,31 @@
         </div>
 
         <div class="col-5">
-            <!-- 
-                Put circle chart here
-                Should be % breakdown of top 5 accounts
-            -->
+            <Top5ExpenseChart 
+                AccountId="AccountId" 
+                Dates="filterDate" />
         </div>
     </div>
 
 
-    <div class="d-flex flex-row gap-3 p-2">
+    @* <div class="d-flex flex-row gap-3 p-2">
         <label>Date Range</label>
         <InputDateRange InputId="idFilterDate"
-                        BeginDate="filterDate.Begin"
-                        EndDate="filterDate.End"
-                        BeginDateChanged="OnFilterDateBeginChanged"
-                        EndDateChanged="OnFilterDateEndChanged" />
+        BeginDate="filterDate.Begin"
+        EndDate="filterDate.End"
+        BeginDateChanged="OnFilterDateBeginChanged"
+        EndDateChanged="OnFilterDateEndChanged" />
 
-    </div>
+    </div> *@
     <div class="row">
         <div class="col-12">
-            <TransactionListing Account="account"
-                                BegDate="filterDate.Begin"
-                                EndDate="filterDate.End" />
+            <TransactionListing 
+            Account="account"
+            BegDate="filterDate.Begin"
+            EndDate="filterDate.End" />
         </div>
     </div>
 
 </section>
 
 
-@code {
-    [Parameter] public Guid AccountId { get; set; }
-
-    private IMoneyAccount account;
-    private decimal currBalance;
-
-
-    private DateRange filterDate = new DateRange(DateTime.Today.Year, DateTime.Today.Month);
-
-    protected override void OnParametersSet()
-    {
-        var a = actionGetAccount.Execute(this.AccountId);
-        if (a is IMoneyAccount money)
-        {
-            account = money;
-        }
-    }
-
-    private void OnFilterDateBeginChanged(ChangeEventArgs e)
-    {
-        if (DateTime.TryParse(e.Value.ToString(), out DateTime begin))
-        {
-            filterDate.Begin = begin;
-        }
-    }
-
-    private void OnFilterDateEndChanged(ChangeEventArgs e)
-    {
-        if (DateTime.TryParse(e.Value.ToString(), out DateTime end))
-        {
-            filterDate.End = end;
-        }
-    }
-}
