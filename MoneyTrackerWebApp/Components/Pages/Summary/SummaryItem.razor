@@ -10,9 +10,9 @@
     </div> *@
     <div class="card-body @BGColor">
         <div class="card-title">
-            <div class="row ">
+            <div class="row align-middle">
 
-                <div class="col-6 d-flex">
+                <div class="col-7 gap-3 d-flex">
                     <ActionIconButton ButtonId="btnShowDetail"
                                       ButtonType="button"
                                       IconOption="IconOpt.StockExchange"
@@ -21,14 +21,14 @@
                     <h1>@Account.AccountDesc</h1>
                 </div>
 
-                <div class="col-2 offset-2 align-content-end">
+                <div class="col-4 offset-1 gap-2 d-flex align-middle align-content-end">
                     <h3>Balance:</h3>
-                </div>
-
-                <div class="col-2">
                     <h3>@Account.Balance.ToDisplayText()</h3>
                 </div>
 
+                @* <div class="col-2">
+                </div>
+ *@
 
             </div>
         </div>
@@ -52,11 +52,8 @@
 
             <div class="row">
 
-                <div class="col-2 offset-8 align-content-end">
+                <div class="col-4 offset-8 d-flex gap-3 align-middle align-content-end">
                     <h3>Balance:</h3>
-                </div>
-
-                <div class="col-2">
                     <h3>@Account.BudgetBalance.ToDisplayText()</h3>
                 </div>
 
