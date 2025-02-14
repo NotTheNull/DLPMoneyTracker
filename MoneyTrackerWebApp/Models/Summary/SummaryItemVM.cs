@@ -1,5 +1,6 @@
 ﻿using DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans.Interfaces;
 using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
+using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.BudgetPlan;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 
@@ -22,7 +23,7 @@ namespace MoneyTrackerWebApp.Models.Summary
         }
 
 
-        private IJournalAccount _account;
+        private IMoneyAccount _account;
 
         public Guid AccountId { get { return _account.Id; } }
 
@@ -91,11 +92,20 @@ namespace MoneyTrackerWebApp.Models.Summary
             }
         }
 
+        public ICSVMapping Mapping
+        {
+            get { return _account.Mapping; }
+        }
+
 
 
         public void LoadAccount(IJournalAccount act)
         {
-            _account = act;
+            if(act is IMoneyAccount money)
+            {
+                _account = money;
+            }
+            
             this.Refresh();
         }
 

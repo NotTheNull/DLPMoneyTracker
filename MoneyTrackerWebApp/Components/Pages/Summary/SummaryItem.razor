@@ -14,21 +14,29 @@
 
                 <div class="col-7 gap-3 d-flex">
                     <ActionIconButton ButtonId="btnShowDetail"
-                                      ButtonType="button"
-                                      IconOption="IconOpt.StockExchange"
-                                      ParentName="@SectionId"
-                                      OnClickHandler="ShowDetailClicked" />
-                    <h1>@Account.AccountDesc</h1>
+                    ButtonType="button"
+                    IconOption="IconOpt.StockExchange"
+                    ParentName="@SectionId"
+                    OnClickHandler="ShowDetailClicked" />
+                    <h3>@Account.AccountDesc</h3>
                 </div>
 
-                <div class="col-4 offset-1 gap-2 d-flex align-middle align-content-end">
-                    <h3>Balance:</h3>
-                    <h3>@Account.Balance.ToDisplayText()</h3>
+                <div class="col-3 offset-1 gap-2 d-flex align-middle align-content-end">
+                    <h3>Balance: @Account.Balance.ToDisplayText()</h3>
                 </div>
 
-                @* <div class="col-2">
+                <div class="col-1">
+                    <!-- Show the CSV Import button IF and ONLY IF the mapping is configured -->
+                    @if(Account.Mapping?.IsValidMapping() == true) {
+                        <ActionIconButton ButtonId="btnShowCSV"
+                        ButtonType="button"
+                        IconOption="IconOpt.OpenFile"
+                        ParentName="@SectionId"
+                        onclick="ShowCSVClicked"
+                        />
+                    }
                 </div>
- *@
+
 
             </div>
         </div>
@@ -52,9 +60,8 @@
 
             <div class="row">
 
-                <div class="col-4 offset-8 d-flex gap-3 align-middle align-content-end">
-                    <h3>Balance:</h3>
-                    <h3>@Account.BudgetBalance.ToDisplayText()</h3>
+                <div class="col-3 offset-8 d-flex gap-3 align-middle align-content-end">
+                    <h3>Balance: @Account.BudgetBalance.ToDisplayText()</h3>
                 </div>
 
             </div>
@@ -94,6 +101,11 @@
 
     private void ShowDetailClicked() {
         string url = string.Format("/detail/{0}", Account.AccountId);
+        navigation.NavigateTo(url);
+    }
+
+    private void ShowCSVClicked() {
+        string url = string.Format("/csv/{0}", Account.AccountId);
         navigation.NavigateTo(url);
     }
 }
