@@ -78,5 +78,16 @@
         return new DateRange(range.Begin.AddDays(-30), range.End.AddDays(14));
     }
 
+    public void RemoveRecord(TransactionRecord record)
+    {
+        this.RecordList.Remove(record);
+    }
 
+    public void RemoveRecords(IEnumerable<TransactionRecord> records)
+    {
+        foreach(var record in records)
+        {
+            this.RecordList.Remove(record);
+        }
+    }
 }

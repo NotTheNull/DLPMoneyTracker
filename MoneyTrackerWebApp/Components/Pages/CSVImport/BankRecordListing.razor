@@ -1,5 +1,4 @@
-﻿
-@if (RecordList?.Any() == true)
+﻿@if (RecordList?.Any() == true)
 {
 
     <section id="idBankRecords">
@@ -19,7 +18,7 @@
                     <tr>
                         <td>
                             <InputCheckbox Value="record.IsSelected"
-                                           ValueChanged="@((val) => IsSelectedChanged(record.UID, val))" />
+                            ValueChanged="@((val) => IsSelectedChanged(record.UID, val))" />
                         </td>
                         <td>@record.TransactionDate.ToDisplayText()</td>
                         <td>@record.Description.Trim()</td>
@@ -42,7 +41,7 @@ else
 
 
 @code {
-    
+
     [Parameter] public List<CSVRecord> RecordList { get; set; }
 
     public List<CSVRecord> SelectedRecords
@@ -68,5 +67,17 @@ else
         record.IsSelected = newValue;
     }
 
+    public void RemoveRecord(CSVRecord record)
+    {
+        if (this.RecordList.Contains(record)) this.RecordList.Remove(record);
+    }
+
+    public void RemoveRecords(IEnumerable<CSVRecord> records)
+    {
+        foreach(var record in records)
+        {
+            this.RecordList.Remove(record);
+        }
+    }
 
 }
