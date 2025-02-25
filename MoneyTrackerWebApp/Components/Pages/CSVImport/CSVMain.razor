@@ -29,11 +29,11 @@
             <BankRecordListing @ref="bankFile" RecordList="dto.RecordList" />
 
             <!-- Action buttons?: Auto-Clear, Match, Create -->
-            <div class="d-inline d-inline-block">
-                <Button Id="btnClearSelections">Clear Selections</Button>
-                <Button Id="btnAutoMatch">Auto-Match</Button>
-                <Button Id="btnMatch">Match</Button>
-                <Button Id="btnCreateNewTransaction">Create New</Button>
+            <div class="d-inline d-inline-block gap-1">
+                <Button Id="btnClearSelections" Class="btn btn-warning" onclick="@(() => ClearSelections())">Clear Selections</Button>
+                <Button Id="btnAutoMatch" Class="btn btn-primary">Auto-Match</Button>
+                <Button Id="btnMatch" Class="btn btn-primary" >Match</Button>
+                <Button Id="btnCreateNewTransaction" Class="btn btn-success">Create New</Button>
             </div>
 
             <!-- Transaction listing -->
@@ -107,7 +107,8 @@
 
     private void ClearSelections()
     {
-        // TODO: clear all checkmarks from both recordsets
+        bankFile.ClearSelected();
+        transactions.ClearSelected();
     }
 
     private void AutoMatch()
