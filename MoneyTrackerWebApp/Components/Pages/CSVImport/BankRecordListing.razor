@@ -1,0 +1,72 @@
+﻿
+@if (RecordList?.Any() == true)
+{
+
+    <section id="idBankRecords">
+        <table class="table table-info table-striped">
+            <thead>
+                <tr>
+                    <th><!-- IsSelected Checkbox --></th>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (CSVRecord record in RecordList)
+                {
+                    <tr>
+                        <td>
+                            <InputCheckbox Value="record.IsSelected"
+                                           ValueChanged="@((val) => IsSelectedChanged(record.UID, val))" />
+                        </td>
+                        <td>@record.TransactionDate.ToDisplayText()</td>
+                        <td>@record.Description.Trim()</td>
+                        <td>@record.Amount.ToDisplayText()</td>
+                    </tr>
+
+                }
+
+
+            </tbody>
+        </table>
+    </section>
+
+
+}
+else
+{
+    <p>Selected file has no data</p>
+}
+
+
+@code {
+    
+    [Parameter] public List<CSVRecord> RecordList { get; set; }
+
+    public List<CSVRecord> SelectedRecords
+    {
+        get
+        {
+            return RecordList.Where(x => x.IsSelected).ToList();
+        }
+    }
+
+
+    public void ClearSelected()
+    {
+        RecordList.ForEach(x => x.IsSelected = false);
+    }
+
+
+    private void IsSelectedChanged(Guid recordId, bool newValue)
+    {
+        var record = RecordList.FirstOrDefault(x => x.UID == recordId);
+        if (record is null) return;
+
+        record.IsSelected = newValue;
+    }
+
+
+}

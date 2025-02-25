@@ -1,0 +1,82 @@
+﻿@inject IGetTransactionsBySearchUseCase actionGetTransactions
+
+<section id="idCSVTransactionListing">
+    <table class="table table-info table-striped">
+        <thead>
+            <tr>
+                <th><!-- IsSelected Checkbox --></th>
+                <th>Transaction Date</th>
+                <th>Account</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Bank Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (TransactionRecord record in RecordList)
+            {
+                <tr>
+                    <td>
+                        <InputCheckbox Value="record.IsSelected"
+                        ValueChanged="@((val) => record.IsSelectedChanged(val))" />
+                    </td>
+                    <td>@record.TransactionDate.ToDisplayText()</td>
+                    <td>@record.AccountName</td>
+                    <td>@record.Description</td>
+                    <td>@record.Amount.ToDisplayText()</td>
+                    <td>
+                        @if(record.BankDate.HasValue)
+                        {
+                            record.BankDate.Value.ToDisplayText();
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</section>
+
+
+@code {
+    [Parameter] public IMoneyAccount Account { get; set; }
+    [Parameter] public DateRange Dates { get; set; }
+
+    public List<TransactionRecord> SelectedList {get
+        {
+            return RecordList.Where(x => x.IsSelected).ToList();
+        }
+    }
+
+    private List<TransactionRecord> RecordList { get; } = new List<TransactionRecord>();
+
+
+    protected override void OnParametersSet()
+    {
+        Refresh();
+    }
+
+    public void ClearSelected()
+    {
+        RecordList.ForEach(x => x.IsSelected = false);
+    }
+
+    public void Refresh()
+    {
+        RecordList.Clear();
+        var result = actionGetTransactions.Execute(AdjustDateRange(Dates), null, Account);
+        if (result?.Any() != true) return;
+
+        foreach (var r in result)
+        {
+            RecordList.Add(new TransactionRecord(r, Account.Id));
+        }
+    }
+
+    private DateRange AdjustDateRange(DateRange range)
+    {
+        return new DateRange(range.Begin.AddDays(-30), range.End.AddDays(14));
+    }
+
+
+}

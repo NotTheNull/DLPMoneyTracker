@@ -147,6 +147,7 @@ namespace MoneyTrackerWebApp
         {
             builder.Services.AddScoped<INavigationHistoryService, NavigationHistoryService>();
             builder.Services.AddTransient<IJournalAccountService, JournalAccountService>();
+            builder.Services.AddTransient<ICSVParserService, CSVParserService>();
         }
     }
 }

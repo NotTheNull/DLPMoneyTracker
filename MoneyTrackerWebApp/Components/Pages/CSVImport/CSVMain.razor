@@ -1,0 +1,129 @@
+﻿@page "/csv/{AccountId:guid}"
+
+@inject IGetJournalAccountByUIDUseCase ActionGetAccount
+@inject ICSVParserService csvService
+
+<section id="idCSVImport">
+    @if (account is null)
+    {
+        <p>@NO_ACCOUNT</p>
+    }
+    else if (isReadingFile)
+    {
+        <p>@READING_FILE</p>
+    }
+    else
+    {
+
+        <h3>CSV Import for @account.Description</h3>
+
+        <!-- File locator -->
+        <div class="row">
+            <label>CSV Path</label>
+            <InputFile OnChange="FileSelected" />
+        </div>
+
+        @if (dto != null)
+        {
+            <!-- CSV Records -->
+            <BankRecordListing @ref="bankFile" RecordList="dto.RecordList" />
+
+            <!-- Action buttons?: Auto-Clear, Match, Create -->
+            <div class="d-inline d-inline-block">
+                <Button Id="btnClearSelections">Clear Selections</Button>
+                <Button Id="btnAutoMatch">Auto-Match</Button>
+                <Button Id="btnMatch">Match</Button>
+                <Button Id="btnCreateNewTransaction">Create New</Button>
+            </div>
+
+            <!-- Transaction listing -->
+            <TransactionListing @ref="transactions" Account="account" Dates="dto.Dates" />
+
+
+        }
+        else
+        {
+            <p>@NO_BANK_FILE</p>
+        }
+
+    }
+</section>
+
+@code {
+    [Parameter] public Guid AccountId { get; set; }
+
+    private const string READING_FILE = "Parsing bank file ...";
+    private const string NO_ACCOUNT = "Money Account has not been selected";
+    private const string NO_BANK_FILE = "Please select a bank file [*.csv] to process";
+
+    private BankRecordListing bankFile;
+    private TransactionListing transactions;
+
+    private bool isReadingFile = false;
+    private IMoneyAccount account = null;
+    private CSVFileDTO dto = null;
+
+    protected override void OnInitialized()
+    {
+        ResetState();
+    }
+
+    protected override void OnParametersSet()
+    {
+        var acct = ActionGetAccount.Execute(AccountId);
+        if (acct is IMoneyAccount money)
+        {
+            account = money;
+        }
+        else
+        {
+            throw new InvalidOperationException("CSV Import is only available for Money Accounts");
+        }
+
+        if (account.Mapping?.IsValidMapping() != true) throw new InvalidOperationException("CSV Mapping is missing");
+    }
+
+
+    private async Task FileSelected(InputFileChangeEventArgs e)
+    {
+        //csvFile = e.File;
+        isReadingFile = true;
+        try
+        {
+            dto = await csvService.GetDataFromCSV(account, e.File);
+        }
+        finally
+        {
+            isReadingFile = false;
+        }
+    }
+
+
+    private void ResetState()
+    {
+        isReadingFile = false;
+        dto = null;
+    }
+
+    private void ClearSelections()
+    {
+        // TODO: clear all checkmarks from both recordsets
+    }
+
+    private void AutoMatch()
+    {
+        // TODO: process both lists and remove known matches
+
+    }
+
+    private void MatchRecords()
+    {
+        // TODO: take selected records, remove them from the recordsets, update transactions with the bank date
+    }
+
+    private void CreateNew()
+    {
+        // TODO: create new transaction for the selected bank record
+    }
+
+}
