@@ -1,6 +1,7 @@
 ﻿@page "/csv/{AccountId:guid}"
 
 @inject IGetJournalAccountByUIDUseCase ActionGetAccount
+@inject ISaveTransactionUseCase ActionSaveTransaction;
 @inject ICSVParserService csvService
 
 <section id="idCSVImport">
@@ -30,8 +31,7 @@
 
             <!-- Action buttons?: Auto-Clear, Match, Create -->
             <div class="d-inline d-inline-block gap-1">
-                <Button Id="btnClear" Class="btn btn-primary" onclick="@(() => ClearSelections())">Clear</Button>
-                <Button Id="btnRemoveSelections" Class="btn btn-warning" onclick="@(() => RemoveSelections())">Remove Selections</Button>
+                <Button Id="btnClear" Class="btn btn-warning" onclick="@(() => ClearSelections())">Clear</Button>
                 <Button Id="btnAutoMatch" Class="btn btn-primary" onclick="@(() => AutoMatch())">Auto-Match</Button>
                 <Button Id="btnMatch" Class="btn btn-success" onclick="@(() => MatchRecords())">Match</Button>
                 <Button Id="btnCreateNewTransaction" Class="btn btn-primary" onclick="@(() => CreateNewTransaction())">Create New</Button>
@@ -112,13 +112,6 @@
         transListing.ClearSelected();
     }
 
-    /// <summary>
-    /// The selected records are removed from their respective lists
-    /// </summary>
-    private void RemoveSelections()
-    {
-        // TODO: Finish RemoveSeelctions(9)) action
-    }
 
     /// <summary>
     /// Compares the Bank Record list to the Transaction list and removes any 1:1 pairs where
@@ -138,9 +131,23 @@
 
     }
 
+    /// <summary>
+    /// Assigns the more recent date from the selected Bank Records to the selected Transaction records 
+    /// if the transaction record does not already have a bank date
+    /// </summary>
+    /// <remarks>
+    /// REQUIRES: Sum of selected Bank Records MUST EXACTLY MATCH the sum of selected Transaction records
+    /// </remarks>
     private void MatchRecords()
     {
-        // TODO: take selected records, remove them from the recordsets, update transactions with the bank date
+        if (bankListing.SelectedRecords.Sum(s => s.Amount) != transListing.SelectedRecords.Sum(s => s.Amount)) return;
+
+        transListing.SelectedRecords.Where(x => !x.BankDate.HasValue).ToList().ForEach(x => {
+            x.BankDate = bankListing.SelectedRecords.OrderByDescending(o => o.TransactionDate).First().TransactionDate;
+            ActionSaveTransaction.Execute(x.MoneyRecord);
+        });
+        bankListing.RemoveRecords(bankListing.SelectedRecords.ToList());
+        transListing.RemoveRecords(transListing.SelectedRecords.ToList());
     }
 
     private void CreateNewTransaction()

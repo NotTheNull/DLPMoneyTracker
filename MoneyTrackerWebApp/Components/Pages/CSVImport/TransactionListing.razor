@@ -42,7 +42,7 @@
     [Parameter] public IMoneyAccount Account { get; set; }
     [Parameter] public DateRange Dates { get; set; }
 
-    public List<TransactionRecord> SelectedList {get
+    public List<TransactionRecord> SelectedRecords {get
         {
             return RecordList.Where(x => x.IsSelected).ToList();
         }
