@@ -30,10 +30,11 @@
 
             <!-- Action buttons?: Auto-Clear, Match, Create -->
             <div class="d-inline d-inline-block gap-1">
-                <Button Id="btnClearSelections" Class="btn btn-warning" onclick="@(() => ClearSelections())">Clear Selections</Button>
+                <Button Id="btnClear" Class="btn btn-primary" onclick="@(() => ClearSelections())">Clear</Button>
+                <Button Id="btnRemoveSelections" Class="btn btn-warning" onclick="@(() => RemoveSelections())">Remove Selections</Button>
                 <Button Id="btnAutoMatch" Class="btn btn-primary" onclick="@(() => AutoMatch())">Auto-Match</Button>
-                <Button Id="btnMatch" Class="btn btn-primary" onclick="@(() => MatchRecords())">Match</Button>
-                <Button Id="btnCreateNewTransaction" Class="btn btn-success" onclick="@(() => CreateNewTransaction())">Create New</Button>
+                <Button Id="btnMatch" Class="btn btn-success" onclick="@(() => MatchRecords())">Match</Button>
+                <Button Id="btnCreateNewTransaction" Class="btn btn-primary" onclick="@(() => CreateNewTransaction())">Create New</Button>
             </div>
 
             <!-- Transaction listing -->
@@ -109,6 +110,14 @@
     {
         bankListing.ClearSelected();
         transListing.ClearSelected();
+    }
+
+    /// <summary>
+    /// The selected records are removed from their respective lists
+    /// </summary>
+    private void RemoveSelections()
+    {
+        // TODO: Finish RemoveSeelctions(9)) action
     }
 
     /// <summary>
