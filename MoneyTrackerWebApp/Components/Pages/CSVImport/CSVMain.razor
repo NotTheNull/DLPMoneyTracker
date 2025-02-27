@@ -31,9 +31,9 @@
             <!-- Action buttons?: Auto-Clear, Match, Create -->
             <div class="d-inline d-inline-block gap-1">
                 <Button Id="btnClearSelections" Class="btn btn-warning" onclick="@(() => ClearSelections())">Clear Selections</Button>
-                <Button Id="btnAutoMatch" Class="btn btn-primary">Auto-Match</Button>
-                <Button Id="btnMatch" Class="btn btn-primary" >Match</Button>
-                <Button Id="btnCreateNewTransaction" Class="btn btn-success">Create New</Button>
+                <Button Id="btnAutoMatch" Class="btn btn-primary" onclick="@(() => AutoMatch())">Auto-Match</Button>
+                <Button Id="btnMatch" Class="btn btn-primary" onclick="@(() => MatchRecords())">Match</Button>
+                <Button Id="btnCreateNewTransaction" Class="btn btn-success" onclick="@(() => CreateNewTransaction())">Create New</Button>
             </div>
 
             <!-- Transaction listing -->
@@ -122,7 +122,7 @@
         // TODO: take selected records, remove them from the recordsets, update transactions with the bank date
     }
 
-    private void CreateNew()
+    private void CreateNewTransaction()
     {
         // TODO: create new transaction for the selected bank record
     }
