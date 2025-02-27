@@ -26,7 +26,7 @@
         @if (dto != null)
         {
             <!-- CSV Records -->
-            <BankRecordListing @ref="bankFile" RecordList="dto.RecordList" />
+            <BankRecordListing @ref="bankListing" RecordList="dto.RecordList" />
 
             <!-- Action buttons?: Auto-Clear, Match, Create -->
             <div class="d-inline d-inline-block gap-1">
@@ -37,7 +37,7 @@
             </div>
 
             <!-- Transaction listing -->
-            <TransactionListing @ref="transactions" Account="account" Dates="dto.Dates" />
+            <TransactionListing @ref="transListing" Account="account" Dates="dto.Dates" />
 
 
         }
@@ -56,8 +56,8 @@
     private const string NO_ACCOUNT = "Money Account has not been selected";
     private const string NO_BANK_FILE = "Please select a bank file [*.csv] to process";
 
-    private BankRecordListing bankFile;
-    private TransactionListing transactions;
+    private BankRecordListing bankListing;
+    private TransactionListing transListing;
 
     private bool isReadingFile = false;
     private IMoneyAccount account = null;
@@ -107,13 +107,25 @@
 
     private void ClearSelections()
     {
-        bankFile.ClearSelected();
-        transactions.ClearSelected();
+        bankListing.ClearSelected();
+        transListing.ClearSelected();
     }
 
+    /// <summary>
+    /// Compares the Bank Record list to the Transaction list and removes any 1:1 pairs where
+    /// the Bank Date and Amount exactly match.
+    /// </summary>
     private void AutoMatch()
     {
-        // TODO: process both lists and remove known matches
+        var loopList = bankListing.RecordList.ToList();
+        foreach(var bankRecord in loopList)
+        {
+            var transaction = transListing.RecordList.FirstOrDefault(x => x.BankDate == bankRecord.TransactionDate && Math.Abs(x.Amount) == Math.Abs(bankRecord.Amount));
+            if (transaction is null) continue;
+
+            bankListing.RemoveRecord(bankRecord);
+            transListing.RemoveRecord(transaction);
+        }
 
     }
 
