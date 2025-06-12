@@ -9,24 +9,19 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
 {
     public class CreditCardAccount : IMoneyAccount, ILiabilityAccount
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         public LedgerType JournalType { get { return LedgerType.LiabilityCard; } }
 
-        public int OrderBy { get; set; }
+        public int OrderBy { get; set; } = 0;
 
         public DateTime? DateClosedUTC { get; set; }
 
         public ICSVMapping Mapping { get; } = new CSVMapping();
 
-
-        public CreditCardAccount()
-        {
-            Id = Guid.NewGuid();
-        }
-
+        public CreditCardAccount() {}
         public CreditCardAccount(IJournalAccount cpy)
         {
             this.Copy(cpy);

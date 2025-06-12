@@ -9,13 +9,13 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
 {
     public class ReceivableAccount : INominalAccount, ISubLedgerAccount
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         public LedgerType JournalType { get { return LedgerType.Receivable; } }
 
-        public int OrderBy { get; set; }
+        public int OrderBy { get; set; } = 0;
 
         public DateTime? DateClosedUTC { get; set; }
 
@@ -25,10 +25,7 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
         public IJournalAccount? SummaryAccount { get; set; }
 
 
-        public ReceivableAccount()
-        {
-            Id = Guid.NewGuid();
-        }
+        public ReceivableAccount(){}
 
         public ReceivableAccount(IJournalAccount cpy)
         {

@@ -15,15 +15,12 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
         public static SpecialAccount DebtReduction { get { return new SpecialAccount() { Id = new Guid("FFFFFFFF-0000-0000-0000-999999999999"), Description = "*DEBT REDUCTION*" }; } }
 
 
-        public SpecialAccount()
-        {
-
-        }
+        public SpecialAccount(){}}
 
 
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         public LedgerType JournalType { get { return LedgerType.Special; } }
 

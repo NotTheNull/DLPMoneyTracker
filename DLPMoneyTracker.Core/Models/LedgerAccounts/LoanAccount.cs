@@ -9,21 +9,17 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
 {
     public class LoanAccount : ILiabilityAccount
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
-        public LedgerType JournalType        { get { return LedgerType.LiabilityLoan; } }
+        public LedgerType JournalType  { get { return LedgerType.LiabilityLoan; } }
 
-        public int OrderBy { get; set; }
+        public int OrderBy { get; set; } = 0;
 
         public DateTime? DateClosedUTC { get; set; }
         
-        public LoanAccount()
-        {
-            this.Id = Guid.NewGuid();
-        }
-
+        public LoanAccount() {}
         public LoanAccount(IJournalAccount cpy)
         {
             this.Copy(cpy);
