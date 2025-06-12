@@ -17,7 +17,7 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
         public int OrderBy { get; set; } = 0;
         public DateTime? DateClosedUTC { get; set; }
 
-        public ICSVMapping Mapping { get; } = new();
+        public ICSVMapping Mapping { get; } = new CSVMapping();
 
         public BankAccount() {}
         public BankAccount(IJournalAccount cpy)
