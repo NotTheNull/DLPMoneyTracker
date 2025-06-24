@@ -18,7 +18,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
     {
         private readonly ILedgerAccountRepository accountRepository = accountRepository;
 
-        public Guid Id { get; set; } = Guid.Empty;
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         public string Description { get; set; } = string.Empty;
 
@@ -42,7 +42,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
         {
             ArgumentNullException.ThrowIfNull(cpy);
 
-            this.Id = cpy.Id;
+            this.Id = cpy.Id != Guid.Empty ? cpy.Id : Guid.NewGuid();
             this.Description = cpy.Description;
             this.JournalType = cpy.JournalType;
             this.OrderBy = cpy.OrderBy;
