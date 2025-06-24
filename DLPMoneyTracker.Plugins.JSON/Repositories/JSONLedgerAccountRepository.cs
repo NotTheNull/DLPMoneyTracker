@@ -78,10 +78,6 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         }
 
 
-
-
-
-
         public IJournalAccount GetAccountByUID(Guid uid)
         {
             return this.AccountList.First(x => x.Id == uid);
