@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace DLPMoneyTracker.Plugins.JSON.Adapters
 {
     
-    public class JSONSourceToJournalAccountAdapter(ILedgerAccountRepository accountRepository) : ISourceToJournalAccountAdapter<JournalAccountJSON>
+    public sealed class JSONSourceToJournalAccountAdapter(ILedgerAccountRepository accountRepository) : ISourceToJournalAccountAdapter<JournalAccountJSON>
     {
         private readonly ILedgerAccountRepository accountRepository = accountRepository;
 
