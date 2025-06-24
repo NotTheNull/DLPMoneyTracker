@@ -25,7 +25,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             this.LoadFromFile();
         }
 
-        public List<IJournalAccount> AccountList { get; set; } = new List<IJournalAccount>();
+        public List<IJournalAccount> AccountList { get; set; } = [];
 
 
         public string FilePath { get { return Path.Combine(config.JSONFilePath, "Config", "LedgerAccounts.json"); } }
@@ -40,22 +40,16 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             this.AccountList.Add(SpecialAccount.DebtInterest);
             this.AccountList.Add(SpecialAccount.DebtReduction);
 
-            string json = string.Empty;
-            if (File.Exists(FilePath))
-            {
-                json = File.ReadAllText(FilePath);
-            }
-            else
-            {
-                return;
-            }
+            if (!File.Exists(FilePath)) return;
+            
+            string json = File.ReadAllText(FilePath);            
             if (string.IsNullOrWhiteSpace(json)) return;
 
-            var dataList = (List<JournalAccountJSON>)JsonSerializer.Deserialize(json, typeof(List<JournalAccountJSON>));
+            List<JournalAccountJSON>? dataList = JsonSerializer.Deserialize(json, typeof(List<JournalAccountJSON>)) as List<JournalAccountJSON>;
             if (dataList?.Any() != true) return;
 
             JSONSourceToJournalAccountAdapter adapter = new JSONSourceToJournalAccountAdapter(this);
-            JournalAccountFactory factory = new JournalAccountFactory();
+            JournalAccountFactory factory = new();
 
             foreach (var data in dataList)
             {
@@ -66,14 +60,14 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
 
         public void SaveToFile()
         {
-            List<JournalAccountJSON> listJSONData = new List<JournalAccountJSON>();
-            JSONSourceToJournalAccountAdapter adapter = new JSONSourceToJournalAccountAdapter(this);
+            List<JournalAccountJSON> listJSONData = [];
+            JSONSourceToJournalAccountAdapter adapter = new(this);
             foreach (var account in this.AccountList)
             {
                 if (account.JournalType == LedgerType.NotSet) continue;
                 adapter.Copy(account);
                 
-                JournalAccountJSON jsonAccount = new JournalAccountJSON();
+                JournalAccountJSON jsonAccount = new();
                 adapter.ExportSource(ref jsonAccount);
                 listJSONData.Add(jsonAccount);                
             }
@@ -90,17 +84,17 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
 
         public IJournalAccount GetAccountByUID(Guid uid)
         {
-            return this.AccountList.FirstOrDefault(x => x.Id == uid);
+            return this.AccountList.First(x => x.Id == uid);
         }
 
         public List<IJournalAccount> GetFullList()
         {
-            return this.AccountList.ToList();
+            return [.. this.AccountList];
         }
 
         public List<IJournalAccount> GetAccountsBySearch(JournalAccountSearch search)
         {
-            if (search.JournalTypes.Any() != true) return null;
+            if (search.JournalTypes.Count != 0) return [];
 
             var listAccounts = this.AccountList.Where(x => search.JournalTypes.Contains(x.JournalType));
             if(!string.IsNullOrWhiteSpace(search.NameFilterText))
@@ -113,7 +107,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
                 listAccounts = listAccounts.Where(x => !x.DateClosedUTC.HasValue);
             }
 
-            return listAccounts.ToList();
+            return [.. listAccounts];
         }
 
         public void SaveJournalAccount(IJournalAccount account)
@@ -143,7 +137,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         {
             var listData = this.AccountList.Where(x => x.JournalType == type).ToList();
 
-            List<IJournalAccount> listAccounts = new List<IJournalAccount>();
+            List<IJournalAccount> listAccounts = [];
             foreach(var data in listData)
             {
                 if(data is ISubLedgerAccount sub)
@@ -160,9 +154,9 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
 
         public List<IJournalAccount> GetDetailAccountsForSummary(Guid uidSummaryAccount)
         {
-            if (uidSummaryAccount == null || uidSummaryAccount == Guid.Empty) return null;
+            if (uidSummaryAccount == Guid.Empty) return [];
 
-            List<IJournalAccount> listAccounts = new List<IJournalAccount>();
+            List<IJournalAccount> listAccounts = [];
             foreach(var account in this.AccountList)
             {
                 if(account is ISubLedgerAccount sub)
