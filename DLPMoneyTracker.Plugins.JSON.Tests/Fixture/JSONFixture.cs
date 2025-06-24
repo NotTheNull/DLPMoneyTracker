@@ -15,7 +15,7 @@ using DLPMoneyTracker.Plugins.JSON.Adapters;
 
 namespace DLPMoneyTracker.Plugins.JSON.Tests.Fixture
 {
-    internal class JSONFixture : IDisposable
+    public class JSONFixture : IDisposable
     {
 
         private readonly IServiceProvider _serviceProvider;
