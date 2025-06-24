@@ -22,16 +22,16 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             this.deleteAccountUseCase = deleteAccountUseCase;
             _editAccount = UICore.DependencyHost.GetRequiredService<MoneyAccountVM>();
 
-            this.JournalTypeList = new List<SpecialDropListItem<LedgerType>>
-            {
-                new SpecialDropListItem<LedgerType>("Bank", LedgerType.Bank),
-                new SpecialDropListItem<LedgerType>("Credit Card", LedgerType.LiabilityCard),
-                new SpecialDropListItem<LedgerType>("Loan", LedgerType.LiabilityLoan)
-            };
+            this.JournalTypeList =
+            [
+                new("Bank", LedgerType.Bank),
+                new("Credit Card", LedgerType.LiabilityCard),
+                new("Loan", LedgerType.LiabilityLoan)
+            ];
             this.ReloadAccounts();
         }
 
-        private ObservableCollection<MoneyAccountVM> _listAccounts = new ObservableCollection<MoneyAccountVM>();
+        private ObservableCollection<MoneyAccountVM> _listAccounts = [];
 
         public ObservableCollection<MoneyAccountVM> AccountList { get { return _listAccounts; } }
 
