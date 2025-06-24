@@ -9,8 +9,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.JSON.Models
 {
-
-    internal sealed class JournalAccountJSON
+    public sealed class JournalAccountJSON
     {
         public Guid Id { get; set; }
 
@@ -27,7 +26,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Models
         public DateTime? PreviousBankReconciliationStatementDate { get; set; }
         public Guid? SummaryAccountUID { get; set; }
 
-        public CSVMapping Mapping { get; set; } = null;
+        public CSVMapping? Mapping { get; set; } 
 
 
     }
