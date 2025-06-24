@@ -51,11 +51,5 @@ namespace DLPMoneyTracker.BusinessLogic.Factories
                 _ => throw new NotSupportedException(string.Format("Ledger Type [{0}] is not supported", jType.ToString()))
             };            
         }
-
-
-
-
-
-
     }
 }
