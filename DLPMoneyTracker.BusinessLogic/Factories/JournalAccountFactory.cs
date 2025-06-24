@@ -25,7 +25,7 @@ namespace DLPMoneyTracker.BusinessLogic.Factories
             if (acct.Id == SpecialAccount.DebtInterest.Id) return SpecialAccount.DebtInterest;
             if (acct.Id == SpecialAccount.DebtReduction.Id) return SpecialAccount.DebtReduction;
             if (acct.Id == SpecialAccount.InitialBalance.Id) return SpecialAccount.InitialBalance;
-            if (acct.Id == SpecialAccount.UnlistedAdjusment.Id) return SpecialAccount.UnlistedAdjusment;
+            if (acct.Id == SpecialAccount.UnlistedAdjustment.Id) return SpecialAccount.UnlistedAdjustment;
 
             return acct.JournalType switch
             {

@@ -36,7 +36,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         {
             this.AccountList.Clear();
             this.AccountList.Add(SpecialAccount.InitialBalance);
-            this.AccountList.Add(SpecialAccount.UnlistedAdjusment);
+            this.AccountList.Add(SpecialAccount.UnlistedAdjustment);
             this.AccountList.Add(SpecialAccount.DebtInterest);
             this.AccountList.Add(SpecialAccount.DebtReduction);
 
@@ -177,7 +177,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             return listAccounts;
         }
 
-        private readonly Guid[] SPECIAL_UIDS = [SpecialAccount.DebtInterest.Id, SpecialAccount.DebtReduction.Id, SpecialAccount.InitialBalance.Id, SpecialAccount.UnlistedAdjusment.Id, Guid.Empty];
+        private readonly Guid[] SPECIAL_UIDS = [SpecialAccount.DebtInterest.Id, SpecialAccount.DebtReduction.Id, SpecialAccount.InitialBalance.Id, SpecialAccount.UnlistedAdjustment.Id, Guid.Empty];
 
         public Guid GetNextUID()
         {

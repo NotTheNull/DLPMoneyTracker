@@ -72,7 +72,7 @@ namespace DLPMoneyTracker2.LedgerEntry
 			{
 				viewModel = UICore.DependencyHost.GetRequiredService<DebtAdjustmentJournalEntryVM>();
 			}
-			else if(debit.Id == SpecialAccount.UnlistedAdjusment.Id || credit.Id == SpecialAccount.UnlistedAdjusment.Id)
+			else if(debit.Id == SpecialAccount.UnlistedAdjustment.Id || credit.Id == SpecialAccount.UnlistedAdjustment.Id)
 			{
 				viewModel = UICore.DependencyHost.GetRequiredService<CorrectionJournalEntryVM>();
 			}

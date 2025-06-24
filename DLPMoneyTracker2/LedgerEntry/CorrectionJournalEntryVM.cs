@@ -20,7 +20,7 @@ namespace DLPMoneyTracker2.LedgerEntry
 				new List<LedgerType>(),
 				TransactionType.Correction)
 		{
-			this.SelectedCreditAccount = SpecialAccount.UnlistedAdjusment;
+			this.SelectedCreditAccount = SpecialAccount.UnlistedAdjustment;
 		}
 
 		public override string Title => "Enter Journal Correction";
