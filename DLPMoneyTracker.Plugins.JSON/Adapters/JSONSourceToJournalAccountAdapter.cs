@@ -14,24 +14,17 @@ using System.Threading.Tasks;
 namespace DLPMoneyTracker.Plugins.JSON.Adapters
 {
     
-
-    internal class JSONSourceToJournalAccountAdapter : ISourceToJournalAccountAdapter<JournalAccountJSON>
+    internal class JSONSourceToJournalAccountAdapter(ILedgerAccountRepository accountRepository) : ISourceToJournalAccountAdapter<JournalAccountJSON>
     {
-        private readonly ILedgerAccountRepository accountRepository;
+        private readonly ILedgerAccountRepository accountRepository = accountRepository;
 
-        public JSONSourceToJournalAccountAdapter(ILedgerAccountRepository accountRepository)
-        {
-            this.accountRepository = accountRepository;
-        }
+        public Guid Id { get; set; } = Guid.Empty;
 
+        public string Description { get; set; } = string.Empty;
 
-        public Guid Id { get; set; }
+        public LedgerType JournalType { get; set; } = LedgerType.NotSet;
 
-        public string Description { get; set; }
-
-        public LedgerType JournalType { get; set; }
-
-        public int OrderBy { get; set; }
+        public int OrderBy { get; set; } = 0;
 
         public DateTime? DateClosedUTC { get; set; }
 
@@ -41,7 +34,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
 
         public IJournalAccount? SummaryAccount { get; set; } = null;
 
-        public ICSVMapping Mapping { get; set; } = null;
+        public ICSVMapping? Mapping { get; set; } 
 
         
 
@@ -55,11 +48,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             this.OrderBy = cpy.OrderBy;
             this.DateClosedUTC = cpy.DateClosedUTC;
 
-            if(this.Mapping != null)
-            {
-                this.Mapping.Dispose();
-                this.Mapping = null;
-            }
+            this.Mapping?.Dispose();
             if (cpy is INominalAccount nominal)
             {
                 this.BudgetType = nominal.BudgetType;
@@ -68,9 +57,15 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             }
             else if (cpy is IMoneyAccount money)
             {
-                if (this.Mapping is null) this.Mapping = new CSVMapping();
-
-                this.Mapping.Copy(money.Mapping);
+                if (money.Mapping != null)
+                {
+                    this.Mapping ??= new CSVMapping();
+                    this.Mapping.Copy(money.Mapping);
+                } else
+                {
+                    this.Mapping?.Dispose();
+                    this.Mapping = null;
+                }
             }
 
             if(cpy is ISubLedgerAccount sub)
@@ -93,7 +88,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             acct.CurrentBudgetAmount = this.CurrentBudgetAmount;
             acct.SummaryAccountUID = this.SummaryAccount?.Id;
 
-            acct.Mapping = null;
+            
             if(this.Mapping != null)
             {
                 acct.Mapping = new CSVMapping();
@@ -116,14 +111,8 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             this.CurrentBudgetAmount = acct.CurrentBudgetAmount;
 
             this.SummaryAccount = acct.SummaryAccountUID == null ? null : accountRepository.GetAccountByUID(acct.SummaryAccountUID.Value);
-            
 
-            if (this.Mapping != null)
-            {
-                this.Mapping.Dispose();
-                this.Mapping = null;
-            }
-
+            this.Mapping?.Dispose();
             if (acct.Mapping != null)
             {
                 this.Mapping = new CSVMapping();
