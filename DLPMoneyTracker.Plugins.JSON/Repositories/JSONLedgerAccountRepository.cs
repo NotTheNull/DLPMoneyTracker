@@ -90,7 +90,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
 
         public List<IJournalAccount> GetAccountsBySearch(JournalAccountSearch search)
         {
-            if (search.JournalTypes.Count != 0) return [];
+            if (search.JournalTypes.Count == 0) return [];
 
             var listAccounts = this.AccountList.Where(x => search.JournalTypes.Contains(x.JournalType));
             if(!string.IsNullOrWhiteSpace(search.NameFilterText))
