@@ -1,4 +1,5 @@
 ﻿using DLPMoneyTracker.BusinessLogic.Factories;
+using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts;
 using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
 using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
@@ -10,17 +11,20 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
 {
     public class MoneyAccountVM : BaseViewModel, IJournalAccount
     {
+        private readonly IGetNextUIDUseCase getNextUIDUseCase;
         private readonly ISaveJournalAccountUseCase _saveAccountUseCase;
         private readonly List<LedgerType> _listValidTypes = [LedgerType.Bank, LedgerType.LiabilityCard, LedgerType.LiabilityLoan];
 
         public MoneyAccountVM(
+            IGetNextUIDUseCase getNextUIDUseCase,
             ISaveJournalAccountUseCase saveAccountUseCase) : base()
         {
+            this.getNextUIDUseCase = getNextUIDUseCase;
             this._saveAccountUseCase = saveAccountUseCase;
             this.Clear();
         }
 
-        public Guid Id { get; private set; } = Guid.NewGuid();
+        public Guid Id { get; private set; } 
 
         private string _description = string.Empty;
 
@@ -92,7 +96,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
 
         public void Clear()
         {
-            Id = Guid.NewGuid();
+            Id = getNextUIDUseCase.Execute();
             Description = string.Empty;
             JournalType = LedgerType.NotSet;
             this.DateClosedUTC = null;
