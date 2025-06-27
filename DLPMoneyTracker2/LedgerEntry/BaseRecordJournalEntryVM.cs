@@ -1,7 +1,6 @@
 ﻿
 using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
 using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
-using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.BudgetPlan;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
@@ -43,10 +42,6 @@ namespace DLPMoneyTracker2.LedgerEntry
         string Description { get; }
         decimal Amount { get; }
 
-
-
-
-
         void Clear();
 
         void LoadAccounts();
@@ -59,9 +54,9 @@ namespace DLPMoneyTracker2.LedgerEntry
 
     public abstract class BaseRecordJournalEntryVM : BaseViewModel, IJournalEntryVM
     {
-        
-        private readonly List<LedgerType> _validDebitTypes = new List<LedgerType>();
-        private readonly List<LedgerType> _validCreditTypes = new List<LedgerType>();
+
+        private readonly List<LedgerType> _validDebitTypes = [];
+        private readonly List<LedgerType> _validCreditTypes = [];
         protected readonly IGetJournalAccountListByTypesUseCase getAccountsByTypeUseCase;
         protected readonly IGetJournalAccountByUIDUseCase getAccountByUIDUseCase;
         protected readonly ISaveTransactionUseCase saveMoneyRecordUseCase;
@@ -70,7 +65,7 @@ namespace DLPMoneyTracker2.LedgerEntry
             IGetJournalAccountListByTypesUseCase getAccountsByTypeUseCase,
             IGetJournalAccountByUIDUseCase getAccountByUIDUseCase,
             ISaveTransactionUseCase saveMoneyRecordUseCase,
-            IEnumerable<LedgerType> validDebitTypes, 
+            IEnumerable<LedgerType> validDebitTypes,
             IEnumerable<LedgerType> validCreditTypes,
             TransactionType transType)
         {
@@ -90,7 +85,6 @@ namespace DLPMoneyTracker2.LedgerEntry
 
 
         private DateTime _date;
-
         public DateTime TransactionDate
         {
             get { return _date; }
@@ -101,22 +95,19 @@ namespace DLPMoneyTracker2.LedgerEntry
             }
         }
 
-        private TransactionType _transType;
+        private readonly TransactionType _transType;
         public TransactionType JournalEntryType { get { return _transType; } }
 
 
         public bool IsNew { get { return !this.ExistingTransactionId.HasValue; } }
         public abstract bool IsValidTransaction { get; }
 
-        protected ObservableCollection<SpecialDropListItem<IJournalAccount>> _listValidDebits = new ObservableCollection<SpecialDropListItem<IJournalAccount>>();
-
-        public ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidDebitAccounts
-        { get { return _listValidDebits; } }
+        protected ObservableCollection<SpecialDropListItem<IJournalAccount>> _listValidDebits = [];
+        public ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidDebitAccounts => _listValidDebits;
 
         public abstract string DebitHeader { get; }
 
-        protected IJournalAccount _debit;
-
+        protected IJournalAccount? _debit;
         public IJournalAccount? SelectedDebitAccount
         {
             get { return _debit; }
@@ -131,53 +122,45 @@ namespace DLPMoneyTracker2.LedgerEntry
 
 
         private DateTime? _debitBankDate;
-
         public DateTime? DebitBankDate
         {
             get { return _debitBankDate; }
-            set 
+            set
             {
                 _debitBankDate = value;
                 NotifyPropertyChanged(nameof(DebitBankDate));
             }
         }
-        public virtual bool IsDebitBankDateVisible
-        {
-            get
-            {
-                return !IsNew && (_debit is IMoneyAccount);
-            }
-        }
+        public virtual bool IsDebitBankDateVisible => !IsNew && (_debit is IMoneyAccount);
 
 
-
-		public bool CanUserEditCreditAccount 
+        public bool CanUserEditCreditAccount
         {
             get
             {
                 if (this.IsNew) return true;
-                if(SelectedCreditAccount != null)
+                if (SelectedCreditAccount != null)
                     return !SelectedCreditAccount.DateClosedUTC.HasValue;
 
                 return true;
-            } 
+            }
         }
-		public bool CanUserEditDebitAccount 
-        { 
+        public bool CanUserEditDebitAccount
+        {
             get
             {
                 if (this.IsNew) return true;
-                if(SelectedDebitAccount != null)
+                if (SelectedDebitAccount != null)
                     return !SelectedDebitAccount.DateClosedUTC.HasValue;
 
                 return true;
             }
         }
-    
 
 
 
-		public virtual bool IsCreditEnabled        { get { return CanUserEditCreditAccount; } }
+
+        public virtual bool IsCreditEnabled { get { return CanUserEditCreditAccount; } }
 
         public virtual bool IsCreditBankDateVisible
         {
@@ -188,14 +171,12 @@ namespace DLPMoneyTracker2.LedgerEntry
         }
 
 
-        protected ObservableCollection<SpecialDropListItem<IJournalAccount>> _listValidCredits = new ObservableCollection<SpecialDropListItem<IJournalAccount>>();
-
-        public ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidCreditAccounts        { get { return _listValidCredits; } }
+        protected ObservableCollection<SpecialDropListItem<IJournalAccount>> _listValidCredits = [];
+        public ObservableCollection<SpecialDropListItem<IJournalAccount>> ValidCreditAccounts { get { return _listValidCredits; } }
 
         public abstract string CreditHeader { get; }
 
-        protected IJournalAccount _credit;
-
+        protected IJournalAccount? _credit;
         public IJournalAccount? SelectedCreditAccount
         {
             get { return _credit; }
@@ -213,8 +194,8 @@ namespace DLPMoneyTracker2.LedgerEntry
         public DateTime? CreditBankDate
         {
             get { return _creditBankDate; }
-            set 
-            { 
+            set
+            {
                 _creditBankDate = value;
                 NotifyPropertyChanged(nameof(CreditBankDate));
             }
@@ -224,14 +205,14 @@ namespace DLPMoneyTracker2.LedgerEntry
 
         public abstract string Title { get; }
 
-        protected string _desc;
+        protected string _description = string.Empty;
 
         public string Description
         {
-            get { return _desc; }
+            get { return _description; }
             set
             {
-                _desc = value;
+                _description = value;
                 NotifyPropertyChanged(nameof(Description));
             }
         }
@@ -301,9 +282,10 @@ namespace DLPMoneyTracker2.LedgerEntry
         /// </summary>
         public virtual void SaveTransaction()
         {
+            if (this.SelectedCreditAccount is null || this.SelectedDebitAccount is null) return;
             if (!IsValidTransaction) return;
 
-            MoneyTransaction record = new MoneyTransaction()
+            MoneyTransaction record = new()
             {
                 JournalEntryType = this.JournalEntryType,
                 CreditAccount = this.SelectedCreditAccount,
@@ -315,7 +297,7 @@ namespace DLPMoneyTracker2.LedgerEntry
                 Description = this.Description
             };
 
-            if(this.ExistingTransactionId.HasValue)
+            if (this.ExistingTransactionId.HasValue)
             {
                 record.UID = this.ExistingTransactionId.Value;
             }

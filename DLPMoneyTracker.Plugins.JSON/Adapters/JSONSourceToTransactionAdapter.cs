@@ -4,24 +4,12 @@ using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.JSON.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
 
 namespace DLPMoneyTracker.Plugins.JSON.Adapters
 {
-    internal class JSONSourceToTransactionAdapter : ISourceToTransactionAdapter<JournalEntryJSON>
+    internal class JSONSourceToTransactionAdapter(ILedgerAccountRepository accountRepository) : ISourceToTransactionAdapter<JournalEntryJSON>
     {
-        private readonly ILedgerAccountRepository accountRepository;
-
-        public JSONSourceToTransactionAdapter(ILedgerAccountRepository accountRepository)
-        {
-            this.accountRepository = accountRepository;
-        }
-
+        private readonly ILedgerAccountRepository accountRepository = accountRepository;
 
         public Guid UID { get; set; }
         public DateTime TransactionDate { get; set; }
@@ -29,18 +17,17 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
         public string Description { get; set; } = string.Empty;
         public decimal TransactionAmount { get; set; }
 
-
-        public IJournalAccount DebitAccount { get; set; }
-        public Guid DebitAccountId { get { return DebitAccount?.Id ?? Guid.Empty; } }
-        public string DebitAccountName { get { return DebitAccount?.Description ?? string.Empty; } }
+        private IJournalAccount? _debit;
+        public IJournalAccount DebitAccount { get { return _debit ?? SpecialAccount.InvalidAccount; } set { _debit = value; } }
+        public Guid DebitAccountId => DebitAccount?.Id ?? Guid.Empty;
+        public string DebitAccountName => DebitAccount?.Description ?? string.Empty;
         public DateTime? DebitBankDate { get; set; }
 
-
-        public IJournalAccount CreditAccount { get; set; }
-        public Guid CreditAccountId { get { return CreditAccount?.Id ?? Guid.Empty; } }
-        public string CreditAccountName { get { return CreditAccount?.Description ?? string.Empty; } }
+        private IJournalAccount? _credit;
+        public IJournalAccount CreditAccount { get { return _credit ?? SpecialAccount.InvalidAccount; } set { _credit = value; } }
+        public Guid CreditAccountId => CreditAccount?.Id ?? Guid.Empty;
+        public string CreditAccountName => CreditAccount?.Description ?? string.Empty;
         public DateTime? CreditBankDate { get; set; }
-
 
         public void ExportSource(ref JournalEntryJSON acct)
         {

@@ -1,54 +1,39 @@
-﻿using DLPMoneyTracker.BusinessLogic.Factories;
-using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
+﻿using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
 using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.BankReconciliation;
-using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.SQL.Adapters;
 using DLPMoneyTracker.Plugins.SQL.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.SQL.Repositories
 {
-    public class SQLBankReconciliationRepository : IBankReconciliationRepository
+    public class SQLBankReconciliationRepository(NotificationSystem notification, IDLPConfig config, ILedgerAccountRepository accountRepository) : IBankReconciliationRepository
     {
-        private readonly NotificationSystem notification;
-        private readonly IDLPConfig config;
-        private readonly ILedgerAccountRepository accountRepository;
-
-        public SQLBankReconciliationRepository(NotificationSystem notification, IDLPConfig config, ILedgerAccountRepository accountRepository)
-        {
-            this.notification = notification;
-            this.config = config;
-            this.accountRepository = accountRepository;
-        }
+        private readonly NotificationSystem notification = notification;
+        private readonly IDLPConfig config = config;
+        private readonly ILedgerAccountRepository accountRepository = accountRepository;
 
         public List<BankReconciliationOverviewDTO> GetFullList()
         {
-            List<BankReconciliationOverviewDTO> listOverviews = new List<BankReconciliationOverviewDTO>();
-            using (DataContext context = new DataContext(config))
+            List<BankReconciliationOverviewDTO> listOverviews = [];
+            using (DataContext context = new(config))
             {
-                var listBankAccounts = context.Reconciliations.Select(s => s.BankAccount).Distinct().ToList();
+                List<Account> listBankAccounts = [.. context.Reconciliations.Select(s => s.BankAccount).Distinct().Where(x => x != null)];
                 if (listBankAccounts?.Any() != true) return listOverviews;
 
-                foreach(Account bank in listBankAccounts)
+                foreach (Account bank in listBankAccounts)
                 {
                     BankReconciliationOverviewDTO overview = new BankReconciliationOverviewDTO()
                     {
                         BankAccount = accountRepository.GetAccountByUID(bank.AccountUID)
                     };
-                    listOverviews.Add(overview); 
+                    listOverviews.Add(overview);
 
-                    var listReconciliations = context.Reconciliations.Where(x => x.BankAccount.AccountUID == bank.AccountUID).ToList();
-                    foreach(var record in listReconciliations)
+                    var listReconciliations = context.Reconciliations.Where(x => x.BankAccount != null && x.BankAccount.AccountUID == bank.AccountUID).ToList();
+                    foreach (var record in listReconciliations)
                     {
-                        BankReconciliationDTO dto = new BankReconciliationDTO()
+                        BankReconciliationDTO dto = new()
                         {
                             BankAccount = overview.BankAccount,
                             StatementDate = new DateRange(record.StartingDate, record.EndingDate),
@@ -57,23 +42,21 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
                         };
                         overview.ReconciliationList.Add(dto);
                     }
-
                 }
-
             }
 
             return listOverviews;
         }
 
-
         public List<IMoneyTransaction> GetReconciliationTransactions(Guid accountUID, DateRange statementDates)
         {
-            List<IMoneyTransaction> listMoneyRecords = new List<IMoneyTransaction>();
-            using (DataContext context = new DataContext(config))
+            List<IMoneyTransaction> listMoneyRecords = [];
+            using (DataContext context = new(config))
             {
                 var listTransactions = context.TransactionBatches
                     .Where(x =>
                         x.Details.Any(y =>
+                            y.LedgerAccount != null &&
                             y.LedgerAccount.AccountUID == accountUID &&
                             (
                                 !y.BankReconciliationDate.HasValue ||
@@ -89,8 +72,8 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
                     .ToList();
                 if (listTransactions?.Any() != true) return listMoneyRecords;
 
-                SQLSourceToTransactionAdapter adapter = new SQLSourceToTransactionAdapter(context, accountRepository);
-                foreach(var record in listTransactions)
+                SQLSourceToTransactionAdapter adapter = new(context, accountRepository);
+                foreach (var record in listTransactions)
                 {
                     adapter.ImportSource(record);
                     listMoneyRecords.Add(new MoneyTransaction(adapter));
@@ -100,23 +83,23 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
             return listMoneyRecords;
         }
 
-        
-
         public void SaveReconciliation(BankReconciliationDTO dto)
         {
-            using (DataContext context = new DataContext(config))
+            using (DataContext context = new(config))
             {
                 var existingReconciliation = context.Reconciliations
                     .FirstOrDefault(x =>
+                        x.BankAccount != null &&
                         x.BankAccount.AccountUID == dto.BankAccount.Id &&
                         x.StartingDate == dto.StatementDate.Begin &&
                         x.EndingDate == dto.StatementDate.End
                     );
-                if(existingReconciliation is null)
+                if (existingReconciliation is null)
                 {
                     // Need to make sure that the date range doesn't intersect with an existing record
                     bool hasIntersectingDates = context.Reconciliations
                         .Any(x =>
+                            x.BankAccount != null &&
                             x.BankAccount.AccountUID == dto.BankAccount.Id &&
                             (
                                 (
@@ -131,7 +114,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
                         );
                     if (hasIntersectingDates) throw new BadReconciliationException("Statement dates overlap existing reconciliations");
 
-                    existingReconciliation = new BankReconciliation()
+                    existingReconciliation = new()
                     {
                         BankAccount = context.Accounts.FirstOrDefault(x => x.AccountUID == dto.BankAccount.Id),
                         StartingDate = dto.StatementDate.Begin,
@@ -155,10 +138,8 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         public int GetRecordCount()
         {
-            using (DataContext context = new DataContext(config))
-            {
-                return context.Reconciliations.Count();
-            }
+            using DataContext context = new(config);
+            return context.Reconciliations.Count();
         }
     }
 
@@ -166,7 +147,6 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
     {
         public BadReconciliationException()
         {
-            
         }
 
         public BadReconciliationException(string? message) : base(message)
@@ -176,7 +156,5 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
         public BadReconciliationException(string? message, Exception? innerException) : base(message, innerException)
         {
         }
-
-
     }
 }

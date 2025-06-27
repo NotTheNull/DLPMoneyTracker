@@ -7,22 +7,18 @@ using System.Collections.Generic;
 
 namespace DLPMoneyTracker2.LedgerEntry
 {
-	public class IncomeJournalEntryVM : BaseRecordJournalEntryVM
-	{
-		public IncomeJournalEntryVM(
+	public class IncomeJournalEntryVM(
             IGetJournalAccountListByTypesUseCase getAccountsByTypeUseCase,
             IGetJournalAccountByUIDUseCase getAccountByUIDUseCase,
-            ISaveTransactionUseCase saveMoneyRecordUseCase) :
-            base(
-                getAccountsByTypeUseCase,
-                getAccountByUIDUseCase,
-                saveMoneyRecordUseCase,
-                new List<LedgerType>() { LedgerType.Bank },
-				new List<LedgerType>() { LedgerType.Receivable },
-				TransactionType.Income)
-		{
-		}
-
+            ISaveTransactionUseCase saveMoneyRecordUseCase) : 
+		BaseRecordJournalEntryVM(
+            getAccountsByTypeUseCase,
+            getAccountByUIDUseCase,
+            saveMoneyRecordUseCase,
+            [LedgerType.Bank],
+			[LedgerType.Receivable],
+			TransactionType.Income)
+	{
         public override string Title => "Enter Income";
         public override string DebitHeader { get { return "Bank"; } }
 
@@ -32,8 +28,8 @@ namespace DLPMoneyTracker2.LedgerEntry
 		{
 			get
 			{
-				return this.SelectedDebitAccount.JournalType == LedgerType.Bank
-					&& this.SelectedCreditAccount.JournalType == LedgerType.Receivable
+				return this.SelectedDebitAccount?.JournalType == LedgerType.Bank
+					&& this.SelectedCreditAccount?.JournalType == LedgerType.Receivable
 					&& !string.IsNullOrWhiteSpace(this.Description)
 					&& this.Amount > decimal.Zero;
 			}

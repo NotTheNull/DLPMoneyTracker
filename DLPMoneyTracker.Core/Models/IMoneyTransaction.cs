@@ -1,10 +1,4 @@
 ﻿using DLPMoneyTracker.Core.Models.LedgerAccounts;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Core.Models
 {
@@ -18,6 +12,7 @@ namespace DLPMoneyTracker.Core.Models
         Correction,
         Transfer
     }
+
     public interface IMoneyTransaction
     {
         Guid UID { get; }
@@ -26,6 +21,7 @@ namespace DLPMoneyTracker.Core.Models
 
         // For now, I'll keep the one to one relationship going; I may change this once I add subledger Funds accounts
         IJournalAccount DebitAccount { get; }
+
         Guid DebitAccountId { get; }
         string DebitAccountName { get; }
         DateTime? DebitBankDate { get; }
@@ -44,9 +40,8 @@ namespace DLPMoneyTracker.Core.Models
     public class MoneyTransaction : IMoneyTransaction
     {
         public MoneyTransaction()
-        {
-            
-        }
+        { }
+
         public MoneyTransaction(IMoneyTransaction transaction)
         {
             this.Copy(transaction);
@@ -58,17 +53,15 @@ namespace DLPMoneyTracker.Core.Models
         public string Description { get; set; } = string.Empty;
         public decimal TransactionAmount { get; set; } = decimal.Zero;
 
-        public IJournalAccount DebitAccount { get; set; }
-        public Guid DebitAccountId { get { return DebitAccount?.Id ?? Guid.Empty; } }
-        public string DebitAccountName { get { return DebitAccount?.Description ?? string.Empty; } }
+        public IJournalAccount DebitAccount { get; set; } = SpecialAccount.InvalidAccount;
+        public Guid DebitAccountId => DebitAccount.Id;
+        public string DebitAccountName => DebitAccount.Description;
         public DateTime? DebitBankDate { get; set; }
 
-
-        public IJournalAccount CreditAccount { get; set; }
-        public Guid CreditAccountId { get { return CreditAccount?.Id ?? Guid.Empty; } }
-        public string CreditAccountName { get { return CreditAccount?.Description ?? string.Empty; } }
+        public IJournalAccount CreditAccount { get; set; } = SpecialAccount.InvalidAccount;
+        public Guid CreditAccountId => CreditAccount.Id;
+        public string CreditAccountName => CreditAccount.Description;
         public DateTime? CreditBankDate { get; set; }
-
 
         public void Copy(IMoneyTransaction transaction)
         {

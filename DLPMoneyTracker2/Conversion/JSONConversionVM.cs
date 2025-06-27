@@ -3,10 +3,7 @@ using DLPMoneyTracker.Plugins.JSON.Repositories;
 using DLPMoneyTracker.Plugins.SQL.Repositories;
 using DLPMoneyTracker2.Core;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace DLPMoneyTracker2.Conversion
@@ -45,39 +42,43 @@ namespace DLPMoneyTracker2.Conversion
             this.Refresh();
         }
 
-
         #region Properties
-        private ConversionDTO _jsonCounts = new ConversionDTO();
-        public int JSONAccountCount 
+
+        private readonly ConversionDTO _jsonCounts = new();
+
+        public int JSONAccountCount
         {
-            get{ return _jsonCounts.JournalAccountCount; } 
+            get { return _jsonCounts.JournalAccountCount; }
             set
             {
                 _jsonCounts.JournalAccountCount = value;
                 NotifyPropertyChanged(nameof(JSONAccountCount));
             }
         }
-        public int JSONPlanCount 
+
+        public int JSONPlanCount
         {
-            get { return _jsonCounts.BudgetPlanCount; } 
+            get { return _jsonCounts.BudgetPlanCount; }
             set
             {
                 _jsonCounts.BudgetPlanCount = value;
                 NotifyPropertyChanged(nameof(JSONPlanCount));
             }
         }
-        public int JSONReconciliationCount 
+
+        public int JSONReconciliationCount
         {
-            get { return _jsonCounts.BankReconciliationCount; } 
+            get { return _jsonCounts.BankReconciliationCount; }
             set
             {
                 _jsonCounts.BankReconciliationCount = value;
                 NotifyPropertyChanged(nameof(JSONReconciliationCount));
             }
         }
-        public long JSONTransactionCount 
+
+        public long JSONTransactionCount
         {
-            get { return _jsonCounts.TransactionCount; } 
+            get { return _jsonCounts.TransactionCount; }
             set
             {
                 _jsonCounts.TransactionCount = value;
@@ -85,95 +86,79 @@ namespace DLPMoneyTracker2.Conversion
             }
         }
 
+        private readonly ConversionDTO _sqlCounts = new();
 
-
-
-
-        private ConversionDTO _sqlCounts = new ConversionDTO();
-
-        public int SQLAccountCount 
+        public int SQLAccountCount
         {
-            get { return _sqlCounts.JournalAccountCount; } 
+            get { return _sqlCounts.JournalAccountCount; }
             set
             {
                 _sqlCounts.JournalAccountCount = value;
                 NotifyPropertyChanged(nameof(SQLAccountCount));
             }
         }
-        public int SQLPlanCount 
+
+        public int SQLPlanCount
         {
-            get { return _sqlCounts.BudgetPlanCount; } 
+            get { return _sqlCounts.BudgetPlanCount; }
             set
             {
                 _sqlCounts.BudgetPlanCount = value;
                 NotifyPropertyChanged(nameof(SQLPlanCount));
             }
         }
-        public int SQLReconciliationCount 
+
+        public int SQLReconciliationCount
         {
-            get { return _sqlCounts.BankReconciliationCount; } 
+            get { return _sqlCounts.BankReconciliationCount; }
             set
             {
                 _sqlCounts.BankReconciliationCount = value;
                 NotifyPropertyChanged(nameof(SQLReconciliationCount));
             }
         }
-        public long SQLTransactionCount 
+
+        public long SQLTransactionCount
         {
-            get { return _sqlCounts.TransactionCount; } 
+            get { return _sqlCounts.TransactionCount; }
             set
             {
                 _sqlCounts.TransactionCount = value;
                 NotifyPropertyChanged(nameof(SQLTransactionCount));
             }
         }
-        #endregion
+
+        #endregion Properties
 
         #region Commands
 
-        private RelayCommand _cmdRefresh;
-        public RelayCommand CommandRefresh
-        {
-            get { return _cmdRefresh ?? (_cmdRefresh = new RelayCommand((o) => this.Refresh())); }
-        }
+        public RelayCommand CommandRefresh => new((o) => this.Refresh());
 
+        public RelayCommand CommandExportJSON => new((o) => this.ExportJSON());
 
-        private RelayCommand _cmdExportJSON;
-        public RelayCommand CommandExportJSON
-        {
-            get { return _cmdExportJSON ?? (_cmdExportJSON = new RelayCommand((o) => this.ExportJSON())); }
-        }
+        public RelayCommand CommandImportSQL => new((o) => this.ImportSQL());
 
-
-
-
-        private RelayCommand _cmdImportSQL;
-        public RelayCommand CommandImportSQL
-        {
-            get { return _cmdImportSQL ?? (_cmdImportSQL = new RelayCommand((o) => this.ImportSQL())); }
-        }
-
-
-
-        #endregion
+        #endregion Commands
 
         #region UI Helpers
+
         private bool _showProgressBar;
 
         public bool ShowProgressBar
         {
             get { return _showProgressBar; }
-            set 
+            set
             {
                 _showProgressBar = value;
                 NotifyPropertyChanged(nameof(ShowProgressBar));
             }
         }
 
-        #endregion
+        #endregion UI Helpers
+
         private void ExportJSON()
         {
-            if (this.ShowProgressBar) return; // Work already in progress
+            if (this.ShowProgressBar) return;
 
             this.ShowProgressBar = true;
             try
@@ -207,7 +192,6 @@ namespace DLPMoneyTracker2.Conversion
                 this.Refresh();
                 this.ShowProgressBar = false;
             }
-
         }
 
         private void ImportSQL()
@@ -218,32 +202,32 @@ namespace DLPMoneyTracker2.Conversion
             try
             {
                 var listAccounts = jsonAccountRepository.GetFullList();
-                foreach(var account in listAccounts)
+                foreach (var account in listAccounts)
                 {
                     sqlAccountRepository.SaveJournalAccount(account);
                 }
 
                 var listBudgetPlans = jsonPlanRepository.GetFullList();
-                foreach(var plan in listBudgetPlans)
+                foreach (var plan in listBudgetPlans)
                 {
                     sqlPlanRepository.SavePlan(plan);
                 }
 
                 var listTransactions = jsonTransactionRepository.GetFullList();
-                foreach(var record in listTransactions.OrderBy(o => o.TransactionDate).ThenBy(o => o.UID))
+                foreach (var record in listTransactions.OrderBy(o => o.TransactionDate).ThenBy(o => o.UID))
                 {
                     sqlTransactionRepository.SaveTransaction(record);
                 }
 
                 var listReconciliations = jsonReconciliationRepository.GetFullList();
-                foreach(var reconciliation in listReconciliations.SelectMany(s => s.ReconciliationList))
+                foreach (var reconciliation in listReconciliations.SelectMany(s => s.ReconciliationList))
                 {
                     sqlReconciliationRepository.SaveReconciliation(reconciliation);
                 }
 
                 MessageBox.Show("Import complete");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show($"Unable to import: {ex.Message}");
             }
@@ -253,8 +237,6 @@ namespace DLPMoneyTracker2.Conversion
                 this.ShowProgressBar = false;
             }
         }
-
-
 
         private void Refresh()
         {
@@ -281,9 +263,5 @@ namespace DLPMoneyTracker2.Conversion
             NotifyPropertyChanged(nameof(SQLReconciliationCount));
             NotifyPropertyChanged(nameof(SQLTransactionCount));
         }
-
-
-
-
     }
 }

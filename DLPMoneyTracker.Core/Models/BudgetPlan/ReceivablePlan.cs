@@ -1,60 +1,43 @@
 ﻿using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Core.Models.ScheduleRecurrence;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace DLPMoneyTracker.Core.Models.BudgetPlan
 {
     public class ReceivablePlan : IBudgetPlan
     {
         public Guid UID { get; set; } = Guid.NewGuid();
 
-        public BudgetPlanType PlanType { get { return BudgetPlanType.Receivable; } }
+        public BudgetPlanType PlanType => BudgetPlanType.Receivable;
 
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         public decimal ExpectedAmount { get; set; }
 
-        private List<LedgerType> _validDebits = new List<LedgerType>()
-        {
+        private readonly List<LedgerType> _validDebits =
+        [
             LedgerType.Bank
-        };
+        ];
 
+        public List<LedgerType> ValidDebitAccountTypes => _validDebits;
 
-        public List<LedgerType> ValidDebitAccountTypes { get { return _validDebits; } }
-
-        public IJournalAccount DebitAccount { get; set; }
-
-        public Guid DebitAccountId { get { return DebitAccount?.Id ?? Guid.Empty; } }
-
-        public string DebitAccountName { get { return DebitAccount?.Description ?? string.Empty; } }
-
-
+        public IJournalAccount DebitAccount { get; set; } = SpecialAccount.InvalidAccount;
+        public Guid DebitAccountId => DebitAccount.Id;
+        public string DebitAccountName => DebitAccount.Description;
 
         private List<LedgerType> _validCredits = new List<LedgerType>()
         {
             LedgerType.Receivable
         };
 
+        public List<LedgerType> ValidCreditAccountTypes => _validCredits;
 
-        public List<LedgerType> ValidCreditAccountTypes { get { return _validCredits; } }
+        public IJournalAccount CreditAccount { get; set; } = SpecialAccount.InvalidAccount;
+        public Guid CreditAccountId => CreditAccount.Id;
+        public string CreditAccountName => CreditAccount.Description;
 
-        public IJournalAccount CreditAccount { get; set; }
-
-        public Guid CreditAccountId { get { return CreditAccount?.Id ?? Guid.Empty; } }
-
-        public string CreditAccountName { get { return CreditAccount?.Description ?? string.Empty; } }
-
-
-        public IScheduleRecurrence Recurrence { get; set; }
-        public DateTime NotificationDate { get { return Recurrence.NotificationDate; } }
-        public DateTime NextOccurrence { get { return Recurrence.NextOccurrence; } }
-
-
+        public IScheduleRecurrence? Recurrence { get; set; }
+        public DateTime NotificationDate => Recurrence?.NotificationDate ?? DateTime.MinValue;
+        public DateTime NextOccurrence => Recurrence?.NextOccurrence ?? DateTime.MinValue;
 
         public bool IsValid()
         {
@@ -66,6 +49,7 @@ namespace DLPMoneyTracker.Core.Models.BudgetPlan
 
             return true;
         }
+
         public void Copy(IBudgetPlan plan)
         {
             ArgumentNullException.ThrowIfNull(plan);
@@ -77,7 +61,6 @@ namespace DLPMoneyTracker.Core.Models.BudgetPlan
             this.Description = plan.Description;
             this.Recurrence = plan.Recurrence;
             this.ExpectedAmount = plan.ExpectedAmount;
-
         }
     }
 }

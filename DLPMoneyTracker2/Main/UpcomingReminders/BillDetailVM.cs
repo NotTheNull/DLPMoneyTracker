@@ -5,36 +5,13 @@ using System;
 
 namespace DLPMoneyTracker2.Main.UpcomingReminders
 {
-    public class BillDetailVM : BaseViewModel
+    public class BillDetailVM(IBudgetPlan plan) : BaseViewModel
     {
-        private readonly IBudgetPlan _plan;
+        private readonly IBudgetPlan _plan = plan;
 
-        public BillDetailVM(IBudgetPlan plan)
-        {
-            _plan = plan;
-        }
-
-        public DateTime DateDue
-        {
-            get
-            {
-                return _plan?.NextOccurrence ?? DateTime.MinValue;
-            }
-        }
-
-        public string DisplayDate
-        {
-            get { return string.Format("{0:yyyy/MM/dd}", this.DateDue); }
-        }
-
-        public string Description
-        {
-            get { return _plan?.Description ?? string.Empty; }
-        }
-
-        public decimal Amount
-        {
-            get { return _plan?.ExpectedAmount ?? decimal.Zero; }
-        }
+        public DateTime DateDue => _plan?.NextOccurrence ?? DateTime.MinValue;
+        public string DisplayDate => string.Format("{0:yyyy/MM/dd}", this.DateDue);
+        public string Description => _plan?.Description ?? string.Empty; 
+        public decimal Amount => _plan?.ExpectedAmount ?? decimal.Zero; 
     }
 }

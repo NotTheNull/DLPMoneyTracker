@@ -1,11 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DLPMoneyTracker.Core.Models.LedgerAccounts
+﻿namespace DLPMoneyTracker.Core.Models.LedgerAccounts
 {
     public class LoanAccount : ILiabilityAccount
     {
@@ -13,13 +6,15 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
 
         public string Description { get; set; } = string.Empty;
 
-        public LedgerType JournalType  { get { return LedgerType.LiabilityLoan; } }
+        public LedgerType JournalType => LedgerType.LiabilityLoan;
 
         public int OrderBy { get; set; } = 0;
 
         public DateTime? DateClosedUTC { get; set; }
-        
-        public LoanAccount() {}
+
+        public LoanAccount()
+        { }
+
         public LoanAccount(IJournalAccount cpy)
         {
             this.Copy(cpy);
@@ -32,8 +27,7 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
             this.Id = cpy.Id;
             this.Description = cpy.Description;
             this.OrderBy = cpy.OrderBy;
-            this.DateClosedUTC = cpy.DateClosedUTC;            
+            this.DateClosedUTC = cpy.DateClosedUTC;
         }
-
     }
 }

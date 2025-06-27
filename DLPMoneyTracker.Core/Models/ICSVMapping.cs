@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DLPMoneyTracker.Core.Models
+﻿namespace DLPMoneyTracker.Core.Models
 {
     public interface ICSVMapping : IDisposable
     {
@@ -17,8 +11,11 @@ namespace DLPMoneyTracker.Core.Models
         Dictionary<string, int> Mapping { get; }
 
         bool IsValidMapping();
+
         int GetMapping(string columnName);
+
         void SetMapping(string columnName, int columnIndex);
+
         void Copy(ICSVMapping cpy);
     }
 
@@ -27,21 +24,18 @@ namespace DLPMoneyTracker.Core.Models
         public int StartingRow { get; set; } = 1;
         public bool IsAmountInverted { get; set; } = false;
 
-        public Dictionary<string, int> Mapping { get; set; } = new Dictionary<string, int>();
+        public Dictionary<string, int> Mapping { get; set; } = [];
 
-
-
-        ~CSVMapping() { this.Dispose(); }
-
-
-
+        ~CSVMapping()
+        {
+            this.Dispose();
+        }
 
         public bool IsValidMapping()
         {
             return this.StartingRow >= 0
                 && this.Mapping.Count > 0;
         }
-
 
         public void Copy(ICSVMapping cpy)
         {
@@ -59,20 +53,16 @@ namespace DLPMoneyTracker.Core.Models
         public int GetMapping(string columnName)
         {
             // Remember to deduct 1 since arrays are 0-index
-            if (this.Mapping.ContainsKey(columnName)) return this.Mapping[columnName] - 1;
+            if (this.Mapping.TryGetValue(columnName, out int value)) return value - 1;
 
             return -1;
         }
 
         public void SetMapping(string columnName, int columnIndex)
         {
-            if(this.Mapping.ContainsKey(columnName))
+            if (!Mapping.TryAdd(columnName, columnIndex))
             {
                 this.Mapping[columnName] = columnIndex;
-            }
-            else
-            {
-                this.Mapping.Add(columnName, columnIndex);
             }
         }
 
@@ -80,12 +70,10 @@ namespace DLPMoneyTracker.Core.Models
         {
             GC.SuppressFinalize(this);
 
-            if(this.Mapping != null)
+            if (this.Mapping != null)
             {
                 this.Mapping.Clear();
-                this.Mapping = null;
             }
         }
     }
-
 }

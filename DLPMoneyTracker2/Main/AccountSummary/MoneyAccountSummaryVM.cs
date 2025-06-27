@@ -19,7 +19,7 @@ namespace DLPMoneyTracker2.Main.AccountSummary
         private readonly IGetUpcomingPlansForAccountUseCase getUpcomingPlansUseCase;
         private readonly IFindTransactionForBudgetPlanUseCase findBudgetPlanTransactionUseCase;
         private readonly NotificationSystem notifications;
-        private IJournalAccount _account;
+        private IJournalAccount _account = null!;
 
         public MoneyAccountSummaryVM(
             IGetJournalAccountCurrentMonthBalanceUseCase getAccountBalanceUseCase,
@@ -41,12 +41,11 @@ namespace DLPMoneyTracker2.Main.AccountSummary
             this.Refresh();
         }
 
+        public Guid AccountId => _account.Id;
 
-        public Guid AccountId { get { return _account.Id; } }
+        public LedgerType AccountType => _account.JournalType;
 
-        public LedgerType AccountType { get { return _account.JournalType; } }
-
-        public string AccountDesc { get { return _account.Description; } }
+        public string AccountDesc => _account.Description;
 
         private decimal _bal;
 
@@ -61,11 +60,10 @@ namespace DLPMoneyTracker2.Main.AccountSummary
             }
         }
 
-        private ObservableCollection<JournalPlanVM> _listPlans = new ObservableCollection<JournalPlanVM>();
+        private readonly ObservableCollection<JournalPlanVM> _listPlans = [];
+        public ObservableCollection<JournalPlanVM> PlanList => _listPlans;
 
-        public ObservableCollection<JournalPlanVM> PlanList { get { return _listPlans; } }
-
-        public bool ShowBudgetData { get { return PlanList.Count > 0; } }
+        public bool ShowBudgetData => PlanList.Count > 0;
 
         public decimal BudgetBalance
         {
@@ -76,38 +74,14 @@ namespace DLPMoneyTracker2.Main.AccountSummary
                 {
                     foreach (var p in this.PlanList)
                     {
-                        switch (p.PlanType)
+                        bal += p.PlanType switch
                         {
-                            case BudgetPlanType.Receivable:
-                                bal += p.Amount;
-                                break;
-
-                            case BudgetPlanType.Payable:
-                                bal -= p.Amount;
-                                break;
-
-                            case BudgetPlanType.Transfer:
-                                if (p.IsParentDebit)
-                                {
-                                    bal += p.Amount;
-                                }
-                                else
-                                {
-                                    bal -= p.Amount;
-                                }
-                                break;
-
-                            case BudgetPlanType.DebtPayment:
-                                if (this.AccountType == LedgerType.Bank)
-                                {
-                                    bal -= p.Amount;
-                                }
-                                else
-                                {
-                                    bal += p.Amount;
-                                }
-                                break;
-                        }
+                            BudgetPlanType.Receivable => p.Amount,
+                            BudgetPlanType.Payable => p.Amount * -1,
+                            BudgetPlanType.Transfer => p.Amount * (p.IsParentDebit ? 1 : -1),
+                            BudgetPlanType.DebtPayment => p.Amount * ((this.AccountType == LedgerType.Bank) ? -1 : 1),
+                            _ => 0
+                        };
                     }
                 }
                 return this.AccountType == LedgerType.Bank ? bal : bal * -1;
@@ -116,62 +90,35 @@ namespace DLPMoneyTracker2.Main.AccountSummary
 
         #region Commands
 
-        private RelayCommand _cmdDetail;
-
-        public RelayCommand CommandDetails
-        {
-            get
+        public RelayCommand CommandDetails =>
+            new((o) =>
             {
-                return _cmdDetail ?? (_cmdDetail = new RelayCommand((o) =>
-                {
-                    TransDetailFilter filter = new TransDetailFilter() { Account = _account };
-                    AccountTransactionDetail window = new AccountTransactionDetail(filter);
-                    window.Show();
-                }));
-            }
-        }
+                TransDetailFilter filter = new() { Account = _account };
+                AccountTransactionDetail window = new(filter);
+                window.Show();
+            });
 
-        private RelayCommand _cmdCreateTrans;
-
-        public RelayCommand CommandCreateTransaction
-        {
-            get
+        public RelayCommand CommandCreateTransaction =>
+            new((plan) =>
             {
-                return _cmdCreateTrans ?? (_cmdCreateTrans = new RelayCommand((plan) =>
+                if (plan is JournalPlanVM jPlan)
                 {
-                    if (plan is JournalPlanVM jPlan)
+                    IJournalEntryVM transVM = jPlan.PlanType switch
                     {
-                        IJournalEntryVM transVM;
-                        switch (jPlan.PlanType)
-                        {
-                            case BudgetPlanType.Payable:
-                                transVM = UICore.DependencyHost.GetRequiredService<ExpenseJournalEntryVM>();
-                                break;
+                        BudgetPlanType.Payable => UICore.DependencyHost.GetRequiredService<ExpenseJournalEntryVM>(),
+                        BudgetPlanType.Receivable => UICore.DependencyHost.GetRequiredService<IncomeJournalEntryVM>(),
+                        BudgetPlanType.Transfer => UICore.DependencyHost.GetRequiredService<TransferJournalEntryVM>(),
+                        BudgetPlanType.DebtPayment => UICore.DependencyHost.GetRequiredService<DebtPaymentJournalEntryVM>(),
+                        _ => throw new InvalidOperationException($"No transaction definition for plan type {jPlan.PlanType} ")
+                    };
 
-                            case BudgetPlanType.Receivable:
-                                transVM = UICore.DependencyHost.GetRequiredService<IncomeJournalEntryVM>();
-                                break;
+                    transVM.FillFromPlan(jPlan.ThePlan);
+                    RecordJournalEntry window = new(transVM);
+                    window.Show();
 
-                            case BudgetPlanType.Transfer:
-                                transVM = UICore.DependencyHost.GetRequiredService<TransferJournalEntryVM>();
-                                break;
-
-                            case BudgetPlanType.DebtPayment:
-                                transVM = UICore.DependencyHost.GetRequiredService<DebtPaymentJournalEntryVM>();
-                                break;
-
-                            default:
-                                return;
-                        }
-                        transVM.FillFromPlan(jPlan.ThePlan);
-                        RecordJournalEntry window = new RecordJournalEntry(transVM);
-                        window.Show();
-
-                        this.RemoveBudgetPlan(jPlan);
-                    }
-                }));
-            }
-        }
+                    this.RemoveBudgetPlan(jPlan);
+                }
+            });
 
         #endregion Commands
 

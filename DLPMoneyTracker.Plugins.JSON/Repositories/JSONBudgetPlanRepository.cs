@@ -5,18 +5,13 @@ using DLPMoneyTracker.Core.Models.BudgetPlan;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.JSON.Adapters;
 using DLPMoneyTracker.Plugins.JSON.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.JSON.Repositories
 {
     public class JSONBudgetPlanRepository : IBudgetPlanRepository, IJSONRepository
     {
-        private int _year;
+        private readonly int _year;
         private readonly ILedgerAccountRepository accountRepository;
         private readonly IDLPConfig config;
 
@@ -28,38 +23,29 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             this.LoadFromFile();
         }
 
-        public List<IBudgetPlan> BudgetPlanList { get; set; } = new List<IBudgetPlan>();
+        public List<IBudgetPlan> BudgetPlanList { get; set; } = [];
 
-        public string FilePath { get { return Path.Combine(config.JSONFilePath, "Data", "JournalPlan.json"); } }
-
+        public string FilePath => Path.Combine(config.JSONFilePath, "Data", "JournalPlan.json");
 
         public void LoadFromFile()
         {
             this.BudgetPlanList.Clear();
-            string json = string.Empty;
-            if (File.Exists(this.FilePath))
-            {
-                json = File.ReadAllText(FilePath);
-            }
-            else
-            {
-                return;
-            }
+            if (!File.Exists(this.FilePath)) return;
+
+            string json = File.ReadAllText(FilePath);
             if (string.IsNullOrWhiteSpace(json)) return;
 
-            var dataList = (List<JournalPlanJSON>)JsonSerializer.Deserialize(json, typeof(List<JournalPlanJSON>));
+            var dataList = (List<JournalPlanJSON>?)JsonSerializer.Deserialize(json, typeof(List<JournalPlanJSON>));
             if (dataList?.Any() != true) return;
 
-            BudgetPlanFactory budgetFactory = new BudgetPlanFactory();
-            ScheduleRecurrenceFactory recurrenceFactory = new ScheduleRecurrenceFactory();
-            JSONScheduleRecurrenceAdapter adapter = new JSONScheduleRecurrenceAdapter();
-            foreach(var data in dataList)
+            JSONScheduleRecurrenceAdapter adapter = new();
+            foreach (var data in dataList)
             {
                 adapter.ImportJSON(data.RecurrenceJSON);
-                var recurrence = recurrenceFactory.Build(adapter);
+                var recurrence = ScheduleRecurrenceFactory.Build(adapter);
                 IJournalAccount debit = accountRepository.GetAccountByUID(data.DebitAccountId);
                 IJournalAccount credit = accountRepository.GetAccountByUID(data.CreditAccountId);
-                var newPlan = budgetFactory.Build(data.PlanType, data.UID, data.Description, debit, credit, data.ExpectedAmount, recurrence);
+                var newPlan = BudgetPlanFactory.Build(data.PlanType, data.UID, data.Description, debit, credit, data.ExpectedAmount, recurrence);
                 BudgetPlanList.Add(newPlan);
             }
         }
@@ -68,10 +54,10 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         {
             if (this.BudgetPlanList.Any() != true) return;
 
-            List<JournalPlanJSON> listJSONPlans = new List<JournalPlanJSON>();
-            foreach(var plan in this.BudgetPlanList)
+            List<JournalPlanJSON> listJSONPlans = [];
+            foreach (var plan in this.BudgetPlanList)
             {
-                JournalPlanJSON jsonPlan = new JournalPlanJSON();
+                JournalPlanJSON jsonPlan = new();
                 jsonPlan.Copy(plan);
                 listJSONPlans.Add(jsonPlan);
             }
@@ -80,30 +66,30 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             File.WriteAllText(this.FilePath, json);
         }
 
-
         public List<IBudgetPlan> Search(BudgetPlanSearch search)
         {
+            ArgumentNullException.ThrowIfNull(search);
             var listPlans = this.BudgetPlanList.Where(x => search.DateRange.IsWithinRange(x.NextOccurrence));
 
-            if(search.AccountUID != null && search.AccountUID != Guid.Empty)
+            if (search.AccountUID != Guid.Empty)
             {
                 listPlans = listPlans.Where(x => x.DebitAccountId == search.AccountUID || x.CreditAccountId == search.AccountUID);
             }
 
-            if(!string.IsNullOrWhiteSpace(search.FilterText))
+            if (!string.IsNullOrWhiteSpace(search.FilterText))
             {
                 listPlans = listPlans.Where(x => x.Description.Contains(search.FilterText));
             }
 
-            return listPlans.ToList();
+            return [.. listPlans];
         }
 
         public List<IBudgetPlan> GetUpcomingPlansForAccount(Guid accountUID)
         {
-            if (!this.BudgetPlanList.Any(x => x.CreditAccountId == accountUID || x.DebitAccountId == accountUID)) return null;
+            if (!this.BudgetPlanList.Any(x => x.CreditAccountId == accountUID || x.DebitAccountId == accountUID)) return [];
 
-            List<IBudgetPlan> listPlans = new List<IBudgetPlan>();
-            foreach(var record in this.BudgetPlanList.Where(x => x.CreditAccountId == accountUID || x.DebitAccountId == accountUID))
+            List<IBudgetPlan> listPlans = [];
+            foreach (var record in this.BudgetPlanList.Where(x => x.CreditAccountId == accountUID || x.DebitAccountId == accountUID))
             {
                 // Adding five days for Next Occurrence check to account for weekends & holidays that might delay the bill posting
                 if (record.NotificationDate <= DateTime.Today && record.NextOccurrence.AddDays(5) >= DateTime.Today)
@@ -117,7 +103,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
 
         public List<IBudgetPlan> GetFullList()
         {
-            return this.BudgetPlanList.ToList();
+            return [.. this.BudgetPlanList];
         }
 
         public void DeletePlan(Guid planUID)
@@ -136,7 +122,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             if (plan.UID == Guid.Empty) throw new InvalidOperationException("Plan UID cannot be EMPTY");
 
             var existingPlan = this.BudgetPlanList.FirstOrDefault(x => x.UID == plan.UID);
-            if(existingPlan is null)
+            if (existingPlan is null)
             {
                 this.BudgetPlanList.Add(plan);
             }
@@ -155,12 +141,12 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
 
         public List<IBudgetPlan> GetAllPlansForAccount(Guid accountUID)
         {
-            return this.BudgetPlanList.Where(x => x.DebitAccountId == accountUID || x.CreditAccountId == accountUID).ToList();
+            return [.. this.BudgetPlanList.Where(x => x.DebitAccountId == accountUID || x.CreditAccountId == accountUID)];
         }
 
         public List<IBudgetPlan> GetPlanListByType(BudgetPlanType planType)
         {
-            return this.BudgetPlanList.Where(x => x.PlanType == planType).ToList();
+            return [.. this.BudgetPlanList.Where(x => x.PlanType == planType)];
         }
     }
 }

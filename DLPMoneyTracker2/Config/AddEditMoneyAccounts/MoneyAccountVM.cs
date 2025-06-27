@@ -1,39 +1,35 @@
-﻿using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
+﻿using DLPMoneyTracker.BusinessLogic.Factories;
+using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
+using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
-using DLPMoneyTracker.Core;
 using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using DLPMoneyTracker.Core.Models;
-using DLPMoneyTracker.BusinessLogic.Factories;
 
 namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
 {
     public class MoneyAccountVM : BaseViewModel, IJournalAccount
     {
-        private readonly ISaveJournalAccountUseCase saveAccountUseCase;
-        private readonly List<LedgerType> _listValidTypes = new List<LedgerType>() { LedgerType.Bank, LedgerType.LiabilityCard, LedgerType.LiabilityLoan };
-
+        private readonly ISaveJournalAccountUseCase _saveAccountUseCase;
+        private readonly List<LedgerType> _listValidTypes = [LedgerType.Bank, LedgerType.LiabilityCard, LedgerType.LiabilityLoan];
 
         public MoneyAccountVM(
             ISaveJournalAccountUseCase saveAccountUseCase) : base()
         {
-            this.saveAccountUseCase = saveAccountUseCase;
+            this._saveAccountUseCase = saveAccountUseCase;
             this.Clear();
         }
 
-
         public Guid Id { get; private set; }
 
-        private string _desc = string.Empty;
+        private string _description = string.Empty;
 
         public string Description
         {
-            get { return _desc; }
+            get { return _description; }
             set
             {
-                _desc = value;
+                _description = value;
                 NotifyPropertyChanged(nameof(Description));
             }
         }
@@ -50,7 +46,6 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             }
         }
 
-        
         private DateTime? _closeDateUTC;
 
         public DateTime? DateClosedUTC
@@ -65,14 +60,15 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             }
         }
 
-        public bool IsClosed
-        { get { return _closeDateUTC.HasValue; } }
+        public bool IsClosed => _closeDateUTC.HasValue;
 
         public string DisplayClosedMessage
         {
             get
             {
+#pragma warning disable CS8629 // Nullability is checked with this.IsClosed
                 if (this.IsClosed) return string.Format("CLOSED: {0}", _closeDateUTC.Value.ToLocalTime());
+#pragma warning restore CS8629 // Nullable value type may be null.
 
                 return string.Empty;
             }
@@ -89,17 +85,10 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
                 NotifyPropertyChanged(nameof(DisplayOrder));
             }
         }
-        public int OrderBy { get { return DisplayOrder; } }
 
+        public int OrderBy => DisplayOrder; 
 
-        public ICSVMapping Mapping { get; set; } = null;
-
-
-
-
-
-
-
+        public ICSVMapping? Mapping { get; set; }
 
         public void Clear()
         {
@@ -112,7 +101,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
 
         public void Copy(IJournalAccount account)
         {
-            if (account is null) throw new ArgumentNullException("Money Account");
+            ArgumentNullException.ThrowIfNull(account);
             if (!_listValidTypes.Contains(account.JournalType)) throw new InvalidCastException(string.Format("[{0} - {1}] is not a valid Money Account", account.JournalType.ToString(), account.Description));
 
             Id = account.Id;
@@ -120,7 +109,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             JournalType = account.JournalType;
             DateClosedUTC = account.DateClosedUTC;
             DisplayOrder = account.OrderBy;
-            
+
             if (this.Mapping != null)
             {
                 this.Mapping.Dispose();
@@ -130,24 +119,22 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             if (account is IMoneyAccount money)
             {
                 this.Mapping = new CSVMapping();
-                this.Mapping.Copy(money.Mapping);
+                if (money.Mapping != null) this.Mapping.Copy(money.Mapping);
             }
         }
 
         public void SaveAccount()
         {
-            if (string.IsNullOrWhiteSpace(_desc)) return;
+            if (string.IsNullOrWhiteSpace(_description)) return;
             if (JournalType == LedgerType.NotSet) return;
 
-            JournalAccountFactory factory = new JournalAccountFactory();
-            var account = factory.Build(this);
-            if(account is IMoneyAccount money && this.Mapping != null)
+            var account = JournalAccountFactory.Build(this);
+            if (account is IMoneyAccount money && this.Mapping != null)
             {
-                money.Mapping.Copy(this.Mapping);
+                money.Mapping?.Copy(this.Mapping);
             }
 
-            saveAccountUseCase.Execute(account);
-            
+            _saveAccountUseCase.Execute(account);
         }
     }
 }

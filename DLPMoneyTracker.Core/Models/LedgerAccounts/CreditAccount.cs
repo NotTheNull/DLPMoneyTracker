@@ -1,11 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DLPMoneyTracker.Core.Models.LedgerAccounts
+﻿namespace DLPMoneyTracker.Core.Models.LedgerAccounts
 {
     public class CreditCardAccount : IMoneyAccount, ILiabilityAccount
     {
@@ -13,7 +6,7 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
 
         public string Description { get; set; } = string.Empty;
 
-        public LedgerType JournalType { get { return LedgerType.LiabilityCard; } }
+        public LedgerType JournalType => LedgerType.LiabilityCard;
 
         public int OrderBy { get; set; } = 0;
 
@@ -21,7 +14,9 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
 
         public ICSVMapping Mapping { get; } = new CSVMapping();
 
-        public CreditCardAccount() {}
+        public CreditCardAccount()
+        { }
+
         public CreditCardAccount(IJournalAccount cpy)
         {
             this.Copy(cpy);
@@ -36,11 +31,10 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
             this.OrderBy = cpy.OrderBy;
             this.DateClosedUTC = cpy.DateClosedUTC;
 
-            if(cpy is IMoneyAccount money)
+            if (cpy is IMoneyAccount money && money.Mapping != null)
             {
                 this.Mapping.Copy(money.Mapping);
             }
         }
-
     }
 }

@@ -1,17 +1,9 @@
-﻿
-using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DLPMoneyTracker.Core.Models.ScheduleRecurrence
+﻿namespace DLPMoneyTracker.Core.Models.ScheduleRecurrence
 {
     public class MonthlyRecurrence : IScheduleRecurrence
     {
         public DateTime StartDate { get; set; } = DateTime.Today;
-        public RecurrenceFrequency Frequency { get { return RecurrenceFrequency.Monthly; } }
+        public RecurrenceFrequency Frequency => RecurrenceFrequency.Monthly;
 
         public DateTime NextOccurrence
         {
@@ -26,13 +18,7 @@ namespace DLPMoneyTracker.Core.Models.ScheduleRecurrence
             }
         }
 
-        public DateTime NotificationDate
-        {
-            get
-            {
-                return this.NextOccurrence.AddDays(IScheduleRecurrence.NOTIFICATION_DAYS_PRIOR);
-            }
-        }
+        public DateTime NotificationDate => this.NextOccurrence.AddDays(IScheduleRecurrence.NOTIFICATION_DAYS_PRIOR);
 
         /// <summary>
         /// Deduces the next start date by verifying whether the Start Date exceeds the number of days
@@ -47,7 +33,7 @@ namespace DLPMoneyTracker.Core.Models.ScheduleRecurrence
             if (month > 12) month = 1;
 
             int year = DateTime.Today.Year;
-            if(DateTime.Today.Month == 12 && month < DateTime.Today.Month)
+            if (DateTime.Today.Month == 12 && month < DateTime.Today.Month)
             {
                 // Likely we're going from December to January
                 year++;
@@ -64,6 +50,5 @@ namespace DLPMoneyTracker.Core.Models.ScheduleRecurrence
                 return new DateTime(year, month, this.StartDate.Day);
             }
         }
-
     }
 }

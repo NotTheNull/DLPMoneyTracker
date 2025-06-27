@@ -2,50 +2,35 @@
 using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
 using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models.BudgetPlan;
-using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.SQL.Adapters;
 using DLPMoneyTracker.Plugins.SQL.Data;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.SQL.Repositories
 {
-    public class SQLBudgetPlanRepository : IBudgetPlanRepository
+    public class SQLBudgetPlanRepository(IDLPConfig config, ILedgerAccountRepository accountRepository) : IBudgetPlanRepository
     {
-        private readonly IDLPConfig config;
-        private readonly ILedgerAccountRepository accountRepository;
-
-        public SQLBudgetPlanRepository(IDLPConfig config, ILedgerAccountRepository accountRepository)
-        {
-            this.config = config;
-            this.accountRepository = accountRepository;
-        }
+        private readonly IDLPConfig config = config;
+        private readonly ILedgerAccountRepository accountRepository = accountRepository;
 
         public void DeletePlan(Guid planUID)
         {
-            using (DataContext context = new DataContext(config))
-            {
-                var existingPlan = context.BudgetPlans.FirstOrDefault(x => x.PlanUID == planUID);
-                if (existingPlan is null) return;
+            using DataContext context = new(config);
+            var existingPlan = context.BudgetPlans.FirstOrDefault(x => x.PlanUID == planUID);
+            if (existingPlan is null) return;
 
-                context.BudgetPlans.Remove(existingPlan);
-                context.SaveChanges();
-            }
+            context.BudgetPlans.Remove(existingPlan);
+            context.SaveChanges();
         }
 
         public List<IBudgetPlan> GetFullList()
         {
-            List<IBudgetPlan> listPlansFinal = new List<IBudgetPlan>();
-            using(DataContext context = new DataContext(config))
+            List<IBudgetPlan> listPlansFinal = [];
+            using (DataContext context = new(config))
             {
                 var listPlans = context.BudgetPlans.ToList();
                 if (listPlans?.Any() != true) return listPlansFinal;
 
-                foreach(var src in listPlans)
+                foreach (var src in listPlans)
                 {
                     listPlansFinal.Add(this.SourceToPlan(src, context));
                 }
@@ -56,25 +41,23 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         private IBudgetPlan SourceToPlan(BudgetPlan src, DataContext context)
         {
-            SQLSourceToBudgetPlanAdapter planAdapter = new SQLSourceToBudgetPlanAdapter(context, accountRepository);
-            BudgetPlanFactory planFactory = new BudgetPlanFactory();
-
+            SQLSourceToBudgetPlanAdapter planAdapter = new(context, accountRepository);
             planAdapter.ImportSource(src);
-            return planFactory.Build(planAdapter);
+            return BudgetPlanFactory.Build(planAdapter);
         }
 
         public List<IBudgetPlan> GetUpcomingPlansForAccount(Guid accountUID)
         {
-            List<IBudgetPlan> listPlans = new List<IBudgetPlan>();
-            using (DataContext context = new DataContext(config))
+            List<IBudgetPlan> listPlans = [];
+            using (DataContext context = new(config))
             {
                 var listPlansLoop = context.BudgetPlans
-                    .Where(x => x.Credit.AccountUID == accountUID || x.Debit.AccountUID == accountUID)
+                    .Where(x => (x.Credit != null && x.Credit.AccountUID == accountUID) || (x.Debit != null && x.Debit.AccountUID == accountUID))
                     .ToList();
-                foreach(var src in listPlansLoop)
+                foreach (var src in listPlansLoop)
                 {
                     IBudgetPlan plan = this.SourceToPlan(src, context);
-                    if(plan.NotificationDate <= DateTime.Today && plan.NextOccurrence.AddDays(5) >= DateTime.Today)
+                    if (plan.NotificationDate <= DateTime.Today && plan.NextOccurrence.AddDays(5) >= DateTime.Today)
                     {
                         listPlans.Add(plan);
                     }
@@ -86,34 +69,32 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         public void SavePlan(IBudgetPlan plan)
         {
-            using (DataContext context = new DataContext(config))
-            {
-                SQLSourceToBudgetPlanAdapter adapter = new SQLSourceToBudgetPlanAdapter(context, accountRepository);
-                adapter.Copy(plan);
+            using DataContext context = new DataContext(config);
+            SQLSourceToBudgetPlanAdapter adapter = new(context, accountRepository);
+            adapter.Copy(plan);
 
-                var existingPlan = context.BudgetPlans.FirstOrDefault(x => x.PlanUID == plan.UID);
-                if(existingPlan is null)
-                {
-                    existingPlan = new BudgetPlan();
-                    context.BudgetPlans.Add(existingPlan);
-                }
-                adapter.ExportSource(ref existingPlan);
-                context.SaveChanges();
+            var existingPlan = context.BudgetPlans.FirstOrDefault(x => x.PlanUID == plan.UID);
+            if (existingPlan is null)
+            {
+                existingPlan = new BudgetPlan();
+                context.BudgetPlans.Add(existingPlan);
             }
+            adapter.ExportSource(ref existingPlan);
+            context.SaveChanges();
         }
 
         public List<IBudgetPlan> Search(BudgetPlanSearch search)
         {
-            List<IBudgetPlan> listPlanFinal = new List<IBudgetPlan>();
-            using(DataContext context = new DataContext(config))
+            List<IBudgetPlan> listPlanFinal = [];
+            using (DataContext context = new(config))
             {
                 var listPlanQuery = context.BudgetPlans.Where(x => x.ExpectedAmount != decimal.Zero);
-                if(search.AccountUID != null && search.AccountUID != Guid.Empty)
+                if (search.AccountUID != Guid.Empty)
                 {
-                    listPlanQuery = listPlanQuery.Where(x => x.Debit.AccountUID == search.AccountUID || x.Credit.AccountUID == search.AccountUID);
+                    listPlanQuery = listPlanQuery.Where(x => (x.Credit != null && x.Credit.AccountUID == search.AccountUID) || (x.Debit != null && x.Debit.AccountUID == search.AccountUID));
                 }
 
-                if(!string.IsNullOrWhiteSpace(search.FilterText))
+                if (!string.IsNullOrWhiteSpace(search.FilterText))
                 {
                     listPlanQuery = listPlanQuery.Where(x => x.Description.Contains(search.FilterText));
                 }
@@ -121,11 +102,11 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
                 var listPlanLoop = listPlanQuery.ToList();
                 if (listPlanLoop?.Any() != true) return listPlanFinal;
 
-                foreach(var src in listPlanLoop)
+                foreach (var src in listPlanLoop)
                 {
                     IBudgetPlan plan = SourceToPlan(src, context);
 
-                    if(search.DateRange.IsWithinRange(plan.NextOccurrence))
+                    if (search.DateRange.IsWithinRange(plan.NextOccurrence))
                     {
                         listPlanFinal.Add(plan);
                     }
@@ -137,21 +118,19 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         public int GetRecordCount()
         {
-            using(DataContext context = new DataContext(config))
-            {
-                return context.BudgetPlans.Count();
-            }
+            using DataContext context = new(config);
+            return context.BudgetPlans.Count();
         }
 
         public List<IBudgetPlan> GetAllPlansForAccount(Guid accountUID)
         {
-            List<IBudgetPlan> listPlanFinal = new List<IBudgetPlan>();
-            using (DataContext context = new DataContext(config))
+            List<IBudgetPlan> listPlanFinal = [];
+            using (DataContext context = new(config))
             {
-                var listPlanLoop = context.BudgetPlans.Where(x => x.Debit.AccountUID == accountUID || x.Credit.AccountUID == accountUID).ToList();
+                var listPlanLoop = context.BudgetPlans.Where(x => (x.Credit != null && x.Credit.AccountUID == accountUID) || (x.Debit != null && x.Debit.AccountUID == accountUID)).ToList();
                 if (listPlanLoop?.Any() != true) return listPlanFinal;
 
-                foreach(var src in listPlanLoop)
+                foreach (var src in listPlanLoop)
                 {
                     IBudgetPlan plan = SourceToPlan(src, context);
                     listPlanFinal.Add(plan);
@@ -163,8 +142,8 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         public List<IBudgetPlan> GetPlanListByType(BudgetPlanType planType)
         {
-            List<IBudgetPlan> listPlanFinal = new List<IBudgetPlan>();
-            using (DataContext context = new DataContext(config))
+            List<IBudgetPlan> listPlanFinal = [];
+            using (DataContext context = new(config))
             {
                 var listPlanLoop = context.BudgetPlans.Where(x => x.PlanType == planType).ToList();
                 if (listPlanLoop?.Any() != true) return listPlanFinal;

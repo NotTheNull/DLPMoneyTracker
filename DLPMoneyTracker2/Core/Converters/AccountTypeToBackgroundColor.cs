@@ -1,6 +1,6 @@
-﻿
-using DLPMoneyTracker.Core.Models.LedgerAccounts;
+﻿using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -9,29 +9,22 @@ namespace DLPMoneyTracker2.Core.Converters
 {
     public class AccountTypeToBackgroundColor : IValueConverter
     {
+        private static readonly List<LedgerType> validAccounts = [LedgerType.Bank, LedgerType.LiabilityCard, LedgerType.LiabilityLoan];
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is null) return Brushes.White;
             if (value is LedgerType acctType)
             {
-                Color primaryColor = Colors.White;
-                switch (acctType)
+                if (!validAccounts.Contains(acctType)) return Brushes.White;
+
+                Color primaryColor = acctType switch
                 {
-                    case LedgerType.Bank:
-                        primaryColor = Colors.LightGreen;
-                        break;
-
-                    case LedgerType.LiabilityCard:
-                        primaryColor = Colors.Yellow;
-                        break;
-
-                    case LedgerType.LiabilityLoan:
-                        primaryColor = Colors.Orange;
-                        break;
-
-                    default:
-                        return Brushes.White;
-                }
+                    LedgerType.Bank => Colors.LightGreen,
+                    LedgerType.LiabilityCard => Colors.Yellow,
+                    LedgerType.LiabilityLoan => Colors.Orange,
+                    _ => Colors.White
+                };
 
                 LinearGradientBrush brush = new LinearGradientBrush()
                 {

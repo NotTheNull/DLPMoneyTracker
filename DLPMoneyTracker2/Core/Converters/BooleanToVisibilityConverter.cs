@@ -10,21 +10,17 @@ namespace DLPMoneyTracker2.Core.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             Visibility hide = Visibility.Collapsed;
-            string args = string.Empty;
-            if (!(parameter is null))
+            string args = parameter?.ToString() ?? string.Empty;
+
+            if (args.Contains('H'))
             {
-                args = parameter.ToString();
-                if (args.Contains("H"))
-                {
-                    hide = Visibility.Hidden;
-                }
+                hide = Visibility.Hidden;
             }
 
             if (value is null) return hide;
-
             if (value is bool flag)
             {
-                if (args.Contains("R"))
+                if (args.Contains('R'))
                     return flag ? hide : Visibility.Visible;
                 else
                     return flag ? Visibility.Visible : hide;

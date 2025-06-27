@@ -3,12 +3,9 @@ using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models.BudgetPlan;
 using DLPMoneyTracker2.Core;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DLPMoneyTracker2.Main.ExpenseOverview
+namespace DLPMoneyTracker2.Main.ExpensePlanner
 {
     public class MonthlyExpenseDetailVM : BaseViewModel
     {
@@ -22,14 +19,12 @@ namespace DLPMoneyTracker2.Main.ExpenseOverview
             this.plan = plan;
             this.searchTransactionUseCase = searchTransactionUseCase;
 
-            this.Load();
+            Load();
         }
 
-
-        public string Name { get { return plan.Description; } }
-        public decimal Amount { get { return plan.ExpectedAmount; } }
-        public DateTime NextDueDate { get { return plan.NextOccurrence; } }
-
+        public string Name => plan.Description;
+        public decimal Amount => plan.ExpectedAmount;
+        public DateTime NextDueDate => plan.NextOccurrence;
 
         public DateTime? January { get; set; }
         public DateTime? February { get; set; }
@@ -44,74 +39,81 @@ namespace DLPMoneyTracker2.Main.ExpenseOverview
         public DateTime? November { get; set; }
         public DateTime? December { get; set; }
 
-
-
-
         public bool HasAccount(Guid accountUID)
         {
             return plan.DebitAccountId == accountUID || plan.CreditAccountId == accountUID;
         }
 
-
         public void Load()
         {
-            DateRange range = new DateRange()
+            DateRange range = new()
             {
                 Begin = new DateTime(DateTime.Today.Year, 1, 1),
                 End = DateTime.Today
             };
             var transactions = searchTransactionUseCase.Execute(range, plan.Description, plan.DebitAccount);
 
-            this.Reset();
+            Reset();
             foreach (var t in transactions.OrderBy(o => o.TransactionDate))
             {
                 switch (t.TransactionDate.Month)
                 {
                     case 1:
-                        this.January = t.TransactionDate;
+                        January = t.TransactionDate;
                         break;
+
                     case 2:
-                        this.February = t.TransactionDate;
+                        February = t.TransactionDate;
                         break;
+
                     case 3:
-                        this.March = t.TransactionDate;
+                        March = t.TransactionDate;
                         break;
+
                     case 4:
-                        this.April = t.TransactionDate;
+                        April = t.TransactionDate;
                         break;
+
                     case 5:
-                        this.May = t.TransactionDate;
+                        May = t.TransactionDate;
                         break;
+
                     case 6:
-                        this.June = t.TransactionDate;
+                        June = t.TransactionDate;
                         break;
+
                     case 7:
-                        this.July = t.TransactionDate;
+                        July = t.TransactionDate;
                         break;
+
                     case 8:
-                        this.August = t.TransactionDate;
+                        August = t.TransactionDate;
                         break;
+
                     case 9:
-                        this.September = t.TransactionDate;
+                        September = t.TransactionDate;
                         break;
+
                     case 10:
-                        this.October = t.TransactionDate;
+                        October = t.TransactionDate;
                         break;
+
                     case 11:
-                        this.November = t.TransactionDate;
+                        November = t.TransactionDate;
                         break;
+
                     case 12:
-                        this.December = t.TransactionDate;
+                        December = t.TransactionDate;
                         break;
                 }
             }
 
-            this.NotifyChanges();
+            NotifyChanges();
         }
 
         private void Reset()
         {
-            this.January = this.February = this.March = this.April = this.May = this.June = this.July = this.August = this.September = this.October = this.November = this.December = null;
+            January = February = March = April = May = June = July = August = September = October = November = December = null;
         }
 
         private void NotifyChanges()

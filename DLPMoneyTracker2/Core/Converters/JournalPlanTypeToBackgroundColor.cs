@@ -14,20 +14,13 @@ namespace DLPMoneyTracker2.Core.Converters
             if (value is null) return Brushes.White;
             if (value is BudgetPlanType planType)
             {
-                switch (planType)
+                return planType switch
                 {
-                    case BudgetPlanType.Receivable:
-                        return Brushes.Green;
-
-                    case BudgetPlanType.Payable:
-                        return Brushes.Red;
-
-                    case BudgetPlanType.Transfer:
-                        return Brushes.Blue;
-
-                    default:
-                        return Brushes.White;
-                }
+                    BudgetPlanType.Receivable => Brushes.Green,
+                    BudgetPlanType.Payable => Brushes.Red,
+                    BudgetPlanType.Transfer => Brushes.Blue,
+                    _ => Brushes.White,
+                };
             }
 
             return Brushes.White;

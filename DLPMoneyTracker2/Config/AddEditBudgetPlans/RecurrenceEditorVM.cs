@@ -9,11 +9,9 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
     public class RecurrenceEditorVM : BaseViewModel
     {
         public delegate void RecurrenceSelectedHandler(IScheduleRecurrence selected);
-
-        public event RecurrenceSelectedHandler RecurrenceSelected;
+        public event RecurrenceSelectedHandler? RecurrenceSelected;
 
         private RecurrenceFrequency _selFreq;
-
         public RecurrenceFrequency SelectedFrequency
         {
             get { return _selFreq; }
@@ -25,14 +23,10 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
             }
         }
 
-        public bool IsMonthly
-        {
-            get { return this.SelectedFrequency == RecurrenceFrequency.Monthly; }
-        }
+        public bool IsMonthly => this.SelectedFrequency == RecurrenceFrequency.Monthly;
 
 
-        private DateTime _dateStart;
-
+        private DateTime _dateStart = DateTime.Today;
         public DateTime StartDate
         {
             get { return _dateStart; }
@@ -43,64 +37,45 @@ namespace DLPMoneyTracker2.Config.AddEditBudgetPlans
             }
         }
 
-        private List<SpecialDropListItem<RecurrenceFrequency>> _listFreq;
-
-        public List<SpecialDropListItem<RecurrenceFrequency>> RecurrenceFrequencyList
-        { get { return _listFreq; } }
+        private readonly List<SpecialDropListItem<RecurrenceFrequency>> _listFreq = 
+        [
+            new SpecialDropListItem<RecurrenceFrequency>("Monthly", RecurrenceFrequency.Monthly),
+            new SpecialDropListItem<RecurrenceFrequency>("Semi-Annual", RecurrenceFrequency.SemiAnnual),
+            new SpecialDropListItem<RecurrenceFrequency>("Annual", RecurrenceFrequency.Annual)
+        ];
+        public List<SpecialDropListItem<RecurrenceFrequency>> RecurrenceFrequencyList => _listFreq;
 
         #region Commands
 
-        private RelayCommand _cmdSave;
-
-        public RelayCommand CommandSave
-        {
-            get
+        public RelayCommand CommandSave => 
+            new((o) =>
             {
-                return _cmdSave ?? (_cmdSave = new RelayCommand((o) =>
-                {
-                    RecurrenceSelected?.Invoke(this.GetRecurrence());
-                }));
-            }
-        }
+                RecurrenceSelected?.Invoke(this.GetRecurrence());
+            });
 
         #endregion Commands
 
-        public RecurrenceEditorVM() : base()
-        {
-            _dateStart = DateTime.Today;
-            this.LoadFrequenceList();
-        }
-
-        private void LoadFrequenceList()
-        {
-            _listFreq = new List<SpecialDropListItem<RecurrenceFrequency>>()
-            {
-                new SpecialDropListItem<RecurrenceFrequency>("Monthly", RecurrenceFrequency.Monthly),
-                new SpecialDropListItem<RecurrenceFrequency>("Semi-Annual", RecurrenceFrequency.SemiAnnual),
-                new SpecialDropListItem<RecurrenceFrequency>("Annual", RecurrenceFrequency.Annual)
-            };
-        }
+        public RecurrenceEditorVM() : base() { }
 
         public IScheduleRecurrence GetRecurrence()
         {
-            ScheduleRecurrenceFactory factory = new ScheduleRecurrenceFactory();
-            return factory.Build(this.SelectedFrequency, this.StartDate);
+            return ScheduleRecurrenceFactory.Build(this.SelectedFrequency, this.StartDate);
         }
 
-        public void EditRecurrence(IScheduleRecurrence recurr)
+        public void EditRecurrence(IScheduleRecurrence r)
         {
-            if (recurr is null) return;
-            this.SelectedFrequency = recurr.Frequency;
+            if (r is null) return;
+            this.SelectedFrequency = r.Frequency;
 
-            if (recurr is MonthlyRecurrence monthly)
+            if (r is MonthlyRecurrence monthly)
             {
                 this.StartDate = monthly.StartDate;
             }
-            else if (recurr is SemiAnnualRecurrence semi)
+            else if (r is SemiAnnualRecurrence semi)
             {
                 this.StartDate = semi.StartDate;
             }
-            else if (recurr is AnnualRecurrence annual)
+            else if (r is AnnualRecurrence annual)
             {
                 this.StartDate = annual.StartDate;
             }

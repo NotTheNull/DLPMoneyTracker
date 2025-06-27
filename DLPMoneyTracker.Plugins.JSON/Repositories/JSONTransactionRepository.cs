@@ -4,12 +4,7 @@ using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.JSON.Adapters;
 using DLPMoneyTracker.Plugins.JSON.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.JSON.Repositories
 {
@@ -17,7 +12,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
     {
         private readonly ILedgerAccountRepository accountRepository;
         private readonly IDLPConfig config;
-        private int _year;
+        private readonly int _year;
 
         public JSONTransactionRepository(ILedgerAccountRepository accountRepository, IDLPConfig config)
         {
@@ -27,34 +22,27 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             this.LoadFromFile();
         }
 
-        public List<IMoneyTransaction> TransactionList { get; set; } = new List<IMoneyTransaction>();
+        public List<IMoneyTransaction> TransactionList { get; set; } = [];
 
-        public string FilePath { get { return Path.Combine(config.JSONFilePath, "Data", "Journal.json"); } }
-
+        public string FilePath => Path.Combine(config.JSONFilePath, "Data", "Journal.json");
 
         public void LoadFromFile()
         {
             this.TransactionList.Clear();
-            string json = string.Empty;
-            if(File.Exists(this.FilePath))
-            {
-                json = File.ReadAllText(this.FilePath);
-            }
-            else
-            {
-                return;
-            }
+            if (!File.Exists(this.FilePath)) return;
+
+            string json = File.ReadAllText(this.FilePath);
             if (string.IsNullOrWhiteSpace(json)) return;
 
-            var dataList = (List<JournalEntryJSON>)JsonSerializer.Deserialize(json, typeof(List<JournalEntryJSON>));
+            var dataList = (List<JournalEntryJSON>?)JsonSerializer.Deserialize(json, typeof(List<JournalEntryJSON>));
             if (dataList?.Any() != true) return;
 
-            JSONSourceToTransactionAdapter adapter = new JSONSourceToTransactionAdapter(accountRepository);
+            JSONSourceToTransactionAdapter adapter = new(accountRepository);
             bool reSaveFile = false; // Mainly here to help correct the change for Initial Balance accounts
-            foreach(var data in dataList)
+            foreach (var data in dataList)
             {
                 adapter.ImportSource(data);
-                reSaveFile = reSaveFile || ( adapter.CreditAccountId != data.CreditAccountId || adapter.DebitAccountId != data.DebitAccountId);
+                reSaveFile = reSaveFile || (adapter.CreditAccountId != data.CreditAccountId || adapter.DebitAccountId != data.DebitAccountId);
                 this.TransactionList.Add(new MoneyTransaction(adapter));
             }
         }
@@ -63,12 +51,12 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         {
             if (this.TransactionList.Any() != true) return;
 
-            JSONSourceToTransactionAdapter adapter = new JSONSourceToTransactionAdapter(accountRepository);
-            List<JournalEntryJSON> listJSONRecords = new List<JournalEntryJSON>();
-            foreach(var t in this.TransactionList)
+            JSONSourceToTransactionAdapter adapter = new(accountRepository);
+            List<JournalEntryJSON> listJSONRecords = [];
+            foreach (var t in this.TransactionList)
             {
                 adapter.Copy(t);
-                JournalEntryJSON jsonRecord = new JournalEntryJSON();
+                JournalEntryJSON jsonRecord = new();
                 adapter.ExportSource(ref jsonRecord);
                 listJSONRecords.Add(jsonRecord);
             }
@@ -77,27 +65,26 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             File.WriteAllText(this.FilePath, json);
         }
 
-
         public List<IMoneyTransaction> GetFullList()
         {
-            return this.TransactionList.ToList();
+            return [.. this.TransactionList];
         }
 
         public List<IMoneyTransaction> Search(MoneyRecordSearch search)
         {
             var listRecords = this.TransactionList.Where(x => search.DateRange.IsWithinRange(x.TransactionDate));
 
-            if(search.Account != null)
+            if (search.Account != null)
             {
                 listRecords = listRecords.Where(x => x.DebitAccountId == search.Account.Id || x.CreditAccountId == search.Account.Id);
             }
 
-            if(!string.IsNullOrWhiteSpace(search.SearchText))
+            if (!string.IsNullOrWhiteSpace(search.SearchText))
             {
                 listRecords = listRecords.Where(x => x.Description.Contains(search.SearchText));
             }
 
-            return listRecords.ToList();
+            return [.. listRecords];
         }
 
         public decimal GetCurrentAccountBalance(Guid accountUID)
@@ -109,7 +96,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         {
             IJournalAccount account = accountRepository.GetAccountByUID(accountUID);
 
-            MoneyRecordSearch search = new MoneyRecordSearch { Account = account, DateRange = new Core.DateRange(year, month) };
+            MoneyRecordSearch search = new() { Account = account, DateRange = new Core.DateRange(year, month) };
             if (account is IMoneyAccount || account is ILiabilityAccount)
             {
                 // Assets & Liabilities require the full range of transactions to get the Balance
@@ -121,7 +108,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             decimal balance = decimal.Zero;
             foreach (var record in listRecords)
             {
-                if(record.DebitAccountId == accountUID)
+                if (record.DebitAccountId == accountUID)
                 {
                     balance += record.TransactionAmount;
                 }
@@ -139,7 +126,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         {
             IJournalAccount account = accountRepository.GetAccountByUID(accountUID);
 
-            MoneyRecordSearch search = new MoneyRecordSearch { Account = account, DateRange = new Core.DateRange(new DateTime(year, 1, 1), new DateTime(year, 12, 31)) };
+            MoneyRecordSearch search = new() { Account = account, DateRange = new Core.DateRange(new DateTime(year, 1, 1), new DateTime(year, 12, 31)) };
             if (account is IMoneyAccount)
             {
                 // Assets & Liabilities require the full range of transactions to get the Balance
@@ -165,7 +152,6 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             return balance;
         }
 
-
         public void RemoveTransaction(IMoneyTransaction transaction)
         {
             ArgumentNullException.ThrowIfNull(transaction);
@@ -182,7 +168,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             ArgumentNullException.ThrowIfNull(transaction);
 
             var existingRecord = this.TransactionList.FirstOrDefault(x => x.UID == transaction.UID);
-            if(existingRecord is null)
+            if (existingRecord is null)
             {
                 this.TransactionList.Add(transaction);
             }

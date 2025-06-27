@@ -1,29 +1,16 @@
 ﻿using DLPMoneyTracker.BusinessLogic.AdapterInterfaces;
-using DLPMoneyTracker.BusinessLogic.Factories;
 using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
 using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.SQL.Data;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.SQL.Adapters
 {
-    public class SQLSourceToTransactionAdapter : ISourceToTransactionAdapter<TransactionBatch>
+    public class SQLSourceToTransactionAdapter(DataContext context, ILedgerAccountRepository accountRepository) : ISourceToTransactionAdapter<TransactionBatch>
     {
-        private readonly DataContext context;
-        private readonly ILedgerAccountRepository accountRepository;
-
-        public SQLSourceToTransactionAdapter(DataContext context, ILedgerAccountRepository accountRepository)
-        {
-            this.context = context;
-            this.accountRepository = accountRepository;
-        }
+        private readonly DataContext context = context;
+        private readonly ILedgerAccountRepository accountRepository = accountRepository;
 
         public Guid UID { get; set; }
 
@@ -31,26 +18,25 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
 
         public TransactionType JournalEntryType { get; set; }
 
-        public IJournalAccount DebitAccount { get; set; }
+        public IJournalAccount DebitAccount { get; set; } = SpecialAccount.InvalidAccount;
 
-        public Guid DebitAccountId { get { return this.DebitAccount.Id; } }
+        public Guid DebitAccountId => this.DebitAccount.Id;
 
-        public string DebitAccountName { get { return this.DebitAccount.Description; } }
+        public string DebitAccountName => this.DebitAccount.Description;
 
         public DateTime? DebitBankDate { get; set; }
 
-        public IJournalAccount CreditAccount { get; set; }
+        public IJournalAccount CreditAccount { get; set; } = SpecialAccount.InvalidAccount;
 
-        public Guid CreditAccountId { get { return this.CreditAccount.Id; } }
+        public Guid CreditAccountId => this.CreditAccount.Id;
 
-        public string CreditAccountName { get { return this.CreditAccount.Description; } }
+        public string CreditAccountName => this.CreditAccount.Description;
 
         public DateTime? CreditBankDate { get; set; }
 
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         public decimal TransactionAmount { get; set; }
-
 
         public void Copy(IMoneyTransaction transaction)
         {
@@ -89,18 +75,16 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
                     Amount = this.TransactionAmount * -1,
                     LedgerAccount = context.Accounts.FirstOrDefault(x => x.AccountUID == this.CreditAccountId)
                 });
-
             }
             else
             {
-                var debit = src.Details.FirstOrDefault(x => x.Amount > decimal.Zero);
+                var debit = src.Details.First(x => x.Amount > decimal.Zero);
                 debit.Amount = this.TransactionAmount;
                 debit.LedgerAccount = context.Accounts.FirstOrDefault(x => x.AccountUID == this.DebitAccountId);
 
-                var credit = src.Details.FirstOrDefault(x => x.Amount < decimal.Zero);
+                var credit = src.Details.First(x => x.Amount < decimal.Zero);
                 credit.Amount = this.TransactionAmount * -1;
                 credit.LedgerAccount = context.Accounts.FirstOrDefault(x => x.AccountUID == this.CreditAccountId);
-
             }
         }
 
@@ -117,16 +101,15 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
             {
                 if (detail.Amount < decimal.Zero)
                 {
-                    this.CreditAccount = accountRepository.GetAccountByUID(detail.LedgerAccount.AccountUID);
+                    this.CreditAccount = accountRepository.GetAccountByUID(detail.LedgerAccount?.AccountUID ?? Guid.Empty);
                     this.CreditBankDate = detail.BankReconciliationDate;
                 }
                 else
                 {
-                    this.DebitAccount = accountRepository.GetAccountByUID(detail.LedgerAccount.AccountUID);
+                    this.DebitAccount = accountRepository.GetAccountByUID(detail.LedgerAccount?.AccountUID ?? Guid.Empty);
                     this.DebitBankDate = detail.BankReconciliationDate;
                 }
             }
         }
-
     }
 }

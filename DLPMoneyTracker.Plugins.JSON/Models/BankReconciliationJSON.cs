@@ -1,9 +1,4 @@
 ﻿using DLPMoneyTracker.Core.Models.BankReconciliation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.JSON.Models
 {
@@ -18,7 +13,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Models
         public decimal EndingBalance { get; set; }
 
         // This is only here for compatibility; no reason to keep writing it back
-        public List<JournalEntryJSON> TransactionList { get; set; }
+        public List<JournalEntryJSON> TransactionList { get; set; } = [];
 
         internal void Copy(BankReconciliationDTO rec)
         {

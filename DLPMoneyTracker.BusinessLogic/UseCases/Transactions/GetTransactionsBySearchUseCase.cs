@@ -3,23 +3,11 @@ using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
 using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.BusinessLogic.UseCases.Transactions
 {
-    public class GetTransactionsBySearchUseCase : IGetTransactionsBySearchUseCase
+    public class GetTransactionsBySearchUseCase(ITransactionRepository moneyRepository) : IGetTransactionsBySearchUseCase
     {
-        private readonly ITransactionRepository moneyRepository;
-
-        public GetTransactionsBySearchUseCase(ITransactionRepository moneyRepository)
-        {
-            this.moneyRepository = moneyRepository;
-        }
-
         public List<IMoneyTransaction> Execute(DateRange? dateRange, string? filterText, IJournalAccount? account)
         {
             MoneyRecordSearch search = new MoneyRecordSearch();

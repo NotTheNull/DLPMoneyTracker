@@ -1,28 +1,14 @@
-﻿using DLPMoneyTracker.Core.Models.LedgerAccounts;
-using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
 using DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans.Interfaces;
+using DLPMoneyTracker.Core.Models.LedgerAccounts;
 
 namespace DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans
 {
-    public class GetBudgetTransactionBalanceForAccountUseCase : IGetBudgetTransactionBalanceForAccountUseCase
+    public class GetBudgetTransactionBalanceForAccountUseCase(ITransactionRepository moneyRepository, ILedgerAccountRepository accountRepository) : IGetBudgetTransactionBalanceForAccountUseCase
     {
-        private readonly ITransactionRepository moneyRepository;
-        private readonly ILedgerAccountRepository accountRepository;
-        private readonly List<LedgerType> listBudgetAccountTypes = new List<LedgerType>() { LedgerType.LiabilityLoan, LedgerType.Payable, LedgerType.Receivable };
-
-        public GetBudgetTransactionBalanceForAccountUseCase(ITransactionRepository moneyRepository, ILedgerAccountRepository accountRepository)
-        {
-            this.moneyRepository = moneyRepository;
-            this.accountRepository = accountRepository;
-        }
-
-
-
+        private readonly ITransactionRepository moneyRepository = moneyRepository;
+        private readonly ILedgerAccountRepository accountRepository = accountRepository;
+        private readonly List<LedgerType> listBudgetAccountTypes = [LedgerType.LiabilityLoan, LedgerType.Payable, LedgerType.Receivable];
 
         /// <summary>
         /// This use case is intended for those accounts that are displayed on the Budget Analysis screen.
@@ -39,7 +25,7 @@ namespace DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans
 
             if (account.JournalType == LedgerType.LiabilityLoan)
             {
-                MoneyRecordSearch search = new MoneyRecordSearch()
+                MoneyRecordSearch search = new()
                 {
                     Account = account,
                     DateRange = new Core.DateRange(DateTime.Today.Year, DateTime.Today.Month)

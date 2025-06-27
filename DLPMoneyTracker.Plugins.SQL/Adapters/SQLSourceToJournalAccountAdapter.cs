@@ -3,27 +3,16 @@ using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
 using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.SQL.Data;
-using Microsoft.EntityFrameworkCore.Migrations.Operations.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.SQL.Adapters
 {
-    public class SQLSourceToJournalAccountAdapter : ISourceToJournalAccountAdapter<Account>
+    public class SQLSourceToJournalAccountAdapter(ILedgerAccountRepository accountRepository) : ISourceToJournalAccountAdapter<Account>
     {
-        private readonly ILedgerAccountRepository accountRepository;
-
-        public SQLSourceToJournalAccountAdapter(ILedgerAccountRepository accountRepository)
-        {
-            this.accountRepository = accountRepository;
-        }
+        private readonly ILedgerAccountRepository accountRepository = accountRepository;
 
         public Guid Id { get; set; }
 
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         public LedgerType JournalType { get; set; }
 
@@ -35,9 +24,9 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
         public decimal DefaultMonthlyBudgetAmount { get; set; } = decimal.Zero;
         public decimal CurrentBudgetAmount { get; set; } = decimal.Zero;
 
-        public IJournalAccount SummaryAccount { get; set; }
+        public IJournalAccount SummaryAccount { get; set; } = SpecialAccount.InvalidAccount;
 
-        public ICSVMapping Mapping { get; set; } = null;
+        public ICSVMapping? Mapping { get; set; }
 
         public void Copy(IJournalAccount cpy)
         {
@@ -55,10 +44,9 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
                 this.DefaultMonthlyBudgetAmount = nominal.DefaultMonthlyBudgetAmount;
                 this.CurrentBudgetAmount = nominal.CurrentBudgetAmount;
             }
-            else if (cpy is IMoneyAccount money)
+            else if (cpy is IMoneyAccount money && money.Mapping != null)
             {
-                if (this.Mapping is null) this.Mapping = new CSVMapping();
-
+                this.Mapping ??= new CSVMapping();
                 this.Mapping.Copy(money.Mapping);
             }
         }
@@ -88,10 +76,10 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
                 acct.CSVMapping.IsAmountInverted = this.Mapping.IsAmountInverted;
                 acct.CSVMapping.StartingRow = this.Mapping.StartingRow;
 
-                foreach(var key in this.Mapping.Mapping.Keys)
+                foreach (var key in this.Mapping.Mapping.Keys)
                 {
                     var column = acct.CSVMapping.Columns.FirstOrDefault(x => x.ColumnName == key);
-                    if(column is null)
+                    if (column is null)
                     {
                         column = new CSVColumn()
                         {
@@ -101,11 +89,9 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
                         acct.CSVMapping.Columns.Add(column);
                     }
                     column.ColumnIndex = this.Mapping.Mapping[key];
-                    
                 }
             }
         }
-
 
         public void ImportSource(Account acct)
         {
@@ -121,7 +107,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
             this.CurrentBudgetAmount = acct.CurrentBudget;
 
             this.Mapping = null;
-            if(acct.CSVMapping != null)
+            if (acct.CSVMapping != null)
             {
                 this.Mapping = new CSVMapping()
                 {
@@ -129,19 +115,18 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
                     StartingRow = acct.CSVMapping.StartingRow
                 };
 
-                foreach(var col in acct.CSVMapping.Columns)
+                foreach (var col in acct.CSVMapping.Columns)
                 {
-                    if(this.Mapping.Mapping.ContainsKey(col.ColumnName))
+                    if (this.Mapping.Mapping.ContainsKey(col.ColumnName))
                     {
                         this.Mapping.Mapping[col.ColumnName] = col.ColumnIndex;
-                    } else
+                    }
+                    else
                     {
                         this.Mapping.Mapping.Add(col.ColumnName, col.ColumnIndex);
                     }
                 }
             }
         }
-
-
     }
 }

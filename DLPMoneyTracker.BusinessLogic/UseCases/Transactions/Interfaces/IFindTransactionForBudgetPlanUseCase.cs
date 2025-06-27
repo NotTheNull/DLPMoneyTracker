@@ -6,6 +6,6 @@ namespace DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces
 {
     public interface IFindTransactionForBudgetPlanUseCase
     {
-        IMoneyTransaction Execute(IBudgetPlan plan, IJournalAccount account);
+        IMoneyTransaction? Execute(IBudgetPlan plan, IJournalAccount account);
     }
 }

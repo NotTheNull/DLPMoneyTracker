@@ -4,18 +4,13 @@ using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.JSON.Adapters;
 using DLPMoneyTracker.Plugins.JSON.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.JSON.Repositories
 {
     public class JSONLedgerAccountRepository : ILedgerAccountRepository, IJSONRepository
     {
-        private int _year;
+        private readonly int _year;
         private readonly IDLPConfig config;
 
         public JSONLedgerAccountRepository(IDLPConfig config)
@@ -27,10 +22,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
 
         public List<IJournalAccount> AccountList { get; set; } = [];
 
-
-        public string FilePath { get { return Path.Combine(config.JSONFilePath, "Config", "LedgerAccounts.json"); } }
-
-
+        public string FilePath => Path.Combine(config.JSONFilePath, "Config", "LedgerAccounts.json");
 
         public void LoadFromFile()
         {
@@ -41,20 +33,18 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             this.AccountList.Add(SpecialAccount.DebtReduction);
 
             if (!File.Exists(FilePath)) return;
-            
-            string json = File.ReadAllText(FilePath);            
+
+            string json = File.ReadAllText(FilePath);
             if (string.IsNullOrWhiteSpace(json)) return;
 
             List<JournalAccountJSON>? dataList = JsonSerializer.Deserialize(json, typeof(List<JournalAccountJSON>)) as List<JournalAccountJSON>;
             if (dataList?.Any() != true) return;
 
-            JSONSourceToJournalAccountAdapter adapter = new JSONSourceToJournalAccountAdapter(this);
-            JournalAccountFactory factory = new();
-
+            JSONSourceToJournalAccountAdapter adapter = new(this);
             foreach (var data in dataList)
             {
                 adapter.ImportSource(data);
-                this.AccountList.Add(factory.Build(adapter));
+                this.AccountList.Add(JournalAccountFactory.Build(adapter));
             }
         }
 
@@ -66,17 +56,16 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             {
                 if (account.JournalType == LedgerType.NotSet) continue;
                 adapter.Copy(account);
-                
+
                 JournalAccountJSON jsonAccount = new();
                 adapter.ExportSource(ref jsonAccount);
-                listJSONData.Add(jsonAccount);                
+                listJSONData.Add(jsonAccount);
             }
 
             if (listJSONData.Any() != true) return;
             string json = JsonSerializer.Serialize<List<JournalAccountJSON>>(listJSONData);
             File.WriteAllText(this.FilePath, json);
         }
-
 
         public IJournalAccount GetAccountByUID(Guid uid)
         {
@@ -93,12 +82,12 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             if (search.JournalTypes.Count == 0) return [];
 
             var listAccounts = this.AccountList.Where(x => search.JournalTypes.Contains(x.JournalType));
-            if(!string.IsNullOrWhiteSpace(search.NameFilterText))
+            if (!string.IsNullOrWhiteSpace(search.NameFilterText))
             {
                 listAccounts = listAccounts.Where(x => x.Description.Contains(search.NameFilterText));
             }
 
-            if(!search.IncludeDeleted)
+            if (!search.IncludeDeleted)
             {
                 listAccounts = listAccounts.Where(x => !x.DateClosedUTC.HasValue);
             }
@@ -111,7 +100,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             ArgumentNullException.ThrowIfNull(account);
 
             var existingAccount = this.AccountList.FirstOrDefault(x => x.Id == account.Id);
-            if(existingAccount is null)
+            if (existingAccount is null)
             {
                 this.AccountList.Add(account);
             }
@@ -128,17 +117,16 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             return this.AccountList.Count;
         }
 
-
         public List<IJournalAccount> GetSummaryAccountListByType(LedgerType type)
         {
-            var listData = this.AccountList.Where(x => x.JournalType == type).ToList();
+            List<IJournalAccount> listData = [.. this.AccountList.Where(x => x.JournalType == type)];
 
             List<IJournalAccount> listAccounts = [];
-            foreach(var data in listData)
+            foreach (var data in listData)
             {
-                if(data is ISubLedgerAccount sub)
+                if (data is ISubLedgerAccount sub)
                 {
-                    if(sub.SummaryAccount is null)
+                    if (sub.SummaryAccount is null)
                     {
                         listAccounts.Add(data);
                     }
@@ -153,11 +141,11 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             if (uidSummaryAccount == Guid.Empty) return [];
 
             List<IJournalAccount> listAccounts = [];
-            foreach(var account in this.AccountList)
+            foreach (var account in this.AccountList)
             {
-                if(account is ISubLedgerAccount sub)
+                if (account is ISubLedgerAccount sub)
                 {
-                    if(sub.SummaryAccount?.Id == uidSummaryAccount)
+                    if (sub.SummaryAccount?.Id == uidSummaryAccount)
                     {
                         listAccounts.Add(account);
                     }
@@ -175,7 +163,6 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
             do
             {
                 next = Guid.NewGuid();
-
             } while (DoesUIDExist(next));
 
             return next;

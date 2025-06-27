@@ -9,9 +9,8 @@ namespace DLPMoneyTracker2.Core.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is null) return string.Empty;
-            if (!(value is DateTime) && !(value is DateTime?)) return string.Empty;
 
-            DateTime date = DateTime.MinValue;
+            DateTime date;
             if(value is DateTime?)
             {
                 DateTime? work = (DateTime?)value;
@@ -21,6 +20,10 @@ namespace DLPMoneyTracker2.Core.Converters
             else if (value is DateTime work)
             {
                 date = work;
+            }
+            else
+            {
+                return string.Empty;
             }
 
             if (parameter is null)

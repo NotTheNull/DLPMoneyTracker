@@ -1,10 +1,7 @@
-﻿
-
-using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
+﻿using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker2.Core;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -12,7 +9,6 @@ namespace DLPMoneyTracker2.Main.AccountSummary
 {
     public class MoneyAccountOverviewVM : BaseViewModel
     {
-
         private readonly IGetMoneyAccountsUseCase getMoneyAccountsUseCase;
 
         public MoneyAccountOverviewVM(IGetMoneyAccountsUseCase getMoneyAccountsUseCase)
@@ -22,10 +18,8 @@ namespace DLPMoneyTracker2.Main.AccountSummary
             this.Load();
         }
 
-        private ObservableCollection<MoneyAccountSummaryVM> _listAcctSummary = new ObservableCollection<MoneyAccountSummaryVM>();
-
-        public ObservableCollection<MoneyAccountSummaryVM> AccountSummaryList
-        { get { return _listAcctSummary; } }
+        private readonly ObservableCollection<MoneyAccountSummaryVM> _listAcctSummary = [];
+        public ObservableCollection<MoneyAccountSummaryVM> AccountSummaryList => _listAcctSummary;
 
         public void Load()
         {

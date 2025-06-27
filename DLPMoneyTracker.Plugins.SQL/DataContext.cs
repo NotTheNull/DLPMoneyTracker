@@ -4,14 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DLPMoneyTracker.Plugins.SQL
 {
-    public class DataContext : DbContext
+    public class DataContext(IDLPConfig config) : DbContext()
     {
-        private readonly IDLPConfig _config;
-
-        public DataContext(IDLPConfig config) : base() 
-        {
-            _config = config;
-        }
+        private readonly IDLPConfig _config = config;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

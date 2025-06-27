@@ -10,8 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace DLPMoneyTracker2.Conversion
@@ -23,7 +21,7 @@ namespace DLPMoneyTracker2.Conversion
         private readonly ISaveTransactionUseCase saveTransactionUseCase;
 
         public CSVImportVM(
-            IGetTransactionsBySearchUseCase searchTransactionUseCase, 
+            IGetTransactionsBySearchUseCase searchTransactionUseCase,
             IGetJournalAccountListByTypesUseCase searchAccountsUseCase,
             ISaveTransactionUseCase saveTransactionUseCase)
         {
@@ -32,10 +30,13 @@ namespace DLPMoneyTracker2.Conversion
             this.saveTransactionUseCase = saveTransactionUseCase;
             this.Init();
         }
-        ~CSVImportVM() { this.Dispose(); }
+
+        ~CSVImportVM()
+        {
+            this.Dispose();
+        }
 
         #region Properties
-
 
         private string _path = string.Empty;
 
@@ -49,9 +50,7 @@ namespace DLPMoneyTracker2.Conversion
             }
         }
 
-
-
-        private DateRange bankDateRange = new DateRange();
+        private readonly DateRange bankDateRange = new();
 
         public DateTime StartDate
         {
@@ -73,11 +72,8 @@ namespace DLPMoneyTracker2.Conversion
             }
         }
 
+        private IMoneyAccount _account = null!;
 
-
-
-
-        private IMoneyAccount _account;
         public IMoneyAccount SelectedMoneyAccount
         {
             get { return _account; }
@@ -86,7 +82,7 @@ namespace DLPMoneyTracker2.Conversion
                 _account = value;
                 NotifyPropertyChanged(nameof(SelectedMoneyAccount));
 
-                if(!string.IsNullOrWhiteSpace(this.CSVFilePath))
+                if (!string.IsNullOrWhiteSpace(this.CSVFilePath))
                 {
                     this.ImportCSV();
                     this.PrefillDateRange();
@@ -95,122 +91,77 @@ namespace DLPMoneyTracker2.Conversion
             }
         }
 
-        public ObservableCollection<SpecialDropListItem<IMoneyAccount>> AccountList { get; set; } = new ObservableCollection<SpecialDropListItem<IMoneyAccount>>();
+        public ObservableCollection<SpecialDropListItem<IMoneyAccount>> AccountList { get; set; } = [];
 
+        private ICSVMapping? Mapping
+        { get { return this.SelectedMoneyAccount.Mapping; } }
 
+        public ObservableCollection<CSVRecordVM> CSVRecordList { get; set; } = [];
 
+        public ObservableCollection<TransactionVM> TransactionList { get; set; } = [];
 
-
-        private ICSVMapping Mapping { get { return this.SelectedMoneyAccount?.Mapping; } }
-
-        public ObservableCollection<CSVRecordVM> CSVRecordList { get; set; } = new ObservableCollection<CSVRecordVM>();
-
-        public ObservableCollection<TransactionVM> TransactionList { get; set; } = new ObservableCollection<TransactionVM>();
-
-        #endregion
+        #endregion Properties
 
         #region Commands
 
-        private RelayCommand _cmdLoadCSV;
-
-        public RelayCommand CommandLoadCSV
-        {
-            get
+        public RelayCommand CommandLoadCSV =>
+            new((o) =>
             {
-                return _cmdLoadCSV ??= new RelayCommand((o) =>
+                OpenFileDialog fileDialog = new OpenFileDialog()
                 {
-                    OpenFileDialog fileDialog = new OpenFileDialog()
-                    {
-                        CheckPathExists = true,
-                        CheckFileExists = true,
-                        DefaultExt = "csv",
-                        InitialDirectory = "C:\\",
-                        Filter = "Comma-Separated Values (*.csv)|*.csv",
-                        FilterIndex = 1,
-                        Multiselect=false
-                    };
+                    CheckPathExists = true,
+                    CheckFileExists = true,
+                    DefaultExt = "csv",
+                    InitialDirectory = "C:\\",
+                    Filter = "Comma-Separated Values (*.csv)|*.csv",
+                    FilterIndex = 1,
+                    Multiselect = false
+                };
 
-                    bool? isFileSelected = fileDialog.ShowDialog();
-                    if (isFileSelected == true)
-                    {
-                        this.LoadCSV(fileDialog.FileName);
-                    }
+                bool? isFileSelected = fileDialog.ShowDialog();
+                if (isFileSelected == true)
+                {
+                    this.LoadCSV(fileDialog.FileName);
+                }
+            });
 
-                });
-            }
-        }
-
-        private RelayCommand _cmdRefresh;
-        public RelayCommand CommandRefresh
-        {
-            get
+        public RelayCommand CommandRefresh =>
+            new((o) =>
             {
-                return _cmdRefresh ??= new RelayCommand((o) =>
-                {
-                    this.ImportCSV();
-                    this.LoadTransactions();
-                });
-            }
-        }
+                this.ImportCSV();
+                this.LoadTransactions();
+            });
 
-        private RelayCommand _cmdMatch;
-        public RelayCommand CommandMatch
-        {
-            get
+        public RelayCommand CommandMatch =>
+            new((o) =>
             {
-                return _cmdMatch ??= new RelayCommand((o) =>
-                {
-                    this.MatchCSVtoTransactions();
-                });
-            }
-        }
+                this.MatchCSVtoTransactions();
+            });
 
-
-        private RelayCommand _cmdAddNew;
-        public RelayCommand CommandAddNewTransaction
-        {
-            get
+        public RelayCommand CommandAddNewTransaction =>
+            new((o) =>
             {
-                return _cmdAddNew ??= new RelayCommand((o) =>
-                {
-                    this.CreateNewTransaction();
-                });
-            }
-        }
+                this.CreateNewTransaction();
+            });
 
-        private RelayCommand _cmdAutoClear;
-        public RelayCommand CommandAutoClear
-        {
-            get
+        public RelayCommand CommandAutoClear =>
+            new((o) =>
             {
-                return _cmdAutoClear ??= new RelayCommand((o) =>
-                {
-                    this.AutoClear();
-                });
-            }
-        }
+                this.AutoClear();
+            });
 
-        private RelayCommand _cmdClearSelTrans;
-        public RelayCommand CommandClearSelectedTransactions
-        {
-            get 
+        public RelayCommand CommandClearSelectedTransactions =>
+            new((o) =>
             {
-                return _cmdClearSelTrans ??= new RelayCommand((o) =>
-                {
-                    this.TransactionList.Where(x => x.IsSelected).ToList().ForEach(x => x.IsSelected = false);
-                });
-             }
-        }
+                this.TransactionList.Where(x => x.IsSelected).ToList().ForEach(x => x.IsSelected = false);
+            });
 
-
-        #endregion
-
-
+        #endregion Commands
 
         private void AutoClear()
         {
             var loopList = this.CSVRecordList.ToList();
-            foreach(var csv in loopList)
+            foreach (var csv in loopList)
             {
                 var transaction = this.TransactionList.FirstOrDefault(x => x.BankDate == csv.TransactionDate && Math.Abs(x.Amount) == Math.Abs(csv.Amount));
                 if (transaction is null) continue;
@@ -220,18 +171,18 @@ namespace DLPMoneyTracker2.Conversion
             }
         }
 
-
         private void PrefillDateRange()
         {
             if (this.Mapping is null) return;
             if (this.CSVRecordList?.Any() != true) return;
 
             // Adding seven days on either end to account for processing delays
-            this.StartDate = this.CSVRecordList.OrderBy(o => o.TransactionDate).FirstOrDefault().TransactionDate.AddDays(-7);
-            this.EndDate = this.CSVRecordList.OrderBy(o => o.TransactionDate).LastOrDefault().TransactionDate.AddDays(7);
+            if (this.CSVRecordList.Count > 0)
+            {
+                this.StartDate = this.CSVRecordList.OrderBy(o => o.TransactionDate).First().TransactionDate.AddDays(-7);
+                this.EndDate = this.CSVRecordList.OrderBy(o => o.TransactionDate).Last().TransactionDate.AddDays(7);
+            }
         }
-
-
 
         /// <summary>
         /// Uses the CSV record to build a new transaction
@@ -242,43 +193,42 @@ namespace DLPMoneyTracker2.Conversion
             var csv = this.CSVRecordList.FirstOrDefault(x => x.IsSelected);
             if (csv is null) return;
 
-            bool isCredit = (csv.Amount * (this.Mapping.IsAmountInverted ? -1 : 1) < 0);
-            MoneyTransaction record = new MoneyTransaction()
+            bool isCredit = (csv.Amount * (this.Mapping?.IsAmountInverted ?? false ? -1 : 1) < 0);
+            MoneyTransaction record = new()
             {
                 TransactionDate = csv.TransactionDate,
                 Description = csv.Description,
                 TransactionAmount = Math.Abs(csv.Amount)
             };
-            if(isCredit)
+            if (isCredit)
             {
                 record.CreditAccount = _account;
                 record.CreditBankDate = csv.TransactionDate;
                 record.JournalEntryType = TransactionType.Expense;
-            } 
-            else if(this.SelectedMoneyAccount.JournalType == LedgerType.LiabilityCard)
+            }
+            else if (this.SelectedMoneyAccount.JournalType == LedgerType.LiabilityCard)
             {
                 record.DebitAccount = _account;
                 record.DebitBankDate = csv.TransactionDate;
                 record.JournalEntryType = TransactionType.DebtPayment;
-            } else
+            }
+            else
             {
                 record.DebitAccount = _account;
                 record.DebitBankDate = csv.TransactionDate;
                 record.JournalEntryType = TransactionType.Income;
             }
 
-
             var viewModel = JournalEntryVMFactory.BuildViewModel(record);
-            RecordJournalEntry window = new RecordJournalEntry(viewModel);
+            RecordJournalEntry window = new(viewModel);
             window.Show();
 
             // Remove CSV from Collection list
             this.CSVRecordList.Remove(csv);
         }
 
-
         /// <summary>
-        /// Pulls the CSV record (should only ever be one) and saves its Date 
+        /// Pulls the CSV record (should only ever be one) and saves its Date
         /// to the matched transaction(s) Bank Date field.  Then removes those records from the lists.
         /// </summary>
         private void MatchCSVtoTransactions()
@@ -293,15 +243,14 @@ namespace DLPMoneyTracker2.Conversion
 
             decimal sumTransactions = Math.Round(transactions.Sum(s => s.Amount), 2);
 
-            if(Math.Abs(csv.Amount) != Math.Abs(sumTransactions))
+            if (Math.Abs(csv.Amount) != Math.Abs(sumTransactions))
             {
                 MessageBox.Show("Amounts do not match!");
                 return;
             }
 
-
             // Update Bank Date on transactions
-            foreach(var t in transactions)
+            foreach (var t in transactions)
             {
                 t.BankDate = csv.TransactionDate;
                 saveTransactionUseCase.Execute(t.Transaction);
@@ -314,15 +263,10 @@ namespace DLPMoneyTracker2.Conversion
             this.CSVRecordList.Remove(csv);
         }
 
-
-
-
-
         private void Init()
         {
             this.StartDate = DateTime.Today.AddDays(-60);
             this.EndDate = DateTime.Today;
-
 
             var results = searchAccountsUseCase.Execute(new List<LedgerType>() { LedgerType.Bank, LedgerType.LiabilityCard });
             if (results?.Any() != true) return;
@@ -336,7 +280,7 @@ namespace DLPMoneyTracker2.Conversion
             }
         }
 
-        private List<string[]> csvData = new List<string[]>();
+        private readonly List<string[]> _csvData = [];
 
         /// <summary>
         /// Reads the contents of the CSV file into a List
@@ -345,43 +289,43 @@ namespace DLPMoneyTracker2.Conversion
         /// <exception cref="ArgumentNullException"></exception>
         private void LoadCSV(string pathCSV)
         {
-            if (string.IsNullOrWhiteSpace(pathCSV)) throw new ArgumentNullException("File path");
+            if (string.IsNullOrWhiteSpace(pathCSV)) throw new ArgumentNullException(nameof(pathCSV));
             this.CSVFilePath = pathCSV;
 
-            csvData.Clear();
+            _csvData.Clear();
             var fileData = System.IO.File.ReadAllText(pathCSV);
             string splitThis = "\n";
-            if(fileData.Contains("\n\r"))
+            if (fileData.Contains("\n\r"))
             {
                 splitThis = "\n\r";
-            } else if(fileData.Contains("\r\n"))
+            }
+            else if (fileData.Contains("\r\n"))
             {
                 splitThis = "\r\n";
             }
-            
+
             // We have the weird situation where there COULD be commas in the Description
             // Most bank CSVs so far wrap each field in QUOTES to help identify the break points
             // May need regular expression for this
             var fileLines = fileData.Split(splitThis);
-            List<string[]> listData = new List<string[]>();
-            foreach(string line in fileLines)
+            List<string[]> listData = [];
+            foreach (string line in fileLines)
             {
-                string sanitized = this.SanitizeCSVLine(line);
+                string sanitized = SanitizeCSVLine(line);
                 listData.Add(sanitized.Split(","));
             }
 
-
-            if (listData?.Any() == true) csvData.AddRange(listData);
+            if (listData?.Any() == true) _csvData.AddRange(listData);
             this.PrefillDateRange();
         }
 
-        private string SanitizeCSVLine(string arg)
+        private static string SanitizeCSVLine(string arg)
         {
             if (string.IsNullOrWhiteSpace(arg)) return string.Empty;
 
             char[] lineArray = arg.Trim().ToCharArray();
             bool isRemoveComma = false;
-            for(int i = 0; i < lineArray.Length; i++)
+            for (int i = 0; i < lineArray.Length; i++)
             {
                 if (lineArray[i] == '\"')
                 {
@@ -406,12 +350,11 @@ namespace DLPMoneyTracker2.Conversion
 
             this.CSVRecordList.Clear();
             if (Mapping?.Mapping is null) return;
-            if (csvData.Count <= this.Mapping.StartingRow) return;
+            if (_csvData.Count <= this.Mapping.StartingRow) return;
 
-
-            for (int i = this.Mapping.StartingRow - 1; i < csvData.Count; i++)
+            for (int i = this.Mapping.StartingRow - 1; i < _csvData.Count; i++)
             {
-                if (csvData[i].Length <= 1)
+                if (_csvData[i].Length <= 1)
                 {
                     // This is a blank row; skip it
                     continue;
@@ -419,12 +362,11 @@ namespace DLPMoneyTracker2.Conversion
 
                 this.CSVRecordList.Add(new CSVRecordVM
                 {
-                    TransactionDate = csvData[i][this.Mapping.GetMapping(ICSVMapping.TRANS_DATE)].RemoveQuotes().ToDateTime(),
-                    Description = csvData[i][this.Mapping.GetMapping(ICSVMapping.DESCRIPTION)].RemoveQuotes().Trim(),
-                    Amount = csvData[i][this.Mapping.GetMapping(ICSVMapping.AMOUNT)].RemoveQuotes().ToDecimal()
+                    TransactionDate = _csvData[i][this.Mapping.GetMapping(ICSVMapping.TRANS_DATE)].RemoveQuotes().ToDateTime(),
+                    Description = _csvData[i][this.Mapping.GetMapping(ICSVMapping.DESCRIPTION)].RemoveQuotes().Trim(),
+                    Amount = _csvData[i][this.Mapping.GetMapping(ICSVMapping.AMOUNT)].RemoveQuotes().ToDecimal()
                 });
             }
-
         }
 
         /// <summary>
@@ -445,23 +387,18 @@ namespace DLPMoneyTracker2.Conversion
             }
         }
 
-
-
         public void Dispose()
         {
             GC.SuppressFinalize(this);
             this.CSVRecordList?.Clear();
             this.TransactionList?.Clear();
-            csvData?.Clear();
+            _csvData?.Clear();
             this.CSVFilePath = string.Empty;
         }
-
     }
 
     public class CSVRecordVM : BaseViewModel
     {
-
-
         private bool _selected;
 
         public bool IsSelected
@@ -473,7 +410,6 @@ namespace DLPMoneyTracker2.Conversion
                 NotifyPropertyChanged(nameof(this.IsSelected));
             }
         }
-
 
         private DateTime _date;
 
@@ -487,18 +423,17 @@ namespace DLPMoneyTracker2.Conversion
             }
         }
 
-        private string _desc;
+        private string _description = string.Empty;
 
         public string Description
         {
-            get { return _desc; }
+            get { return _description; }
             set
             {
-                _desc = value;
+                _description = value;
                 NotifyPropertyChanged(nameof(Description));
             }
         }
-
 
         private decimal _amount;
 
@@ -511,22 +446,15 @@ namespace DLPMoneyTracker2.Conversion
                 NotifyPropertyChanged(nameof(Amount));
             }
         }
-
     }
 
-    public class TransactionVM : BaseViewModel
+    public class TransactionVM(IMoneyAccount account, IMoneyTransaction trans) : BaseViewModel
     {
-        private readonly IMoneyAccount account;
-        private IMoneyTransaction transaction;
+        private readonly IMoneyAccount account = account;
+        private readonly IMoneyTransaction transaction = trans;
 
-        public TransactionVM(IMoneyAccount account, IMoneyTransaction trans)
-        {
-            this.account = account;
-            this.transaction = trans;
-        }
-
-        public IMoneyTransaction Transaction { get { return transaction; } }
-
+        public IMoneyTransaction Transaction
+        { get { return transaction; } }
 
         private bool _selected;
 
@@ -540,28 +468,15 @@ namespace DLPMoneyTracker2.Conversion
             }
         }
 
+        public DateTime TransactionDate
+        { get { return transaction.TransactionDate; } }
 
-        // Transaction Date
-        public DateTime TransactionDate { get { return transaction.TransactionDate; } }
+        public string Description
+        { get { return transaction.Description; } }
 
-        // Description
-        public string Description { get { return transaction.Description; } }
+        public decimal Amount
+        { get { return transaction.TransactionAmount; } }
 
-        // Amount
-        public decimal Amount { get { return transaction.TransactionAmount; } }
-
-        //// Other account
-        //public string OffsetAccountName
-        //{
-        //    get
-        //    {
-        //        if (account.Id == transaction.DebitAccountId) return transaction.CreditAccountName;
-
-        //        return transaction.DebitAccountName;
-        //    }
-        //}
-
-        // Bank Date
         public DateTime? BankDate
         {
             get
@@ -582,12 +497,8 @@ namespace DLPMoneyTracker2.Conversion
                     {
                         record.CreditBankDate = value;
                     }
-
                 }
-
             }
         }
-
-
     }
 }

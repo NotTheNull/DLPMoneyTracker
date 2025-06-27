@@ -29,8 +29,6 @@ namespace DLPMoneyTracker2.Main.UpcomingReminders
             this.findTransactionByPlanUseCase = findTransactionByPlanUseCase;
             this.notifications = notifications;
             this.notifications.TransactionsModified += Notifications_TransactionsModified;
-            
-            _listBills = new ObservableCollection<BillDetailVM>();
         }
 
         private void Notifications_TransactionsModified(Guid debitAccountId, Guid creditAccountId)
@@ -38,19 +36,14 @@ namespace DLPMoneyTracker2.Main.UpcomingReminders
             this.Load();
         }
 
-        //public ObservableCollection<BillDetailVM> RemindersList { get; set; }
-        private ObservableCollection<BillDetailVM> _listBills;
-
-        public ObservableCollection<BillDetailVM> RemindersList
-        {
-            get { return _listBills; }
-        }
+        private readonly ObservableCollection<BillDetailVM> _listBills = [];
+        public ObservableCollection<BillDetailVM> RemindersList => _listBills;
 
         public void Load()
         {
             this.RemindersList.Clear();
 
-            DateRange range = new DateRange(DateTime.Today.AddDays(-7), DateTime.Today.AddDays(30));
+            DateRange range = new(DateTime.Today.AddDays(-7), DateTime.Today.AddDays(30));
             var listPlans = getPlansByDatesUseCase.Execute(range);
             if (listPlans?.Any() != true) return;
 

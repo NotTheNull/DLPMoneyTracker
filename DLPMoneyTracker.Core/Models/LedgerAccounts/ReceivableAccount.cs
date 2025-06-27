@@ -1,11 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DLPMoneyTracker.Core.Models.LedgerAccounts
+﻿namespace DLPMoneyTracker.Core.Models.LedgerAccounts
 {
     public class ReceivableAccount : INominalAccount, ISubLedgerAccount
     {
@@ -13,7 +6,7 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
 
         public string Description { get; set; } = string.Empty;
 
-        public LedgerType JournalType { get { return LedgerType.Receivable; } }
+        public LedgerType JournalType => LedgerType.Receivable;
 
         public int OrderBy { get; set; } = 0;
 
@@ -24,8 +17,8 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
         public decimal CurrentBudgetAmount { get; set; } = decimal.Zero;
         public IJournalAccount? SummaryAccount { get; set; }
 
-
-        public ReceivableAccount(){}
+        public ReceivableAccount()
+        { }
 
         public ReceivableAccount(IJournalAccount cpy)
         {
@@ -48,6 +41,5 @@ namespace DLPMoneyTracker.Core.Models.LedgerAccounts
                 this.CurrentBudgetAmount = nominal.CurrentBudgetAmount;
             }
         }
-
     }
 }

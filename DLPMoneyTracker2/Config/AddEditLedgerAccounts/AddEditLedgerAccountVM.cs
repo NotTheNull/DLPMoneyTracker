@@ -12,51 +12,51 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 {
     public class AddEditLedgerAccountVM : BaseViewModel
     {
-        private readonly IGetNominalAccountsUseCase getLedgerAccountsUseCase;
-        private readonly IDeleteJournalAccountUseCase deleteAcountUseCase;
-        private readonly IGetSummaryAccountListByType getSummaryListUseCase;
-        private readonly NotificationSystem notifications;
+        private readonly IGetNominalAccountsUseCase _getLedgerAccountsUseCase;
+        private readonly IDeleteJournalAccountUseCase _deleteAccountUseCase;
+        private readonly IGetSummaryAccountListByType _getSummaryListUseCase;
+        private readonly NotificationSystem _notifications;
+        private readonly LedgerAccountVM _editAccount;
 
         public AddEditLedgerAccountVM(
             IGetNominalAccountsUseCase getLedgerAccountsUseCase,
-            IDeleteJournalAccountUseCase deleteAcountUseCase,
+            IDeleteJournalAccountUseCase deleteAccountUseCase,
             IGetSummaryAccountListByType getSummaryListUseCase,
-            NotificationSystem notifications) : base()
+            NotificationSystem notifications, LedgerAccountVM viewModel) : base()
         {
-            this.getLedgerAccountsUseCase = getLedgerAccountsUseCase;
-            this.deleteAcountUseCase = deleteAcountUseCase;
-            this.getSummaryListUseCase = getSummaryListUseCase;
-            this.notifications = notifications;
-            _editAccount = UICore.DependencyHost.GetRequiredService<LedgerAccountVM>();
+            _getLedgerAccountsUseCase = getLedgerAccountsUseCase;
+            _deleteAccountUseCase = deleteAccountUseCase;
+            _getSummaryListUseCase = getSummaryListUseCase;
+            _notifications = notifications;
+            _editAccount = viewModel;
             
-
             this.ReloadAccounts();
         }
 
-        private ObservableCollection<LedgerAccountVM> _listAccounts = new ObservableCollection<LedgerAccountVM>();
-        public ObservableCollection<LedgerAccountVM> AccountList { get { return _listAccounts; } }
+        private readonly ObservableCollection<LedgerAccountVM> _listAccounts = [];
+        public ObservableCollection<LedgerAccountVM> AccountList => _listAccounts;
 
         public bool CanEdit { get { return _editAccount?.DateClosedUTC == null; } }
 
-        public List<SpecialDropListItem<LedgerType>> JournalTypeList { get; set; } = new List<SpecialDropListItem<LedgerType>>()
-            {
+        public List<SpecialDropListItem<LedgerType>> JournalTypeList { get; } =
+            [
                 new SpecialDropListItem<LedgerType>("Receivable", LedgerType.Receivable),
                 new SpecialDropListItem<LedgerType>("Payable", LedgerType.Payable)
-            };
-        public List<SpecialDropListItem<BudgetTrackingType>> BudgetTypeList { get; set; } = new List<SpecialDropListItem<BudgetTrackingType>>()
-        {
+            ];
+
+        public List<SpecialDropListItem<BudgetTrackingType>> BudgetTypeList { get; } =
+        [
             new SpecialDropListItem<BudgetTrackingType>("DO NOT TRACK", BudgetTrackingType.DO_NOT_TRACK),
             new SpecialDropListItem<BudgetTrackingType>("Fixed Expense/Income", BudgetTrackingType.Fixed),
             new SpecialDropListItem<BudgetTrackingType>("Variable Expense/Income", BudgetTrackingType.Variable)
-        };
+        ];
 
-        public ObservableCollection<SpecialDropListItem<IJournalAccount?>> SummaryAccountList { get; set; } = new ObservableCollection<SpecialDropListItem<IJournalAccount?>>();
+        public ObservableCollection<SpecialDropListItem<IJournalAccount?>> SummaryAccountList { get; set; } = [];
 
 
         #region Editing Data Fields
 
-        private LedgerAccountVM _editAccount;
-
+        
 
         public string Description
         {
@@ -113,79 +113,52 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 
         #region Commands
 
-        private RelayCommand _cmdSave;
-
-        public RelayCommand CommandSave
-        {
-            get
+        public RelayCommand CommandSave => 
+            new((o) =>
             {
-                return _cmdSave ?? (_cmdSave = new RelayCommand((o) =>
+                _editAccount.SaveAccount();
+                _editAccount.Clear();
+                this.SummaryAccountList.Clear();
+
+                // Even if no changes were made, best to trigger any recalculations regarding budget
+                _notifications.TriggerBudgetAmountChanged(_editAccount.Id);
+
+                this.NotifyAll();
+                this.ReloadAccounts();
+            });
+
+        public RelayCommand CommandClear => 
+            new((o) =>
+            {
+                _editAccount.Clear();
+                this.SummaryAccountList.Clear();
+                this.NotifyAll();
+            });
+
+        public RelayCommand CommandLoad => 
+            new((act) =>
+            {
+                if (act is LedgerAccountVM vm)
                 {
-                    _editAccount.SaveAccount();
-                    _editAccount.Clear();
-                    this.SummaryAccountList.Clear();
-
-                    // Even if no changes were made, best to trigger any recalculations regarding budget
-                    notifications.TriggerBudgetAmountChanged(_editAccount.Id);
-
+                    _editAccount.Copy(vm);
+                    this.LoadSummaryAccounts();
                     this.NotifyAll();
-                    this.ReloadAccounts();
-                }));
-            }
-        }
+                }
+            });
 
-        private RelayCommand _cmdClear;
-
-        public RelayCommand CommandClear
-        {
-            get
+        public RelayCommand CommandRemove => 
+            new((act) =>
             {
-                return _cmdClear ?? (_cmdClear = new RelayCommand((o) =>
+                ArgumentNullException.ThrowIfNull(act);
+
+                if (act is LedgerAccountVM vm)
                 {
-                    _editAccount.Clear();
-                    this.SummaryAccountList.Clear();
-                    this.NotifyAll();
-                }));
-            }
-        }
-
-        private RelayCommand _cmdLoad;
-
-        public RelayCommand CommandLoad
-        {
-            get
-            {
-                return _cmdLoad ?? (_cmdLoad = new RelayCommand((act) =>
-                {
-                    if (act is LedgerAccountVM vm)
-                    {
-                        _editAccount.Copy(vm);
-                        this.LoadSummaryAccounts();
-                        this.NotifyAll();
-                    }
-                }));
-            }
-        }
-
-        private RelayCommand _cmdDel;
-        public RelayCommand CommandRemove
-        {
-            get
-            {
-                return _cmdDel ?? (_cmdDel = new RelayCommand((act) =>
-                {
-                    if (act is null) throw new ArgumentNullException("Account");
-
-                    if (act is LedgerAccountVM vm)
-                    {
-                        deleteAcountUseCase.Execute(vm.Id);
-                    }
-                    _editAccount.Clear();
-                    this.NotifyAll();
-                    this.ReloadAccounts();
-                }));
-            }
-        }
+                    _deleteAccountUseCase.Execute(vm.Id);
+                }
+                _editAccount.Clear();
+                this.NotifyAll();
+                this.ReloadAccounts();
+            });
 
 
 
@@ -197,7 +170,9 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
         public void ReloadAccounts()
         {
             this.AccountList.Clear();
-            var listAccounts = getLedgerAccountsUseCase.Execute(true); //_config.GetJournalAccountList(new JournalAccountSearch(LedgerAccountVM.ValidTypes));
+            var listAccounts = _getLedgerAccountsUseCase.Execute(true); //_config.GetJournalAccountList(new JournalAccountSearch(LedgerAccountVM.ValidTypes));
+            if (listAccounts?.Any() != true) return;
+
             foreach (var act in listAccounts.OrderBy(o => o.Description))
             {
                 LedgerAccountVM vm = UICore.DependencyHost.GetRequiredService<LedgerAccountVM>();
@@ -212,7 +187,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             this.SummaryAccountList.Clear();
             this.SummaryAccountList.Add(new SpecialDropListItem<IJournalAccount?>("SET AS SUMMARY ACCOUNT", null));
 
-            var listAccounts = getSummaryListUseCase.Execute(this.AccountType);
+            var listAccounts = _getSummaryListUseCase.Execute(this.AccountType);
             if (listAccounts?.Any() != true) return;
 
             foreach(IJournalAccount account in listAccounts.OrderBy(o => o.Description))

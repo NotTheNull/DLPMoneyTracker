@@ -1,14 +1,8 @@
 ﻿using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models.ScheduleRecurrence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.JSON.Adapters
 {
-
     public class JSONScheduleRecurrenceAdapter : IScheduleRecurrence
     {
         public const string FREQUENCY_MONTHLY = "MONTHLY";
@@ -18,12 +12,10 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
         public RecurrenceFrequency Frequency { get; set; }
         public DateTime StartDate { get; set; }
 
-
         // No need to worry about these fields
         public DateTime NextOccurrence => throw new NotImplementedException();
 
         public DateTime NotificationDate => throw new NotImplementedException();
-
 
         public void Copy(IScheduleRecurrence recurrence)
         {
@@ -41,30 +33,22 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             // the data is split via "|"
             var breakdown = data.Split("|");
             if (breakdown is null) return;
-            if (breakdown.Count() < 2) return;
+            if (breakdown.Length < 2) return;
 
-            switch (breakdown[0])
+            Frequency = breakdown[0] switch
             {
-                case FREQUENCY_ANNUAL:
-                    Frequency = RecurrenceFrequency.Annual;
-                    break;
-                case FREQUENCY_SEMI_ANNUAL:
-                    Frequency = RecurrenceFrequency.SemiAnnual;
-                    break;
-                case FREQUENCY_MONTHLY:
-                    Frequency = RecurrenceFrequency.Monthly;
-                    break;
-                default:
-                    return;
-
-            }
+                FREQUENCY_ANNUAL => RecurrenceFrequency.Annual,
+                FREQUENCY_SEMI_ANNUAL => RecurrenceFrequency.SemiAnnual,
+                FREQUENCY_MONTHLY => RecurrenceFrequency.Monthly,
+                _ => throw new InvalidOperationException($"Recurrence {breakdown[0]} is not supported")
+            };
 
             if (this.Frequency == RecurrenceFrequency.Monthly)
             {
                 if (int.TryParse(breakdown[1], out int startDay))
                 {
-                    DateRange validDates = new DateRange(DateTime.Today.Year, DateTime.Today.Month);
-                    if(validDates.End.Day < startDay)
+                    DateRange validDates = new(DateTime.Today.Year, DateTime.Today.Month);
+                    if (validDates.End.Day < startDay)
                     {
                         // Likely the case for February or months that end with 30 instead of 31
                         startDay = validDates.End.Day;
@@ -74,35 +58,24 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
                 }
                 else
                 {
-                    DateTime.TryParse(breakdown[1], out DateTime newStart);
-                    this.StartDate = newStart;
+                    if (DateTime.TryParse(breakdown[1], out DateTime newStart)) this.StartDate = newStart;
                 }
             }
             else
             {
-                DateTime.TryParse(breakdown[1], out DateTime newStart);
-                this.StartDate = newStart;
+                if (DateTime.TryParse(breakdown[1], out DateTime newStart)) this.StartDate = newStart;
             }
-
         }
 
         public string ExportJSON()
         {
-            string frequency = string.Empty;
-            switch(this.Frequency)
+            string frequency = this.Frequency switch
             {
-                case RecurrenceFrequency.Annual:
-                    frequency = FREQUENCY_ANNUAL;
-                    break;
-                case RecurrenceFrequency.SemiAnnual:
-                    frequency = FREQUENCY_SEMI_ANNUAL;
-                    break;
-                case RecurrenceFrequency.Monthly:
-                    frequency = FREQUENCY_MONTHLY;
-                    break;
-                default:
-                    return string.Empty;
-            }
+                RecurrenceFrequency.Annual => FREQUENCY_ANNUAL,
+                RecurrenceFrequency.Monthly => FREQUENCY_MONTHLY,
+                RecurrenceFrequency.SemiAnnual => FREQUENCY_SEMI_ANNUAL,
+                _ => string.Empty
+            };
 
             string date = string.Format("{0:yyyy/MM/dd}", this.StartDate);
             return string.Concat(frequency, "|", date);

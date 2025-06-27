@@ -1,9 +1,4 @@
 ﻿using DLPMoneyTracker.Core.Models.LedgerAccounts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.BusinessLogic.PluginInterfaces
 {
@@ -27,7 +22,7 @@ namespace DLPMoneyTracker.BusinessLogic.PluginInterfaces
         {
             return new JournalAccountSearch
             {
-                JournalTypes = new List<LedgerType> { LedgerType.Bank, LedgerType.LiabilityCard, LedgerType.LiabilityLoan },
+                JournalTypes = [LedgerType.Bank, LedgerType.LiabilityCard, LedgerType.LiabilityLoan],
                 IncludeDeleted = includeDeleted,
                 NameFilterText = string.Empty
             };
@@ -37,34 +32,39 @@ namespace DLPMoneyTracker.BusinessLogic.PluginInterfaces
         {
             return new JournalAccountSearch
             {
-                JournalTypes = new List<LedgerType> { LedgerType.Bank, LedgerType.LiabilityCard },
+                JournalTypes = [LedgerType.Bank, LedgerType.LiabilityCard],
                 IncludeDeleted = includeDeleted,
                 NameFilterText = string.Empty
             };
         }
-
 
         public static JournalAccountSearch GetNominalAccounts(bool includeDeleted = false)
         {
             return new JournalAccountSearch
             {
-                JournalTypes = new List<LedgerType>() { LedgerType.Payable, LedgerType.Receivable },
+                JournalTypes = [LedgerType.Payable, LedgerType.Receivable],
                 IncludeDeleted = includeDeleted,
                 NameFilterText = string.Empty
             };
         }
-
     }
 
     public interface ILedgerAccountRepository
     {
         IJournalAccount GetAccountByUID(Guid uid);
+
         List<IJournalAccount> GetFullList();
+
         List<IJournalAccount> GetAccountsBySearch(JournalAccountSearch search);
+
         List<IJournalAccount> GetSummaryAccountListByType(LedgerType type);
+
         List<IJournalAccount> GetDetailAccountsForSummary(Guid uidSummaryAccount);
+
         void SaveJournalAccount(IJournalAccount account);
+
         int GetRecordCount();
+
         Guid GetNextUID();
     }
 }

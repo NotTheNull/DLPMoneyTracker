@@ -1,19 +1,17 @@
 ﻿using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
-using DLPMoneyTracker.Plugins.SQL.Data;
 using DLPMoneyTracker.Core;
 using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
 using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts;
-using System.Reflection.Metadata.Ecma335;
 
 namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 {
     public class LedgerAccountVM : BaseViewModel, INominalAccount, ISubLedgerAccount
     {
 
-        private readonly List<LedgerType> _listValidTypes = new List<LedgerType>() { LedgerType.Payable, LedgerType.Receivable };
+        private readonly List<LedgerType> _listValidTypes = [LedgerType.Payable, LedgerType.Receivable];
         private readonly IGetNextUIDUseCase getNextUIDUseCase;
         private readonly ISaveJournalAccountUseCase saveUseCase;
 
@@ -27,24 +25,20 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             this.Clear();
         }
 
-        private IJournalAccount _mainAccount;
-
         public Guid Id { get; private set; }
 
-        private string _desc = string.Empty;
-
+        private string _description = string.Empty;
         public string Description
         {
-            get { return _desc; }
+            get { return _description; }
             set
             {
-                _desc = value;
+                _description = value;
                 NotifyPropertyChanged(nameof(Description));
             }
         }
 
         private LedgerType _acctType;
-
         public LedgerType JournalType
         {
             get { return _acctType; }
@@ -59,7 +53,6 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
         public string DisplayJournalType { get { return this.JournalType.ToDisplayText(); } }
 
         private DateTime? _closeDateUTC;
-
         public DateTime? DateClosedUTC
         {
             get { return _closeDateUTC?.ToLocalTime(); }
@@ -72,24 +65,24 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
             }
         }
 
-        public bool IsClosed
-        { get { return _closeDateUTC.HasValue; } }
+        public bool IsClosed => _closeDateUTC.HasValue;
 
         public string DisplayClosedMessage
         {
             get
             {
+#pragma warning disable CS8629 // this.IsClosed is already checking the state of the datetime
                 if (this.IsClosed) return string.Format("CLOSED: {0}", _closeDateUTC.Value.ToLocalTime());
+#pragma warning restore CS8629 // Nullable value type may be null.
 
                 return string.Empty;
             }
         }
 
-        public int OrderBy { get { return 9999; } }
+        public int OrderBy => 9999;
 
 
         private BudgetTrackingType _budgetType;
-
         public BudgetTrackingType BudgetType
         {
             get { return _budgetType; }
@@ -105,12 +98,11 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 
 
         private decimal _budget;
-
         public decimal DefaultMonthlyBudgetAmount
         {
             get { return _budget; }
-            set 
-            { 
+            set
+            {
                 _budget = value;
                 this.CurrentBudgetAmount = value;
                 NotifyPropertyChanged(nameof(DefaultMonthlyBudgetAmount));
@@ -119,11 +111,10 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 
 
         private IJournalAccount? _summary;
-
         public IJournalAccount? SummaryAccount
         {
             get { return _summary; }
-            set 
+            set
             {
                 _summary = value;
                 NotifyPropertyChanged(nameof(SummaryAccount));
@@ -163,7 +154,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
                 this.DefaultMonthlyBudgetAmount = account.DefaultMonthlyBudgetAmount;
             }
 
-            if(cpy is ISubLedgerAccount sub)
+            if (cpy is ISubLedgerAccount sub)
             {
                 this.SummaryAccount = sub.SummaryAccount;
             }
@@ -172,7 +163,7 @@ namespace DLPMoneyTracker2.Config.AddEditLedgerAccounts
 
         public void SaveAccount()
         {
-            if (string.IsNullOrWhiteSpace(_desc)) return;
+            if (string.IsNullOrWhiteSpace(_description)) return;
             if (JournalType == LedgerType.NotSet) return;
 
             saveUseCase.Execute(this);

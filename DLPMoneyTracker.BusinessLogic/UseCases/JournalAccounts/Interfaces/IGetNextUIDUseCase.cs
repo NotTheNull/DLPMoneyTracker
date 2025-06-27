@@ -1,5 +1,4 @@
-﻿
-namespace DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts
+﻿namespace DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts
 {
     public interface IGetNextUIDUseCase
     {

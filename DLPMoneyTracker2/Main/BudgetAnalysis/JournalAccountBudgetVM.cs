@@ -1,9 +1,5 @@
-﻿
-
-
-using DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans.Interfaces;
+﻿using DLPMoneyTracker.BusinessLogic.UseCases.BudgetPlans.Interfaces;
 using DLPMoneyTracker.BusinessLogic.UseCases.JournalAccounts.Interfaces;
-using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
 using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models.BudgetPlan;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
@@ -21,7 +17,6 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
         private readonly IGetBudgetTransactionBalanceForAccountUseCase getBudgetBalanceForAccountUseCase;
         private readonly ISaveJournalAccountUseCase saveNominalAccountUseCase;
         private readonly NotificationSystem notifications;
-
 
         public JournalAccountBudgetVM(
             IGetAllCurrentMonthBudgetPlansForAccountUseCase getCurrentMonthPlansUseCase,
@@ -44,36 +39,25 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
             this.Refresh();
         }
 
-        private List<IBudgetPlan> _listPlans = new List<IBudgetPlan>();
+        #region Properties
 
-        private IJournalAccount _account;
+        private readonly List<IBudgetPlan> _listPlans = [];
 
-        public IJournalAccount Account { get { return _account; } }
-        public INominalAccount NominalAccount { get { return (INominalAccount)this.Account; } }
+        private IJournalAccount _account = null!;
+        public IJournalAccount Account => _account;
+        public INominalAccount NominalAccount => (INominalAccount)this.Account;
+        public Guid AccountId => _account.Id;
+        public string AccountDesc => _account.Description;
 
-        public Guid AccountId { get { return _account.Id; } }
+        public BudgetTrackingType BudgetType => (this.Account.JournalType == LedgerType.LiabilityLoan) ? BudgetTrackingType.Fixed : this.NominalAccount.BudgetType;
 
-        public string AccountDesc { get { return _account.Description; } }
-
-        public BudgetTrackingType BudgetType 
-        { 
-            get 
-            {
-                if(this.Account.JournalType == LedgerType.LiabilityLoan)
-                {
-                    return BudgetTrackingType.Fixed;
-                }
-
-                return this.NominalAccount.BudgetType; 
-            }
-        }
         public decimal MonthlyBudgetAmount
         {
-            get 
+            get
             {
                 if (this.IsFixedExpense) return decimal.Zero;
 
-                return this.NominalAccount.CurrentBudgetAmount; 
+                return this.NominalAccount.CurrentBudgetAmount;
             }
             set
             {
@@ -87,42 +71,11 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
             }
         }
 
-        public decimal MonthlyBudget
-        {
-            get
-            {
-                if (this.IsFixedExpense)
-                {
-                    return _listPlans.Sum(s => s.ExpectedAmount);
-                }
-                else
-                {
-                    return this.MonthlyBudgetAmount;
-                }
-
-            }
-        }
-
-        public bool IsFixedExpense
-        {
-            get
-            {
-                return this.BudgetType == BudgetTrackingType.Fixed || this.Account.JournalType == LedgerType.LiabilityLoan;
-            }
-        }
+        public decimal MonthlyBudget => this.IsFixedExpense ? _listPlans.Sum(s => s.ExpectedAmount) : this.MonthlyBudgetAmount;
+        public bool IsFixedExpense => this.BudgetType == BudgetTrackingType.Fixed || this.Account.JournalType == LedgerType.LiabilityLoan;
 
         // NOTE: even if the account is closed, if there are transactions then it should be visible
-        public bool IsVisible
-        {
-            get
-            {
-                return
-                    (
-                        this.CurrentMonthTotal != decimal.Zero ||
-                        _account?.DateClosedUTC == null
-                    );
-            }
-        }
+        public bool IsVisible => this.CurrentMonthTotal != decimal.Zero || _account?.DateClosedUTC == null;
 
         private decimal _currMon;
 
@@ -137,18 +90,9 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
             }
         }
 
-        public SolidColorBrush CurrentValueFontColor
-        {
-            get
-            {
-                if (Math.Abs(this.CurrentMonthTotal) > Math.Abs(this.MonthlyBudget))
-                {
-                    return new SolidColorBrush(Colors.Red);
-                }
+        public SolidColorBrush CurrentValueFontColor => Math.Abs(this.CurrentMonthTotal) > Math.Abs(this.MonthlyBudget) ? new SolidColorBrush(Colors.Red) : new SolidColorBrush(Colors.Black);
 
-                return new SolidColorBrush(Colors.Black);
-            }
-        }
+        #endregion Properties
 
         public void Load(IJournalAccount account)
         {
@@ -167,32 +111,23 @@ namespace DLPMoneyTracker2.Main.BudgetAnalysis
                 // Need to make sure they apply to the current month
                 foreach (var plan in listPlans)
                 {
-                    bool addPlanToList = false;
-                    switch (plan.Recurrence.Frequency)
+                    bool addPlanToList = plan.Recurrence.Frequency switch
                     {
-                        case DLPMoneyTracker.Core.Models.ScheduleRecurrence.RecurrenceFrequency.Annual:
-                            addPlanToList = plan.Recurrence.StartDate.Month == DateTime.Today.Month;
-                            break;
-                        case DLPMoneyTracker.Core.Models.ScheduleRecurrence.RecurrenceFrequency.SemiAnnual:
-                            addPlanToList = plan.Recurrence.StartDate.Month == DateTime.Today.Month || plan.Recurrence.StartDate.AddMonths(6).Month == DateTime.Today.Month;
-                            break;
-                        case DLPMoneyTracker.Core.Models.ScheduleRecurrence.RecurrenceFrequency.Monthly:
-                            addPlanToList = true;
-                            break;
-                    }
+                        DLPMoneyTracker.Core.Models.ScheduleRecurrence.RecurrenceFrequency.Annual => plan.Recurrence.StartDate.Month == DateTime.Today.Month,
+                        DLPMoneyTracker.Core.Models.ScheduleRecurrence.RecurrenceFrequency.SemiAnnual => plan.Recurrence.StartDate.Month == DateTime.Today.Month || plan.Recurrence.StartDate.AddMonths(6).Month == DateTime.Today.Month,
+                        DLPMoneyTracker.Core.Models.ScheduleRecurrence.RecurrenceFrequency.Monthly => true,
+                        _ => false
+                    };
 
                     if (addPlanToList)
                     {
                         _listPlans.Add(plan);
                     }
                 }
-
             }
-
 
             this.NotifyAll();
         }
-
 
         public void ResetBudget()
         {

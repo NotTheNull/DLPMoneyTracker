@@ -1,9 +1,4 @@
 ﻿using DLPMoneyTracker.Core.Models.BankReconciliation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.JSON.Models
 {
@@ -11,7 +6,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Models
     {
         public Guid AccountId { get; set; }
 
-        public List<BankReconciliationJSON> ReconciliationList { get; set; } = new List<BankReconciliationJSON>();
+        public List<BankReconciliationJSON> ReconciliationList { get; set; } = [];
 
         public void Copy(BankReconciliationOverviewDTO dto)
         {
@@ -19,9 +14,9 @@ namespace DLPMoneyTracker.Plugins.JSON.Models
 
             this.AccountId = dto.BankAccount.Id;
 
-            foreach(var rec in dto.ReconciliationList)
+            foreach (var rec in dto.ReconciliationList)
             {
-                BankReconciliationJSON json = new BankReconciliationJSON();
+                BankReconciliationJSON json = new();
                 json.Copy(rec);
 
                 this.ReconciliationList.Add(json);

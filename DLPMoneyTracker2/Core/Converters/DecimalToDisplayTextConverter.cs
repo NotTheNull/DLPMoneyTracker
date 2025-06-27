@@ -11,7 +11,7 @@ namespace DLPMoneyTracker2.Core.Converters
             if (value is null) return string.Empty;
             if (value is decimal number)
             {
-                if (!(parameter is null))
+                if (parameter is not null)
                 {
                     return number.ToString(parameter.ToString());
                 }

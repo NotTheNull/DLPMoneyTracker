@@ -3,17 +3,9 @@ using DLPMoneyTracker.BusinessLogic.PluginInterfaces;
 using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.JSON.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.JSON.Adapters
 {
-    
     public sealed class JSONSourceToJournalAccountAdapter(ILedgerAccountRepository accountRepository) : ISourceToJournalAccountAdapter<JournalAccountJSON>
     {
         private readonly ILedgerAccountRepository accountRepository = accountRepository;
@@ -32,11 +24,9 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
         public decimal DefaultMonthlyBudgetAmount { get; set; } = decimal.Zero;
         public decimal CurrentBudgetAmount { get; set; } = decimal.Zero;
 
-        public IJournalAccount? SummaryAccount { get; set; } = null;
+        public IJournalAccount? SummaryAccount { get; set; }
 
-        public ICSVMapping? Mapping { get; set; } 
-
-        
+        public ICSVMapping? Mapping { get; set; }
 
         public void Copy(IJournalAccount cpy)
         {
@@ -61,14 +51,15 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
                 {
                     this.Mapping ??= new CSVMapping();
                     this.Mapping.Copy(money.Mapping);
-                } else
+                }
+                else
                 {
                     this.Mapping?.Dispose();
                     this.Mapping = null;
                 }
             }
 
-            if(cpy is ISubLedgerAccount sub)
+            if (cpy is ISubLedgerAccount sub)
             {
                 this.SummaryAccount = sub.SummaryAccount;
             }
@@ -88,14 +79,12 @@ namespace DLPMoneyTracker.Plugins.JSON.Adapters
             acct.CurrentBudgetAmount = this.CurrentBudgetAmount;
             acct.SummaryAccountUID = this.SummaryAccount?.Id;
 
-            
-            if(this.Mapping != null)
+            if (this.Mapping != null)
             {
                 acct.Mapping = new CSVMapping();
                 acct.Mapping.Copy(this.Mapping);
             }
         }
-
 
         public void ImportSource(JournalAccountJSON acct)
         {

@@ -5,60 +5,43 @@ using DLPMoneyTracker.Core.Models.BudgetPlan;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Core.Models.ScheduleRecurrence;
 using DLPMoneyTracker.Plugins.SQL.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.SQL.Adapters
 {
-    public class SQLSourceToBudgetPlanAdapter : ISourceToBudgetPlanAdapter<BudgetPlan>
+    public class SQLSourceToBudgetPlanAdapter(DataContext context, ILedgerAccountRepository accountRepository) : ISourceToBudgetPlanAdapter<BudgetPlan>
     {
-        private readonly DataContext context;
-        private readonly ILedgerAccountRepository accountRepository;
-
-        public SQLSourceToBudgetPlanAdapter(DataContext context, ILedgerAccountRepository accountRepository)
-        {
-            this.context = context;
-            this.accountRepository = accountRepository;
-        }
-        public SQLSourceToBudgetPlanAdapter()
-        {
-            this.context = null;
-        }
+        private readonly DataContext context = context;
+        private readonly ILedgerAccountRepository accountRepository = accountRepository;
 
         public Guid UID { get; set; }
 
         public BudgetPlanType PlanType { get; set; }
 
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         public decimal ExpectedAmount { get; set; }
 
         public List<LedgerType> ValidDebitAccountTypes => throw new NotImplementedException();
 
-        public IJournalAccount DebitAccount { get; set; }
+        public IJournalAccount DebitAccount { get; set; } = SpecialAccount.InvalidAccount;
 
-        public Guid DebitAccountId { get { return this.DebitAccount?.Id ?? Guid.Empty; } }
+        public Guid DebitAccountId => this.DebitAccount?.Id ?? Guid.Empty;
 
-        public string DebitAccountName { get { return this.DebitAccount?.Description ?? string.Empty; } }
+        public string DebitAccountName => this.DebitAccount?.Description ?? string.Empty;
 
         public List<LedgerType> ValidCreditAccountTypes => throw new NotImplementedException();
 
-        public IJournalAccount CreditAccount { get; set; }
+        public IJournalAccount CreditAccount { get; set; } = SpecialAccount.InvalidAccount;
 
-        public Guid CreditAccountId { get { return this.CreditAccount?.Id ?? Guid.Empty; } }
+        public Guid CreditAccountId => this.CreditAccount?.Id ?? Guid.Empty;
 
-        public string CreditAccountName { get { return this.CreditAccount?.Description ?? string.Empty; } }
+        public string CreditAccountName => this.CreditAccount?.Description ?? string.Empty;
 
-        public IScheduleRecurrence Recurrence { get; set; }
+        public IScheduleRecurrence Recurrence { get; set; } = ScheduleRecurrenceFactory.Default();
 
         public DateTime NotificationDate => throw new NotImplementedException();
 
         public DateTime NextOccurrence => throw new NotImplementedException();
-
-
 
         public void Copy(IBudgetPlan plan)
         {
@@ -85,9 +68,8 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
             plan.StartDate = this.Recurrence.StartDate;
 
             plan.Debit = context.Accounts.FirstOrDefault(x => x.AccountUID == this.DebitAccountId);
-            plan.Credit = context.Accounts.FirstOrDefault(x => x.AccountUID == this.CreditAccountId);            
+            plan.Credit = context.Accounts.FirstOrDefault(x => x.AccountUID == this.CreditAccountId);
         }
-
 
         public void ImportSource(BudgetPlan plan)
         {
@@ -97,15 +79,11 @@ namespace DLPMoneyTracker.Plugins.SQL.Adapters
             this.PlanType = plan.PlanType;
             this.Description = plan.Description;
             this.ExpectedAmount = plan.ExpectedAmount;
+            this.Recurrence = ScheduleRecurrenceFactory.Build(plan.Frequency, plan.StartDate);
 
-            ScheduleRecurrenceFactory recurrenceFactory = new ScheduleRecurrenceFactory();
-            this.Recurrence = recurrenceFactory.Build(plan.Frequency, plan.StartDate);
-
-            this.DebitAccount = accountRepository.GetAccountByUID(plan.Debit.AccountUID);
-            this.CreditAccount = accountRepository.GetAccountByUID(plan.Credit.AccountUID);
+            this.DebitAccount = accountRepository.GetAccountByUID(plan.Debit?.AccountUID ?? Guid.Empty);
+            this.CreditAccount = accountRepository.GetAccountByUID(plan.Credit?.AccountUID ?? Guid.Empty);
         }
-
-
 
         public bool IsValid()
         {

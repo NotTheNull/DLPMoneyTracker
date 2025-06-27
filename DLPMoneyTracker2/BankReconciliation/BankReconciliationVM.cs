@@ -5,14 +5,10 @@ using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.BankReconciliation;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker2.Core;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 
 namespace DLPMoneyTracker2.BankReconciliation
 {
@@ -48,28 +44,28 @@ namespace DLPMoneyTracker2.BankReconciliation
         }
 
 		
-		private IJournalAccount _account;
+		private IJournalAccount _account = null!;
 		private IMoneyAccount MoneyAccount { get { return (IMoneyAccount)_account; } }
 		public string AccountDescription { get { return _account.Description; } }
 
 
-		private DateRange statementDate = new DateRange();
+		private readonly DateRange _statementDate = new();
 		public DateTime StartingDate 
 		{
-			get { return statementDate.Begin; }
+			get { return _statementDate.Begin; }
 			set
 			{
-				statementDate.Begin = value;
+				_statementDate.Begin = value;
 				NotifyPropertyChanged(nameof(StartingDate));
 			}
 		}
 	
 		public DateTime EndingDate 
 		{
-			get { return statementDate.End; }
+			get { return _statementDate.End; }
 			set
 			{
-				statementDate.End = value;
+				_statementDate.End = value;
 				NotifyPropertyChanged(nameof(EndingDate));
 				this.LoadCurrentTransactions();
 			}
@@ -104,16 +100,14 @@ namespace DLPMoneyTracker2.BankReconciliation
 
 
 
-		private ObservableCollection<SingleAccountDetailVM> _listTrans = new ObservableCollection<SingleAccountDetailVM>();
+		private readonly ObservableCollection<SingleAccountDetailVM> _listTrans = [];
 		public ObservableCollection<SingleAccountDetailVM> TransactionList { get { return _listTrans; }  }
 
 		private List<SingleAccountDetailVM> ReconcileList 
 		{
 			get
 			{ 
-				return _listTrans
-					.Where(x => x.BankDate.HasValue && statementDate.IsWithinRange(x.BankDate.Value))
-					.ToList(); 
+				return [.. _listTrans.Where(x => x.BankDate.HasValue && _statementDate.IsWithinRange(x.BankDate.Value))]; 
 			} 
 		}
 
@@ -153,26 +147,19 @@ namespace DLPMoneyTracker2.BankReconciliation
 		}
 
 
-
-		private RelayCommand _cmdLoadTrans;
-		public RelayCommand CommandLoadTransactions
-		{
-			get
+		public RelayCommand CommandLoadTransactions => 
+			new((o) =>
 			{
-				return _cmdLoadTrans ?? (_cmdLoadTrans = new RelayCommand((o) =>
-				{
-					this.LoadCurrentTransactions();
-					NotifyReconciledChange();
-				}));
-			}
-		}
+				this.LoadCurrentTransactions();
+				NotifyReconciledChange();
+			});
 
 
 
 
 		public void LoadAccount(IJournalAccount account)
 		{
-			if (!(account is IMoneyAccount)) throw new InvalidOperationException("Selected Account MUST be a Money Account");
+			if (account is not IMoneyAccount) throw new InvalidOperationException("Selected Account MUST be a Money Account");
 			
 			_account = account;
 		
@@ -185,10 +172,10 @@ namespace DLPMoneyTracker2.BankReconciliation
 
 		private void LoadCurrentTransactions()
 		{
-			if (statementDate is null) return;
+			if (_statementDate is null) return;
 
 			_listTrans.Clear();
-			var listRecords = getBankRecTransactionsUseCase.Execute(_account.Id, statementDate);
+			var listRecords = getBankRecTransactionsUseCase.Execute(_account.Id, _statementDate);
 			foreach(var t in listRecords)
 			{
 				_listTrans.Add(new SingleAccountDetailVM(_account, t, notifications));
@@ -198,7 +185,7 @@ namespace DLPMoneyTracker2.BankReconciliation
 
 		public void AddTransaction(IMoneyTransaction record)
 		{
-			SingleAccountDetailVM vm = new SingleAccountDetailVM(_account, record, notifications);					
+			SingleAccountDetailVM vm = new(_account, record, notifications);					
 
             if (_listTrans.Contains(vm)) return;
             _listTrans.Add(vm);
@@ -227,10 +214,10 @@ namespace DLPMoneyTracker2.BankReconciliation
 		{
 			if (!IsBalanced) return;
 
-			BankReconciliationDTO reconciliation = new BankReconciliationDTO()
+			BankReconciliationDTO reconciliation = new()
 			{
 				BankAccount = _account,
-				StatementDate = statementDate,
+				StatementDate = _statementDate,
 				StartingBalance = this.StartingBalance,
 				EndingBalance = this.EndingBalance
 			};
@@ -243,7 +230,6 @@ namespace DLPMoneyTracker2.BankReconciliation
 			GC.SuppressFinalize(this);
             this.notifications.TransactionsModified -= Notifications_TransactionsModified;
             this.notifications.BankDateChanged -= Notifications_BankDateChanged;
-
         }
 	}
 }

@@ -13,26 +13,20 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
         private readonly IGetMoneyAccountsUseCase getMoneyAccountsUseCase;
         private readonly IDeleteJournalAccountUseCase deleteAccountUseCase;
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-        public AddEditMoneyAccountVM(IGetMoneyAccountsUseCase getMoneyAccountsUseCase, IDeleteJournalAccountUseCase deleteAccountUseCase) : base()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        public AddEditMoneyAccountVM(
+            MoneyAccountVM viewModel,
+            IGetMoneyAccountsUseCase getMoneyAccountsUseCase,
+            IDeleteJournalAccountUseCase deleteAccountUseCase) : base()
         {
             this.getMoneyAccountsUseCase = getMoneyAccountsUseCase;
             this.deleteAccountUseCase = deleteAccountUseCase;
-            _editAccount = UICore.DependencyHost.GetRequiredService<MoneyAccountVM>();
+            _editAccount = viewModel;
 
-            this.JournalTypeList =
-            [
-                new("Bank", LedgerType.Bank),
-                new("Credit Card", LedgerType.LiabilityCard),
-                new("Loan", LedgerType.LiabilityLoan)
-            ];
             this.ReloadAccounts();
         }
 
-        private ObservableCollection<MoneyAccountVM> _listAccounts = [];
-
+        private readonly ObservableCollection<MoneyAccountVM> _listAccounts = [];
         public ObservableCollection<MoneyAccountVM> AccountList { get { return _listAccounts; } }
 
 
@@ -74,116 +68,80 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
         public bool CanEdit { get { return _editAccount?.DateClosedUTC == null; } }
         public bool CanEditMapping { get { return this.AccountType == LedgerType.Bank || this.AccountType == LedgerType.LiabilityCard; } }
 
-        public List<SpecialDropListItem<LedgerType>> JournalTypeList { get; set; }
-
-
-
-
-
+        public List<SpecialDropListItem<LedgerType>> JournalTypeList { get; } =
+        [
+            new("Bank", LedgerType.Bank),
+            new("Credit Card", LedgerType.LiabilityCard),
+            new("Loan", LedgerType.LiabilityLoan)
+        ];
 
 
 
         #region Commands
 
-        private RelayCommand _cmdSave;
-
-        public RelayCommand CommandSave
-        {
-            get
+        public RelayCommand CommandSave => 
+            new ((o) =>
             {
-                return _cmdSave ?? (_cmdSave = new RelayCommand((o) =>
-                {
-                    _editAccount.SaveAccount();
-                    this.ReloadAccounts();
-                    this.NotifyAll();
-                }));
-            }
-        }
-
-        private RelayCommand _cmdClear;
-
-        public RelayCommand CommandClear
-        {
-            get
-            {
-                return _cmdClear ?? (_cmdClear = new RelayCommand((o) =>
-                {
-                    _editAccount.Clear();
-                    this.NotifyAll();
-                }));
-            }
-        }
-
-        private RelayCommand _cmdLoad;
-
-        public RelayCommand CommandLoad
-        {
-            get
-            {
-                return _cmdLoad ?? (_cmdLoad = new RelayCommand((act) =>
-                {
-                    if (act is null) throw new ArgumentNullException("Account");
-                    //if (act.GetType() != typeof(IJournalAccount)) throw new InvalidCastException(string.Format("Cannot Load type [{0}", act.GetType().FullName));
-
-                    //_editAccount.LoadAccount((IJournalAccount)act);
-                    if (act is MoneyAccountVM vm)
-                    {
-                        _editAccount = vm;
-                    }
-
-                    this.NotifyAll();
-                }));
-            }
-        }
-
-        private RelayCommand _cmdDel;
-
-        public RelayCommand CommandRemove
-        {
-            get
-            {
-                return _cmdDel ?? (_cmdDel = new RelayCommand((act) =>
-                {
-                    if (act is null) throw new ArgumentNullException("Account");
-                    //if (act.GetType() != typeof(IJournalAccount)) throw new InvalidCastException(string.Format("Cannot Load type [{0}", act.GetType().FullName));
-                    if (act is MoneyAccountVM vm)
-                    {
-                        deleteAccountUseCase.Execute(vm.Id);
-                    }
-                    this.ReloadAccounts();
-                    _editAccount.Clear();
-                    this.NotifyAll();
-                }));
-            }
-        }
-
-
-        private RelayCommand _cmdEditMap;
-        public RelayCommand CommandEditMapping
-        {
-            get
-            {
-                return _cmdEditMap ??= new RelayCommand((o) =>
-                {
-                    if (_editAccount is null) return;
-
-                    var mappingUI = UICore.DependencyHost.GetRequiredService<CSVMappingUI>();
-                    mappingUI.LoadMoneyAccount(_editAccount);
-                    mappingUI.ShowDialog();
-                });
-            }
-        }
+                _editAccount.SaveAccount();
+                this.ReloadAccounts();
+                this.NotifyAll();
+            });
+            
         
+
+        public RelayCommand CommandClear =>
+            new((o) =>
+            {
+                _editAccount.Clear();
+                this.NotifyAll();
+            });
+
+
+        public RelayCommand CommandLoad =>
+            new((act) =>
+            {
+                ArgumentNullException.ThrowIfNull(act);
+                
+                if (act is MoneyAccountVM vm)
+                {
+                    _editAccount = vm;
+                }
+
+                this.NotifyAll();
+            });
+
+        public RelayCommand CommandRemove =>
+            new((act) =>
+            {
+                ArgumentNullException.ThrowIfNull(act);
+                
+                if (act is MoneyAccountVM vm)
+                {
+                    deleteAccountUseCase.Execute(vm.Id);
+                }
+                this.ReloadAccounts();
+                _editAccount.Clear();
+                this.NotifyAll();
+            });
+
+
+        public RelayCommand CommandEditMapping => 
+            new((o) =>
+            {
+                if (_editAccount is null) return;
+
+                var mappingUI = UICore.DependencyHost.GetRequiredService<CSVMappingUI>();
+                mappingUI.LoadMoneyAccount(_editAccount);
+                mappingUI.ShowDialog();
+            });
+
 
         #endregion Commands
 
-        /// <summary>
-        /// Reloads the listing of accounts
-        /// </summary>
         public void ReloadAccounts()
         {
             this.AccountList.Clear();
-            var listValidAccounts = getMoneyAccountsUseCase.Execute(true); //_config.GetJournalAccountList(new JournalAccountSearch(MoneyAccountVM.ValidTypes));
+            var listValidAccounts = getMoneyAccountsUseCase.Execute(true); 
             foreach (var act in listValidAccounts)
             {
                 MoneyAccountVM vm = UICore.DependencyHost.GetRequiredService<MoneyAccountVM>();

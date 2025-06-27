@@ -22,7 +22,6 @@ using DLPMoneyTracker2.LedgerEntry;
 using DLPMoneyTracker2.Main.AccountSummary;
 using DLPMoneyTracker2.Main.BankReconciliation;
 using DLPMoneyTracker2.Main.BudgetAnalysis;
-using DLPMoneyTracker2.Main.ExpenseDetail;
 using DLPMoneyTracker2.Main.ExpensePlanner;
 using DLPMoneyTracker2.Main.TransactionList;
 using DLPMoneyTracker2.Main.UpcomingReminders;
@@ -41,14 +40,14 @@ namespace DLPMoneyTracker2
                 
         public static void Init()
         {
-            ServiceCollection services = new ServiceCollection();
+            ServiceCollection services = new();
             ConfigureServices(services);
             DependencyHost = services.BuildServiceProvider();
         }
 
         private static void ConfigureServices(ServiceCollection services)
         {
-            var source = App.Config["AppSettings:source"].ToDataSource();
+            var source = App.Config["AppSettings:source"]?.ToDataSource() ?? DLPDataSource.NotSet;
             if (source == DLPDataSource.NotSet) throw new InvalidOperationException("Unable to read configuration file");
 
             // Repositories
@@ -109,12 +108,6 @@ namespace DLPMoneyTracker2
             services.AddTransient<IGetBudgetPlanListByType, GetBudgetPlanListByType>();
             services.AddTransient<IGetSummaryAccountListByType, GetSummaryAccountListByType>();
             services.AddTransient<IGetNextUIDUseCase, GetNextUIDUseCase>();
-
-
-            // Factories
-            services.AddTransient<JournalAccountFactory>();
-            services.AddTransient<BudgetPlanFactory>();
-            services.AddTransient<ScheduleRecurrenceFactory>();
 
 
             // Main UI
@@ -182,8 +175,6 @@ namespace DLPMoneyTracker2
 
             services.AddTransient<CSVImport>();
             services.AddTransient<CSVImportVM>();
-
-
 
 
         }

@@ -1,31 +1,16 @@
-﻿using DLPMoneyTracker.BusinessLogic.AdapterInterfaces;
-using DLPMoneyTracker.Core.Models.LedgerAccounts;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Text.Json.Serialization.Metadata;
-using System.Threading.Tasks;
+﻿using DLPMoneyTracker.Core.Models.LedgerAccounts;
 
 namespace DLPMoneyTracker.BusinessLogic.Factories
 {
-    public class JournalAccountFactory
+    public static class JournalAccountFactory
     {
-        
-        public JournalAccountFactory()
-        {
-            
-        }
-
-
-        public IJournalAccount Build(IJournalAccount acct)
+        public static IJournalAccount Build(IJournalAccount acct)
         {
             if (acct.Id == SpecialAccount.DebtInterest.Id) return SpecialAccount.DebtInterest;
             if (acct.Id == SpecialAccount.DebtReduction.Id) return SpecialAccount.DebtReduction;
             if (acct.Id == SpecialAccount.InitialBalance.Id) return SpecialAccount.InitialBalance;
             if (acct.Id == SpecialAccount.UnlistedAdjustment.Id) return SpecialAccount.UnlistedAdjustment;
+            if (acct.Id == SpecialAccount.InvalidAccount.Id) return SpecialAccount.InvalidAccount;
 
             return acct.JournalType switch
             {
@@ -36,10 +21,9 @@ namespace DLPMoneyTracker.BusinessLogic.Factories
                 LedgerType.Receivable => new ReceivableAccount(acct),
                 _ => throw new NotSupportedException(string.Format("Ledger Type [{0}] is not supported", acct.JournalType.ToString()))
             };
-
         }
 
-        public IJournalAccount Build(LedgerType jType, string description, int orderBy = 99)
+        public static IJournalAccount Build(LedgerType jType, string description, int orderBy = 99)
         {
             return jType switch
             {
@@ -49,7 +33,7 @@ namespace DLPMoneyTracker.BusinessLogic.Factories
                 LedgerType.Payable => new PayableAccount() { Description = description },
                 LedgerType.Receivable => new ReceivableAccount() { Description = description },
                 _ => throw new NotSupportedException(string.Format("Ledger Type [{0}] is not supported", jType.ToString()))
-            };            
+            };
         }
     }
 }

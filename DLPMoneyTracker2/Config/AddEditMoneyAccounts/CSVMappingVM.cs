@@ -1,26 +1,18 @@
 ﻿using DLPMoneyTracker.Core.Models;
-using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker2.Core;
-using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
 {
     public class CSVMappingVM : BaseViewModel
     {
-        private ICSVMapping _mapOriginal;
-        private MoneyAccountVM _money;
+        private MoneyAccountVM? _money;
+        private ICSVMapping? _mapOriginal;
 
-        public CSVMappingVM()
-        {
-            
-        }
+        public CSVMappingVM() { }
+
         public CSVMappingVM(MoneyAccountVM money)
         {
+            _money = money;
             this.LoadMoneyAccount(money);
         }
 
@@ -38,7 +30,6 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             }
         }
 
-
         private int _colTransDate = 1;
 
         public int TransDateColumn
@@ -51,19 +42,17 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             }
         }
 
-
-        private int _colDesc = 2;
+        private int _colDescription = 2;
 
         public int DescriptionColumn
         {
-            get { return _colDesc; }
+            get { return _colDescription; }
             set
             {
-                _colDesc = value;
+                _colDescription = value;
                 NotifyPropertyChanged(nameof(DescriptionColumn));
             }
         }
-
 
         private int _colAmount = 3;
 
@@ -77,73 +66,54 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             }
         }
 
-
         private bool _isInverted;
 
         public bool IsAmountInverted
         {
             get { return _isInverted; }
-            set 
-            { 
+            set
+            {
                 _isInverted = value;
                 NotifyPropertyChanged(nameof(this.IsAmountInverted));
             }
         }
 
-
-
-        #endregion
-
+        #endregion Properties
 
         #region Commands
 
-        private RelayCommand _cmdDiscard;
-        public RelayCommand CommandDiscard
-        {
-            get
+        public RelayCommand CommandDiscard =>
+            new((o) =>
             {
-                return _cmdDiscard ??= new RelayCommand((o) =>
-                {
-                    this.Reset();
-                });
-            }
-        }
+                this.Reset();
+            });
 
-
-        private RelayCommand _cmdSave;
-        public RelayCommand CommandSave
-        {
-            get
+        public RelayCommand CommandSave =>
+            new((o) =>
             {
-                return _cmdSave ??= new RelayCommand((o) =>
-                {
-                    if (_money.Mapping is null) _money.Mapping = new CSVMapping();
-                    _money.Mapping.Copy(this.BuildMap());
-                });
-            }
-        }
+                if (_money is null) return;
+                _money.Mapping ??= new CSVMapping();
+                _money.Mapping.Copy(this.BuildMap());
+            });
 
-
-        #endregion
-
+        #endregion Commands
 
         private void Reset()
         {
-            if (_mapOriginal is null) _mapOriginal = new CSVMapping();
+            _mapOriginal ??= new CSVMapping();
 
             this.StartingRow = _mapOriginal.StartingRow;
             this.IsAmountInverted = _mapOriginal.IsAmountInverted;
 
             // Remember to add 1 since arrays are 0-index
-            this.TransDateColumn = _mapOriginal.GetMapping(ICSVMapping.TRANS_DATE)+1;
-            this.DescriptionColumn = _mapOriginal.GetMapping(ICSVMapping.DESCRIPTION)+1;
-            this.AmountColumn = _mapOriginal.GetMapping(ICSVMapping.AMOUNT)+1;
+            this.TransDateColumn = _mapOriginal.GetMapping(ICSVMapping.TRANS_DATE) + 1;
+            this.DescriptionColumn = _mapOriginal.GetMapping(ICSVMapping.DESCRIPTION) + 1;
+            this.AmountColumn = _mapOriginal.GetMapping(ICSVMapping.AMOUNT) + 1;
         }
-
 
         public ICSVMapping BuildMap()
         {
-            CSVMapping newMapping = new CSVMapping()
+            CSVMapping newMapping = new()
             {
                 StartingRow = this.StartingRow,
                 IsAmountInverted = this.IsAmountInverted
@@ -158,8 +128,8 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
 
         public void LoadMoneyAccount(MoneyAccountVM money)
         {
-            _mapOriginal = money.Mapping;
             _money = money;
+            _mapOriginal = money.Mapping;
             this.Reset();
         }
     }

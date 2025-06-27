@@ -1,4 +1,5 @@
 ﻿
+using DLPMoneyTracker.Core;
 using DLPMoneyTracker2.Config.AddEditBudgetPlans;
 using DLPMoneyTracker2.Config.AddEditLedgerAccounts;
 using DLPMoneyTracker2.Config.AddEditMoneyAccounts;
@@ -22,7 +23,6 @@ namespace DLPMoneyTracker2
     /// </summary>
     public partial class MainWindow : Window
     {
-        
         private readonly MoneyAccountOverview _viewMoneyAccounts;
         private readonly TransactionDetail _viewTransactions;
         private readonly CurrentMonthBudget _viewBudgetAnalysis;
@@ -30,12 +30,23 @@ namespace DLPMoneyTracker2
         private readonly YearToDateUI _viewYTD;
         private readonly BankReconciliationListingUI _viewBankRec;
 
-        public MainWindow(MoneyAccountOverview viewMain, CurrentMonthBudget viewBudget, TransactionDetail viewDetail, ExpensePlannerUI viewBills, YearToDateUI viewYTD, BankReconciliationListingUI viewBankRec)
+        public MainWindow(
+            IDLPConfig config,
+            MoneyAccountOverview viewMain, 
+            CurrentMonthBudget viewBudget, 
+            TransactionDetail viewDetail, 
+            ExpensePlannerUI viewBills, 
+            YearToDateUI viewYTD, 
+            BankReconciliationListingUI viewBankRec)
         {
             InitializeComponent();
 
             var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            this.Title = $"DLP Money Tracker - {version.ToString()}";
+            this.Title = $"DLP Money Tracker - {version?.ToString() ?? "*N/A*"}";
+
+#if DEBUG
+            lblPath.Text = $"SRC: {config.DataSource}  PATH: {config.JSONFilePath}";
+#endif
 
             panelAccountSummary.Children.Add(viewMain);
             _viewMoneyAccounts = viewMain;
@@ -83,35 +94,35 @@ namespace DLPMoneyTracker2
         private void MenuRecordIncome_Click(object sender, RoutedEventArgs e)
         {
             IncomeJournalEntryVM viewModel = UICore.DependencyHost.GetRequiredService<IncomeJournalEntryVM>();
-            RecordJournalEntry window = new RecordJournalEntry(viewModel);
+            RecordJournalEntry window = new(viewModel);
             window.Show();
         }
 
         private void MenuRecordExpense_Click(object sender, RoutedEventArgs e)
         {
             ExpenseJournalEntryVM viewModel = UICore.DependencyHost.GetRequiredService<ExpenseJournalEntryVM>();
-            RecordJournalEntry window = new RecordJournalEntry(viewModel);
+            RecordJournalEntry window = new(viewModel);
             window.Show();
         }
 
         private void MenuRecordLiabilityPayment_Click(object sender, RoutedEventArgs e)
         {
             DebtPaymentJournalEntryVM viewModel = UICore.DependencyHost.GetRequiredService<DebtPaymentJournalEntryVM>();
-            RecordJournalEntry window = new RecordJournalEntry(viewModel);
+            RecordJournalEntry window = new(viewModel);
             window.Show();
         }
 
         private void MenuRecordBankTransfer_Click(object sender, RoutedEventArgs e)
         {
             TransferJournalEntryVM viewModel = UICore.DependencyHost.GetRequiredService<TransferJournalEntryVM>();
-            RecordJournalEntry window = new RecordJournalEntry(viewModel);
+            RecordJournalEntry window = new(viewModel);
             window.Show();
         }
 
         private void MenuAccountCorrection_Click(object sender, RoutedEventArgs e)
         {
             CorrectionJournalEntryVM viewModel = UICore.DependencyHost.GetRequiredService<CorrectionJournalEntryVM>();
-            RecordJournalEntry window = new RecordJournalEntry(viewModel);
+            RecordJournalEntry window = new(viewModel);
             window.Show();
         }
 
@@ -125,7 +136,7 @@ namespace DLPMoneyTracker2
         private void MenuRecordDebtAdjustment_Click(object sender, RoutedEventArgs e)
         {
             DebtAdjustmentJournalEntryVM viewModel = UICore.DependencyHost.GetRequiredService<DebtAdjustmentJournalEntryVM>();
-            RecordJournalEntry window = new RecordJournalEntry(viewModel);
+            RecordJournalEntry window = new(viewModel);
             window.Show();
         }
 

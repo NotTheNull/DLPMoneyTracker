@@ -1,11 +1,5 @@
 ﻿using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.JSON.Models
 {
@@ -26,8 +20,6 @@ namespace DLPMoneyTracker.Plugins.JSON.Models
         public DateTime? PreviousBankReconciliationStatementDate { get; set; }
         public Guid? SummaryAccountUID { get; set; }
 
-        public CSVMapping? Mapping { get; set; } 
-
-
+        public CSVMapping? Mapping { get; set; }
     }
 }

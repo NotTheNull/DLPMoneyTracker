@@ -4,29 +4,19 @@ using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models.LedgerAccounts;
 using DLPMoneyTracker.Plugins.SQL.Adapters;
 using DLPMoneyTracker.Plugins.SQL.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLPMoneyTracker.Plugins.SQL.Repositories
 {
-    public class SQLLedgerAccountRepository : ILedgerAccountRepository
+    public class SQLLedgerAccountRepository(IDLPConfig config) : ILedgerAccountRepository
     {
-        private readonly IDLPConfig config;
-
-        public SQLLedgerAccountRepository(IDLPConfig config)
-        {
-            this.config = config;
-        }
+        private readonly IDLPConfig config = config;
 
         public IJournalAccount GetAccountByUID(Guid uid)
         {
-            using (DataContext context = new DataContext(config))
+            using (DataContext context = new(config))
             {
                 var account = context.Accounts.FirstOrDefault(x => x.AccountUID == uid);
-                if (account is null) return null;
+                if (account is null) return SpecialAccount.InvalidAccount;
 
                 return this.SourceToAccount(account);
             }
@@ -35,7 +25,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
         public List<IJournalAccount> GetFullList()
         {
             List<IJournalAccount> listAccountsFinal = new List<IJournalAccount>();
-            using (DataContext context = new DataContext(config))
+            using (DataContext context = new(config))
             {
                 var listAccounts = context.Accounts.ToList();
                 if (listAccounts?.Any() != true) return listAccountsFinal;
@@ -54,7 +44,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
             List<IJournalAccount> listAccountsFinal = new List<IJournalAccount>();
             if (search.JournalTypes?.Any() != true) return listAccountsFinal;
 
-            using (DataContext context = new DataContext(config))
+            using (DataContext context = new(config))
             {
                 var listAccountsQuery = context.Accounts.Where(x => search.JournalTypes.Contains(x.AccountType));
 
@@ -82,7 +72,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         public int GetRecordCount()
         {
-            using (DataContext context = new DataContext(config))
+            using (DataContext context = new(config))
             {
                 return context.Accounts.Count();
             }
@@ -90,9 +80,9 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         public void SaveJournalAccount(IJournalAccount account)
         {
-            using (DataContext context = new DataContext(config))
+            using (DataContext context = new(config))
             {
-                SQLSourceToJournalAccountAdapter adapter = new SQLSourceToJournalAccountAdapter(this);
+                SQLSourceToJournalAccountAdapter adapter = new(this);
                 adapter.Copy(account);
 
                 var existingAccount = context.Accounts.FirstOrDefault(x => x.AccountUID == account.Id);
@@ -109,10 +99,10 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         public List<IJournalAccount> GetSummaryAccountListByType(LedgerType type)
         {
-            if (type == LedgerType.NotSet) return null;
+            if (type == LedgerType.NotSet) return [];
 
-            List<IJournalAccount> listAccountsFinal = new List<IJournalAccount>();
-            using (DataContext context = new DataContext(config))
+            List<IJournalAccount> listAccountsFinal = [];
+            using (DataContext context = new(config))
             {
                 var listAccountsLoop = context.Accounts.Where(x => x.AccountType == type && x.SummaryAccountId == null).ToList();
                 foreach (var account in listAccountsLoop)
@@ -126,10 +116,10 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         public List<IJournalAccount> GetDetailAccountsForSummary(Guid uidSummaryAccount)
         {
-            if (uidSummaryAccount == null || uidSummaryAccount == Guid.Empty) return null;
+            if (uidSummaryAccount == Guid.Empty) return [];
 
-            List<IJournalAccount> listAccountsFinal = new List<IJournalAccount>();
-            using (DataContext context = new DataContext(config))
+            List<IJournalAccount> listAccountsFinal = [];
+            using (DataContext context = new(config))
             {
                 var listAccountsLoop = context.Accounts.Where(x => x.SummaryAccount != null && x.SummaryAccount.AccountUID == uidSummaryAccount).ToList();
                 foreach (var account in listAccountsLoop)
@@ -141,21 +131,17 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
             return listAccountsFinal;
         }
 
-
-
         private IJournalAccount SourceToAccount(Account a)
         {
-            SQLSourceToJournalAccountAdapter adapter = new SQLSourceToJournalAccountAdapter(this);
+            SQLSourceToJournalAccountAdapter adapter = new(this);
             adapter.ImportSource(a);
-
-            JournalAccountFactory factory = new JournalAccountFactory();
-            return factory.Build(adapter);
+            return JournalAccountFactory.Build(adapter);
         }
 
         public Guid GetNextUID()
         {
             Guid next;
-            using (DataContext context = new DataContext(config))
+            using (DataContext context = new(config))
             {
                 do
                 {
