@@ -20,7 +20,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
             this.Clear();
         }
 
-        public Guid Id { get; private set; }
+        public Guid Id { get; private set; } = Guid.NewGuid();
 
         private string _description = string.Empty;
 
@@ -92,7 +92,7 @@ namespace DLPMoneyTracker2.Config.AddEditMoneyAccounts
 
         public void Clear()
         {
-            Id = Guid.Empty;
+            Id = Guid.NewGuid();
             Description = string.Empty;
             JournalType = LedgerType.NotSet;
             this.DateClosedUTC = null;
