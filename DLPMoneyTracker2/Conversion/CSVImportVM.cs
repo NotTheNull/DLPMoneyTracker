@@ -93,8 +93,7 @@ namespace DLPMoneyTracker2.Conversion
 
         public ObservableCollection<SpecialDropListItem<IMoneyAccount>> AccountList { get; set; } = [];
 
-        private ICSVMapping? Mapping
-        { get { return this.SelectedMoneyAccount.Mapping; } }
+        private ICSVMapping? Mapping { get { return this.SelectedMoneyAccount?.Mapping; } }
 
         public ObservableCollection<CSVRecordVM> CSVRecordList { get; set; } = [];
 
@@ -268,12 +267,13 @@ namespace DLPMoneyTracker2.Conversion
             this.StartDate = DateTime.Today.AddDays(-60);
             this.EndDate = DateTime.Today;
 
-            var results = searchAccountsUseCase.Execute(new List<LedgerType>() { LedgerType.Bank, LedgerType.LiabilityCard });
+            var results = searchAccountsUseCase.Execute([LedgerType.Bank, LedgerType.LiabilityCard]);
             if (results?.Any() != true) return;
 
             foreach (var account in results)
             {
-                if (account is IMoneyAccount money)
+                // Only add a money account if it has a valid mapping
+                if (account is IMoneyAccount money && money.Mapping != null && money.Mapping.IsValidMapping())
                 {
                     this.AccountList.Add(new SpecialDropListItem<IMoneyAccount>(account.Description, money));
                 }
