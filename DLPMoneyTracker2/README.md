@@ -8,6 +8,24 @@ This WPF application is my personal finance tracking tool.  All data entered is 
 While the existing apps are quite robust, the versions I tried would not work without linking accounts.  While this may be nice for some people to better facilitate Bank Reconciliation, for me it often led to duplicate entries as my manual entries wouldn't automatically match up to an existing bank record.  This caused too much micromanagement with data fixes which left reporting untrustworthy.
 
 
+# AppSettings
+
+There are two sections within the AppSettings.json file:
+- **ConnectionStrings**
+    - Feel free to add as many database connection strings as you need
+	- Should add **"json_path"** as a connection string
+	    - this is the path to where the data JSON files will be stored
+		- If this is not defined, it will store the files in the same location as the application
+- **AppSettings**
+    - **"source"**
+	    - defines which source-type (json or db) is the primary source of data
+		- if not set, the UI will load Empty
+	- **"connName"**
+	    - the name of the database connection string to use
+		- if not set, then all features requiring SQL _(e.g. Import/Export JSON)_ will not function
+		- if you set the value to **"json_path"**, no data will load because it's not a valid SQL Server
+
+
 # Configuration
 
 These are the objects that should be defined before using this application.
