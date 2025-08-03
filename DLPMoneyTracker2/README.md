@@ -98,8 +98,21 @@ This feature was added to offer a quick way to take a CSV listing of money accou
 This option is used to sync the local JSON files with a SQL database.  At some point down the road, I may automate this.
 
 
+# WIP
 
+This section is intended to jot down ideas for future features
 
+### Transaction Splitter
 
+With some transactions (e.g. Amazon, Uber Eats, etc) I will usually record the transaction with the total but the bank will ultimately record multiple transactions _(e.g. Amazon purchases are split into multiple shipments, Uber Eats tip is charged separately from the Food order)_.
+This feature is expected to create a new transaction prefilled with the transaction data, keep the same Debit / Credit accounts, and maintain valid Transaction amounts by re-evaluating the original transaction's amount.  The sum of the two records MUST total the original amount.
+
+### Redesign Budget Planner
+
+Mainly needs rethinking.  Right now, the math ends up not being accurate.  May want to replace the UI itself with a report be it SSRS or custom HTML.  
+
+### Redesign Bank Reconciliation
+
+The main thing with this existing feature is that it's not tailored for multiple years.  The UI alone needs to be reworked to represent previous 12 to 24 months.
 
 
