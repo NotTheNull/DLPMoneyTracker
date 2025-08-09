@@ -13,13 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Reports\**" />
-    <EmbeddedResource Remove="Reports\**" />
-    <None Remove="Reports\**" />
-    <Page Remove="Reports\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="Core\Behaviors\WebViewHTMLStringBehavior.cs" />
     <Compile Remove="Core\Converters\CategoryTypeToBackgroundColor.cs" />
     <Compile Remove="Core\Converters\CategoryTypeToDisplayText.cs" />

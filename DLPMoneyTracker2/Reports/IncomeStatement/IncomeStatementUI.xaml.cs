@@ -12,21 +12,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace DLPMoneyTracker2.Reports
+namespace DLPMoneyTracker2.Reports.IncomeStatement
 {
     /// <summary>
-    /// Interaction logic for BudgetAnalysisParamtersUI.xaml
+    /// Interaction logic for IncomeStatementUI.xaml
     /// </summary>
-    public partial class BudgetAnalysisParamtersUI : Window
+    public partial class IncomeStatementUI : Window
     {
-        public BudgetAnalysisParamtersUI()
+        public IncomeStatementUI()
         {
             InitializeComponent();
-        }
-
-        private void btnClose_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
         }
     }
 }
