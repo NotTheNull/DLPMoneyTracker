@@ -1,19 +1,25 @@
-﻿using DLPMoneyTracker2.Core;
+﻿using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
+using DLPMoneyTracker.Core;
+using DLPMoneyTracker.Core.Models;
+using DLPMoneyTracker2.Core;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.Reports.IncomeStatement;
 
-public class IncomeStatementVM : BaseViewModel
+public class IncomeStatementVM(IGetTransactionsBySearchUseCase actionSearchTransaction) : BaseViewModel
 {
-
+    
+    
+	#region Properties
 
 	public readonly List<SpecialDropListItem<int>> MonthList =
-    [
-        new SpecialDropListItem<int>("January", 1),
+	[
+		new SpecialDropListItem<int>("January", 1),
 		new SpecialDropListItem<int>("February", 2),
 		new SpecialDropListItem<int>("March", 3),
 		new SpecialDropListItem<int>("April", 4),
@@ -28,25 +34,25 @@ public class IncomeStatementVM : BaseViewModel
 	];
 
 
-	private int _year;
+	private int _year = DateTime.Today.Year;
 
 	public int SelectedYear
 	{
 		get { return _year; }
-		set 
-		{ 
+		set
+		{
 			_year = value;
 			NotifyPropertyChanged(nameof(SelectedYear));
 		}
 	}
 
 
-	private int _month;
+	private int _month = DateTime.Today.Month;
 
 	public int SelectedMonth
 	{
 		get { return _month; }
-		set 
+		set
 		{
 			_month = value;
 			NotifyPropertyChanged(nameof(SelectedMonth));
@@ -54,5 +60,67 @@ public class IncomeStatementVM : BaseViewModel
 	}
 
 
+	public decimal TotalIncome => IncomeList.Sum(s => s.Total);
+
+	public decimal TotalExpense => ExpenseList.Sum(s => s.Total);
+
+	public decimal TotalProfit => (TotalIncome - TotalExpense);
+
+
+	public ObservableCollection<IncomeStatementAccountVM> IncomeList { get; } = [];
+	public ObservableCollection<IncomeStatementAccountVM> ExpenseList { get; } = [];
+
+	#endregion
+
+
+	#region Commands
+
+	public RelayCommand CommandLoad => new((o) => LoadTransactions());
+
+
+    #endregion
+    private readonly TransactionType[] _incomeTypes = [TransactionType.Income];
+    private readonly TransactionType[] _expenseTypes = [TransactionType.Expense, TransactionType.DebtPayment];
+
+    
+    private void LoadTransactions()
+	{	
+		// TODO: Finish
+
+
+
+		NotifyPropertyChanged(nameof(TotalIncome));
+		NotifyPropertyChanged(nameof(TotalExpense));
+		NotifyPropertyChanged(nameof(TotalProfit));
+	}
+
+
+
+}
+
+public class IncomeStatementAccountVM : BaseViewModel
+{
+	private string _name = string.Empty;
+	public string AccountName
+	{
+		get { return _name; }
+		set 
+		{
+			_name = value;
+			NotifyPropertyChanged(nameof(AccountName));
+		}
+	}
+
+	private decimal _total;
+
+	public decimal Total
+	{
+		get { return _total; }
+		set 
+		{ 
+			_total = value;
+			NotifyPropertyChanged(nameof(Total));
+		}
+	}
 
 }

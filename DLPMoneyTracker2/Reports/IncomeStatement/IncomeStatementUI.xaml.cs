@@ -23,5 +23,10 @@ namespace DLPMoneyTracker2.Reports.IncomeStatement
         {
             InitializeComponent();
         }
+
+        private void btnCloseWindow_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }
