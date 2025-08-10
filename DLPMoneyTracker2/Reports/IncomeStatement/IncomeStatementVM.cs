@@ -1,4 +1,5 @@
-﻿using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
+﻿using AutoMapper;
+using DLPMoneyTracker.BusinessLogic.UseCases.Transactions.Interfaces;
 using DLPMoneyTracker.Core;
 using DLPMoneyTracker.Core.Models;
 using DLPMoneyTracker2.Core;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DLPMoneyTracker2.Reports.IncomeStatement;
 
-public class IncomeStatementVM(IGetTransactionsBySearchUseCase actionSearchTransaction) : BaseViewModel
+public class IncomeStatementVM(IMapper mapper) : BaseViewModel
 {
     
     
@@ -67,8 +68,8 @@ public class IncomeStatementVM(IGetTransactionsBySearchUseCase actionSearchTrans
 	public decimal TotalProfit => (TotalIncome - TotalExpense);
 
 
-	public ObservableCollection<IncomeStatementAccountVM> IncomeList { get; } = [];
-	public ObservableCollection<IncomeStatementAccountVM> ExpenseList { get; } = [];
+	public ObservableCollection<IncomeStatementItemVM> IncomeList { get; } = [];
+	public ObservableCollection<IncomeStatementItemVM> ExpenseList { get; } = [];
 
 	#endregion
 
@@ -98,7 +99,7 @@ public class IncomeStatementVM(IGetTransactionsBySearchUseCase actionSearchTrans
 
 }
 
-public class IncomeStatementAccountVM : BaseViewModel
+public class IncomeStatementItemVM : BaseViewModel
 {
 	private string _name = string.Empty;
 	public string AccountName
