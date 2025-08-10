@@ -97,6 +97,11 @@ This feature was added to offer a quick way to take a CSV listing of money accou
 
 This option is used to sync the local JSON files with a SQL database.  At some point down the road, I may automate this.
 
+# Reports
+
+Bringing back reports as basic WPF UI windows instead of simple HTML.  Formatting is kind of important.  Eventually, I would like to work in graphs with these reports.
+
+
 
 # WIP
 
