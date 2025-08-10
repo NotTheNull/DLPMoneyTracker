@@ -1,21 +1,22 @@
-﻿<Window x:Class="DLPMoneyTracker2.Conversion.CSVImport"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DLPMoneyTracker2.Conversion"
-        mc:Ignorable="d"
-        Title="CSVImport" 
-        WindowStartupLocation="CenterOwner"
-        Height="650" 
-        Width="800">
+﻿<Window
+    x:Class="DLPMoneyTracker2.Conversion.CSVImport"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:DLPMoneyTracker2.Conversion"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="CSVImport"
+    Width="800"
+    Height="650"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
 
     <Window.Resources>
         <ResourceDictionary>
             <Style x:Key="localButton" TargetType="Button">
                 <Setter Property="Width" Value="100" />
                 <Setter Property="Height" Value="30" />
-                <Setter Property="Margin" Value="5, 0, 10, 0"/>
+                <Setter Property="Margin" Value="5,0,10,0" />
             </Style>
         </ResourceDictionary>
     </Window.Resources>
@@ -25,47 +26,49 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="15" />
-            <!-- Buffer -->
+            <!--  Buffer  -->
             <RowDefinition Height="30" />
             <RowDefinition Height="30" />
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="*" />
             <RowDefinition Height="40" />
-            <!-- Buttons -->
+            <!--  Buttons  -->
             <RowDefinition Height="30" />
             <RowDefinition Height="*" />
             <RowDefinition Height="40" />
             <RowDefinition Height="15" />
-            <!-- Buffer -->
+            <!--  Buffer  -->
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal"
+        <StackPanel
+            Grid.Row="0"
             Background="LightGray"
-            Grid.Row="0">
-            <Button x:Name="btnCloseWindow"
-                    ToolTip="Discard Unsaved Changes and Close Window"
-                    Click="btnCloseWindow_Click"
-                    Margin="5"
-                    Style="{StaticResource MenuButton}">
+            Orientation="Horizontal">
+            <Button
+                x:Name="btnCloseWindow"
+                Margin="5"
+                Click="btnCloseWindow_Click"
+                Style="{StaticResource MenuButton}"
+                ToolTip="Discard Unsaved Changes and Close Window">
                 <Button.Content>
                     <Image Source="/Icons/Leave-256.png" />
                 </Button.Content>
             </Button>
 
-            <Button Grid.Column="2"
-                    ToolTip="Load CSV file"
-                    
-                    Style="{StaticResource MenuButton}"
-                    Command="{Binding Path=CommandLoadCSV}">
+            <Button
+                Grid.Column="2"
+                Command="{Binding Path=CommandLoadCSV}"
+                Style="{StaticResource MenuButton}"
+                ToolTip="Load CSV file">
                 <Button.Content>
                     <Image Source="/Icons/open-file-50.png" />
                 </Button.Content>
             </Button>
 
-            <TextBlock Margin="10, 0, 0, 0" 
-                       Foreground="Blue"
-                       Text="{Binding Path=CSVFilePath, UpdateSourceTrigger=PropertyChanged, FallbackValue=*NO FILE*}"
-                       Style="{StaticResource StandardHeaderLabel}"    
-                       />
+            <TextBlock
+                Margin="10,0,0,0"
+                Foreground="Blue"
+                Style="{StaticResource StandardHeaderLabel}"
+                Text="{Binding Path=CSVFilePath, UpdateSourceTrigger=PropertyChanged, FallbackValue=*NO FILE*}" />
 
 
         </StackPanel>
@@ -85,94 +88,83 @@
                 <ColumnDefinition Width="15" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Money Account"
-                       Style="{StaticResource StandardHeaderLabel}"
-                       Grid.Column="0"
-                       />
+            <TextBlock
+                Grid.Column="0"
+                Style="{StaticResource StandardHeaderLabel}"
+                Text="Money Account" />
 
-            <ComboBox Grid.Column="1" 
-                      Width="200"
-                      Margin="0, 5, 0, 5"
-                      ItemsSource="{Binding Path=AccountList}"
-                      SelectedValue="{Binding Path=SelectedMoneyAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                      DisplayMemberPath="Display"
-                      SelectedValuePath="Value"
-                      />
+            <ComboBox
+                Grid.Column="1"
+                Width="200"
+                Margin="0,5,0,5"
+                DisplayMemberPath="Display"
+                ItemsSource="{Binding Path=AccountList}"
+                SelectedValue="{Binding Path=SelectedMoneyAccount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                SelectedValuePath="Value" />
 
-            <TextBlock Text="CSV Date Range"
-                       Style="{StaticResource StandardHeaderLabel}"
-                       Grid.Column="3"
-                       />
+            <TextBlock
+                Grid.Column="3"
+                Style="{StaticResource StandardHeaderLabel}"
+                Text="CSV Date Range" />
 
-            <DatePicker Grid.Column="4"
-                        SelectedDate="{Binding Path=StartDate, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                        />
+            <DatePicker Grid.Column="4" SelectedDate="{Binding Path=StartDate, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
 
-            <TextBlock Text="To"
-                       Style="{StaticResource StandardHeaderLabel}"
-                       Foreground="Black"
-                       Grid.Column="5"
-                       />
+            <TextBlock
+                Grid.Column="5"
+                Foreground="Black"
+                Style="{StaticResource StandardHeaderLabel}"
+                Text="To" />
 
-            <DatePicker Grid.Column="6"
-                        SelectedDate="{Binding Path=EndDate, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-            />
+            <DatePicker Grid.Column="6" SelectedDate="{Binding Path=EndDate, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
 
-            <Button ToolTip="Reload records"
-                    Style="{StaticResource MenuButton}"
-                    Grid.Column="8"
-                    Command="{Binding Path=CommandRefresh}"
-                    >
+            <Button
+                Grid.Column="8"
+                Command="{Binding Path=CommandRefresh}"
+                Style="{StaticResource MenuButton}"
+                ToolTip="Reload records">
                 <Image Source="/Icons/Refresh-256.png" />
             </Button>
 
         </Grid>
 
-        <TextBlock Grid.Row="3"
-                   Style="{StaticResource StandardHeaderLabel}"
-                   Text="CSV Records"
-                   />
-        
-        <DataGrid Grid.Row="4"
-                  ItemsSource="{Binding Path=CSVRecordList}"
-                  >
+        <TextBlock
+            Grid.Row="3"
+            Style="{StaticResource StandardHeaderLabel}"
+            Text="CSV Records" />
+
+        <DataGrid Grid.Row="4" ItemsSource="{Binding Path=CSVRecordList}">
             <DataGrid.Columns>
 
-                <!-- Checkbox -->
+                <!--  Checkbox  -->
                 <DataGridTemplateColumn Width="40">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <RadioButton GroupName="CSVSelection" 
-                                         IsChecked="{Binding Path=IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                         />
+                            <RadioButton GroupName="CSVSelection" IsChecked="{Binding Path=IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <!-- Date -->
-                <DataGridTextColumn Header="Date" 
-                                    Binding="{Binding Path=TransactionDate, Converter={StaticResource convertDateToDisplay}}" 
-                                    Width="120"
-                                    SortDirection="Ascending"
-                                    />
+                <!--  Date  -->
+                <DataGridTextColumn
+                    Width="120"
+                    Binding="{Binding Path=TransactionDate, Converter={StaticResource convertDateToDisplay}}"
+                    Header="Date"
+                    SortDirection="Ascending" />
 
-                <!-- Description -->
-                <DataGridTemplateColumn Header="Description" 
-                                        Width="450">
+                <!--  Description  -->
+                <DataGridTemplateColumn Width="450" Header="Description">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Path=Description}"
-                                       TextWrapping="Wrap"
-                                       />
+                            <TextBlock Text="{Binding Path=Description}" TextWrapping="Wrap" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <!-- Amount -->
-                <DataGridTextColumn Header="Amount"
-                                    Binding="{Binding Path=Amount, Converter={StaticResource convertDecimalToDisplay}}"
-                                    Width="180"
-                                    />
+                <!--  Amount  -->
+                <DataGridTextColumn
+                    Width="180"
+                    Binding="{Binding Path=Amount, Converter={StaticResource convertDecimalToDisplay}}"
+                    Header="Amount" />
 
             </DataGrid.Columns>
         </DataGrid>
@@ -182,47 +174,41 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="200" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="1"
-                    Style="{StaticResource localButton}"
-                    Command="{Binding Path=CommandAutoClear}"
-                    ToolTip="Compares Date and Amount to match records"
-                    >
+            <Button
+                Grid.Column="1"
+                Command="{Binding Path=CommandAutoClear}"
+                Style="{StaticResource localButton}"
+                ToolTip="Compares Date and Amount to match records">
                 Auto-Clear
             </Button>
 
-            <StackPanel HorizontalAlignment="Right"
-                    Orientation="Horizontal"
-                    Grid.Column="3"
-                    >
-                <Button Style="{StaticResource localButton}"
-                    Command="{Binding Path=CommandMatch}"
-                    >
+            <StackPanel
+                Grid.Column="3"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
+                <Button Command="{Binding Path=CommandMatch}" Style="{StaticResource localButton}">
                     Match
                 </Button>
 
-                <Button Style="{StaticResource localButton}"
-                    Command="{Binding Path=CommandAddNewTransaction}"
-                    >
+                <Button Command="{Binding Path=CommandAddNewTransaction}" Style="{StaticResource localButton}">
                     Create New
                 </Button>
 
             </StackPanel>
         </Grid>
 
-        <TextBlock Grid.Row="6"
-           Style="{StaticResource StandardHeaderLabel}"
-           Text="Transactions"
-           />
-        
-        <DataGrid Grid.Row="7"
-                  ItemsSource="{Binding Path=TransactionList}"
-                  >
+        <TextBlock
+            Grid.Row="6"
+            Style="{StaticResource StandardHeaderLabel}"
+            Text="Transactions" />
+
+        <DataGrid Grid.Row="7" ItemsSource="{Binding Path=TransactionList}">
             <DataGrid.Columns>
 
-                <!-- Checkbox -->
+                <!--  Checkbox  -->
                 <DataGridTemplateColumn Width="40">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -231,45 +217,42 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <!-- Date -->
-                <DataGridTextColumn Header="Transaction Date"
-                                    Binding="{Binding Path=TransactionDate, Converter={StaticResource convertDateToDisplay}}"
-                                    Width="120"
-                                    />
+                <!--  Date  -->
+                <DataGridTextColumn
+                    Width="120"
+                    Binding="{Binding Path=TransactionDate, Converter={StaticResource convertDateToDisplay}}"
+                    Header="Transaction Date" />
 
-                <!-- Description -->
-                <DataGridTemplateColumn Header="Description" 
-                        Width="350">
+                <!--  Description  -->
+                <DataGridTemplateColumn Width="350" Header="Description">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Path=Description}"
-                       TextWrapping="Wrap"
-                       />
+                            <TextBlock Text="{Binding Path=Description}" TextWrapping="Wrap" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
 
-                <!-- Amount -->
-                <DataGridTextColumn Header="Amount"
-                    Binding="{Binding Path=Amount, Converter={StaticResource convertDecimalToDisplay}}"
+                <!--  Amount  -->
+                <DataGridTextColumn
                     Width="180"
-                    />
+                    Binding="{Binding Path=Amount, Converter={StaticResource convertDecimalToDisplay}}"
+                    Header="Amount" />
 
-                <!-- Bank Date -->
-                <DataGridTextColumn Header="Bank Date"
-                    Binding="{Binding Path=BankDate, Converter={StaticResource convertDateToDisplay}}"
+                <!--  Bank Date  -->
+                <DataGridTextColumn
                     Width="120"
-                    />
+                    Binding="{Binding Path=BankDate, Converter={StaticResource convertDateToDisplay}}"
+                    Header="Bank Date" />
 
             </DataGrid.Columns>
         </DataGrid>
 
-        <StackPanel Grid.Row="8"
-                    HorizontalAlignment="Right"
-                    Orientation="Horizontal">
-            <Button Style="{StaticResource localButton}"
-                    Command="{Binding Path=CommandClearSelectedTransactions}">
+        <StackPanel
+            Grid.Row="8"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Button Command="{Binding Path=CommandClearSelectedTransactions}" Style="{StaticResource localButton}">
                 Clear Selected
             </Button>
         </StackPanel>

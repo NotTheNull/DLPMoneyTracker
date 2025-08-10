@@ -96,7 +96,7 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         {
             IJournalAccount account = accountRepository.GetAccountByUID(accountUID);
 
-            MoneyRecordSearch search = new() { Account = account, DateRange = new Core.DateRange(year, month) };
+            MoneyRecordSearch search = new() { Account = account, DateRange = DateRange.GetMonthRange(year, month) };
             if (account is IMoneyAccount || account is ILiabilityAccount)
             {
                 // Assets & Liabilities require the full range of transactions to get the Balance

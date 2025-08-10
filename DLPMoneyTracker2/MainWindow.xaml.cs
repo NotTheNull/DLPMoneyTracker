@@ -12,6 +12,7 @@ using DLPMoneyTracker2.Main.ExpensePlanner;
 using DLPMoneyTracker2.Main.TransactionList;
 using DLPMoneyTracker2.Main.UpcomingReminders;
 using DLPMoneyTracker2.Main.YTD;
+using DLPMoneyTracker2.Reports.IncomeStatement;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows;
@@ -151,6 +152,12 @@ namespace DLPMoneyTracker2
             //MessageBox.Show("Feature coming soon");
             CSVImport window = UICore.DependencyHost.GetRequiredService<CSVImport>();
             window.Show();
+        }
+
+        private void MenuIncomeStatement_Click(object sender, RoutedEventArgs e)
+        {
+            IncomeStatementUI report = UICore.DependencyHost.GetRequiredService<IncomeStatementUI>();
+            report.Show();
         }
     }
 }
