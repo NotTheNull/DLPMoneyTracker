@@ -22,6 +22,10 @@
         <SolidColorBrush x:Key="DisabledTextBox" Color="LightGray" />
         <SolidColorBrush x:Key="EnabledTextBox" Color="White" />
 
+        <SolidColorBrush x:Key="IncomeBackground" Color="#FF97F1A8" />
+        <SolidColorBrush x:Key="ExpenseBackground" Color="PaleVioletRed" />
+        
+
         <Style x:Key="MenuIcon" TargetType="Image">
             <Setter Property="Width" Value="20" />
             <Setter Property="Height" Value="20" />

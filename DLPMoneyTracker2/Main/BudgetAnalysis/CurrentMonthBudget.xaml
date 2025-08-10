@@ -198,7 +198,7 @@
 
             <Grid x:Name="panelMonthlyIncome"
                   HorizontalAlignment="Left"
-                  Background="#FF97F1A8"
+                  Background="{StaticResource IncomeBackground}"
                   Grid.Row="0">
 
                 <Grid.ColumnDefinitions>
@@ -236,7 +236,7 @@
 
             <Grid x:Name="panelVariableExpenseBudget"
                   HorizontalAlignment="Left"
-                  Background="PaleVioletRed"
+                  Background="{StaticResource ExpenseBackground}"
                   Grid.Row="2"
                   >
                 <Grid.ColumnDefinitions>
@@ -301,7 +301,7 @@
 
             <Grid x:Name="panelVariableExpenseCurrent"
                   HorizontalAlignment="Left"
-                  Background="PaleVioletRed"
+                  Background="{StaticResource ExpenseBackground}"
                   Grid.Column="2"
                   Grid.Row="2"
                   >
