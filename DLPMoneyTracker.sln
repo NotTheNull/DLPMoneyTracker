@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLPMoneyTracker.Plugins.JSO
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLPMoneyTracker.TestModels", "DLPMoneyTracker.TestModels\DLPMoneyTracker.TestModels.csproj", "{BC2C7FE9-E7BF-4EDB-A0E5-2105745A8E88}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLPMoneyTracker.Blazor", "DLPMoneyTracker.Blazor\DLPMoneyTracker.Blazor.csproj", "{AD60A1B0-FBA4-4E00-8620-6144AE0C69F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,12 @@ Global
 		{BC2C7FE9-E7BF-4EDB-A0E5-2105745A8E88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC2C7FE9-E7BF-4EDB-A0E5-2105745A8E88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC2C7FE9-E7BF-4EDB-A0E5-2105745A8E88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD60A1B0-FBA4-4E00-8620-6144AE0C69F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD60A1B0-FBA4-4E00-8620-6144AE0C69F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD60A1B0-FBA4-4E00-8620-6144AE0C69F0}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{AD60A1B0-FBA4-4E00-8620-6144AE0C69F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD60A1B0-FBA4-4E00-8620-6144AE0C69F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD60A1B0-FBA4-4E00-8620-6144AE0C69F0}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
