@@ -113,6 +113,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
         <PackageReference Include="NLog" Version="6.0.3" />
         <PackageReference Include="NLog.Extensions.Logging" Version="6.0.3" />
+        <PackageReference Include="NLog.Schema" Version="6.0.3" />
         <PackageReference Include="System.Text.Json" Version="8.0.6" />
     </ItemGroup>
 
