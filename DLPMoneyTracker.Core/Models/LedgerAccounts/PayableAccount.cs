@@ -1,51 +1,49 @@
-﻿namespace DLPMoneyTracker.Core.Models.LedgerAccounts
+﻿using System.Diagnostics;
+
+namespace DLPMoneyTracker.Core.Models.LedgerAccounts;
+
+[DebuggerDisplay("[{Id}] {JournalType} {Description}")]
+public class PayableAccount : INominalAccount, ISubLedgerAccount
 {
-    public class PayableAccount : INominalAccount, ISubLedgerAccount
+    public Guid Id { get; set; } = Guid.NewGuid();
+
+    public string Description { get; set; } = string.Empty;
+
+    public LedgerType JournalType => LedgerType.Payable;
+
+    public int OrderBy { get; set; } = 0;
+
+    public DateTime? DateClosedUTC { get; set; }
+
+    public BudgetTrackingType BudgetType { get; set; }
+    public decimal DefaultMonthlyBudgetAmount { get; set; } = decimal.Zero;
+    public decimal CurrentBudgetAmount { get; set; } = decimal.Zero;
+
+    public IJournalAccount? SummaryAccount { get; set; }
+
+    public PayableAccount() { }
+
+    public PayableAccount(IJournalAccount cpy) => this.Copy(cpy);
+
+    public void Copy(IJournalAccount cpy)
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        if (cpy.JournalType != this.JournalType) throw new InvalidOperationException("Copy MUST be a Payable Account");
 
-        public string Description { get; set; } = string.Empty;
+        this.Id = cpy.Id;
+        this.Description = cpy.Description;
+        this.OrderBy = cpy.OrderBy;
+        this.DateClosedUTC = cpy.DateClosedUTC;
 
-        public LedgerType JournalType => LedgerType.Payable;
-
-        public int OrderBy { get; set; } = 0;
-
-        public DateTime? DateClosedUTC { get; set; }
-
-        public BudgetTrackingType BudgetType { get; set; }
-        public decimal DefaultMonthlyBudgetAmount { get; set; } = decimal.Zero;
-        public decimal CurrentBudgetAmount { get; set; } = decimal.Zero;
-
-        public IJournalAccount? SummaryAccount { get; set; }
-
-        public PayableAccount()
-        { }
-
-        public PayableAccount(IJournalAccount cpy)
+        if (cpy is INominalAccount nominal)
         {
-            this.Copy(cpy);
+            this.BudgetType = nominal.BudgetType;
+            this.DefaultMonthlyBudgetAmount = nominal.DefaultMonthlyBudgetAmount;
+            this.CurrentBudgetAmount = nominal.CurrentBudgetAmount;
         }
 
-        public void Copy(IJournalAccount cpy)
+        if (cpy is ISubLedgerAccount sub)
         {
-            if (cpy.JournalType != this.JournalType) throw new InvalidOperationException("Copy MUST be a Payable Account");
-
-            this.Id = cpy.Id;
-            this.Description = cpy.Description;
-            this.OrderBy = cpy.OrderBy;
-            this.DateClosedUTC = cpy.DateClosedUTC;
-
-            if (cpy is INominalAccount nominal)
-            {
-                this.BudgetType = nominal.BudgetType;
-                this.DefaultMonthlyBudgetAmount = nominal.DefaultMonthlyBudgetAmount;
-                this.CurrentBudgetAmount = nominal.CurrentBudgetAmount;
-            }
-
-            if (cpy is ISubLedgerAccount sub)
-            {
-                this.SummaryAccount = sub.SummaryAccount;
-            }
+            this.SummaryAccount = sub.SummaryAccount;
         }
     }
 }

@@ -164,8 +164,7 @@ namespace DLPMoneyTracker2.Conversion
             try
             {
                 var listAccounts = sqlAccountRepository.GetFullList();
-                jsonAccountRepository.AccountList.Clear();
-                jsonAccountRepository.AccountList.AddRange(listAccounts);
+                jsonAccountRepository.LoadFromList(listAccounts);
                 jsonAccountRepository.SaveToFile();
 
                 var listBudgetPlans = sqlPlanRepository.GetFullList();
