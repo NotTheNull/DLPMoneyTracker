@@ -88,11 +88,12 @@ namespace DLPMoneyTracker.Plugins.JSON.Repositories
         {
             if (!this.BudgetPlanList.Any(x => x.CreditAccountId == accountUID || x.DebitAccountId == accountUID)) return [];
 
+            DateRange payperiod = new(config.Period.CurrentPayPeriod, config.Period.NextPayPeriod);
+
             List<IBudgetPlan> listPlans = [];
             foreach (var record in this.BudgetPlanList.Where(x => x.CreditAccountId == accountUID || x.DebitAccountId == accountUID))
             {
-                // Adding five days for Next Occurrence check to account for weekends & holidays that might delay the bill posting
-                if (record.NotificationDate <= DateTime.Today && record.NextOccurrence.AddDays(5) >= DateTime.Today)
+                if(payperiod.IsWithinRange(record.NextOccurrence))
                 {
                     listPlans.Add(record);
                 }
