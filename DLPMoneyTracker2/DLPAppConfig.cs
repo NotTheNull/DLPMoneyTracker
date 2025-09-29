@@ -24,6 +24,6 @@ public class DLPAppConfig : IDLPConfig
     public PayPeriod Period => new()
     {
         StartDate = App.Config["AppSettings:payPeriod:startDate"]?.ToString().ToDateTime() ?? Common.MINIMUM_DATE,
-        NumberOfDays = App.Config["AppSettings:payPeriod:numberDays"]?.ToString().Toint() ?? 1
+        NumberOfDays = App.Config["AppSettings:payPeriod:numberDays"]?.ToString().ToInt() ?? 1
     };
 }
