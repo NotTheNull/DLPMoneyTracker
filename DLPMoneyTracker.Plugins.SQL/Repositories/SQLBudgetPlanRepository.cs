@@ -48,6 +48,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
 
         public List<IBudgetPlan> GetUpcomingPlansForAccount(Guid accountUID)
         {
+            DateRange payPeriod = new(config.Period.CurrentPayPeriod, config.Period.NextPayPeriod);
             List<IBudgetPlan> listPlans = [];
             using (DataContext context = new(config))
             {
@@ -57,7 +58,7 @@ namespace DLPMoneyTracker.Plugins.SQL.Repositories
                 foreach (var src in listPlansLoop)
                 {
                     IBudgetPlan plan = this.SourceToPlan(src, context);
-                    if (plan.NotificationDate <= DateTime.Today && plan.NextOccurrence.AddDays(5) >= DateTime.Today)
+                    if(payPeriod.IsWithinRange(plan.NextOccurrence))
                     {
                         listPlans.Add(plan);
                     }

@@ -17,6 +17,8 @@
 
         DateTime StartDate { get; set; }
         DateTime NextOccurrence { get; }
+
+        [Obsolete("Need to remove this date as the payPeriod is a step up")]
         DateTime NotificationDate { get; }
         RecurrenceFrequency Frequency { get; }
     }
